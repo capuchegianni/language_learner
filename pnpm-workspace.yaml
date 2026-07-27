@@ -1,0 +1,10 @@
+packages:
+  - 'backend'
+  - 'frontend'
+
+onlyBuiltDependencies:
+  - '@nestjs/core'
+  - '@prisma/engines'
+  - 'better-sqlite3'
+  - 'prisma'
+  - 'esbuild'

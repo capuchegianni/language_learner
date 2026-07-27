@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Environment
+.env
+
+# SQLite database
+*.db
+*.db-journal
+
+# Uploads
+uploads/
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,48 @@
+{
+  "name": "korean-learner-backend",
+  "version": "1.0.0",
+  "description": "NestJS Backend for Korean AI Language Learner",
+  "author": "",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "pnpm exec prisma generate && nest build",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "start": "nest start",
+    "start:dev": "pnpm exec prisma generate && nest start --watch",
+    "start:debug": "nest start --debug --watch",
+    "start:prod": "node dist/main",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma db push"
+  },
+  "dependencies": {
+    "@nestjs/common": "11.1.0",
+    "@nestjs/config": "4.0.4",
+    "@nestjs/core": "11.1.0",
+    "@nestjs/platform-express": "11.1.0",
+    "@nestjs/serve-static": "5.0.5",
+    "@prisma/adapter-better-sqlite3": "7.2.0",
+    "@prisma/client": "7.2.0",
+    "axios": "1.18.1",
+    "better-sqlite3": "13.0.1",
+    "class-transformer": "0.5.1",
+    "class-validator": "0.15.1",
+    "dotenv": "17.4.2",
+    "multer": "2.2.0",
+    "openai": "6.49.0",
+    "reflect-metadata": "0.2.2",
+    "rxjs": "7.8.2"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "11.0.0",
+    "@nestjs/schematics": "11.1.0",
+    "@nestjs/testing": "11.1.0",
+    "@types/better-sqlite3": "7.6.13",
+    "@types/express": "5.0.6",
+    "@types/multer": "2.2.0",
+    "@types/node": "22.10.10",
+    "prisma": "7.2.0",
+    "ts-node": "10.9.2",
+    "typescript": "5.7.3"
+  }
+}
