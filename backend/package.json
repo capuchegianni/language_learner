@@ -1,7 +1,7 @@
 {
-  "name": "korean-learner-backend",
-  "version": "1.0.0",
-  "description": "NestJS Backend for Korean AI Language Learner",
+  "name": "language-learner-backend",
+  "version": "1.0.1",
+  "description": "NestJS Backend for AI Language Learner",
   "author": "",
   "private": true,
   "license": "UNLICENSED",

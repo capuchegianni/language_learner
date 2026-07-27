@@ -14,10 +14,10 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
           <div className="logo-badge">🇰🇷</div>
           <div>
             <div style={{ fontSize: '1.1rem', fontWeight: 700, letterSpacing: '-0.02em' }}>
-              HangulMaster <span style={{ color: 'var(--accent-secondary)' }}>AI</span>
+              Language Learner
             </div>
             <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', fontWeight: 400 }}>
-              Daily Language Studio
+              AI Language Tutor & Progress Storage
             </div>
           </div>
         </div>
