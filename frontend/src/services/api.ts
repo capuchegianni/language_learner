@@ -1,0 +1,135 @@
+import axios from 'axios';
+import {
+  DashboardStats,
+  Lesson,
+  ProposedRule,
+  Rule,
+  Settings,
+  Word,
+} from '../types';
+
+const API_BASE = '/api';
+
+export const api = {
+  // Stats
+  async getDashboardStats(): Promise<DashboardStats> {
+    const res = await axios.get(`${API_BASE}/lessons/stats`);
+    return res.data;
+  },
+
+  // Rule Proposals
+  async getRuleProposals(count?: number, excludeTitles?: string[]): Promise<{
+    proposedNewRules: ProposedRule[];
+    reviewRuleOption: { id: string; title: string; explanation: string } | null;
+    totalKnownWords: number;
+    totalKnownRules: number;
+  }> {
+    const params = new URLSearchParams();
+    if (count) params.append('count', count.toString());
+    if (excludeTitles && excludeTitles.length > 0) params.append('exclude', excludeTitles.join(','));
+    const res = await axios.get(`${API_BASE}/lessons/propose-rules?${params.toString()}`);
+    return res.data;
+  },
+
+  // Lesson Generation
+  async generateLesson(dto: {
+    ruleTitle: string;
+    wordsCount?: number;
+    isReview?: boolean;
+  }): Promise<Lesson> {
+    const res = await axios.post(`${API_BASE}/lessons/generate`, dto);
+    return res.data;
+  },
+
+  // Exercise Submission with Text or Handwritten Image
+  async submitLesson(
+    lessonId: string,
+    answers: { ex1?: string; ex2?: string; ex3?: string },
+    imageFile?: File | null,
+  ): Promise<Lesson> {
+    const formData = new FormData();
+    if (answers.ex1) formData.append('ex1', answers.ex1);
+    if (answers.ex2) formData.append('ex2', answers.ex2);
+    if (answers.ex3) formData.append('ex3', answers.ex3);
+    if (imageFile) formData.append('image', imageFile);
+
+    const res = await axios.post(`${API_BASE}/lessons/${lessonId}/submit`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return res.data;
+  },
+
+  // Lessons History
+  async getLessons(): Promise<Lesson[]> {
+    const res = await axios.get(`${API_BASE}/lessons`);
+    return res.data;
+  },
+
+  async getLessonById(id: string): Promise<Lesson> {
+    const res = await axios.get(`${API_BASE}/lessons/${id}`);
+    return res.data;
+  },
+
+  async deleteLesson(id: string): Promise<void> {
+    await axios.delete(`${API_BASE}/lessons/${id}`);
+  },
+
+  async resetStats(): Promise<void> {
+    await axios.delete(`${API_BASE}/lessons/stats`);
+  },
+
+  // Vocabulary Bank
+  async getWords(query?: string): Promise<Word[]> {
+    const res = await axios.get(`${API_BASE}/vocabulary`, {
+      params: { q: query },
+    });
+    return res.data;
+  },
+
+  async createWord(data: Omit<Word, 'id' | 'createdAt'>): Promise<Word> {
+    const res = await axios.post(`${API_BASE}/vocabulary`, data);
+    return res.data;
+  },
+
+  async updateWord(id: string, data: Partial<Word>): Promise<Word> {
+    const res = await axios.put(`${API_BASE}/vocabulary/${id}`, data);
+    return res.data;
+  },
+
+  async deleteWord(id: string): Promise<void> {
+    await axios.delete(`${API_BASE}/vocabulary/${id}`);
+  },
+
+  // Rule Bank
+  async getRules(query?: string): Promise<Rule[]> {
+    const res = await axios.get(`${API_BASE}/rules`, {
+      params: { q: query },
+    });
+    return res.data;
+  },
+
+  async createRule(data: Omit<Rule, 'id' | 'createdAt'>): Promise<Rule> {
+    const res = await axios.post(`${API_BASE}/rules`, data);
+    return res.data;
+  },
+
+  async updateRule(id: string, data: Partial<Rule>): Promise<Rule> {
+    const res = await axios.put(`${API_BASE}/rules/${id}`, data);
+    return res.data;
+  },
+
+  async deleteRule(id: string): Promise<void> {
+    await axios.delete(`${API_BASE}/rules/${id}`);
+  },
+
+  // Settings
+  async getSettings(): Promise<Settings> {
+    const res = await axios.get(`${API_BASE}/settings`);
+    return res.data;
+  },
+
+  async updateSettings(settings: Partial<Settings>): Promise<Settings> {
+    const res = await axios.post(`${API_BASE}/settings`, settings);
+    return res.data;
+  },
+};
