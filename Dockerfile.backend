@@ -6,16 +6,20 @@ WORKDIR /app
 
 RUN apk add --no-cache python3 make g++
 
-COPY . .
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY backend/package.json backend/
+COPY frontend/package.json frontend/
 
-RUN pnpm install --frozen-lockfile=false
+RUN pnpm install --frozen-lockfile
+
+COPY backend/ backend/
 
 WORKDIR /app/backend
 
 RUN pnpm run build
 
 WORKDIR /app
-RUN pnpm deploy --filter korean-learner-backend --prod --legacy /app/out
+RUN pnpm deploy --filter language-learner-backend --prod --legacy /app/out
 
 FROM node:22-alpine AS runner
 

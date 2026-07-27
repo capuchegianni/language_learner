@@ -6,9 +6,13 @@ WORKDIR /app
 
 RUN apk add --no-cache python3 make g++
 
-COPY . .
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY backend/package.json backend/
+COPY frontend/package.json frontend/
 
-RUN pnpm install --frozen-lockfile=false
+RUN pnpm install --frozen-lockfile
+
+COPY frontend/ frontend/
 
 WORKDIR /app/frontend
 
