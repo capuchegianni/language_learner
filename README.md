@@ -1,6 +1,8 @@
-# 🇰🇷 HangulMaster AI - Korean Daily AI Language Tutor & Automated Studio
+# 🌍 Language Learner - AI Language Tutor & Progress Storage
 
-HangulMaster AI is a personal daily Korean language learning application built to automate and enhance daily structured Korean prompts, vocabulary tracking, rule mastery, and exercise evaluations.
+Language Learner is a personal daily language learning application built to automate and enhance daily structured prompts, vocabulary tracking, rule mastery, and exercise evaluations for **any language you want to learn**.
+
+*(Note: Currently, the app is fully configured for learning **Korean from English**. Support for additional languages and custom language pairings is coming soon!)*
 
 ---
 
@@ -17,7 +19,7 @@ HangulMaster AI is a personal daily Korean language learning application built t
 
 3. **Multimodal AI Vision & OCR Grading Engine**:
    - Complete exercises by typing in the app **or by snapping a photo of your handwritten notebook practice**!
-   - Uses Multimodal AI (Vision) to transcribe handwritten Korean text, grade sentence translations, check grammar/particles, and provide an overall score (0-100%).
+   - Uses Multimodal AI (Vision) to transcribe handwritten text, grade sentence translations, check grammar/particles, and provide an overall score (0-100%).
 
 4. **Automated Vocabulary & Rule Bank**:
    - Every generated lesson automatically populates new daily words into your **Word Bank** and mastered rules into your **Rule Bank**.
