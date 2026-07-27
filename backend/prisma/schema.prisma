@@ -1,0 +1,77 @@
+datasource db {
+  provider = "sqlite"
+}
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+model Word {
+  id            String       @id @default(uuid())
+  korean        String       @unique
+  english       String
+  pronunciation String?
+  partOfSpeech  String?
+  notes         String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  lessons       LessonWord[]
+}
+
+model Rule {
+  id           String   @id @default(uuid())
+  title        String   @unique
+  explanation  String
+  examples     String   // Stored as JSON string
+  exceptions   String?  // Stored as JSON string or text
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  lessons      Lesson[]
+}
+
+model Lesson {
+  id              String       @id @default(uuid())
+  title           String?
+  date            DateTime     @default(now())
+  ruleId          String?
+  rule            Rule?        @relation(fields: [ruleId], references: [id], onDelete: SetNull)
+  isReview        Boolean      @default(false)
+
+  wordsCount      Int          @default(5)
+  lessonData      String       // JSON string containing 5 words, rules, Ex1, Ex2, Ex3
+
+  status          String       @default("GENERATED") // GENERATED | SUBMITTED | GRADED
+  userSubmission  String?      // JSON string of user answers
+  submissionImage String?      // Image file relative path if handwritten photo uploaded
+  aiFeedback      String?      // JSON string of AI feedback & score breakdown
+  overallScore    Int?
+
+  rawPrompt       String?      // The exact generated prompt text
+
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  words           LessonWord[]
+
+  @@index([ruleId])
+}
+
+model LessonWord {
+  lessonId  String
+  wordId    String
+  lesson    Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  word      Word   @relation(fields: [wordId], references: [id], onDelete: Cascade)
+
+  @@id([lessonId, wordId])
+  @@index([wordId])
+  @@index([lessonId])
+}
+
+model Setting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}
