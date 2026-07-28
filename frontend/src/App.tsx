@@ -3,6 +3,7 @@ import { Navbar } from './components/Navbar';
 import { Dashboard } from './pages/Dashboard';
 import { NewLesson } from './pages/NewLesson';
 import { LessonDetail } from './pages/LessonDetail';
+import { LessonHistory } from './pages/LessonHistory';
 import { WordBank } from './pages/WordBank';
 import { RuleBank } from './pages/RuleBank';
 import { Settings } from './pages/Settings';
@@ -10,15 +11,17 @@ import { Settings } from './pages/Settings';
 export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [selectedLessonId, setSelectedLessonId] = useState<string | null>(null);
+  const [previousTab, setPreviousTab] = useState<string>('dashboard');
 
   const handleSelectLesson = (id: string) => {
+    setPreviousTab(activeTab);
     setSelectedLessonId(id);
     setActiveTab('lesson-detail');
   };
 
-  const handleBackToDashboard = () => {
+  const handleBackFromDetail = () => {
     setSelectedLessonId(null);
-    setActiveTab('dashboard');
+    setActiveTab(previousTab);
   };
 
   return (
@@ -35,7 +38,11 @@ export const App: React.FC = () => {
         )}
 
         {activeTab === 'lesson-detail' && selectedLessonId && (
-          <LessonDetail lessonId={selectedLessonId} onBack={handleBackToDashboard} />
+          <LessonDetail lessonId={selectedLessonId} onBack={handleBackFromDetail} />
+        )}
+
+        {activeTab === 'lesson-history' && (
+          <LessonHistory onSelectLesson={handleSelectLesson} />
         )}
 
         {activeTab === 'word-bank' && <WordBank />}

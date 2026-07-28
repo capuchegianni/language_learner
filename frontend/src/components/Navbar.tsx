@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, Sparkles, Database, Settings as SettingsIcon, LayoutDashboard, Scroll } from 'lucide-react';
+import { Sparkles, Database, Settings as SettingsIcon, LayoutDashboard, Scroll, History } from 'lucide-react';
 
 interface NavbarProps {
   activeTab: string;
@@ -37,6 +37,14 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
           >
             <Sparkles size={18} />
             <span>New Lesson</span>
+          </button>
+
+          <button
+            className={activeTab === 'lesson-history' ? 'active' : ''}
+            onClick={() => setActiveTab('lesson-history')}
+          >
+            <History size={18} />
+            <span>History</span>
           </button>
 
           <button

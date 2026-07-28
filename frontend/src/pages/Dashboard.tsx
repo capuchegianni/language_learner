@@ -178,7 +178,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ setActiveTab, onSelectLess
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {stats?.recentLessons.map((lesson: Lesson) => (
+              {stats?.recentLessons.slice(0, 3).map((lesson: Lesson) => (
                 <div
                   key={lesson.id}
                   className="glass-card"
@@ -216,6 +216,16 @@ export const Dashboard: React.FC<DashboardProps> = ({ setActiveTab, onSelectLess
                   </div>
                 </div>
               ))}
+              {(stats?.recentLessons.length ?? 0) > 3 && (
+                <button
+                  className="btn btn-secondary"
+                  style={{ alignSelf: 'center', marginTop: '0.5rem' }}
+                  onClick={() => setActiveTab('lesson-history')}
+                >
+                  <span>View All Lessons</span>
+                  <ArrowRight size={16} />
+                </button>
+              )}
             </div>
           )}
         </div>
