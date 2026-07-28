@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Navbar } from './components/Navbar';
 import { Dashboard } from './pages/Dashboard';
-import { NewLesson } from './pages/NewLesson';
-import { LessonDetail } from './pages/LessonDetail';
+import { NewLesson } from './pages/NewLesson/index';
+import { LessonDetail } from './pages/LessonDetail/index';
 import { LessonHistory } from './pages/LessonHistory';
 import { WordBank } from './pages/WordBank';
 import { RuleBank } from './pages/RuleBank';
@@ -13,10 +13,14 @@ export const App: React.FC = () => {
   const [selectedLessonId, setSelectedLessonId] = useState<string | null>(null);
   const [previousTab, setPreviousTab] = useState<string>('dashboard');
 
-  const handleSelectLesson = (id: string) => {
+  const handleSelectLesson = (id: string, status?: string) => {
     setPreviousTab(activeTab);
     setSelectedLessonId(id);
-    setActiveTab('lesson-detail');
+    if (status === 'GENERATED' || status === 'SUBMITTED') {
+      setActiveTab('resume-lesson');
+    } else {
+      setActiveTab('lesson-detail');
+    }
   };
 
   const handleBackFromDetail = () => {
@@ -26,15 +30,35 @@ export const App: React.FC = () => {
 
   return (
     <div className="app-layout">
-      <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
+      <Navbar activeTab={activeTab} setActiveTab={(tab) => {
+        if (tab === 'new-lesson') setSelectedLessonId(null);
+        setActiveTab(tab);
+      }} />
 
       <main className="main-content">
         {activeTab === 'dashboard' && (
-          <Dashboard setActiveTab={setActiveTab} onSelectLesson={handleSelectLesson} />
+          <Dashboard setActiveTab={(tab) => {
+            if (tab === 'new-lesson') setSelectedLessonId(null);
+            setActiveTab(tab);
+          }} onSelectLesson={handleSelectLesson} />
         )}
 
         {activeTab === 'new-lesson' && (
-          <NewLesson onLessonFinished={() => setActiveTab('dashboard')} />
+          <NewLesson onLessonFinished={() => {
+            setSelectedLessonId(null);
+            setActiveTab('dashboard');
+          }} />
+        )}
+
+        {activeTab === 'resume-lesson' && selectedLessonId && (
+          <NewLesson
+            resumeLessonId={selectedLessonId}
+            onLessonFinished={() => {
+              setSelectedLessonId(null);
+              setActiveTab('dashboard');
+            }}
+            onBack={handleBackFromDetail}
+          />
         )}
 
         {activeTab === 'lesson-detail' && selectedLessonId && (

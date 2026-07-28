@@ -4,7 +4,7 @@ import { Lesson } from '../types';
 import { Clock, Trash2, Search } from 'lucide-react';
 
 interface LessonHistoryProps {
-  onSelectLesson: (id: string) => void;
+  onSelectLesson: (id: string, status: string) => void;
 }
 
 export const LessonHistory: React.FC<LessonHistoryProps> = ({ onSelectLesson }) => {
@@ -77,7 +77,7 @@ export const LessonHistory: React.FC<LessonHistoryProps> = ({ onSelectLesson }) 
               key={lesson.id}
               className="glass-card"
               style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 1.25rem', transition: 'all 0.2s ease' }}
-              onClick={() => onSelectLesson(lesson.id)}
+              onClick={() => onSelectLesson(lesson.id, lesson.status)}
             >
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>

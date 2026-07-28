@@ -5,7 +5,7 @@ import { Sparkles, BookOpen, Scroll, Award, ArrowRight, CheckCircle2, Clock, Tra
 
 interface DashboardProps {
   setActiveTab: (tab: string) => void;
-  onSelectLesson: (id: string) => void;
+  onSelectLesson: (id: string, status: string) => void;
 }
 
 export const Dashboard: React.FC<DashboardProps> = ({ setActiveTab, onSelectLesson }) => {
@@ -183,7 +183,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ setActiveTab, onSelectLess
                   key={lesson.id}
                   className="glass-card"
                   style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 1.25rem' }}
-                  onClick={() => onSelectLesson(lesson.id)}
+                  onClick={() => onSelectLesson(lesson.id, lesson.status)}
                 >
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
