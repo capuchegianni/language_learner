@@ -210,7 +210,7 @@ Follow this exact JSON structure:
   async gradeSubmission(
     lessonData: LessonContent,
     userAnswersText: { ex1?: string; ex2?: string; ex3?: string },
-    imagePath?: string,
+    imagePaths?: string[],
   ): Promise<GradingResult> {
     const gradingInstructions = `You are an expert Korean teacher grading a student's exercise submission.
 Lesson Details:
@@ -226,7 +226,7 @@ Exercise 1 Answer: ${userAnswersText.ex1 || 'N/A'}
 Exercise 2 Answer: ${userAnswersText.ex2 || 'N/A'}
 Exercise 3 Answer: ${userAnswersText.ex3 || 'N/A'}
 
-${imagePath ? 'NOTE: An image of handwritten answers is attached. Perform OCR on the handwriting first.' : ''}
+${imagePaths && imagePaths.length > 0 ? 'NOTE: Images of handwritten answers are attached. Perform OCR on the handwriting first.' : ''}
 
 Grade the student's work accurately with constructive feedback and corrections.
 Return STRICT JSON format (no markdown formatting, no extra text):
@@ -254,8 +254,8 @@ Return STRICT JSON format (no markdown formatting, no extra text):
     try {
       let rawResponse = '';
 
-      if (imagePath && fs.existsSync(imagePath)) {
-        rawResponse = await this.callLlmWithImage(gradingInstructions, imagePath);
+      if (imagePaths && imagePaths.length > 0) {
+        rawResponse = await this.callLlmWithImages(gradingInstructions, imagePaths);
       } else {
         rawResponse = await this.callLlm(gradingInstructions);
       }
@@ -296,11 +296,22 @@ Return STRICT JSON format (no markdown formatting, no extra text):
    * Calls the LLM with an image attached (vision).
    * Works with any provider that supports the OpenAI vision message format.
    */
-  private async callLlmWithImage(prompt: string, imagePath: string, retries = 2): Promise<string> {
+  private async callLlmWithImages(prompt: string, imagePaths: string[], retries = 2): Promise<string> {
     const { client, model } = await this.getClient();
-    const imageBuffer = fs.readFileSync(imagePath);
-    const base64Image = imageBuffer.toString('base64');
-    const mimeType = path.extname(imagePath).toLowerCase() === '.png' ? 'image/png' : 'image/jpeg';
+    
+    const contentParts: any[] = [{ type: 'text', text: prompt }];
+    
+    for (const imagePath of imagePaths) {
+      if (fs.existsSync(imagePath)) {
+        const imageBuffer = fs.readFileSync(imagePath);
+        const base64Image = imageBuffer.toString('base64');
+        const mimeType = path.extname(imagePath).toLowerCase() === '.png' ? 'image/png' : 'image/jpeg';
+        contentParts.push({
+          type: 'image_url',
+          image_url: { url: `data:${mimeType};base64,${base64Image}` },
+        });
+      }
+    }
 
     for (let i = 0; i <= retries; i++) {
       try {
@@ -309,13 +320,7 @@ Return STRICT JSON format (no markdown formatting, no extra text):
           messages: [
             {
               role: 'user',
-              content: [
-                { type: 'text', text: prompt },
-                {
-                  type: 'image_url',
-                  image_url: { url: `data:${mimeType};base64,${base64Image}` },
-                },
-              ],
+              content: contentParts,
             },
           ],
         });

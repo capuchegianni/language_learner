@@ -128,7 +128,7 @@ export class LessonsService {
   async submitLesson(
     lessonId: string,
     userAnswersText: { ex1?: string; ex2?: string; ex3?: string },
-    imagePath?: string,
+    imagePaths?: string[],
   ) {
     const lesson = await this.prisma.lesson.findUnique({
       where: { id: lessonId },
@@ -140,7 +140,7 @@ export class LessonsService {
     const grading = await this.aiService.gradeSubmission(
       parsedContent,
       userAnswersText,
-      imagePath,
+      imagePaths,
     );
 
     const updated = await this.prisma.lesson.update({
@@ -148,7 +148,6 @@ export class LessonsService {
       data: {
         status: 'GRADED',
         userSubmission: JSON.stringify(userAnswersText),
-        submissionImage: imagePath || null,
         aiFeedback: JSON.stringify(grading),
         overallScore: grading.overallScore,
       },

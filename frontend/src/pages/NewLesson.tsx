@@ -31,8 +31,8 @@ export const NewLesson: React.FC<NewLessonProps> = ({ onLessonFinished }) => {
   const [ex1Answer, setEx1Answer] = useState<string>('');
   const [ex2Answer, setEx2Answer] = useState<string>('');
   const [ex3Answer, setEx3Answer] = useState<string>('');
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState<boolean>(false);
 
   // Grading result state
@@ -51,7 +51,7 @@ export const NewLesson: React.FC<NewLessonProps> = ({ onLessonFinished }) => {
       setLoadingProposals(true);
       let cachedData: { proposals: ProposedRule[]; reviewRule: any } | null = null;
       let titlesToExclude: string[] = [];
-      
+
       const stored = localStorage.getItem('korean_proposals');
       if (stored) {
         const parsed = JSON.parse(stored);
@@ -74,7 +74,7 @@ export const NewLesson: React.FC<NewLessonProps> = ({ onLessonFinished }) => {
 
         const newData = { proposals: combinedProposals, reviewRule: newReviewRule };
         localStorage.setItem('korean_proposals', JSON.stringify(newData));
-        
+
         setProposals(newData.proposals);
         setReviewRule(newData.reviewRule);
         if (newData.proposals.length > 0) {
@@ -102,14 +102,14 @@ export const NewLesson: React.FC<NewLessonProps> = ({ onLessonFinished }) => {
       setReplacingIndex(indexToReplace);
       const currentExcludeTitles = proposals.map(p => p.title);
       const res = await api.getRuleProposals(1, currentExcludeTitles);
-      
+
       if (res.proposedNewRules.length > 0) {
         const newProposals = [...proposals];
         newProposals[indexToReplace] = res.proposedNewRules[0];
-        
+
         setProposals(newProposals);
         localStorage.setItem('korean_proposals', JSON.stringify({ proposals: newProposals, reviewRule }));
-        
+
         if (selectedRuleTitle === proposals[indexToReplace].title) {
           setSelectedRuleTitle(newProposals[indexToReplace].title);
         }
@@ -155,10 +155,18 @@ export const NewLesson: React.FC<NewLessonProps> = ({ onLessonFinished }) => {
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setImageFile(file);
-      setImagePreview(URL.createObjectURL(file));
+    if (e.target.files) {
+      const files = Array.from(e.target.files);
+      const newFiles = [...imageFiles, ...files].slice(0, 3);
+      
+      const totalSize = newFiles.reduce((acc, file) => acc + file.size, 0);
+      if (totalSize > 5 * 1024 * 1024) {
+        alert('Total image size cannot exceed 5MB.');
+        return;
+      }
+      
+      setImageFiles(newFiles);
+      setImagePreviews(newFiles.map(file => URL.createObjectURL(file)));
     }
   };
 
@@ -180,7 +188,7 @@ export const NewLesson: React.FC<NewLessonProps> = ({ onLessonFinished }) => {
       const updatedLesson = await api.submitLesson(
         currentLesson.id,
         { ex1: ex1Answer, ex2: ex2Answer, ex3: ex3Answer },
-        imageFile,
+        imageFiles.length > 0 ? imageFiles : null,
       );
       setCurrentLesson(updatedLesson);
       if (updatedLesson.aiFeedback) {
@@ -552,21 +560,34 @@ export const NewLesson: React.FC<NewLessonProps> = ({ onLessonFinished }) => {
                       <span>Or Upload Photo of Handwritten Exercises (Vision AI OCR)</span>
                     </label>
                     <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: '0.75rem' }}>
-                      Wrote your answers in a physical notebook? Snap a photo and upload it! Vision AI will read your handwriting and evaluate it.
+                      Wrote your answers in a physical notebook? Snap up to 3 photos and upload them! Vision AI will read your handwriting and evaluate it.
                     </p>
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
                       <label className="btn btn-secondary" style={{ cursor: 'pointer' }}>
                         <Upload size={18} />
-                        <span>Choose Photo</span>
-                        <input type="file" accept="image/*" onChange={handleImageChange} style={{ display: 'none' }} />
+                        <span>Choose Photo(s)</span>
+                        <input type="file" accept="image/*" multiple onChange={handleImageChange} style={{ display: 'none' }} />
                       </label>
-                      {imageFile && <span style={{ fontSize: '0.85rem', color: 'var(--accent-success)' }}>Selected: {imageFile.name}</span>}
+                      {imageFiles.length > 0 && (
+                        <div style={{ display: 'flex', gap: '0.5rem', flexDirection: 'column' }}>
+                          {imageFiles.map((f, i) => (
+                            <span key={i} style={{ fontSize: '0.85rem', color: 'var(--accent-success)' }}>Selected: {f.name}</span>
+                          ))}
+                        </div>
+                      )}
+                      {imageFiles.length > 0 && (
+                        <button type="button" className="btn btn-secondary" style={{ padding: '0.3rem 0.6rem', fontSize: '0.8rem' }} onClick={() => { setImageFiles([]); setImagePreviews([]); }}>
+                          Clear
+                        </button>
+                      )}
                     </div>
 
-                    {imagePreview && (
-                      <div style={{ marginTop: '1rem', maxWidth: '300px' }}>
-                        <img src={imagePreview} alt="Handwritten preview" style={{ width: '100%', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color-glow)' }} />
+                    {imagePreviews.length > 0 && (
+                      <div style={{ marginTop: '1rem', display: 'flex', gap: '0.75rem', overflowX: 'auto', paddingBottom: '0.5rem' }}>
+                        {imagePreviews.map((preview, i) => (
+                          <img key={i} src={preview} alt={`Handwritten preview ${i + 1}`} style={{ height: '120px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color-glow)', objectFit: 'cover' }} />
+                        ))}
                       </div>
                     )}
                   </div>

@@ -6,10 +6,10 @@ import {
   Param,
   Post,
   Query,
-  UploadedFile,
+  UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import * as path from 'path';
 import { LessonsService } from './lessons.service';
@@ -53,18 +53,18 @@ export class LessonsController {
 
   @Post(':id/submit')
   @UseInterceptors(
-    FileInterceptor('image', {
+    FilesInterceptor('images', 3, {
       storage: uploadStorage,
-      limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+      limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
     }),
   )
   async submitLesson(
     @Param('id') id: string,
     @Body() body: { ex1?: string; ex2?: string; ex3?: string },
-    @UploadedFile() file?: Express.Multer.File,
+    @UploadedFiles() files?: Array<Express.Multer.File>,
   ) {
-    const imagePath = file ? file.path : undefined;
-    return this.lessonsService.submitLesson(id, body, imagePath);
+    const imagePaths = files && files.length > 0 ? files.map((f) => f.path) : undefined;
+    return this.lessonsService.submitLesson(id, body, imagePaths);
   }
 
   @Get()

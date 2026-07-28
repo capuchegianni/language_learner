@@ -41,17 +41,22 @@ export const api = {
     return res.data;
   },
 
-  // Exercise Submission with Text or Handwritten Image
+  // Exercise Submission with Text or Handwritten Images
   async submitLesson(
     lessonId: string,
     answers: { ex1?: string; ex2?: string; ex3?: string },
-    imageFile?: File | null,
+    imageFiles?: File[] | null,
   ): Promise<Lesson> {
     const formData = new FormData();
     if (answers.ex1) formData.append('ex1', answers.ex1);
     if (answers.ex2) formData.append('ex2', answers.ex2);
     if (answers.ex3) formData.append('ex3', answers.ex3);
-    if (imageFile) formData.append('image', imageFile);
+    
+    if (imageFiles && imageFiles.length > 0) {
+      imageFiles.forEach(file => {
+        formData.append('images', file);
+      });
+    }
 
     const res = await axios.post(`${API_BASE}/lessons/${lessonId}/submit`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
