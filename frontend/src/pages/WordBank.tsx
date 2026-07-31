@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { api } from '../services/api';
 import { Word } from '../types';
-import { BookOpen, Plus, Trash2, Edit, X } from 'lucide-react';
+import { BookOpen, Plus, Trash2, Edit, X, Volume2 } from 'lucide-react';
 import { FilterInput } from '../components/FilterInput';
 
 export const WordBank: React.FC = () => {
@@ -17,6 +17,8 @@ export const WordBank: React.FC = () => {
   const [partOfSpeech, setPartOfSpeech] = useState('');
   const [notes, setNotes] = useState('');
   const [filterCategory, setFilterCategory] = useState('');
+  const [playingWordId, setPlayingWordId] = useState<string | null>(null);
+  const playStateRef = useRef({ id: null as string | null, isSlow: false });
 
   const loadWords = async (q?: string) => {
     try {
@@ -81,6 +83,42 @@ export const WordBank: React.FC = () => {
     }
   };
 
+  const handlePlayAudio = (word: Word) => {
+    if (!window.speechSynthesis) {
+      alert("Sorry, your browser doesn't support text to speech!");
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+
+    const currentState = playStateRef.current;
+    let newSpeed = 1.0;
+    let newIsSlow = false;
+
+    if (currentState.id === word.id && !currentState.isSlow) {
+      newSpeed = 0.5;
+      newIsSlow = true;
+    }
+
+    playStateRef.current = { id: word.id, isSlow: newIsSlow };
+    setPlayingWordId(word.id);
+
+    const utterance = new SpeechSynthesisUtterance(word.korean);
+    utterance.lang = 'ko-KR';
+    utterance.rate = newSpeed;
+
+    const voices = window.speechSynthesis.getVoices();
+    const koVoice = voices.find(v => v.lang === 'ko-KR' || v.lang === 'ko_KR');
+    if (koVoice) {
+      utterance.voice = koVoice;
+    }
+
+    utterance.onend = () => setPlayingWordId(null);
+    utterance.onerror = () => setPlayingWordId(null);
+
+    window.speechSynthesis.speak(utterance);
+  };
+
   return (
     <div>
       {/* Header */}
@@ -111,8 +149,8 @@ export const WordBank: React.FC = () => {
         />
         <div className="glass-card" style={{ padding: '0.85rem 1.25rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <label style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Filter Category:</label>
-          <select 
-            value={filterCategory} 
+          <select
+            value={filterCategory}
             onChange={(e) => setFilterCategory(e.target.value)}
             style={{ background: 'transparent', color: '#fff', border: 'none', outline: 'none', fontSize: '1rem', cursor: 'pointer' }}
           >
@@ -139,9 +177,24 @@ export const WordBank: React.FC = () => {
             <div key={word.id} className="glass-card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
-                  <span className="kr-text" style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--accent-secondary)' }}>
-                    {word.korean}
-                  </span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                    <span className="kr-text" style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--accent-secondary)' }}>
+                      {word.korean}
+                    </span>
+                    <button
+                      className="btn"
+                      style={{
+                        padding: '0.35rem',
+                        color: playingWordId === word.id ? 'var(--accent-primary)' : 'var(--text-secondary)',
+                        borderRadius: '50%',
+                        background: playingWordId === word.id ? 'rgba(59, 130, 246, 0.1)' : 'transparent'
+                      }}
+                      onClick={() => handlePlayAudio(word)}
+                      title="Play pronunciation (Click again to play slower)"
+                    >
+                      <Volume2 size={18} />
+                    </button>
+                  </div>
                   {word.partOfSpeech && <span className="pill pill-primary">{word.partOfSpeech}</span>}
                 </div>
                 <div style={{ fontSize: '1rem', fontWeight: 500, marginBottom: '0.25rem' }}>
