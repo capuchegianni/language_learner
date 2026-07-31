@@ -104,7 +104,7 @@ export const LessonHistory: React.FC<LessonHistoryProps> = ({ onSelectLesson, in
                 ) : null}
                 <button
                   className="btn"
-                  style={{ padding: '0.4rem', color: 'var(--text-muted)' }}
+                  style={{ padding: '0.4rem', color: 'var(--accent-danger)' }}
                   onClick={(e) => handleDelete(e, lesson.id)}
                   title="Delete Lesson"
                 >

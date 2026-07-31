@@ -171,7 +171,7 @@ export const RuleBank: React.FC<RuleBankProps> = ({ onNavigateToHistory }) => {
                     )}
                   </div>
                   <div style={{ display: 'flex', gap: '0.5rem' }}>
-                    <button className="btn" style={{ padding: '0.35rem 0.6rem', color: 'var(--text-secondary)' }} onClick={() => handleOpenEditModal(rule)}>
+                    <button className="btn" style={{ padding: '0.35rem 0.6rem', color: 'var(--accent-warning)' }} onClick={() => handleOpenEditModal(rule)}>
                       <Edit size={16} />
                     </button>
                     <button className="btn" style={{ padding: '0.35rem 0.6rem', color: 'var(--accent-danger)' }} onClick={() => handleDeleteRule(rule.id)}>

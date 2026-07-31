@@ -111,7 +111,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ setActiveTab, onSelectLess
             onClick={() => setActiveTab('new-lesson')}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <div style={{ padding: '0.75rem', borderRadius: 'var(--radius-md)', background: 'rgba(99, 102, 241, 0.2)', color: 'var(--accent-primary)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.75rem', borderRadius: 'var(--radius-md)', background: 'rgba(99, 102, 241, 0.2)', color: 'var(--accent-primary)' }}>
                 <Sparkles size={24} />
               </div>
               <div style={{ flex: 1 }}>
@@ -128,7 +128,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ setActiveTab, onSelectLess
             onClick={() => setActiveTab('word-bank')}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <div style={{ padding: '0.75rem', borderRadius: 'var(--radius-md)', background: 'rgba(6, 182, 212, 0.2)', color: 'var(--accent-secondary)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.75rem', borderRadius: 'var(--radius-md)', background: 'rgba(6, 182, 212, 0.2)', color: 'var(--accent-secondary)' }}>
                 <BookOpen size={24} />
               </div>
               <div style={{ flex: 1 }}>
@@ -145,7 +145,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ setActiveTab, onSelectLess
             onClick={() => setActiveTab('rule-bank')}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <div style={{ padding: '0.75rem', borderRadius: 'var(--radius-md)', background: 'rgba(168, 85, 247, 0.2)', color: 'var(--accent-purple)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.75rem', borderRadius: 'var(--radius-md)', background: 'rgba(168, 85, 247, 0.2)', color: 'var(--accent-purple)' }}>
                 <Scroll size={24} />
               </div>
               <div style={{ flex: 1 }}>

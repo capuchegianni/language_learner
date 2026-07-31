@@ -160,7 +160,7 @@ export const WordBank: React.FC = () => {
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '1rem', borderTop: '1px solid var(--border-color)', paddingTop: '0.75rem' }}>
-                <button className="btn" style={{ padding: '0.35rem 0.6rem', color: 'var(--text-secondary)' }} onClick={() => handleOpenEditModal(word)}>
+                <button className="btn" style={{ padding: '0.35rem 0.6rem', color: 'var(--accent-warning)' }} onClick={() => handleOpenEditModal(word)}>
                   <Edit size={16} />
                 </button>
                 <button className="btn" style={{ padding: '0.35rem 0.6rem', color: 'var(--accent-danger)' }} onClick={() => handleDeleteWord(word.id)}>
