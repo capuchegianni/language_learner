@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 import { Dashboard } from './pages/Dashboard';
 import { NewLesson } from './pages/NewLesson/index';
@@ -9,79 +10,21 @@ import { RuleBank } from './pages/RuleBank';
 import { Settings } from './pages/Settings';
 
 export const App: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<string>('dashboard');
-  const [selectedLessonId, setSelectedLessonId] = useState<string | null>(null);
-  const [previousTab, setPreviousTab] = useState<string>('dashboard');
-  const [lessonHistorySearch, setLessonHistorySearch] = useState<string>('');
-
-  const handleSelectLesson = (id: string, status?: string) => {
-    setPreviousTab(activeTab);
-    setSelectedLessonId(id);
-    if (status === 'GENERATED' || status === 'SUBMITTED') {
-      setActiveTab('resume-lesson');
-    } else {
-      setActiveTab('lesson-detail');
-    }
-  };
-
-  const handleBackFromDetail = () => {
-    setSelectedLessonId(null);
-    setActiveTab(previousTab);
-  };
-
-  const handleNavigateToHistory = (query: string) => {
-    setLessonHistorySearch(query);
-    setActiveTab('lesson-history');
-  };
-
   return (
     <div className="app-layout">
-      <Navbar activeTab={activeTab} setActiveTab={(tab) => {
-        if (tab === 'new-lesson') setSelectedLessonId(null);
-        if (tab === 'lesson-history') setLessonHistorySearch('');
-        setActiveTab(tab);
-      }} />
+      <Navbar />
 
       <main className="main-content">
-        {activeTab === 'dashboard' && (
-          <Dashboard setActiveTab={(tab) => {
-            if (tab === 'new-lesson') setSelectedLessonId(null);
-            if (tab === 'lesson-history') setLessonHistorySearch('');
-            setActiveTab(tab);
-          }} onSelectLesson={handleSelectLesson} />
-        )}
-
-        {activeTab === 'new-lesson' && (
-          <NewLesson onLessonFinished={() => {
-            setSelectedLessonId(null);
-            setActiveTab('dashboard');
-          }} />
-        )}
-
-        {activeTab === 'resume-lesson' && selectedLessonId && (
-          <NewLesson
-            resumeLessonId={selectedLessonId}
-            onLessonFinished={() => {
-              setSelectedLessonId(null);
-              setActiveTab('dashboard');
-            }}
-            onBack={handleBackFromDetail}
-          />
-        )}
-
-        {activeTab === 'lesson-detail' && selectedLessonId && (
-          <LessonDetail lessonId={selectedLessonId} onBack={handleBackFromDetail} />
-        )}
-
-        {activeTab === 'lesson-history' && (
-          <LessonHistory onSelectLesson={handleSelectLesson} initialSearch={lessonHistorySearch} />
-        )}
-
-        {activeTab === 'word-bank' && <WordBank />}
-
-        {activeTab === 'rule-bank' && <RuleBank onNavigateToHistory={handleNavigateToHistory} />}
-
-        {activeTab === 'settings' && <Settings />}
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/lessons/new" element={<NewLesson />} />
+          <Route path="/lessons/:id/resume" element={<NewLesson />} />
+          <Route path="/lessons/:id" element={<LessonDetail />} />
+          <Route path="/history" element={<LessonHistory />} />
+          <Route path="/words" element={<WordBank />} />
+          <Route path="/rules" element={<RuleBank />} />
+          <Route path="/settings" element={<Settings />} />
+        </Routes>
       </main>
 
       <footer style={{ borderTop: '1px solid var(--border-color)', padding: '1.5rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.85rem' }}>

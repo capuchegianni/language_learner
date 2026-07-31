@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { api } from '../../services/api';
 import { Lesson, LessonContent, ProposedRule, GradingResult } from '../../types';
 import { Check, Copy, ChevronRight } from 'lucide-react';
@@ -10,13 +11,9 @@ import { AIFeedbackDisplay } from '../../components/lesson/AIFeedbackDisplay';
 import { RuleExplanation } from '../../components/lesson/RuleExplanation';
 import { WordsLearned } from '../../components/lesson/WordsLearned';
 
-interface NewLessonProps {
-  onLessonFinished?: () => void;
-  resumeLessonId?: string;
-  onBack?: () => void;
-}
-
-export const NewLesson: React.FC<NewLessonProps> = ({ onLessonFinished, resumeLessonId, onBack }) => {
+export const NewLesson: React.FC = () => {
+  const { id: resumeLessonId } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   // Phase state: 'PROPOSAL' | 'GENERATED_WORKSPACE' | 'GRADED'
   const [phase, setPhase] = useState<'PROPOSAL' | 'GENERATED_WORKSPACE' | 'GRADED'>('PROPOSAL');
 
@@ -328,8 +325,8 @@ export const NewLesson: React.FC<NewLessonProps> = ({ onLessonFinished, resumeLe
               submitting={submitting}
               onSubmit={handleSubmitExercises}
               onBack={() => {
-                if (resumeLessonId && onBack) {
-                  onBack();
+                if (resumeLessonId) {
+                  navigate(-1);
                 } else {
                   setPhase('PROPOSAL');
                 }
@@ -366,9 +363,7 @@ export const NewLesson: React.FC<NewLessonProps> = ({ onLessonFinished, resumeLe
             <button
               className="btn btn-primary"
               style={{ padding: '0.75rem 2rem' }}
-              onClick={() => {
-                if (onLessonFinished) onLessonFinished();
-              }}
+              onClick={() => navigate('/')}
             >
               Finish Lesson & Return to Dashboard
             </button>

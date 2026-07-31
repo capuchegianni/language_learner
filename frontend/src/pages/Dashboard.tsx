@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
 import { DashboardStats, Lesson } from '../types';
 import { Sparkles, BookOpen, Scroll, Award, ArrowRight, CheckCircle2, Clock, Trash2 } from 'lucide-react';
 
-interface DashboardProps {
-  setActiveTab: (tab: string) => void;
-  onSelectLesson: (id: string, status: string) => void;
-}
-
-export const Dashboard: React.FC<DashboardProps> = ({ setActiveTab, onSelectLesson }) => {
+export const Dashboard: React.FC = () => {
+  const navigate = useNavigate();
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -49,7 +46,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ setActiveTab, onSelectLess
               Your personal AI tutor generates custom rules, manages your vocabulary bank, and evaluates your handwritten or typed exercise submissions in real time.
             </p>
           </div>
-          <button className="btn btn-primary" onClick={() => setActiveTab('new-lesson')}>
+          <button className="btn btn-primary" onClick={() => navigate('/lessons/new')}>
             <Sparkles size={20} />
             <span>Start Daily Lesson</span>
           </button>
@@ -104,11 +101,11 @@ export const Dashboard: React.FC<DashboardProps> = ({ setActiveTab, onSelectLess
         {/* Quick Hub Navigation */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           <h2 style={{ fontSize: '1.3rem', fontWeight: 600 }}>Quick Learning Hub</h2>
-          
-          <div 
-            className="glass-card" 
+
+          <div
+            className="glass-card"
             style={{ cursor: 'pointer', transition: 'all 0.2s ease' }}
-            onClick={() => setActiveTab('new-lesson')}
+            onClick={() => navigate('/lessons/new')}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.75rem', borderRadius: 'var(--radius-md)', background: 'rgba(99, 102, 241, 0.2)', color: 'var(--accent-primary)' }}>
@@ -122,10 +119,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ setActiveTab, onSelectLess
             </div>
           </div>
 
-          <div 
-            className="glass-card" 
+          <div
+            className="glass-card"
             style={{ cursor: 'pointer', transition: 'all 0.2s ease' }}
-            onClick={() => setActiveTab('word-bank')}
+            onClick={() => navigate('/words')}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.75rem', borderRadius: 'var(--radius-md)', background: 'rgba(6, 182, 212, 0.2)', color: 'var(--accent-secondary)' }}>
@@ -139,10 +136,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ setActiveTab, onSelectLess
             </div>
           </div>
 
-          <div 
-            className="glass-card" 
+          <div
+            className="glass-card"
             style={{ cursor: 'pointer', transition: 'all 0.2s ease' }}
-            onClick={() => setActiveTab('rule-bank')}
+            onClick={() => navigate('/rules')}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.75rem', borderRadius: 'var(--radius-md)', background: 'rgba(168, 85, 247, 0.2)', color: 'var(--accent-purple)' }}>
@@ -168,10 +165,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ setActiveTab, onSelectLess
             <div className="glass-card" style={{ textAlign: 'center', padding: '2.5rem 1rem', color: 'var(--text-secondary)' }}>
               <Clock size={40} style={{ margin: '0 auto 1rem', opacity: 0.5 }} />
               <p>No lessons generated yet.</p>
-              <button 
-                className="btn btn-primary" 
+              <button
+                className="btn btn-primary"
                 style={{ marginTop: '1rem' }}
-                onClick={() => setActiveTab('new-lesson')}
+                onClick={() => navigate('/lessons/new')}
               >
                 Create Your First Lesson
               </button>
@@ -183,7 +180,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ setActiveTab, onSelectLess
                   key={lesson.id}
                   className="glass-card"
                   style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 1.25rem' }}
-                  onClick={() => onSelectLesson(lesson.id, lesson.status)}
+                  onClick={() => {
+                    if (lesson.status === 'GENERATED' || lesson.status === 'SUBMITTED') {
+                      navigate(`/lessons/${lesson.id}/resume`);
+                    } else {
+                      navigate(`/lessons/${lesson.id}`);
+                    }
+                  }}
                 >
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
@@ -220,7 +223,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ setActiveTab, onSelectLess
                 <button
                   className="btn btn-secondary"
                   style={{ alignSelf: 'center', marginTop: '0.5rem' }}
-                  onClick={() => setActiveTab('lesson-history')}
+                  onClick={() => navigate('/history')}
                 >
                   <span>View All Lessons</span>
                   <ArrowRight size={16} />

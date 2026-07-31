@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
 import { Rule } from '../types';
 import { Scroll, Plus, Trash2, Edit, X, Clock } from 'lucide-react';
 import { FilterInput } from '../components/FilterInput';
 
-interface RuleBankProps {
-  onNavigateToHistory?: (ruleName: string) => void;
-}
-
-export const RuleBank: React.FC<RuleBankProps> = ({ onNavigateToHistory }) => {
+export const RuleBank: React.FC = () => {
+  const navigate = useNavigate();
   const [rules, setRules] = useState<Rule[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
@@ -162,7 +160,7 @@ export const RuleBank: React.FC<RuleBankProps> = ({ onNavigateToHistory }) => {
                       <button
                         className="btn btn-secondary"
                         style={{ padding: '0.2rem 0.5rem', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}
-                        onClick={() => onNavigateToHistory && onNavigateToHistory(rule.title)}
+                        onClick={() => navigate(`/history?q=${encodeURIComponent(rule.title)}`)}
                         title={`View ${rule._count.lessons} linked lesson(s)`}
                       >
                         <Clock size={14} />

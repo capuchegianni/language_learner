@@ -1,22 +1,20 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { api } from '../services/api';
 import { Lesson } from '../types';
 import { Clock, Trash2 } from 'lucide-react';
 import { FilterInput } from '../components/FilterInput';
 
-interface LessonHistoryProps {
-  onSelectLesson: (id: string, status: string) => void;
-  initialSearch?: string;
-}
-
-export const LessonHistory: React.FC<LessonHistoryProps> = ({ onSelectLesson, initialSearch = '' }) => {
+export const LessonHistory: React.FC = () => {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState(initialSearch);
+  const [search, setSearch] = useState(searchParams.get('q') || '');
 
   useEffect(() => {
-    setSearch(initialSearch);
-  }, [initialSearch]);
+    setSearch(searchParams.get('q') || '');
+  }, [searchParams]);
 
   const loadLessons = async () => {
     try {
@@ -79,7 +77,13 @@ export const LessonHistory: React.FC<LessonHistoryProps> = ({ onSelectLesson, in
               key={lesson.id}
               className="glass-card"
               style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 1.25rem', transition: 'all 0.2s ease' }}
-              onClick={() => onSelectLesson(lesson.id, lesson.status)}
+              onClick={() => {
+                if (lesson.status === 'GENERATED' || lesson.status === 'SUBMITTED') {
+                  navigate(`/lessons/${lesson.id}/resume`);
+                } else {
+                  navigate(`/lessons/${lesson.id}`);
+                }
+              }}
             >
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>

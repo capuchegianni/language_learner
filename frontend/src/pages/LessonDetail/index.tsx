@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { api } from '../../services/api';
 import { Lesson, LessonContent, GradingResult } from '../../types';
 import { ArrowLeft, Check, Copy } from 'lucide-react';
@@ -6,12 +7,9 @@ import { RuleExplanation } from '../../components/lesson/RuleExplanation';
 import { WordsLearned } from '../../components/lesson/WordsLearned';
 import { AIFeedbackDisplay } from '../../components/lesson/AIFeedbackDisplay';
 
-interface LessonDetailProps {
-  lessonId: string;
-  onBack: () => void;
-}
-
-export const LessonDetail: React.FC<LessonDetailProps> = ({ lessonId, onBack }) => {
+export const LessonDetail: React.FC = () => {
+  const { id: lessonId } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [lesson, setLesson] = useState<Lesson | null>(null);
   const [loading, setLoading] = useState(true);
   const [copiedPrompt, setCopiedPrompt] = useState(false);
@@ -31,6 +29,10 @@ export const LessonDetail: React.FC<LessonDetailProps> = ({ lessonId, onBack }) 
     fetchLesson();
   }, [lessonId]);
 
+  if (!lessonId) {
+    return null;
+  }
+
   if (loading) {
     return (
       <div className="glass-card" style={{ display: 'flex', justifyContent: 'center', padding: '3rem' }}>
@@ -43,7 +45,7 @@ export const LessonDetail: React.FC<LessonDetailProps> = ({ lessonId, onBack }) 
     return (
       <div className="glass-card" style={{ textAlign: 'center', padding: '2rem' }}>
         <p>Lesson not found.</p>
-        <button className="btn btn-secondary" onClick={onBack} style={{ marginTop: '1rem' }}>
+        <button className="btn btn-secondary" onClick={() => navigate(-1)} style={{ marginTop: '1rem' }}>
           Back to Dashboard
         </button>
       </div>
@@ -64,7 +66,7 @@ export const LessonDetail: React.FC<LessonDetailProps> = ({ lessonId, onBack }) 
 
   return (
     <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-      <button className="btn btn-secondary" onClick={onBack} style={{ marginBottom: '1.5rem' }}>
+      <button className="btn btn-secondary" onClick={() => navigate(-1)} style={{ marginBottom: '1.5rem' }}>
         <ArrowLeft size={18} />
         <span>Back</span>
       </button>
