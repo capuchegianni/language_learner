@@ -15,6 +15,7 @@ export const WordBank: React.FC = () => {
   const [pronunciation, setPronunciation] = useState('');
   const [partOfSpeech, setPartOfSpeech] = useState('');
   const [notes, setNotes] = useState('');
+  const [filterCategory, setFilterCategory] = useState('');
 
   const loadWords = async (q?: string) => {
     try {
@@ -31,6 +32,9 @@ export const WordBank: React.FC = () => {
   useEffect(() => {
     loadWords(searchQuery);
   }, [searchQuery]);
+
+  const categories = Array.from(new Set(words.map(w => w.partOfSpeech?.toLowerCase()).filter(Boolean))) as string[];
+  const displayedWords = words.filter(w => !filterCategory || w.partOfSpeech?.toLowerCase() === filterCategory.toLowerCase());
 
   const handleOpenAddModal = () => {
     setEditingWord(null);
@@ -96,16 +100,31 @@ export const WordBank: React.FC = () => {
         </button>
       </div>
 
-      {/* Search Input */}
-      <div className="glass-card" style={{ padding: '0.85rem 1.25rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-        <Search size={20} color="var(--text-secondary)" />
-        <input
-          type="text"
-          placeholder="Search word in Korean or English..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          style={{ background: 'transparent', border: 'none', color: '#fff', outline: 'none', width: '100%', fontSize: '1rem' }}
-        />
+      {/* Search Input and Filter */}
+      <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+        <div className="glass-card" style={{ flex: 1, padding: '0.85rem 1.25rem', display: 'flex', alignItems: 'center', gap: '0.75rem', minWidth: '250px' }}>
+          <Search size={20} color="var(--text-secondary)" />
+          <input
+            type="text"
+            placeholder="Search word in Korean or English..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            style={{ background: 'transparent', border: 'none', color: '#fff', outline: 'none', width: '100%', fontSize: '1rem' }}
+          />
+        </div>
+        <div className="glass-card" style={{ padding: '0.85rem 1.25rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <label style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Filter Category:</label>
+          <select 
+            value={filterCategory} 
+            onChange={(e) => setFilterCategory(e.target.value)}
+            style={{ background: 'transparent', color: '#fff', border: 'none', outline: 'none', fontSize: '1rem', cursor: 'pointer' }}
+          >
+            <option value="" style={{ background: '#1e293b' }}>All Categories</option>
+            {categories.map(cat => (
+              <option key={cat} value={cat} style={{ background: '#1e293b' }}>{cat}</option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {/* Words Grid */}
@@ -113,13 +132,13 @@ export const WordBank: React.FC = () => {
         <div className="glass-card" style={{ display: 'flex', justifyContent: 'center', padding: '3rem' }}>
           <div className="spinner" />
         </div>
-      ) : words.length === 0 ? (
+      ) : displayedWords.length === 0 ? (
         <div className="glass-card" style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-secondary)' }}>
-          <p>No words found matching your search.</p>
+          <p>No words found matching your search and filter criteria.</p>
         </div>
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1.25rem' }}>
-          {words.map((word) => (
+          {displayedWords.map((word) => (
             <div key={word.id} className="glass-card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
@@ -172,7 +191,7 @@ export const WordBank: React.FC = () => {
             <form onSubmit={handleSaveWord} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div className="input-group">
                 <label>Korean (Hangul)*</label>
-                <input type="text" className="kr-text" value={korean} onChange={(e) => setKorean(e.target.value)} required placeholder="e.g. 공부하다" />
+                <input autoFocus type="text" className="kr-text" value={korean} onChange={(e) => setKorean(e.target.value)} required placeholder="e.g. 공부하다" />
               </div>
 
               <div className="input-group">
@@ -186,8 +205,11 @@ export const WordBank: React.FC = () => {
               </div>
 
               <div className="input-group">
-                <label>Part of Speech</label>
-                <input type="text" value={partOfSpeech} onChange={(e) => setPartOfSpeech(e.target.value)} placeholder="e.g. verb, noun, adjective" />
+                <label>Part of Speech (Category)</label>
+                <input list="pos-options" type="text" value={partOfSpeech} onChange={(e) => setPartOfSpeech(e.target.value)} placeholder="e.g. verb, noun, adjective" />
+                <datalist id="pos-options">
+                  {categories.map(cat => <option key={cat} value={cat} />)}
+                </datalist>
               </div>
 
               <div className="input-group">
