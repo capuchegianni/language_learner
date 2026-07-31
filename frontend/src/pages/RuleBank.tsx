@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../services/api';
 import { Rule } from '../types';
-import { Scroll, Search, Plus, Trash2, Edit, X, Clock } from 'lucide-react';
+import { Scroll, Plus, Trash2, Edit, X, Clock } from 'lucide-react';
+import { FilterInput } from '../components/FilterInput';
 
 interface RuleBankProps {
   onNavigateToHistory?: (ruleName: string) => void;
@@ -124,16 +125,12 @@ export const RuleBank: React.FC<RuleBankProps> = ({ onNavigateToHistory }) => {
       </div>
 
       {/* Search Input */}
-      <div className="glass-card" style={{ padding: '0.85rem 1.25rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-        <Search size={20} color="var(--text-secondary)" />
-        <input
-          type="text"
-          placeholder="Search rule title or explanation..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          style={{ background: 'transparent', border: 'none', color: '#fff', outline: 'none', width: '100%', fontSize: '1rem' }}
-        />
-      </div>
+      <FilterInput
+        value={searchQuery}
+        onChange={setSearchQuery}
+        placeholder="Search rule title or explanation..."
+        containerStyle={{ marginBottom: '1.5rem' }}
+      />
 
       {/* Rules List */}
       {loading ? (

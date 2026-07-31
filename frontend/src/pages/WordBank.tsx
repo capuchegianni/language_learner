@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../services/api';
 import { Word } from '../types';
-import { BookOpen, Search, Plus, Trash2, Edit, X } from 'lucide-react';
+import { BookOpen, Plus, Trash2, Edit, X } from 'lucide-react';
+import { FilterInput } from '../components/FilterInput';
 
 export const WordBank: React.FC = () => {
   const [words, setWords] = useState<Word[]>([]);
@@ -102,16 +103,12 @@ export const WordBank: React.FC = () => {
 
       {/* Search Input and Filter */}
       <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
-        <div className="glass-card" style={{ flex: 1, padding: '0.85rem 1.25rem', display: 'flex', alignItems: 'center', gap: '0.75rem', minWidth: '250px' }}>
-          <Search size={20} color="var(--text-secondary)" />
-          <input
-            type="text"
-            placeholder="Search word in Korean or English..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            style={{ background: 'transparent', border: 'none', color: '#fff', outline: 'none', width: '100%', fontSize: '1rem' }}
-          />
-        </div>
+        <FilterInput
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Search word in Korean or English..."
+          containerStyle={{ flex: 1, minWidth: '250px' }}
+        />
         <div className="glass-card" style={{ padding: '0.85rem 1.25rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <label style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Filter Category:</label>
           <select 

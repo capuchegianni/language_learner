@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../services/api';
 import { Lesson } from '../types';
-import { Clock, Trash2, Search } from 'lucide-react';
+import { Clock, Trash2 } from 'lucide-react';
+import { FilterInput } from '../components/FilterInput';
 
 interface LessonHistoryProps {
   onSelectLesson: (id: string, status: string) => void;
@@ -55,16 +56,12 @@ export const LessonHistory: React.FC<LessonHistoryProps> = ({ onSelectLesson, in
       </div>
 
       {/* Search Input */}
-      <div className="glass-card" style={{ padding: '0.85rem 1.25rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-        <Search size={20} color="var(--text-secondary)" />
-        <input
-          type="text"
-          placeholder="Search lessons by rule title..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          style={{ background: 'transparent', border: 'none', color: '#fff', outline: 'none', width: '100%', fontSize: '1rem' }}
-        />
-      </div>
+      <FilterInput
+        value={search}
+        onChange={setSearch}
+        placeholder="Search lessons by rule title..."
+        containerStyle={{ marginBottom: '1.5rem' }}
+      />
 
       {loading ? (
         <div className="glass-card" style={{ display: 'flex', justifyContent: 'center', padding: '3rem' }}>
