@@ -5,12 +5,17 @@ import { Clock, Trash2, Search } from 'lucide-react';
 
 interface LessonHistoryProps {
   onSelectLesson: (id: string, status: string) => void;
+  initialSearch?: string;
 }
 
-export const LessonHistory: React.FC<LessonHistoryProps> = ({ onSelectLesson }) => {
+export const LessonHistory: React.FC<LessonHistoryProps> = ({ onSelectLesson, initialSearch = '' }) => {
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState(initialSearch);
+
+  useEffect(() => {
+    setSearch(initialSearch);
+  }, [initialSearch]);
 
   const loadLessons = async () => {
     try {

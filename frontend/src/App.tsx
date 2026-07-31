@@ -12,6 +12,7 @@ export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [selectedLessonId, setSelectedLessonId] = useState<string | null>(null);
   const [previousTab, setPreviousTab] = useState<string>('dashboard');
+  const [lessonHistorySearch, setLessonHistorySearch] = useState<string>('');
 
   const handleSelectLesson = (id: string, status?: string) => {
     setPreviousTab(activeTab);
@@ -28,10 +29,16 @@ export const App: React.FC = () => {
     setActiveTab(previousTab);
   };
 
+  const handleNavigateToHistory = (query: string) => {
+    setLessonHistorySearch(query);
+    setActiveTab('lesson-history');
+  };
+
   return (
     <div className="app-layout">
       <Navbar activeTab={activeTab} setActiveTab={(tab) => {
         if (tab === 'new-lesson') setSelectedLessonId(null);
+        if (tab === 'lesson-history') setLessonHistorySearch('');
         setActiveTab(tab);
       }} />
 
@@ -39,6 +46,7 @@ export const App: React.FC = () => {
         {activeTab === 'dashboard' && (
           <Dashboard setActiveTab={(tab) => {
             if (tab === 'new-lesson') setSelectedLessonId(null);
+            if (tab === 'lesson-history') setLessonHistorySearch('');
             setActiveTab(tab);
           }} onSelectLesson={handleSelectLesson} />
         )}
@@ -66,12 +74,12 @@ export const App: React.FC = () => {
         )}
 
         {activeTab === 'lesson-history' && (
-          <LessonHistory onSelectLesson={handleSelectLesson} />
+          <LessonHistory onSelectLesson={handleSelectLesson} initialSearch={lessonHistorySearch} />
         )}
 
         {activeTab === 'word-bank' && <WordBank />}
 
-        {activeTab === 'rule-bank' && <RuleBank />}
+        {activeTab === 'rule-bank' && <RuleBank onNavigateToHistory={handleNavigateToHistory} />}
 
         {activeTab === 'settings' && <Settings />}
       </main>

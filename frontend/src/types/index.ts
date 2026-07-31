@@ -15,6 +15,9 @@ export interface Rule {
   examples: string; // JSON string
   exceptions?: string;
   createdAt: string;
+  _count?: {
+    lessons: number;
+  };
 }
 
 export interface ProposedRule {

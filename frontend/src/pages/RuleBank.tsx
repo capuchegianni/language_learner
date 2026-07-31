@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../services/api';
 import { Rule } from '../types';
-import { Scroll, Search, Plus, Trash2, Edit, X } from 'lucide-react';
+import { Scroll, Search, Plus, Trash2, Edit, X, Clock } from 'lucide-react';
 
-export const RuleBank: React.FC = () => {
+interface RuleBankProps {
+  onNavigateToHistory?: (ruleName: string) => void;
+}
+
+export const RuleBank: React.FC<RuleBankProps> = ({ onNavigateToHistory }) => {
   const [rules, setRules] = useState<Rule[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
@@ -153,9 +157,22 @@ export const RuleBank: React.FC = () => {
             return (
               <div key={rule.id} className="glass-card">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
-                  <h3 className="kr-text" style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--accent-purple)' }}>
-                    {rule.title}
-                  </h3>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    <h3 className="kr-text" style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--accent-purple)' }}>
+                      {rule.title}
+                    </h3>
+                    {rule._count && rule._count.lessons > 0 && (
+                      <button
+                        className="btn btn-secondary"
+                        style={{ padding: '0.2rem 0.5rem', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}
+                        onClick={() => onNavigateToHistory && onNavigateToHistory(rule.title)}
+                        title={`View ${rule._count.lessons} linked lesson(s)`}
+                      >
+                        <Clock size={14} />
+                        {rule._count.lessons} Lesson{rule._count.lessons !== 1 ? 's' : ''}
+                      </button>
+                    )}
+                  </div>
                   <div style={{ display: 'flex', gap: '0.5rem' }}>
                     <button className="btn" style={{ padding: '0.35rem 0.6rem', color: 'var(--text-secondary)' }} onClick={() => handleOpenEditModal(rule)}>
                       <Edit size={16} />

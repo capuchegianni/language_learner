@@ -7,6 +7,11 @@ export class RulesService {
 
   async getAllRules() {
     return this.prisma.rule.findMany({
+      include: {
+        _count: {
+          select: { lessons: true }
+        }
+      },
       orderBy: { createdAt: 'desc' },
     });
   }
@@ -18,6 +23,11 @@ export class RulesService {
           { title: { contains: query } },
           { explanation: { contains: query } },
         ],
+      },
+      include: {
+        _count: {
+          select: { lessons: true }
+        }
       },
       orderBy: { createdAt: 'desc' },
     });
