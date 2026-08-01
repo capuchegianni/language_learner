@@ -9,11 +9,11 @@ export default defineConfig({
     host: true,
     proxy: {
       '/api': {
-        target: process.env.BACKEND_URL || 'http://localhost:3000',
+        target: process.env.VITE_BACKEND_URL || 'http://localhost:3000',
         changeOrigin: true,
       },
       '/uploads': {
-        target: process.env.BACKEND_URL || 'http://localhost:3000',
+        target: process.env.VITE_BACKEND_URL || 'http://localhost:3000',
         changeOrigin: true,
       },
     },
@@ -23,11 +23,11 @@ export default defineConfig({
     host: true,
     proxy: {
       '/api': {
-        target: process.env.BACKEND_URL || 'http://localhost:3000',
+        target: process.env.VITE_BACKEND_URL || 'http://localhost:3000',
         changeOrigin: true,
       },
       '/uploads': {
-        target: process.env.BACKEND_URL || 'http://localhost:3000',
+        target: process.env.VITE_BACKEND_URL || 'http://localhost:3000',
         changeOrigin: true,
       },
     },
