@@ -7,10 +7,11 @@ services:
     restart: always
     ports:
       - "3000:3000"
+    env_file: .env
     environment:
-      - PORT=${PORT:-3000}
-      - DATABASE_URL=${DATABASE_URL:-file:./data/dev.db}
-      - API_KEY=${API_KEY:-}
+      - PORT=${PORT}
+      - DATABASE_URL=${DATABASE_URL}
+      - API_KEY=${API_KEY}
     volumes:
       - ./backend/data:/app/data
       - uploads_data:/app/uploads
@@ -24,10 +25,19 @@ services:
     ports:
       - "80:80"
       - "5173:80"
+    env_file: .env
     environment:
-      - BACKEND_URL=${BACKEND_URL:-http://backend:3000}
+      - VITE_BACKEND_URL=${VITE_BACKEND_URL}
     depends_on:
       - backend
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - CLOUDFLARE_TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
+    command: tunnel --no-autoupdate run --token ${CLOUDFLARE_TUNNEL_TOKEN}
 
 volumes:
   uploads_data:
