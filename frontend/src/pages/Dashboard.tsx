@@ -161,7 +161,7 @@ export const Dashboard: React.FC = () => {
             <div className="glass-card" style={{ display: 'flex', justifyContent: 'center', padding: '2rem' }}>
               <div className="spinner" />
             </div>
-          ) : stats?.recentLessons.length === 0 ? (
+          ) : stats?.recentLessons?.length === 0 ? (
             <div className="glass-card" style={{ textAlign: 'center', padding: '2.5rem 1rem', color: 'var(--text-secondary)' }}>
               <Clock size={40} style={{ margin: '0 auto 1rem', opacity: 0.5 }} />
               <p>No lessons generated yet.</p>
@@ -175,7 +175,7 @@ export const Dashboard: React.FC = () => {
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {stats?.recentLessons.slice(0, 3).map((lesson: Lesson) => (
+              {stats?.recentLessons?.slice(0, 3).map((lesson: Lesson) => (
                 <div
                   key={lesson.id}
                   className="glass-card"
@@ -219,7 +219,7 @@ export const Dashboard: React.FC = () => {
                   </div>
                 </div>
               ))}
-              {(stats?.recentLessons.length ?? 0) > 3 && (
+              {(stats?.recentLessons?.length ?? 0) > 3 && (
                 <button
                   className="btn btn-secondary"
                   style={{ alignSelf: 'center', marginTop: '0.5rem' }}
