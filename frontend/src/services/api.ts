@@ -8,7 +8,11 @@ import {
   Word,
 } from '../types';
 
-const API_BASE = '/api';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL?.replace(/\/+$/, '') || '';
+
+export const API_BASE = import.meta.env.DEV
+  ? '/api'
+  : `${BACKEND_URL}/api`;
 
 export const api = {
   // Stats
