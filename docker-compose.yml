@@ -12,6 +12,12 @@ services:
       - PORT=${PORT}
       - DATABASE_URL=${DATABASE_URL}
       - API_KEY=${API_KEY}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - GOOGLE_CALLBACK_URL=${GOOGLE_CALLBACK_URL}
+      - SESSION_SECRET=${SESSION_SECRET}
+      - FRONTEND_URL=${FRONTEND_URL}
+      - NODE_ENV=production
     volumes:
       - ./backend/data:/app/data
       - uploads_data:/app/uploads

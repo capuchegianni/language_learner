@@ -7,9 +7,24 @@ generator client {
   output   = "../src/generated/prisma"
 }
 
+model User {
+  id          String   @id @default(uuid())
+  googleId    String   @unique
+  displayName String
+  email       String   @unique
+  avatarUrl   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  words    Word[]
+  rules    Rule[]
+  lessons  Lesson[]
+  settings Setting[]
+}
+
 model Word {
   id            String       @id @default(uuid())
-  korean        String       @unique
+  korean        String
   english       String
   pronunciation String?
   partOfSpeech  String?
@@ -17,19 +32,31 @@ model Word {
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
 
+  userId        String
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   lessons       LessonWord[]
+
+  @@unique([userId, korean])
+  @@index([userId])
 }
 
 model Rule {
   id           String   @id @default(uuid())
-  title        String   @unique
+  title        String
   explanation  String
   examples     String   // Stored as JSON string
   exceptions   String?  // Stored as JSON string or text
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   lessons      Lesson[]
+
+  @@unique([userId, title])
+  @@index([userId])
 }
 
 model Lesson {
@@ -51,12 +78,16 @@ model Lesson {
 
   rawPrompt       String?      // The exact generated prompt text
 
+  userId          String
+  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt
 
   words           LessonWord[]
 
   @@index([ruleId])
+  @@index([userId])
 }
 
 model LessonWord {
@@ -71,7 +102,14 @@ model LessonWord {
 }
 
 model Setting {
-  key       String   @id
+  id        String   @id @default(uuid())
+  key       String
   value     String
   updatedAt DateTime @updatedAt
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, key])
+  @@index([userId])
 }

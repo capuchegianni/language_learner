@@ -8,6 +8,7 @@ import { AiModule } from './ai/ai.module';
 import { VocabularyModule } from './vocabulary/vocabulary.module';
 import { RulesModule } from './rules/rules.module';
 import { LessonsModule } from './lessons/lessons.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { LessonsModule } from './lessons/lessons.module';
       serveRoot: '/uploads',
     }),
     PrismaModule,
+    AuthModule,
     SettingsModule,
     AiModule,
     VocabularyModule,

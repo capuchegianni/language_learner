@@ -50,6 +50,7 @@ export type LessonMinAggregateOutputType = {
   aiFeedback: string | null
   overallScore: number | null
   rawPrompt: string | null
+  userId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -68,6 +69,7 @@ export type LessonMaxAggregateOutputType = {
   aiFeedback: string | null
   overallScore: number | null
   rawPrompt: string | null
+  userId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -86,6 +88,7 @@ export type LessonCountAggregateOutputType = {
   aiFeedback: number
   overallScore: number
   rawPrompt: number
+  userId: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -116,6 +119,7 @@ export type LessonMinAggregateInputType = {
   aiFeedback?: true
   overallScore?: true
   rawPrompt?: true
+  userId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -134,6 +138,7 @@ export type LessonMaxAggregateInputType = {
   aiFeedback?: true
   overallScore?: true
   rawPrompt?: true
+  userId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -152,6 +157,7 @@ export type LessonCountAggregateInputType = {
   aiFeedback?: true
   overallScore?: true
   rawPrompt?: true
+  userId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -257,6 +263,7 @@ export type LessonGroupByOutputType = {
   aiFeedback: string | null
   overallScore: number | null
   rawPrompt: string | null
+  userId: string
   createdAt: Date
   updatedAt: Date
   _count: LessonCountAggregateOutputType | null
@@ -298,9 +305,11 @@ export type LessonWhereInput = {
   aiFeedback?: Prisma.StringNullableFilter<"Lesson"> | string | null
   overallScore?: Prisma.IntNullableFilter<"Lesson"> | number | null
   rawPrompt?: Prisma.StringNullableFilter<"Lesson"> | string | null
+  userId?: Prisma.StringFilter<"Lesson"> | string
   createdAt?: Prisma.DateTimeFilter<"Lesson"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Lesson"> | Date | string
   rule?: Prisma.XOR<Prisma.RuleNullableScalarRelationFilter, Prisma.RuleWhereInput> | null
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   words?: Prisma.LessonWordListRelationFilter
 }
 
@@ -318,9 +327,11 @@ export type LessonOrderByWithRelationInput = {
   aiFeedback?: Prisma.SortOrderInput | Prisma.SortOrder
   overallScore?: Prisma.SortOrderInput | Prisma.SortOrder
   rawPrompt?: Prisma.SortOrderInput | Prisma.SortOrder
+  userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   rule?: Prisma.RuleOrderByWithRelationInput
+  user?: Prisma.UserOrderByWithRelationInput
   words?: Prisma.LessonWordOrderByRelationAggregateInput
 }
 
@@ -341,9 +352,11 @@ export type LessonWhereUniqueInput = Prisma.AtLeast<{
   aiFeedback?: Prisma.StringNullableFilter<"Lesson"> | string | null
   overallScore?: Prisma.IntNullableFilter<"Lesson"> | number | null
   rawPrompt?: Prisma.StringNullableFilter<"Lesson"> | string | null
+  userId?: Prisma.StringFilter<"Lesson"> | string
   createdAt?: Prisma.DateTimeFilter<"Lesson"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Lesson"> | Date | string
   rule?: Prisma.XOR<Prisma.RuleNullableScalarRelationFilter, Prisma.RuleWhereInput> | null
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   words?: Prisma.LessonWordListRelationFilter
 }, "id">
 
@@ -361,6 +374,7 @@ export type LessonOrderByWithAggregationInput = {
   aiFeedback?: Prisma.SortOrderInput | Prisma.SortOrder
   overallScore?: Prisma.SortOrderInput | Prisma.SortOrder
   rawPrompt?: Prisma.SortOrderInput | Prisma.SortOrder
+  userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.LessonCountOrderByAggregateInput
@@ -387,6 +401,7 @@ export type LessonScalarWhereWithAggregatesInput = {
   aiFeedback?: Prisma.StringNullableWithAggregatesFilter<"Lesson"> | string | null
   overallScore?: Prisma.IntNullableWithAggregatesFilter<"Lesson"> | number | null
   rawPrompt?: Prisma.StringNullableWithAggregatesFilter<"Lesson"> | string | null
+  userId?: Prisma.StringWithAggregatesFilter<"Lesson"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Lesson"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Lesson"> | Date | string
 }
@@ -407,6 +422,7 @@ export type LessonCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   rule?: Prisma.RuleCreateNestedOneWithoutLessonsInput
+  user: Prisma.UserCreateNestedOneWithoutLessonsInput
   words?: Prisma.LessonWordCreateNestedManyWithoutLessonInput
 }
 
@@ -424,6 +440,7 @@ export type LessonUncheckedCreateInput = {
   aiFeedback?: string | null
   overallScore?: number | null
   rawPrompt?: string | null
+  userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
   words?: Prisma.LessonWordUncheckedCreateNestedManyWithoutLessonInput
@@ -445,6 +462,7 @@ export type LessonUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rule?: Prisma.RuleUpdateOneWithoutLessonsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutLessonsNestedInput
   words?: Prisma.LessonWordUpdateManyWithoutLessonNestedInput
 }
 
@@ -462,6 +480,7 @@ export type LessonUncheckedUpdateInput = {
   aiFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   overallScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rawPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   words?: Prisma.LessonWordUncheckedUpdateManyWithoutLessonNestedInput
@@ -481,6 +500,7 @@ export type LessonCreateManyInput = {
   aiFeedback?: string | null
   overallScore?: number | null
   rawPrompt?: string | null
+  userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -516,6 +536,7 @@ export type LessonUncheckedUpdateManyInput = {
   aiFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   overallScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rawPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -544,6 +565,7 @@ export type LessonCountOrderByAggregateInput = {
   aiFeedback?: Prisma.SortOrder
   overallScore?: Prisma.SortOrder
   rawPrompt?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -567,6 +589,7 @@ export type LessonMaxOrderByAggregateInput = {
   aiFeedback?: Prisma.SortOrder
   overallScore?: Prisma.SortOrder
   rawPrompt?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -585,6 +608,7 @@ export type LessonMinOrderByAggregateInput = {
   aiFeedback?: Prisma.SortOrder
   overallScore?: Prisma.SortOrder
   rawPrompt?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -597,6 +621,48 @@ export type LessonSumOrderByAggregateInput = {
 export type LessonScalarRelationFilter = {
   is?: Prisma.LessonWhereInput
   isNot?: Prisma.LessonWhereInput
+}
+
+export type LessonCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.LessonCreateWithoutUserInput, Prisma.LessonUncheckedCreateWithoutUserInput> | Prisma.LessonCreateWithoutUserInput[] | Prisma.LessonUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.LessonCreateOrConnectWithoutUserInput | Prisma.LessonCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.LessonCreateManyUserInputEnvelope
+  connect?: Prisma.LessonWhereUniqueInput | Prisma.LessonWhereUniqueInput[]
+}
+
+export type LessonUncheckedCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.LessonCreateWithoutUserInput, Prisma.LessonUncheckedCreateWithoutUserInput> | Prisma.LessonCreateWithoutUserInput[] | Prisma.LessonUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.LessonCreateOrConnectWithoutUserInput | Prisma.LessonCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.LessonCreateManyUserInputEnvelope
+  connect?: Prisma.LessonWhereUniqueInput | Prisma.LessonWhereUniqueInput[]
+}
+
+export type LessonUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.LessonCreateWithoutUserInput, Prisma.LessonUncheckedCreateWithoutUserInput> | Prisma.LessonCreateWithoutUserInput[] | Prisma.LessonUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.LessonCreateOrConnectWithoutUserInput | Prisma.LessonCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.LessonUpsertWithWhereUniqueWithoutUserInput | Prisma.LessonUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.LessonCreateManyUserInputEnvelope
+  set?: Prisma.LessonWhereUniqueInput | Prisma.LessonWhereUniqueInput[]
+  disconnect?: Prisma.LessonWhereUniqueInput | Prisma.LessonWhereUniqueInput[]
+  delete?: Prisma.LessonWhereUniqueInput | Prisma.LessonWhereUniqueInput[]
+  connect?: Prisma.LessonWhereUniqueInput | Prisma.LessonWhereUniqueInput[]
+  update?: Prisma.LessonUpdateWithWhereUniqueWithoutUserInput | Prisma.LessonUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.LessonUpdateManyWithWhereWithoutUserInput | Prisma.LessonUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.LessonScalarWhereInput | Prisma.LessonScalarWhereInput[]
+}
+
+export type LessonUncheckedUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.LessonCreateWithoutUserInput, Prisma.LessonUncheckedCreateWithoutUserInput> | Prisma.LessonCreateWithoutUserInput[] | Prisma.LessonUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.LessonCreateOrConnectWithoutUserInput | Prisma.LessonCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.LessonUpsertWithWhereUniqueWithoutUserInput | Prisma.LessonUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.LessonCreateManyUserInputEnvelope
+  set?: Prisma.LessonWhereUniqueInput | Prisma.LessonWhereUniqueInput[]
+  disconnect?: Prisma.LessonWhereUniqueInput | Prisma.LessonWhereUniqueInput[]
+  delete?: Prisma.LessonWhereUniqueInput | Prisma.LessonWhereUniqueInput[]
+  connect?: Prisma.LessonWhereUniqueInput | Prisma.LessonWhereUniqueInput[]
+  update?: Prisma.LessonUpdateWithWhereUniqueWithoutUserInput | Prisma.LessonUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.LessonUpdateManyWithWhereWithoutUserInput | Prisma.LessonUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.LessonScalarWhereInput | Prisma.LessonScalarWhereInput[]
 }
 
 export type LessonCreateNestedManyWithoutRuleInput = {
@@ -675,6 +741,91 @@ export type LessonUpdateOneRequiredWithoutWordsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.LessonUpdateToOneWithWhereWithoutWordsInput, Prisma.LessonUpdateWithoutWordsInput>, Prisma.LessonUncheckedUpdateWithoutWordsInput>
 }
 
+export type LessonCreateWithoutUserInput = {
+  id?: string
+  title?: string | null
+  date?: Date | string
+  isReview?: boolean
+  wordsCount?: number
+  lessonData: string
+  status?: string
+  userSubmission?: string | null
+  submissionImage?: string | null
+  aiFeedback?: string | null
+  overallScore?: number | null
+  rawPrompt?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  rule?: Prisma.RuleCreateNestedOneWithoutLessonsInput
+  words?: Prisma.LessonWordCreateNestedManyWithoutLessonInput
+}
+
+export type LessonUncheckedCreateWithoutUserInput = {
+  id?: string
+  title?: string | null
+  date?: Date | string
+  ruleId?: string | null
+  isReview?: boolean
+  wordsCount?: number
+  lessonData: string
+  status?: string
+  userSubmission?: string | null
+  submissionImage?: string | null
+  aiFeedback?: string | null
+  overallScore?: number | null
+  rawPrompt?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  words?: Prisma.LessonWordUncheckedCreateNestedManyWithoutLessonInput
+}
+
+export type LessonCreateOrConnectWithoutUserInput = {
+  where: Prisma.LessonWhereUniqueInput
+  create: Prisma.XOR<Prisma.LessonCreateWithoutUserInput, Prisma.LessonUncheckedCreateWithoutUserInput>
+}
+
+export type LessonCreateManyUserInputEnvelope = {
+  data: Prisma.LessonCreateManyUserInput | Prisma.LessonCreateManyUserInput[]
+}
+
+export type LessonUpsertWithWhereUniqueWithoutUserInput = {
+  where: Prisma.LessonWhereUniqueInput
+  update: Prisma.XOR<Prisma.LessonUpdateWithoutUserInput, Prisma.LessonUncheckedUpdateWithoutUserInput>
+  create: Prisma.XOR<Prisma.LessonCreateWithoutUserInput, Prisma.LessonUncheckedCreateWithoutUserInput>
+}
+
+export type LessonUpdateWithWhereUniqueWithoutUserInput = {
+  where: Prisma.LessonWhereUniqueInput
+  data: Prisma.XOR<Prisma.LessonUpdateWithoutUserInput, Prisma.LessonUncheckedUpdateWithoutUserInput>
+}
+
+export type LessonUpdateManyWithWhereWithoutUserInput = {
+  where: Prisma.LessonScalarWhereInput
+  data: Prisma.XOR<Prisma.LessonUpdateManyMutationInput, Prisma.LessonUncheckedUpdateManyWithoutUserInput>
+}
+
+export type LessonScalarWhereInput = {
+  AND?: Prisma.LessonScalarWhereInput | Prisma.LessonScalarWhereInput[]
+  OR?: Prisma.LessonScalarWhereInput[]
+  NOT?: Prisma.LessonScalarWhereInput | Prisma.LessonScalarWhereInput[]
+  id?: Prisma.StringFilter<"Lesson"> | string
+  title?: Prisma.StringNullableFilter<"Lesson"> | string | null
+  date?: Prisma.DateTimeFilter<"Lesson"> | Date | string
+  ruleId?: Prisma.StringNullableFilter<"Lesson"> | string | null
+  isReview?: Prisma.BoolFilter<"Lesson"> | boolean
+  wordsCount?: Prisma.IntFilter<"Lesson"> | number
+  lessonData?: Prisma.StringFilter<"Lesson"> | string
+  status?: Prisma.StringFilter<"Lesson"> | string
+  userSubmission?: Prisma.StringNullableFilter<"Lesson"> | string | null
+  submissionImage?: Prisma.StringNullableFilter<"Lesson"> | string | null
+  aiFeedback?: Prisma.StringNullableFilter<"Lesson"> | string | null
+  overallScore?: Prisma.IntNullableFilter<"Lesson"> | number | null
+  rawPrompt?: Prisma.StringNullableFilter<"Lesson"> | string | null
+  userId?: Prisma.StringFilter<"Lesson"> | string
+  createdAt?: Prisma.DateTimeFilter<"Lesson"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Lesson"> | Date | string
+}
+
 export type LessonCreateWithoutRuleInput = {
   id?: string
   title?: string | null
@@ -690,6 +841,7 @@ export type LessonCreateWithoutRuleInput = {
   rawPrompt?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutLessonsInput
   words?: Prisma.LessonWordCreateNestedManyWithoutLessonInput
 }
 
@@ -706,6 +858,7 @@ export type LessonUncheckedCreateWithoutRuleInput = {
   aiFeedback?: string | null
   overallScore?: number | null
   rawPrompt?: string | null
+  userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
   words?: Prisma.LessonWordUncheckedCreateNestedManyWithoutLessonInput
@@ -736,27 +889,6 @@ export type LessonUpdateManyWithWhereWithoutRuleInput = {
   data: Prisma.XOR<Prisma.LessonUpdateManyMutationInput, Prisma.LessonUncheckedUpdateManyWithoutRuleInput>
 }
 
-export type LessonScalarWhereInput = {
-  AND?: Prisma.LessonScalarWhereInput | Prisma.LessonScalarWhereInput[]
-  OR?: Prisma.LessonScalarWhereInput[]
-  NOT?: Prisma.LessonScalarWhereInput | Prisma.LessonScalarWhereInput[]
-  id?: Prisma.StringFilter<"Lesson"> | string
-  title?: Prisma.StringNullableFilter<"Lesson"> | string | null
-  date?: Prisma.DateTimeFilter<"Lesson"> | Date | string
-  ruleId?: Prisma.StringNullableFilter<"Lesson"> | string | null
-  isReview?: Prisma.BoolFilter<"Lesson"> | boolean
-  wordsCount?: Prisma.IntFilter<"Lesson"> | number
-  lessonData?: Prisma.StringFilter<"Lesson"> | string
-  status?: Prisma.StringFilter<"Lesson"> | string
-  userSubmission?: Prisma.StringNullableFilter<"Lesson"> | string | null
-  submissionImage?: Prisma.StringNullableFilter<"Lesson"> | string | null
-  aiFeedback?: Prisma.StringNullableFilter<"Lesson"> | string | null
-  overallScore?: Prisma.IntNullableFilter<"Lesson"> | number | null
-  rawPrompt?: Prisma.StringNullableFilter<"Lesson"> | string | null
-  createdAt?: Prisma.DateTimeFilter<"Lesson"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Lesson"> | Date | string
-}
-
 export type LessonCreateWithoutWordsInput = {
   id?: string
   title?: string | null
@@ -773,6 +905,7 @@ export type LessonCreateWithoutWordsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   rule?: Prisma.RuleCreateNestedOneWithoutLessonsInput
+  user: Prisma.UserCreateNestedOneWithoutLessonsInput
 }
 
 export type LessonUncheckedCreateWithoutWordsInput = {
@@ -789,6 +922,7 @@ export type LessonUncheckedCreateWithoutWordsInput = {
   aiFeedback?: string | null
   overallScore?: number | null
   rawPrompt?: string | null
+  userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -825,9 +959,85 @@ export type LessonUpdateWithoutWordsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rule?: Prisma.RuleUpdateOneWithoutLessonsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutLessonsNestedInput
 }
 
 export type LessonUncheckedUpdateWithoutWordsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  wordsCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lessonData?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  userSubmission?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  submissionImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overallScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rawPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type LessonCreateManyUserInput = {
+  id?: string
+  title?: string | null
+  date?: Date | string
+  ruleId?: string | null
+  isReview?: boolean
+  wordsCount?: number
+  lessonData: string
+  status?: string
+  userSubmission?: string | null
+  submissionImage?: string | null
+  aiFeedback?: string | null
+  overallScore?: number | null
+  rawPrompt?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type LessonUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  wordsCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lessonData?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  userSubmission?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  submissionImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overallScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rawPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rule?: Prisma.RuleUpdateOneWithoutLessonsNestedInput
+  words?: Prisma.LessonWordUpdateManyWithoutLessonNestedInput
+}
+
+export type LessonUncheckedUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  wordsCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lessonData?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  userSubmission?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  submissionImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overallScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rawPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  words?: Prisma.LessonWordUncheckedUpdateManyWithoutLessonNestedInput
+}
+
+export type LessonUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -858,6 +1068,7 @@ export type LessonCreateManyRuleInput = {
   aiFeedback?: string | null
   overallScore?: number | null
   rawPrompt?: string | null
+  userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -877,6 +1088,7 @@ export type LessonUpdateWithoutRuleInput = {
   rawPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutLessonsNestedInput
   words?: Prisma.LessonWordUpdateManyWithoutLessonNestedInput
 }
 
@@ -893,6 +1105,7 @@ export type LessonUncheckedUpdateWithoutRuleInput = {
   aiFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   overallScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rawPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   words?: Prisma.LessonWordUncheckedUpdateManyWithoutLessonNestedInput
@@ -911,6 +1124,7 @@ export type LessonUncheckedUpdateManyWithoutRuleInput = {
   aiFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   overallScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rawPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -960,9 +1174,11 @@ export type LessonSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   aiFeedback?: boolean
   overallScore?: boolean
   rawPrompt?: boolean
+  userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   rule?: boolean | Prisma.Lesson$ruleArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   words?: boolean | Prisma.Lesson$wordsArgs<ExtArgs>
   _count?: boolean | Prisma.LessonCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["lesson"]>
@@ -981,9 +1197,11 @@ export type LessonSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   aiFeedback?: boolean
   overallScore?: boolean
   rawPrompt?: boolean
+  userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   rule?: boolean | Prisma.Lesson$ruleArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["lesson"]>
 
 export type LessonSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1000,9 +1218,11 @@ export type LessonSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   aiFeedback?: boolean
   overallScore?: boolean
   rawPrompt?: boolean
+  userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   rule?: boolean | Prisma.Lesson$ruleArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["lesson"]>
 
 export type LessonSelectScalar = {
@@ -1019,27 +1239,32 @@ export type LessonSelectScalar = {
   aiFeedback?: boolean
   overallScore?: boolean
   rawPrompt?: boolean
+  userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type LessonOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "date" | "ruleId" | "isReview" | "wordsCount" | "lessonData" | "status" | "userSubmission" | "submissionImage" | "aiFeedback" | "overallScore" | "rawPrompt" | "createdAt" | "updatedAt", ExtArgs["result"]["lesson"]>
+export type LessonOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "date" | "ruleId" | "isReview" | "wordsCount" | "lessonData" | "status" | "userSubmission" | "submissionImage" | "aiFeedback" | "overallScore" | "rawPrompt" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["lesson"]>
 export type LessonInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   rule?: boolean | Prisma.Lesson$ruleArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   words?: boolean | Prisma.Lesson$wordsArgs<ExtArgs>
   _count?: boolean | Prisma.LessonCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type LessonIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   rule?: boolean | Prisma.Lesson$ruleArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type LessonIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   rule?: boolean | Prisma.Lesson$ruleArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $LessonPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Lesson"
   objects: {
     rule: Prisma.$RulePayload<ExtArgs> | null
+    user: Prisma.$UserPayload<ExtArgs>
     words: Prisma.$LessonWordPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1056,6 +1281,7 @@ export type $LessonPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     aiFeedback: string | null
     overallScore: number | null
     rawPrompt: string | null
+    userId: string
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["lesson"]>
@@ -1453,6 +1679,7 @@ readonly fields: LessonFieldRefs;
 export interface Prisma__LessonClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   rule<T extends Prisma.Lesson$ruleArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lesson$ruleArgs<ExtArgs>>): Prisma.Prisma__RuleClient<runtime.Types.Result.GetResult<Prisma.$RulePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   words<T extends Prisma.Lesson$wordsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lesson$wordsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LessonWordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1496,6 +1723,7 @@ export interface LessonFieldRefs {
   readonly aiFeedback: Prisma.FieldRef<"Lesson", 'String'>
   readonly overallScore: Prisma.FieldRef<"Lesson", 'Int'>
   readonly rawPrompt: Prisma.FieldRef<"Lesson", 'String'>
+  readonly userId: Prisma.FieldRef<"Lesson", 'String'>
   readonly createdAt: Prisma.FieldRef<"Lesson", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Lesson", 'DateTime'>
 }

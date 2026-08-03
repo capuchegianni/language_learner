@@ -32,6 +32,7 @@ export type RuleMinAggregateOutputType = {
   exceptions: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  userId: string | null
 }
 
 export type RuleMaxAggregateOutputType = {
@@ -42,6 +43,7 @@ export type RuleMaxAggregateOutputType = {
   exceptions: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  userId: string | null
 }
 
 export type RuleCountAggregateOutputType = {
@@ -52,6 +54,7 @@ export type RuleCountAggregateOutputType = {
   exceptions: number
   createdAt: number
   updatedAt: number
+  userId: number
   _all: number
 }
 
@@ -64,6 +67,7 @@ export type RuleMinAggregateInputType = {
   exceptions?: true
   createdAt?: true
   updatedAt?: true
+  userId?: true
 }
 
 export type RuleMaxAggregateInputType = {
@@ -74,6 +78,7 @@ export type RuleMaxAggregateInputType = {
   exceptions?: true
   createdAt?: true
   updatedAt?: true
+  userId?: true
 }
 
 export type RuleCountAggregateInputType = {
@@ -84,6 +89,7 @@ export type RuleCountAggregateInputType = {
   exceptions?: true
   createdAt?: true
   updatedAt?: true
+  userId?: true
   _all?: true
 }
 
@@ -167,6 +173,7 @@ export type RuleGroupByOutputType = {
   exceptions: string | null
   createdAt: Date
   updatedAt: Date
+  userId: string
   _count: RuleCountAggregateOutputType | null
   _min: RuleMinAggregateOutputType | null
   _max: RuleMaxAggregateOutputType | null
@@ -198,6 +205,8 @@ export type RuleWhereInput = {
   exceptions?: Prisma.StringNullableFilter<"Rule"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Rule"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Rule"> | Date | string
+  userId?: Prisma.StringFilter<"Rule"> | string
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   lessons?: Prisma.LessonListRelationFilter
 }
 
@@ -209,22 +218,27 @@ export type RuleOrderByWithRelationInput = {
   exceptions?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  user?: Prisma.UserOrderByWithRelationInput
   lessons?: Prisma.LessonOrderByRelationAggregateInput
 }
 
 export type RuleWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  title?: string
+  userId_title?: Prisma.RuleUserIdTitleCompoundUniqueInput
   AND?: Prisma.RuleWhereInput | Prisma.RuleWhereInput[]
   OR?: Prisma.RuleWhereInput[]
   NOT?: Prisma.RuleWhereInput | Prisma.RuleWhereInput[]
+  title?: Prisma.StringFilter<"Rule"> | string
   explanation?: Prisma.StringFilter<"Rule"> | string
   examples?: Prisma.StringFilter<"Rule"> | string
   exceptions?: Prisma.StringNullableFilter<"Rule"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Rule"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Rule"> | Date | string
+  userId?: Prisma.StringFilter<"Rule"> | string
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   lessons?: Prisma.LessonListRelationFilter
-}, "id" | "title">
+}, "id" | "userId_title">
 
 export type RuleOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -234,6 +248,7 @@ export type RuleOrderByWithAggregationInput = {
   exceptions?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   _count?: Prisma.RuleCountOrderByAggregateInput
   _max?: Prisma.RuleMaxOrderByAggregateInput
   _min?: Prisma.RuleMinOrderByAggregateInput
@@ -250,6 +265,7 @@ export type RuleScalarWhereWithAggregatesInput = {
   exceptions?: Prisma.StringNullableWithAggregatesFilter<"Rule"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Rule"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Rule"> | Date | string
+  userId?: Prisma.StringWithAggregatesFilter<"Rule"> | string
 }
 
 export type RuleCreateInput = {
@@ -260,6 +276,7 @@ export type RuleCreateInput = {
   exceptions?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutRulesInput
   lessons?: Prisma.LessonCreateNestedManyWithoutRuleInput
 }
 
@@ -271,6 +288,7 @@ export type RuleUncheckedCreateInput = {
   exceptions?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  userId: string
   lessons?: Prisma.LessonUncheckedCreateNestedManyWithoutRuleInput
 }
 
@@ -282,6 +300,7 @@ export type RuleUpdateInput = {
   exceptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutRulesNestedInput
   lessons?: Prisma.LessonUpdateManyWithoutRuleNestedInput
 }
 
@@ -293,6 +312,7 @@ export type RuleUncheckedUpdateInput = {
   exceptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   lessons?: Prisma.LessonUncheckedUpdateManyWithoutRuleNestedInput
 }
 
@@ -304,6 +324,7 @@ export type RuleCreateManyInput = {
   exceptions?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  userId: string
 }
 
 export type RuleUpdateManyMutationInput = {
@@ -324,6 +345,22 @@ export type RuleUncheckedUpdateManyInput = {
   exceptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type RuleListRelationFilter = {
+  every?: Prisma.RuleWhereInput
+  some?: Prisma.RuleWhereInput
+  none?: Prisma.RuleWhereInput
+}
+
+export type RuleOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
+}
+
+export type RuleUserIdTitleCompoundUniqueInput = {
+  userId: string
+  title: string
 }
 
 export type RuleCountOrderByAggregateInput = {
@@ -334,6 +371,7 @@ export type RuleCountOrderByAggregateInput = {
   exceptions?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
 }
 
 export type RuleMaxOrderByAggregateInput = {
@@ -344,6 +382,7 @@ export type RuleMaxOrderByAggregateInput = {
   exceptions?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
 }
 
 export type RuleMinOrderByAggregateInput = {
@@ -354,11 +393,54 @@ export type RuleMinOrderByAggregateInput = {
   exceptions?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
 }
 
 export type RuleNullableScalarRelationFilter = {
   is?: Prisma.RuleWhereInput | null
   isNot?: Prisma.RuleWhereInput | null
+}
+
+export type RuleCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.RuleCreateWithoutUserInput, Prisma.RuleUncheckedCreateWithoutUserInput> | Prisma.RuleCreateWithoutUserInput[] | Prisma.RuleUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.RuleCreateOrConnectWithoutUserInput | Prisma.RuleCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.RuleCreateManyUserInputEnvelope
+  connect?: Prisma.RuleWhereUniqueInput | Prisma.RuleWhereUniqueInput[]
+}
+
+export type RuleUncheckedCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.RuleCreateWithoutUserInput, Prisma.RuleUncheckedCreateWithoutUserInput> | Prisma.RuleCreateWithoutUserInput[] | Prisma.RuleUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.RuleCreateOrConnectWithoutUserInput | Prisma.RuleCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.RuleCreateManyUserInputEnvelope
+  connect?: Prisma.RuleWhereUniqueInput | Prisma.RuleWhereUniqueInput[]
+}
+
+export type RuleUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.RuleCreateWithoutUserInput, Prisma.RuleUncheckedCreateWithoutUserInput> | Prisma.RuleCreateWithoutUserInput[] | Prisma.RuleUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.RuleCreateOrConnectWithoutUserInput | Prisma.RuleCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.RuleUpsertWithWhereUniqueWithoutUserInput | Prisma.RuleUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.RuleCreateManyUserInputEnvelope
+  set?: Prisma.RuleWhereUniqueInput | Prisma.RuleWhereUniqueInput[]
+  disconnect?: Prisma.RuleWhereUniqueInput | Prisma.RuleWhereUniqueInput[]
+  delete?: Prisma.RuleWhereUniqueInput | Prisma.RuleWhereUniqueInput[]
+  connect?: Prisma.RuleWhereUniqueInput | Prisma.RuleWhereUniqueInput[]
+  update?: Prisma.RuleUpdateWithWhereUniqueWithoutUserInput | Prisma.RuleUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.RuleUpdateManyWithWhereWithoutUserInput | Prisma.RuleUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.RuleScalarWhereInput | Prisma.RuleScalarWhereInput[]
+}
+
+export type RuleUncheckedUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.RuleCreateWithoutUserInput, Prisma.RuleUncheckedCreateWithoutUserInput> | Prisma.RuleCreateWithoutUserInput[] | Prisma.RuleUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.RuleCreateOrConnectWithoutUserInput | Prisma.RuleCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.RuleUpsertWithWhereUniqueWithoutUserInput | Prisma.RuleUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.RuleCreateManyUserInputEnvelope
+  set?: Prisma.RuleWhereUniqueInput | Prisma.RuleWhereUniqueInput[]
+  disconnect?: Prisma.RuleWhereUniqueInput | Prisma.RuleWhereUniqueInput[]
+  delete?: Prisma.RuleWhereUniqueInput | Prisma.RuleWhereUniqueInput[]
+  connect?: Prisma.RuleWhereUniqueInput | Prisma.RuleWhereUniqueInput[]
+  update?: Prisma.RuleUpdateWithWhereUniqueWithoutUserInput | Prisma.RuleUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.RuleUpdateManyWithWhereWithoutUserInput | Prisma.RuleUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.RuleScalarWhereInput | Prisma.RuleScalarWhereInput[]
 }
 
 export type RuleCreateNestedOneWithoutLessonsInput = {
@@ -377,6 +459,67 @@ export type RuleUpdateOneWithoutLessonsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.RuleUpdateToOneWithWhereWithoutLessonsInput, Prisma.RuleUpdateWithoutLessonsInput>, Prisma.RuleUncheckedUpdateWithoutLessonsInput>
 }
 
+export type RuleCreateWithoutUserInput = {
+  id?: string
+  title: string
+  explanation: string
+  examples: string
+  exceptions?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  lessons?: Prisma.LessonCreateNestedManyWithoutRuleInput
+}
+
+export type RuleUncheckedCreateWithoutUserInput = {
+  id?: string
+  title: string
+  explanation: string
+  examples: string
+  exceptions?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  lessons?: Prisma.LessonUncheckedCreateNestedManyWithoutRuleInput
+}
+
+export type RuleCreateOrConnectWithoutUserInput = {
+  where: Prisma.RuleWhereUniqueInput
+  create: Prisma.XOR<Prisma.RuleCreateWithoutUserInput, Prisma.RuleUncheckedCreateWithoutUserInput>
+}
+
+export type RuleCreateManyUserInputEnvelope = {
+  data: Prisma.RuleCreateManyUserInput | Prisma.RuleCreateManyUserInput[]
+}
+
+export type RuleUpsertWithWhereUniqueWithoutUserInput = {
+  where: Prisma.RuleWhereUniqueInput
+  update: Prisma.XOR<Prisma.RuleUpdateWithoutUserInput, Prisma.RuleUncheckedUpdateWithoutUserInput>
+  create: Prisma.XOR<Prisma.RuleCreateWithoutUserInput, Prisma.RuleUncheckedCreateWithoutUserInput>
+}
+
+export type RuleUpdateWithWhereUniqueWithoutUserInput = {
+  where: Prisma.RuleWhereUniqueInput
+  data: Prisma.XOR<Prisma.RuleUpdateWithoutUserInput, Prisma.RuleUncheckedUpdateWithoutUserInput>
+}
+
+export type RuleUpdateManyWithWhereWithoutUserInput = {
+  where: Prisma.RuleScalarWhereInput
+  data: Prisma.XOR<Prisma.RuleUpdateManyMutationInput, Prisma.RuleUncheckedUpdateManyWithoutUserInput>
+}
+
+export type RuleScalarWhereInput = {
+  AND?: Prisma.RuleScalarWhereInput | Prisma.RuleScalarWhereInput[]
+  OR?: Prisma.RuleScalarWhereInput[]
+  NOT?: Prisma.RuleScalarWhereInput | Prisma.RuleScalarWhereInput[]
+  id?: Prisma.StringFilter<"Rule"> | string
+  title?: Prisma.StringFilter<"Rule"> | string
+  explanation?: Prisma.StringFilter<"Rule"> | string
+  examples?: Prisma.StringFilter<"Rule"> | string
+  exceptions?: Prisma.StringNullableFilter<"Rule"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"Rule"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Rule"> | Date | string
+  userId?: Prisma.StringFilter<"Rule"> | string
+}
+
 export type RuleCreateWithoutLessonsInput = {
   id?: string
   title: string
@@ -385,6 +528,7 @@ export type RuleCreateWithoutLessonsInput = {
   exceptions?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutRulesInput
 }
 
 export type RuleUncheckedCreateWithoutLessonsInput = {
@@ -395,6 +539,7 @@ export type RuleUncheckedCreateWithoutLessonsInput = {
   exceptions?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  userId: string
 }
 
 export type RuleCreateOrConnectWithoutLessonsInput = {
@@ -421,9 +566,53 @@ export type RuleUpdateWithoutLessonsInput = {
   exceptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutRulesNestedInput
 }
 
 export type RuleUncheckedUpdateWithoutLessonsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  explanation?: Prisma.StringFieldUpdateOperationsInput | string
+  examples?: Prisma.StringFieldUpdateOperationsInput | string
+  exceptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type RuleCreateManyUserInput = {
+  id?: string
+  title: string
+  explanation: string
+  examples: string
+  exceptions?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type RuleUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  explanation?: Prisma.StringFieldUpdateOperationsInput | string
+  examples?: Prisma.StringFieldUpdateOperationsInput | string
+  exceptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lessons?: Prisma.LessonUpdateManyWithoutRuleNestedInput
+}
+
+export type RuleUncheckedUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  explanation?: Prisma.StringFieldUpdateOperationsInput | string
+  examples?: Prisma.StringFieldUpdateOperationsInput | string
+  exceptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lessons?: Prisma.LessonUncheckedUpdateManyWithoutRuleNestedInput
+}
+
+export type RuleUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   explanation?: Prisma.StringFieldUpdateOperationsInput | string
@@ -472,6 +661,8 @@ export type RuleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   exceptions?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  userId?: boolean
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   lessons?: boolean | Prisma.Rule$lessonsArgs<ExtArgs>
   _count?: boolean | Prisma.RuleCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["rule"]>
@@ -484,6 +675,8 @@ export type RuleSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   exceptions?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  userId?: boolean
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["rule"]>
 
 export type RuleSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -494,6 +687,8 @@ export type RuleSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   exceptions?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  userId?: boolean
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["rule"]>
 
 export type RuleSelectScalar = {
@@ -504,19 +699,26 @@ export type RuleSelectScalar = {
   exceptions?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  userId?: boolean
 }
 
-export type RuleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "explanation" | "examples" | "exceptions" | "createdAt" | "updatedAt", ExtArgs["result"]["rule"]>
+export type RuleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "explanation" | "examples" | "exceptions" | "createdAt" | "updatedAt" | "userId", ExtArgs["result"]["rule"]>
 export type RuleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   lessons?: boolean | Prisma.Rule$lessonsArgs<ExtArgs>
   _count?: boolean | Prisma.RuleCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type RuleIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type RuleIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type RuleIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}
+export type RuleIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}
 
 export type $RulePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Rule"
   objects: {
+    user: Prisma.$UserPayload<ExtArgs>
     lessons: Prisma.$LessonPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -527,6 +729,7 @@ export type $RulePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     exceptions: string | null
     createdAt: Date
     updatedAt: Date
+    userId: string
   }, ExtArgs["result"]["rule"]>
   composites: {}
 }
@@ -921,6 +1124,7 @@ readonly fields: RuleFieldRefs;
  */
 export interface Prisma__RuleClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   lessons<T extends Prisma.Rule$lessonsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Rule$lessonsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LessonPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -958,6 +1162,7 @@ export interface RuleFieldRefs {
   readonly exceptions: Prisma.FieldRef<"Rule", 'String'>
   readonly createdAt: Prisma.FieldRef<"Rule", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Rule", 'DateTime'>
+  readonly userId: Prisma.FieldRef<"Rule", 'String'>
 }
     
 
@@ -1205,6 +1410,10 @@ export type RuleCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions
    * The data used to create many Rules.
    */
   data: Prisma.RuleCreateManyInput | Prisma.RuleCreateManyInput[]
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RuleIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1275,6 +1484,10 @@ export type RuleUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions
    * Limit how many Rules to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RuleIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

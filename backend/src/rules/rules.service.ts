@@ -5,8 +5,9 @@ import { PrismaService } from '../prisma/prisma.service';
 export class RulesService {
   constructor(private prisma: PrismaService) {}
 
-  async getAllRules() {
+  async getAllRules(userId: string) {
     return this.prisma.rule.findMany({
+      where: { userId },
       include: {
         _count: {
           select: { lessons: true }
@@ -16,9 +17,10 @@ export class RulesService {
     });
   }
 
-  async searchRules(query: string) {
+  async searchRules(userId: string, query: string) {
     return this.prisma.rule.findMany({
       where: {
+        userId,
         OR: [
           { title: { contains: query } },
           { explanation: { contains: query } },
@@ -33,16 +35,20 @@ export class RulesService {
     });
   }
 
-  async createRule(data: {
-    title: string;
-    explanation: string;
-    examples: string; // JSON string
-    exceptions?: string;
-  }) {
-    return this.prisma.rule.create({ data });
+  async createRule(
+    userId: string,
+    data: {
+      title: string;
+      explanation: string;
+      examples: string; // JSON string
+      exceptions?: string;
+    },
+  ) {
+    return this.prisma.rule.create({ data: { ...data, userId } });
   }
 
   async updateRule(
+    userId: string,
     id: string,
     data: {
       title?: string;
@@ -52,12 +58,12 @@ export class RulesService {
     },
   ) {
     return this.prisma.rule.update({
-      where: { id },
+      where: { id, userId },
       data,
     });
   }
 
-  async deleteRule(id: string) {
-    return this.prisma.rule.delete({ where: { id } });
+  async deleteRule(userId: string, id: string) {
+    return this.prisma.rule.delete({ where: { id, userId } });
   }
 }

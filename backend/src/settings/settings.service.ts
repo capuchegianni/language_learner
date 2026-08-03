@@ -5,8 +5,10 @@ import { PrismaService } from '../prisma/prisma.service';
 export class SettingsService {
   constructor(private prisma: PrismaService) {}
 
-  async getAllSettings(): Promise<Record<string, string>> {
-    const records = await this.prisma.setting.findMany();
+  async getAllSettings(userId: string): Promise<Record<string, string>> {
+    const records = await this.prisma.setting.findMany({
+      where: { userId },
+    });
     const result: Record<string, string> = {};
     for (const rec of records) {
       result[rec.key] = rec.value;
@@ -14,7 +16,7 @@ export class SettingsService {
     return result;
   }
 
-  async getSetting(key: string): Promise<string> {
+  async getSetting(userId: string, key: string): Promise<string> {
     // API_KEY is always read from env, never stored in DB
     if (key === 'API_KEY') {
       const val = process.env.API_KEY || '';
@@ -24,7 +26,9 @@ export class SettingsService {
       return val;
     }
 
-    const record = await this.prisma.setting.findUnique({ where: { key } });
+    const record = await this.prisma.setting.findUnique({
+      where: { userId_key: { userId, key } },
+    });
     if (!record || !record.value) {
       throw new BadRequestException(`Missing AI configuration: ${key} is not set in the Settings menu.`);
     }
@@ -32,14 +36,14 @@ export class SettingsService {
     return record.value;
   }
 
-  async updateSettings(settings: Record<string, string>): Promise<Record<string, string>> {
+  async updateSettings(userId: string, settings: Record<string, string>): Promise<Record<string, string>> {
     for (const [key, value] of Object.entries(settings)) {
       await this.prisma.setting.upsert({
-        where: { key },
+        where: { userId_key: { userId, key } },
         update: { value },
-        create: { key, value },
+        create: { key, value, userId },
       });
     }
-    return this.getAllSettings();
+    return this.getAllSettings(userId);
   }
 }

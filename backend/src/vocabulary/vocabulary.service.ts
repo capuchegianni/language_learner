@@ -5,15 +5,17 @@ import { PrismaService } from '../prisma/prisma.service';
 export class VocabularyService {
   constructor(private prisma: PrismaService) {}
 
-  async getAllWords() {
+  async getAllWords(userId: string) {
     return this.prisma.word.findMany({
+      where: { userId },
       orderBy: { createdAt: 'desc' },
     });
   }
 
-  async searchWords(query: string) {
+  async searchWords(userId: string, query: string) {
     return this.prisma.word.findMany({
       where: {
+        userId,
         OR: [
           { korean: { contains: query } },
           { english: { contains: query } },
@@ -23,17 +25,21 @@ export class VocabularyService {
     });
   }
 
-  async createWord(data: {
-    korean: string;
-    english: string;
-    pronunciation?: string;
-    partOfSpeech?: string;
-    notes?: string;
-  }) {
-    return this.prisma.word.create({ data });
+  async createWord(
+    userId: string,
+    data: {
+      korean: string;
+      english: string;
+      pronunciation?: string;
+      partOfSpeech?: string;
+      notes?: string;
+    },
+  ) {
+    return this.prisma.word.create({ data: { ...data, userId } });
   }
 
   async updateWord(
+    userId: string,
     id: string,
     data: {
       korean?: string;
@@ -44,12 +50,12 @@ export class VocabularyService {
     },
   ) {
     return this.prisma.word.update({
-      where: { id },
+      where: { id, userId },
       data,
     });
   }
 
-  async deleteWord(id: string) {
-    return this.prisma.word.delete({ where: { id } });
+  async deleteWord(userId: string, id: string) {
+    return this.prisma.word.delete({ where: { id, userId } });
   }
 }

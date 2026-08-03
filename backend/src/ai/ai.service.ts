@@ -71,11 +71,11 @@ export class AiService {
    * Creates an OpenAI client configured with the user's base URL and API key.
    * This works with any OpenAI-compatible provider (OpenAI, Gemini, Groq, Mistral, etc.).
    */
-  private async getClient(): Promise<{ client: OpenAI; model: string }> {
+  private async getClient(userId: string): Promise<{ client: OpenAI; model: string }> {
     const [model, baseURL, apiKey] = await Promise.all([
-      this.settingsService.getSetting('AI_MODEL'),
-      this.settingsService.getSetting('AI_BASE_URL'),
-      this.settingsService.getSetting('API_KEY'),
+      this.settingsService.getSetting(userId, 'AI_MODEL'),
+      this.settingsService.getSetting(userId, 'AI_BASE_URL'),
+      this.settingsService.getSetting(userId, 'API_KEY'),
     ]);
 
     const client = new OpenAI({
@@ -112,7 +112,7 @@ Today's rule -> "${ruleTitle}"`;
   /**
    * Proposes NEW Korean rules/expressions that are NOT yet in knownRules.
    */
-  async proposeRules(knownRulesList: string[], count: number = 3, excludeRulesList: string[] = []): Promise<ProposedRule[]> {
+  async proposeRules(userId: string, knownRulesList: string[], count: number = 3, excludeRulesList: string[] = []): Promise<ProposedRule[]> {
     const systemPrompt = `You are a Korean language learning expert curriculum planner.
 Given the list of known grammar rules/expressions already learned by the student:
 Known rules: [${knownRulesList.join(', ')}]
@@ -129,7 +129,7 @@ Output strictly valid JSON with no extra markdown code block delimiters or text,
 ]`;
 
     try {
-      const rawResponse = await this.callLlm(systemPrompt);
+      const rawResponse = await this.callLlm(userId, systemPrompt);
       const cleaned = this.cleanJsonResponse(rawResponse);
       const parsed = JSON.parse(cleaned);
       if (Array.isArray(parsed) && parsed.length >= count) {
@@ -146,6 +146,7 @@ Output strictly valid JSON with no extra markdown code block delimiters or text,
    * Generates full structured lesson based on the exact prompt architecture.
    */
   async generateLesson(
+    userId: string,
     ruleTitle: string,
     wordsCount: number,
     knownWordsList: string[],
@@ -190,7 +191,7 @@ Follow this exact JSON structure:
 
     try {
       const fullPrompt = `${systemInstructions}\n\nUSER PROMPT:\n${rawPrompt}`;
-      const rawResponse = await this.callLlm(fullPrompt);
+      const rawResponse = await this.callLlm(userId, fullPrompt);
       const cleaned = this.cleanJsonResponse(rawResponse);
       const parsed = JSON.parse(cleaned);
       return {
@@ -208,6 +209,7 @@ Follow this exact JSON structure:
    * Image support works with providers that support vision (OpenAI, Gemini, etc.).
    */
   async gradeSubmission(
+    userId: string,
     lessonData: LessonContent,
     userAnswersText: { ex1?: string; ex2?: string; ex3?: string },
     imagePaths?: string[],
@@ -255,9 +257,9 @@ Return STRICT JSON format (no markdown formatting, no extra text):
       let rawResponse = '';
 
       if (imagePaths && imagePaths.length > 0) {
-        rawResponse = await this.callLlmWithImages(gradingInstructions, imagePaths);
+        rawResponse = await this.callLlmWithImages(userId, gradingInstructions, imagePaths);
       } else {
-        rawResponse = await this.callLlm(gradingInstructions);
+        rawResponse = await this.callLlm(userId, gradingInstructions);
       }
 
       const cleaned = this.cleanJsonResponse(rawResponse);
@@ -271,8 +273,8 @@ Return STRICT JSON format (no markdown formatting, no extra text):
   /**
    * Calls the LLM using a text-only prompt via the configured OpenAI-compatible client.
    */
-  private async callLlm(prompt: string, retries = 2): Promise<string> {
-    const { client, model } = await this.getClient();
+  private async callLlm(userId: string, prompt: string, retries = 2): Promise<string> {
+    const { client, model } = await this.getClient(userId);
     for (let i = 0; i <= retries; i++) {
       try {
         const response = await client.chat.completions.create({
@@ -296,8 +298,8 @@ Return STRICT JSON format (no markdown formatting, no extra text):
    * Calls the LLM with an image attached (vision).
    * Works with any provider that supports the OpenAI vision message format.
    */
-  private async callLlmWithImages(prompt: string, imagePaths: string[], retries = 2): Promise<string> {
-    const { client, model } = await this.getClient();
+  private async callLlmWithImages(userId: string, prompt: string, imagePaths: string[], retries = 2): Promise<string> {
+    const { client, model } = await this.getClient(userId);
     
     const contentParts: any[] = [{ type: 'text', text: prompt }];
     

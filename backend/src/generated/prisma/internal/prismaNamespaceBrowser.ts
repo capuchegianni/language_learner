@@ -51,6 +51,7 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  User: 'User',
   Word: 'Word',
   Rule: 'Rule',
   Lesson: 'Lesson',
@@ -71,6 +72,19 @@ export const TransactionIsolationLevel = {
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const UserScalarFieldEnum = {
+  id: 'id',
+  googleId: 'googleId',
+  displayName: 'displayName',
+  email: 'email',
+  avatarUrl: 'avatarUrl',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
 export const WordScalarFieldEnum = {
   id: 'id',
   korean: 'korean',
@@ -79,7 +93,8 @@ export const WordScalarFieldEnum = {
   partOfSpeech: 'partOfSpeech',
   notes: 'notes',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  userId: 'userId'
 } as const
 
 export type WordScalarFieldEnum = (typeof WordScalarFieldEnum)[keyof typeof WordScalarFieldEnum]
@@ -92,7 +107,8 @@ export const RuleScalarFieldEnum = {
   examples: 'examples',
   exceptions: 'exceptions',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  userId: 'userId'
 } as const
 
 export type RuleScalarFieldEnum = (typeof RuleScalarFieldEnum)[keyof typeof RuleScalarFieldEnum]
@@ -112,6 +128,7 @@ export const LessonScalarFieldEnum = {
   aiFeedback: 'aiFeedback',
   overallScore: 'overallScore',
   rawPrompt: 'rawPrompt',
+  userId: 'userId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -128,9 +145,11 @@ export type LessonWordScalarFieldEnum = (typeof LessonWordScalarFieldEnum)[keyof
 
 
 export const SettingScalarFieldEnum = {
+  id: 'id',
   key: 'key',
   value: 'value',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  userId: 'userId'
 } as const
 
 export type SettingScalarFieldEnum = (typeof SettingScalarFieldEnum)[keyof typeof SettingScalarFieldEnum]

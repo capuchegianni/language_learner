@@ -12,17 +12,20 @@ export class LessonsService {
   /**
    * Returns AI proposed new rules + 1 random review rule if existing rules exist.
    */
-  async getRuleProposals(count: number = 3, excludeTitles: string[] = []) {
-    const knownRules = await this.prisma.rule.findMany({ select: { title: true } });
+  async getRuleProposals(userId: string, count: number = 3, excludeTitles: string[] = []) {
+    const knownRules = await this.prisma.rule.findMany({
+      where: { userId },
+      select: { title: true },
+    });
     const knownRuleTitles = knownRules.map((r) => r.title);
 
-    const proposed = await this.aiService.proposeRules(knownRuleTitles, count, excludeTitles);
+    const proposed = await this.aiService.proposeRules(userId, knownRuleTitles, count, excludeTitles);
 
     let reviewRule = null;
     if (knownRuleTitles.length > 0) {
       const randomIndex = Math.floor(Math.random() * knownRuleTitles.length);
       const randomRule = await this.prisma.rule.findFirst({
-        where: { title: knownRuleTitles[randomIndex] },
+        where: { userId, title: knownRuleTitles[randomIndex] },
       });
       if (randomRule) {
         reviewRule = {
@@ -37,7 +40,7 @@ export class LessonsService {
     return {
       proposedNewRules: proposed,
       reviewRuleOption: reviewRule,
-      totalKnownWords: await this.prisma.word.count(),
+      totalKnownWords: await this.prisma.word.count({ where: { userId } }),
       totalKnownRules: knownRuleTitles.length,
     };
   }
@@ -45,27 +48,34 @@ export class LessonsService {
   /**
    * Generates a daily lesson based on chosen rule title & target words count.
    */
-  async generateLesson(dto: { ruleTitle: string; wordsCount?: number; isReview?: boolean }) {
+  async generateLesson(userId: string, dto: { ruleTitle: string; wordsCount?: number; isReview?: boolean }) {
     const wordsCount = dto.wordsCount || 5;
     const isReview = !!dto.isReview;
 
-    const knownWords = await this.prisma.word.findMany({ select: { korean: true } });
-    const knownRules = await this.prisma.rule.findMany({ select: { title: true } });
+    const knownWords = await this.prisma.word.findMany({
+      where: { userId },
+      select: { korean: true },
+    });
+    const knownRules = await this.prisma.rule.findMany({
+      where: { userId },
+      select: { title: true },
+    });
 
     const knownWordsList = knownWords.map((w) => w.korean);
     const knownRulesList = knownRules.map((r) => r.title);
 
     // Call AI service to construct & execute prompt
     const content = await this.aiService.generateLesson(
+      userId,
       dto.ruleTitle,
       wordsCount,
       knownWordsList,
       knownRulesList,
     );
 
-    // Find or create rule entity in database
+    // Find or create rule entity in database (scoped to user)
     let ruleEntity = await this.prisma.rule.findUnique({
-      where: { title: dto.ruleTitle },
+      where: { userId_title: { userId, title: dto.ruleTitle } },
     });
 
     if (!ruleEntity) {
@@ -75,16 +85,17 @@ export class LessonsService {
           explanation: content.rule.explanation,
           examples: JSON.stringify(content.rule.examples || []),
           exceptions: content.rule.exceptions || null,
+          userId,
         },
       });
     }
 
-    // Upsert new daily words into word bank
+    // Upsert new daily words into word bank (scoped to user)
     const wordEntities = [];
     for (const nw of content.newWords || []) {
       if (!nw.korean) continue;
       let word = await this.prisma.word.findUnique({
-        where: { korean: nw.korean },
+        where: { userId_korean: { userId, korean: nw.korean } },
       });
       if (!word) {
         word = await this.prisma.word.create({
@@ -93,6 +104,7 @@ export class LessonsService {
             english: nw.english || '',
             pronunciation: nw.pronunciation || null,
             partOfSpeech: nw.partOfSpeech || null,
+            userId,
           },
         });
       }
@@ -109,6 +121,7 @@ export class LessonsService {
         lessonData: JSON.stringify(content),
         rawPrompt: content.rawPrompt,
         status: 'GENERATED',
+        userId,
         words: {
           create: wordEntities.map((w) => ({ wordId: w.id })),
         },
@@ -126,25 +139,27 @@ export class LessonsService {
    * Submits user answers (text or uploaded image) and calls AI Vision/Grading engine.
    */
   async submitLesson(
+    userId: string,
     lessonId: string,
     userAnswersText: { ex1?: string; ex2?: string; ex3?: string },
     imagePaths?: string[],
   ) {
     const lesson = await this.prisma.lesson.findUnique({
-      where: { id: lessonId },
+      where: { id: lessonId, userId },
       include: { rule: true },
     });
     if (!lesson) throw new NotFoundException('Lesson not found');
 
     const parsedContent = JSON.parse(lesson.lessonData);
     const grading = await this.aiService.gradeSubmission(
+      userId,
       parsedContent,
       userAnswersText,
       imagePaths,
     );
 
     const updated = await this.prisma.lesson.update({
-      where: { id: lessonId },
+      where: { id: lessonId, userId },
       data: {
         status: 'GRADED',
         userSubmission: JSON.stringify(userAnswersText),
@@ -160,8 +175,9 @@ export class LessonsService {
     return updated;
   }
 
-  async getLessons() {
+  async getLessons(userId: string) {
     return this.prisma.lesson.findMany({
+      where: { userId },
       orderBy: { createdAt: 'desc' },
       include: {
         rule: true,
@@ -170,9 +186,9 @@ export class LessonsService {
     });
   }
 
-  async getLessonById(id: string) {
+  async getLessonById(userId: string, id: string) {
     const lesson = await this.prisma.lesson.findUnique({
-      where: { id },
+      where: { id, userId },
       include: {
         rule: true,
         words: { include: { word: true } },
@@ -182,18 +198,19 @@ export class LessonsService {
     return lesson;
   }
 
-  async deleteLesson(id: string) {
-    return this.prisma.lesson.delete({ where: { id } });
+  async deleteLesson(userId: string, id: string) {
+    return this.prisma.lesson.delete({ where: { id, userId } });
   }
 
-  async getDashboardStats() {
-    const totalWords = await this.prisma.word.count();
-    const totalRules = await this.prisma.rule.count();
+  async getDashboardStats(userId: string) {
+    const totalWords = await this.prisma.word.count({ where: { userId } });
+    const totalRules = await this.prisma.rule.count({ where: { userId } });
     const totalLessons = await this.prisma.lesson.count({
-      where: { status: 'GRADED' },
+      where: { userId, status: 'GRADED' },
     });
 
     const recentLessons = await this.prisma.lesson.findMany({
+      where: { userId },
       take: 5,
       orderBy: { createdAt: 'desc' },
       include: { rule: true },
@@ -215,8 +232,8 @@ export class LessonsService {
     };
   }
 
-  async resetStats() {
-    await this.prisma.lesson.deleteMany();
+  async resetStats(userId: string) {
+    await this.prisma.lesson.deleteMany({ where: { userId } });
     return { success: true, message: 'All lesson history has been reset.' };
   }
 }
