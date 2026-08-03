@@ -49,6 +49,24 @@ export const NewLesson: React.FC = () => {
   // Single card loading state
   const [replacingIndex, setReplacingIndex] = useState<number | null>(null);
 
+  const loadSavedAnswers = (lessonId: string) => {
+    const saved = localStorage.getItem(`lesson_answers_${lessonId}`);
+    if (saved) {
+      try {
+        const parsedSaved = JSON.parse(saved);
+        if (parsedSaved.ex1) setEx1Answers(parsedSaved.ex1);
+        if (parsedSaved.ex2) setEx2Answers(parsedSaved.ex2);
+        if (parsedSaved.ex3) setEx3Answer(parsedSaved.ex3);
+      } catch (e) {
+        console.error('Failed to parse saved answers', e);
+      }
+    } else {
+      setEx1Answers([]);
+      setEx2Answers([]);
+      setEx3Answer('');
+    }
+  };
+
   // Fetch proposals on component mount
   const fetchProposals = async (forceRefresh: boolean = false) => {
     try {
@@ -137,12 +155,14 @@ export const NewLesson: React.FC = () => {
           const parsed: LessonContent = JSON.parse(lesson.lessonData);
           setLessonContent(parsed);
           setSelectedRuleTitle(lesson.rule?.title || lesson.title || '');
+          loadSavedAnswers(lesson.id);
           if (lesson.status === 'GRADED' && lesson.aiFeedback) {
             setGradingResult(JSON.parse(lesson.aiFeedback));
             setPhase('GRADED');
           } else {
             setPhase('GENERATED_WORKSPACE');
           }
+          setCurrentLesson(lesson);
         } catch (err: any) {
           console.error('Failed to load resumed lesson', err);
           setError('Failed to load resumed lesson.');
@@ -171,9 +191,10 @@ export const NewLesson: React.FC = () => {
         wordsCount,
         isReview: isReviewSelection,
       });
-      setCurrentLesson(lesson);
       const parsed: LessonContent = JSON.parse(lesson.lessonData);
       setLessonContent(parsed);
+      loadSavedAnswers(lesson.id);
+      setCurrentLesson(lesson);
       setPhase('GENERATED_WORKSPACE');
       // Only remove the selected proposal from cache, keep the rest
       const stored = localStorage.getItem('korean_proposals');
@@ -239,6 +260,7 @@ export const NewLesson: React.FC = () => {
         setGradingResult(feedback);
       }
       setPhase('GRADED');
+      localStorage.removeItem(`lesson_answers_${currentLesson.id}`);
       confetti({
         particleCount: 80,
         spread: 70,
@@ -251,6 +273,13 @@ export const NewLesson: React.FC = () => {
       setSubmitting(false);
     }
   };
+
+  useEffect(() => {
+    if (currentLesson?.id && phase === 'GENERATED_WORKSPACE') {
+      const data = { ex1: ex1Answers, ex2: ex2Answers, ex3: ex3Answer };
+      localStorage.setItem(`lesson_answers_${currentLesson.id}`, JSON.stringify(data));
+    }
+  }, [ex1Answers, ex2Answers, ex3Answer, currentLesson?.id, phase]);
 
   return (
     <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
