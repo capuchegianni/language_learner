@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { api } from '../services/api';
-import { Settings as SettingsIcon, Key, Cpu, Save, CheckCircle2, Trash2, AlertTriangle, ExternalLink } from 'lucide-react';
+import { api, API_BASE } from '../services/api';
+import { Settings as SettingsIcon, Key, Cpu, Save, CheckCircle2, Trash2, AlertTriangle, ExternalLink, LogOut, User } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
 
 interface ProviderPreset {
   name: string;
@@ -70,6 +71,7 @@ const PROVIDER_PRESETS: ProviderPreset[] = [
 ];
 
 export const Settings: React.FC = () => {
+  const { user } = useAuth();
   const [model, setModel] = useState('gpt-4o-mini');
   const [baseURL, setBaseURL] = useState('https://api.openai.com/v1');
   const [selectedPreset, setSelectedPreset] = useState<ProviderPreset>(PROVIDER_PRESETS[0]);
@@ -145,6 +147,10 @@ export const Settings: React.FC = () => {
     );
   }
 
+  const handleLogout = () => {
+    window.location.href = `${API_BASE}/auth/logout`;
+  };
+
   return (
     <div style={{ maxWidth: '750px', margin: '0 auto' }}>
       <div style={{ marginBottom: '1.5rem' }}>
@@ -155,6 +161,44 @@ export const Settings: React.FC = () => {
         <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
           Configure any OpenAI-compatible AI provider. All providers share the same unified API format.
         </p>
+      </div>
+
+      {/* Account Section */}
+      <div className="glass-card" style={{ marginBottom: '1.5rem' }}>
+        <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-success)' }}>
+          <User size={20} />
+          <span>Account</span>
+        </h3>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            {user?.avatarUrl ? (
+              <img
+                src={user.avatarUrl}
+                alt={user.displayName}
+                style={{ width: 48, height: 48, borderRadius: '50%', border: '2px solid var(--border-color-glow)' }}
+                referrerPolicy="no-referrer"
+              />
+            ) : (
+              <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'var(--gradient-main)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', fontWeight: 700 }}>
+                {user?.displayName?.[0] || '?'}
+              </div>
+            )}
+            <div>
+              <div style={{ fontWeight: 600, fontSize: '1rem' }}>{user?.displayName}</div>
+              <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{user?.email}</div>
+            </div>
+          </div>
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={handleLogout}
+            style={{ gap: '0.5rem' }}
+            id="logout-button"
+          >
+            <LogOut size={16} />
+            <span>Sign Out</span>
+          </button>
+        </div>
       </div>
 
       {savedSuccess && (

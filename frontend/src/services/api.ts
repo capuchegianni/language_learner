@@ -14,6 +14,10 @@ export const API_BASE = import.meta.env.DEV
   ? '/api'
   : `${BACKEND_URL}/api`;
 
+// Ensure cookies are sent with every request (needed for session auth)
+axios.defaults.withCredentials = true;
+
+
 export const api = {
   // Stats
   async getDashboardStats(): Promise<DashboardStats> {

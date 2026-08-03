@@ -1,3 +1,10 @@
+export interface User {
+  id: string;
+  displayName: string;
+  email: string;
+  avatarUrl: string | null;
+}
+
 export interface Word {
   id: string;
   korean: string;
