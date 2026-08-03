@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { api, API_BASE } from '../services/api';
-import { Settings as SettingsIcon, Key, Cpu, Save, CheckCircle2, Trash2, AlertTriangle, ExternalLink, LogOut, User } from 'lucide-react';
+import { Settings as SettingsIcon, Key, Cpu, Save, CheckCircle2, Trash2, AlertTriangle, ExternalLink, LogOut, User, Upload, X } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 interface ProviderPreset {
@@ -82,6 +82,14 @@ export const Settings: React.FC = () => {
   const [resetting, setResetting] = useState(false);
   const [resetSuccess, setResetSuccess] = useState(false);
 
+  // Import State
+  const [showImportModal, setShowImportModal] = useState(false);
+  const [overrideSettings, setOverrideSettings] = useState(false);
+  const [importing, setImporting] = useState(false);
+  const [importSuccess, setImportSuccess] = useState(false);
+  const [importError, setImportError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     const fetchSettings = async () => {
       try {
@@ -136,6 +144,41 @@ export const Settings: React.FC = () => {
       console.error('Failed to reset stats', err);
     } finally {
       setResetting(false);
+    }
+  };
+
+  const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setImporting(true);
+      setImportError(null);
+      setImportSuccess(false);
+
+      const text = await file.text();
+      const jsonData = JSON.parse(text);
+      jsonData.overrideSettings = overrideSettings;
+
+      await api.importData(jsonData);
+      setImportSuccess(true);
+      setShowImportModal(false);
+      setTimeout(() => setImportSuccess(false), 4000);
+
+      // reload settings just in case they were updated
+      const data = await api.getSettings();
+      const savedBaseURL = data.AI_BASE_URL || 'https://api.openai.com/v1';
+      const savedModel = data.AI_MODEL || 'gpt-4o-mini';
+      setBaseURL(savedBaseURL);
+      setModel(savedModel);
+      const matchedPreset = PROVIDER_PRESETS.find((p) => p.baseURL === savedBaseURL);
+      if (matchedPreset) setSelectedPreset(matchedPreset);
+    } catch (err: any) {
+      console.error('Failed to import data', err);
+      setImportError(err.response?.data?.message || err.message || 'Failed to import data. Please check your JSON format.');
+    } finally {
+      setImporting(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
 
@@ -304,6 +347,32 @@ export const Settings: React.FC = () => {
         </div>
       </form>
 
+      {/* Import Data Section */}
+      <div className="glass-card" style={{ marginTop: '1.5rem', borderColor: 'rgba(99,102,241,0.3)', background: 'rgba(99,102,241,0.05)' }}>
+        <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-primary)' }}>
+          <Upload size={20} />
+          <span>Import Data</span>
+        </h3>
+        <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
+          Import words, rules, lessons, and settings from a JSON file.
+        </p>
+        <button
+          type="button"
+          className="btn btn-secondary"
+          onClick={() => setShowImportModal(true)}
+        >
+          <Upload size={16} />
+          <span>Import JSON File</span>
+        </button>
+      </div>
+
+      {importSuccess && (
+        <div className="glass-card" style={{ marginTop: '1.5rem', background: 'rgba(16,185,129,0.15)', borderColor: 'rgba(16,185,129,0.4)', display: 'flex', alignItems: 'center', gap: '0.75rem', color: '#6ee7b7' }}>
+          <CheckCircle2 size={20} />
+          <span>Data imported successfully!</span>
+        </div>
+      )}
+
       {/* Danger Zone */}
       <div className="glass-card" style={{ marginTop: '1.5rem', borderColor: 'rgba(239,68,68,0.3)', background: 'rgba(239,68,68,0.05)' }}>
         <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-danger)' }}>
@@ -323,6 +392,76 @@ export const Settings: React.FC = () => {
           {resetting ? <><div className="spinner" /><span>Resetting...</span></> : <><Trash2 size={16} /><span>Reset Lesson History & Scores</span></>}
         </button>
       </div>
+
+      {/* Import Modal */}
+      {showImportModal && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
+          <div className="glass-card" style={{ width: '90%', maxWidth: '600px', maxHeight: '90vh', overflowY: 'auto', position: 'relative' }}>
+            <button
+              onClick={() => setShowImportModal(false)}
+              style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }}
+            >
+              <X size={24} />
+            </button>
+            <h3 style={{ fontSize: '1.3rem', fontWeight: 700, marginBottom: '1rem', color: '#fff' }}>Import Data</h3>
+
+            <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
+              Your JSON file should have the following structure. Any fields not matching the format will be skipped.
+            </p>
+            <pre style={{ background: 'rgba(0,0,0,0.3)', padding: '1rem', borderRadius: 'var(--radius-sm)', fontSize: '0.8rem', color: 'var(--text-muted)', overflowX: 'auto', marginBottom: '1rem' }}>
+              {`{
+  "settings": [{ "key": "AI_MODEL", "value": "gpt-4o-mini" }],
+  "words": [
+    { "korean": "안녕하세요", "english": "Hello", "pronunciation": "annyeonghaseyo", "partOfSpeech": "noun", "notes": "" }
+  ],
+  "rules": [
+    { "title": "Present Tense", "explanation": "Add -아요/어요", "examples": "[]" }
+  ],
+  "lessons": [
+    { "title": "First Lesson", "ruleTitle": "Present Tense", "lessonData": "{}", "targetWords": ["안녕하세요"] }
+  ]
+}`}
+            </pre>
+
+            {importError && (
+              <div style={{ background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.5)', padding: '0.75rem', borderRadius: 'var(--radius-sm)', color: '#fca5a5', marginBottom: '1rem', fontSize: '0.85rem' }}>
+                {importError}
+              </div>
+            )}
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem' }}>
+              <input
+                type="checkbox"
+                id="overrideSettings"
+                checked={overrideSettings}
+                onChange={(e) => setOverrideSettings(e.target.checked)}
+              />
+              <label htmlFor="overrideSettings" style={{ fontSize: '0.9rem', color: '#fff', cursor: 'pointer' }}>
+                Override settings if data exists
+              </label>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
+              <button className="btn btn-secondary" onClick={() => setShowImportModal(false)}>Cancel</button>
+              <label className="btn btn-primary" style={{ cursor: 'pointer' }}>
+                {importing ? (
+                  <><div className="spinner" /><span>Importing...</span></>
+                ) : (
+                  <><Upload size={18} /><span>Select & Import JSON</span></>
+                )}
+                <input
+                  type="file"
+                  accept=".json,application/json"
+                  style={{ display: 'none' }}
+                  ref={fileInputRef}
+                  onChange={handleImport}
+                  disabled={importing}
+                />
+              </label>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

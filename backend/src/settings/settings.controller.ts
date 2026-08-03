@@ -19,4 +19,10 @@ export class SettingsController {
     const userId = req.user.id;
     return this.settingsService.updateSettings(userId, body);
   }
+
+  @Post('import')
+  async importData(@Req() req: AuthenticatedRequest, @Body() body: any) {
+    const userId = req.user.id;
+    return this.settingsService.importData(userId, body);
+  }
 }

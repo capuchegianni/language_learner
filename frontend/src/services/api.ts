@@ -145,4 +145,9 @@ export const api = {
     const res = await axios.post(`${API_BASE}/settings`, settings);
     return res.data;
   },
+
+  async importData(data: any): Promise<void> {
+    const res = await axios.post(`${API_BASE}/settings/import`, data);
+    return res.data;
+  },
 };
