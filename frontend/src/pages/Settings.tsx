@@ -74,6 +74,8 @@ export const Settings: React.FC = () => {
   const { user } = useAuth();
   const [model, setModel] = useState('gpt-4o-mini');
   const [baseURL, setBaseURL] = useState('https://api.openai.com/v1');
+  const [apiKey, setApiKey] = useState('');
+  const [hasApiKey, setHasApiKey] = useState(false);
   const [selectedPreset, setSelectedPreset] = useState<ProviderPreset>(PROVIDER_PRESETS[0]);
 
   const [loading, setLoading] = useState(true);
@@ -90,6 +92,9 @@ export const Settings: React.FC = () => {
   const [importError, setImportError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const isLocalOllamaBaseURL = /(^https?:\/\/(localhost|127\.0\.0\.1|0\.0\.0\.0):11434\/v1$)|ollama/i.test(baseURL);
+  const activePreset = PROVIDER_PRESETS.find((preset) => preset.baseURL === baseURL) || selectedPreset;
+
   useEffect(() => {
     const fetchSettings = async () => {
       try {
@@ -97,6 +102,8 @@ export const Settings: React.FC = () => {
         const data = await api.getSettings();
         const savedBaseURL = data.AI_BASE_URL || 'https://api.openai.com/v1';
         const savedModel = data.AI_MODEL || 'gpt-4o-mini';
+        setHasApiKey(!!data.hasApiKey);
+        setApiKey('');
         setBaseURL(savedBaseURL);
         setModel(savedModel);
         const matchedPreset = PROVIDER_PRESETS.find((p) => p.baseURL === savedBaseURL);
@@ -114,6 +121,9 @@ export const Settings: React.FC = () => {
     setSelectedPreset(preset);
     setBaseURL(preset.baseURL);
     setModel(preset.defaultModel);
+    if (preset.name === 'Ollama (local)') {
+      setApiKey('');
+    }
   };
 
   const handleSave = async (e: React.FormEvent) => {
@@ -123,8 +133,13 @@ export const Settings: React.FC = () => {
       await api.updateSettings({
         AI_MODEL: model,
         AI_BASE_URL: baseURL,
+        ...(apiKey.trim() && !isLocalOllamaBaseURL ? { api_key: apiKey.trim() } : {}),
       });
       setSavedSuccess(true);
+      if (apiKey.trim() && !isLocalOllamaBaseURL) {
+        setHasApiKey(true);
+        setApiKey('');
+      }
       setTimeout(() => setSavedSuccess(false), 3000);
     } catch (err) {
       console.error('Failed to save settings', err);
@@ -169,6 +184,8 @@ export const Settings: React.FC = () => {
       const data = await api.getSettings();
       const savedBaseURL = data.AI_BASE_URL || 'https://api.openai.com/v1';
       const savedModel = data.AI_MODEL || 'gpt-4o-mini';
+      setHasApiKey(!!data.hasApiKey);
+      setApiKey('');
       setBaseURL(savedBaseURL);
       setModel(savedModel);
       const matchedPreset = PROVIDER_PRESETS.find((p) => p.baseURL === savedBaseURL);
@@ -299,8 +316,8 @@ export const Settings: React.FC = () => {
           <div className="input-group" style={{ marginBottom: '1.25rem' }}>
             <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <span>Base URL</span>
-              <a href={selectedPreset.docsURL} target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.78rem', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                <ExternalLink size={12} /> {selectedPreset.name} docs
+              <a href={activePreset.docsURL} target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.78rem', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                <ExternalLink size={12} /> {activePreset.name} docs
               </a>
             </label>
             <input
@@ -324,26 +341,48 @@ export const Settings: React.FC = () => {
               list="model-suggestions"
             />
             <datalist id="model-suggestions">
-              {selectedPreset.exampleModels.map((m) => <option key={m} value={m} />)}
+              {activePreset.exampleModels.map((m) => <option key={m} value={m} />)}
             </datalist>
             <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'block', marginTop: '0.25rem' }}>
-              Suggestions: {selectedPreset.exampleModels.join(', ')}
+              Suggestions: {activePreset.exampleModels.join(', ')}
             </span>
           </div>
 
-          <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.2)', borderRadius: 'var(--radius-sm)', padding: '0.65rem 0.9rem' }}>
-            🔑 The API key is configured via the <code style={{ fontFamily: 'monospace', color: 'var(--accent-primary)' }}>API_KEY</code> environment variable and is never stored in the database.
-          </div>
-        </div>
+          {!isLocalOllamaBaseURL ? (
+            <>
+              <div className="input-group" style={{ marginBottom: '1.25rem' }}>
+                <label>API Key</label>
+                <input
+                  type="password"
+                  value={apiKey}
+                  onChange={(e) => setApiKey(e.target.value)}
+                  placeholder={hasApiKey ? 'Stored securely - enter a new key to replace it' : 'sk-...'}
+                  autoComplete="new-api-key"
+                  spellCheck={false}
+                />
+                <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'block', marginTop: '0.25rem' }}>
+                  {hasApiKey && !apiKey ? 'A key is already stored securely. Leave this blank to keep it unchanged.' : 'The key is encrypted in the database and never returned to the browser.'}
+                </span>
+              </div>
+              <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.2)', borderRadius: 'var(--radius-sm)', padding: '0.65rem 0.9rem', marginBottom: '1.25rem' }}>
+                🔑 The API key is stored encrypted in the database and is never sent back to the browser.
+              </div>
+            </>
+          ) : (
+            <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.2)', borderRadius: 'var(--radius-sm)', padding: '0.65rem 0.9rem', marginBottom: '1.25rem' }}>
+              Ollama runs locally and does not require an API key.
+            </div>
+          )}
 
-        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <button type="submit" className="btn btn-primary" style={{ minWidth: '180px' }} disabled={saving}>
-            {saving ? (
-              <><div className="spinner" /><span>Saving...</span></>
-            ) : (
-              <><Save size={18} /><span>Save Settings</span></>
-            )}
-          </button>
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <button type="submit" className="btn btn-primary" style={{ minWidth: '180px' }} disabled={saving}>
+              {saving ? (
+                <><div className="spinner" /><span>Saving...</span></>
+              ) : (
+                <><Save size={18} /><span>Save Settings</span></>
+              )}
+            </button>
+          </div>
         </div>
       </form>
 

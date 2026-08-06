@@ -5,6 +5,7 @@ import {
   ProposedRule,
   Rule,
   Settings,
+  SettingsUpdatePayload,
   Word,
 } from '../types';
 
@@ -141,7 +142,7 @@ export const api = {
     return res.data;
   },
 
-  async updateSettings(settings: Partial<Settings>): Promise<Settings> {
+  async updateSettings(settings: SettingsUpdatePayload): Promise<Settings> {
     const res = await axios.post(`${API_BASE}/settings`, settings);
     return res.data;
   },

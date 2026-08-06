@@ -27,7 +27,7 @@ Language Learner is a personal daily language learning application built to auto
 
 5. **Web UI Settings**:
    - Dynamically select any OpenAI-compatible AI provider (OpenAI, Gemini, Groq, Mistral, Ollama, DeepSeek, xAI, etc.) and active model directly in the web interface. 
-   - API Keys are securely managed via the backend environment variable (`API_KEY`).
+   - API keys are stored encrypted in the database from the Settings page and are never returned to the browser.
 
 ---
 

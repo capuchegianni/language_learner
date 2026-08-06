@@ -72,11 +72,14 @@ export class AiService {
    * This works with any OpenAI-compatible provider (OpenAI, Gemini, Groq, Mistral, etc.).
    */
   private async getClient(userId: string): Promise<{ client: OpenAI; model: string }> {
-    const [model, baseURL, apiKey] = await Promise.all([
+    const [model, baseURL] = await Promise.all([
       this.settingsService.getSetting(userId, 'AI_MODEL'),
       this.settingsService.getSetting(userId, 'AI_BASE_URL'),
-      this.settingsService.getSetting(userId, 'API_KEY'),
     ]);
+
+    const apiKey = this.isLocalOllamaBaseURL(baseURL)
+      ? 'ollama'
+      : await this.settingsService.getSetting(userId, 'api_key');
 
     const client = new OpenAI({
       apiKey: apiKey,
@@ -84,6 +87,10 @@ export class AiService {
     });
 
     return { client, model };
+  }
+
+  private isLocalOllamaBaseURL(baseURL: string): boolean {
+    return /(^https?:\/\/(localhost|127\.0\.0\.1|0\.0\.0\.0):11434\/v1$)|ollama/i.test(baseURL);
   }
 
   /**

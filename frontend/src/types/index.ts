@@ -108,4 +108,11 @@ export interface DashboardStats {
 export interface Settings {
   AI_MODEL: string;
   AI_BASE_URL: string;
+  hasApiKey?: boolean;
+}
+
+export interface SettingsUpdatePayload {
+  AI_MODEL?: string;
+  AI_BASE_URL?: string;
+  api_key?: string;
 }

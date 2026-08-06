@@ -1,48 +1,125 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
+import { createCipheriv, createDecipheriv, createHash, randomBytes } from 'crypto';
 import { PrismaService } from '../prisma/prisma.service';
+
+const SECRET_SETTING_KEY = 'api_key';
+const SECRET_PREFIX = 'enc:v1:';
 
 @Injectable()
 export class SettingsService {
   constructor(private prisma: PrismaService) {}
 
-  async getAllSettings(userId: string): Promise<Record<string, string>> {
-    const records = await this.prisma.setting.findMany({
-      where: { userId },
+  private getEncryptionKey(): Buffer {
+    const sessionSecret = process.env.SESSION_SECRET;
+    if (!sessionSecret) {
+      throw new BadRequestException('Missing SESSION_SECRET: encrypted API keys require SESSION_SECRET to be set.');
+    }
+
+    return createHash('sha256').update(sessionSecret).digest();
+  }
+
+  private encryptSecret(value: string): string {
+    const iv = randomBytes(12);
+    const cipher = createCipheriv('aes-256-gcm', this.getEncryptionKey(), iv);
+    const encrypted = Buffer.concat([cipher.update(value, 'utf8'), cipher.final()]);
+    const authTag = cipher.getAuthTag();
+    return `${SECRET_PREFIX}${iv.toString('base64')}.${authTag.toString('base64')}.${encrypted.toString('base64')}`;
+  }
+
+  private decryptSecret(value: string): string {
+    if (!value.startsWith(SECRET_PREFIX)) {
+      return value;
+    }
+
+    const payload = value.slice(SECRET_PREFIX.length);
+    const [ivText, authTagText, encryptedText] = payload.split('.');
+    if (!ivText || !authTagText || !encryptedText) {
+      throw new BadRequestException('Stored API key is corrupted. Please save a new API key.');
+    }
+
+    const iv = Buffer.from(ivText, 'base64');
+    const authTag = Buffer.from(authTagText, 'base64');
+    const encrypted = Buffer.from(encryptedText, 'base64');
+    const decipher = createDecipheriv('aes-256-gcm', this.getEncryptionKey(), iv);
+    decipher.setAuthTag(authTag);
+    return Buffer.concat([decipher.update(encrypted), decipher.final()]).toString('utf8');
+  }
+
+  private normalizeKey(key: string): string {
+    return key.toLowerCase() === SECRET_SETTING_KEY ? SECRET_SETTING_KEY : key;
+  }
+
+  private async upsertSettingValue(userId: string, key: string, value: string) {
+    if (key === SECRET_SETTING_KEY) {
+      if (!value.trim()) {
+        await this.prisma.setting.deleteMany({ where: { userId, key } });
+        return;
+      }
+
+      const encryptedValue = this.encryptSecret(value);
+      await this.prisma.setting.upsert({
+        where: { userId_key: { userId, key } },
+        update: { value: encryptedValue },
+        create: { key, value: encryptedValue, userId },
+      });
+      return;
+    }
+
+    await this.prisma.setting.upsert({
+      where: { userId_key: { userId, key } },
+      update: { value },
+      create: { key, value, userId },
     });
-    const result: Record<string, string> = {};
+  }
+
+  async getAllSettings(userId: string): Promise<Record<string, string | boolean>> {
+    const [records, apiKeyRecord] = await Promise.all([
+      this.prisma.setting.findMany({
+        where: { userId, key: { notIn: [SECRET_SETTING_KEY, 'API_KEY'] } },
+      }),
+      this.prisma.setting.findUnique({
+        where: { userId_key: { userId, key: SECRET_SETTING_KEY } },
+      }),
+    ]);
+
+    const result: Record<string, string | boolean> = {};
     for (const rec of records) {
       result[rec.key] = rec.value;
     }
+
+    result.hasApiKey = !!apiKeyRecord;
     return result;
   }
 
   async getSetting(userId: string, key: string): Promise<string> {
-    // API_KEY is always read from env, never stored in DB
-    if (key === 'API_KEY') {
-      const val = process.env.API_KEY || '';
-      if (!val) {
-        throw new BadRequestException(`Missing AI configuration: Please set the API_KEY environment variable.`);
+    const normalizedKey = this.normalizeKey(key);
+
+    if (normalizedKey === SECRET_SETTING_KEY) {
+      const record = await this.prisma.setting.findUnique({
+        where: { userId_key: { userId, key: normalizedKey } },
+      });
+
+      if (!record || !record.value) {
+        throw new BadRequestException('Missing AI configuration: API key is not set in the Settings menu.');
       }
-      return val;
+
+      return this.decryptSecret(record.value);
     }
 
     const record = await this.prisma.setting.findUnique({
-      where: { userId_key: { userId, key } },
+      where: { userId_key: { userId, key: normalizedKey } },
     });
     if (!record || !record.value) {
-      throw new BadRequestException(`Missing AI configuration: ${key} is not set in the Settings menu.`);
+      throw new BadRequestException(`Missing AI configuration: ${normalizedKey} is not set in the Settings menu.`);
     }
 
     return record.value;
   }
 
-  async updateSettings(userId: string, settings: Record<string, string>): Promise<Record<string, string>> {
+  async updateSettings(userId: string, settings: Record<string, string>): Promise<Record<string, string | boolean>> {
     for (const [key, value] of Object.entries(settings)) {
-      await this.prisma.setting.upsert({
-        where: { userId_key: { userId, key } },
-        update: { value },
-        create: { key, value, userId },
-      });
+      if (typeof value !== 'string') continue;
+      await this.upsertSettingValue(userId, this.normalizeKey(key), value);
     }
     return this.getAllSettings(userId);
   }
@@ -54,21 +131,32 @@ export class SettingsService {
       // 1. Settings
       if (settings && typeof settings === 'object') {
         const settingsObj = Array.isArray(settings)
-          ? settings.reduce((acc, s) => ({ ...acc, [s.key]: s.value }), {})
+          ? settings.reduce<Record<string, string>>((acc, s) => {
+            if (s && typeof s.key === 'string' && typeof s.value === 'string') {
+              acc[this.normalizeKey(s.key)] = s.value;
+            }
+            return acc;
+          }, {})
           : settings;
 
         for (const [key, value] of Object.entries(settingsObj)) {
           if (typeof value !== 'string') continue;
+          const normalizedKey = this.normalizeKey(key);
+
+          if (normalizedKey === SECRET_SETTING_KEY && !value.trim()) continue;
+
           if (overrideSettings) {
+            const storedValue = normalizedKey === SECRET_SETTING_KEY ? this.encryptSecret(value) : value;
             await tx.setting.upsert({
-              where: { userId_key: { userId, key } },
-              update: { value },
-              create: { key, value, userId },
+              where: { userId_key: { userId, key: normalizedKey } },
+              update: { value: storedValue },
+              create: { key: normalizedKey, value: storedValue, userId },
             });
           } else {
-            const existing = await tx.setting.findUnique({ where: { userId_key: { userId, key } }});
+            const existing = await tx.setting.findUnique({ where: { userId_key: { userId, key: normalizedKey } } });
             if (!existing) {
-              await tx.setting.create({ data: { key, value, userId } });
+              const storedValue = normalizedKey === SECRET_SETTING_KEY ? this.encryptSecret(value) : value;
+              await tx.setting.create({ data: { key: normalizedKey, value: storedValue, userId } });
             }
           }
         }
