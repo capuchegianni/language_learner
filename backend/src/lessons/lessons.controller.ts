@@ -47,7 +47,7 @@ export class LessonsController {
   @Get('propose-rules')
   async getRuleProposals(@Req() req: AuthenticatedRequest, @Query('count') count?: string, @Query('exclude') exclude?: string) {
     const userId = req.user.id;
-    const numCount = count ? parseInt(count, 10) : 3;
+    const numCount = count !== undefined ? parseInt(count, 10) : 3;
     const excludeTitles = exclude ? exclude.split(',') : [];
     return this.lessonsService.getRuleProposals(userId, numCount, excludeTitles);
   }

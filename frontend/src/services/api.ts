@@ -34,7 +34,7 @@ export const api = {
     totalKnownRules: number;
   }> {
     const params = new URLSearchParams();
-    if (count) params.append('count', count.toString());
+    if (count !== undefined) params.append('count', count.toString());
     if (excludeTitles && excludeTitles.length > 0) params.append('exclude', excludeTitles.join(','));
     const res = await axios.get(`${API_BASE}/lessons/propose-rules?${params.toString()}`);
     return res.data;

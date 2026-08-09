@@ -120,6 +120,7 @@ Today's rule -> "${ruleTitle}"`;
    * Proposes NEW Korean rules/expressions that are NOT yet in knownRules.
    */
   async proposeRules(userId: string, knownRulesList: string[], count: number = 3, excludeRulesList: string[] = []): Promise<ProposedRule[]> {
+    if (count <= 0) return [];
     const systemPrompt = `You are a Korean language learning expert curriculum planner.
 Given the list of known grammar rules/expressions already learned by the student:
 Known rules: [${knownRulesList.join(', ')}]
