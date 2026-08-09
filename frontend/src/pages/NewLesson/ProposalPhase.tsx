@@ -147,6 +147,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
+                  gap: '2rem',
                 }}
                 onClick={() => onSelectRule(reviewRule.title, true)}
               >
@@ -157,7 +158,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
                   </div>
                   <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{reviewRule.explanation}</p>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: isReviewSelection ? 'var(--accent-warning)' : 'var(--text-muted)', fontWeight: 600 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: isReviewSelection ? 'var(--accent-warning)' : 'var(--text-muted)', fontWeight: 600, flexShrink: 0 }}>
                   {isReviewSelection ? <Check size={18} /> : <BookOpen size={18} />}
                   <span>{isReviewSelection ? 'Selected Review' : 'Select Review'}</span>
                 </div>
