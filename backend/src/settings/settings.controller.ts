@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { SettingsService } from './settings.service';
 import { AuthenticatedGuard } from '../auth/authenticated.guard';
 import { AuthenticatedRequest } from '../types/request';
@@ -12,6 +12,23 @@ export class SettingsController {
   async getSettings(@Req() req: AuthenticatedRequest) {
     const userId = req.user.id;
     return this.settingsService.getAllSettings(userId);
+  }
+
+  @Get('export')
+  async exportData(
+    @Req() req: AuthenticatedRequest,
+    @Query('settings') settings?: string,
+    @Query('words') words?: string,
+    @Query('rules') rules?: string,
+    @Query('lessons') lessons?: string,
+  ) {
+    const userId = req.user.id;
+    return this.settingsService.exportData(userId, {
+      settings: settings === 'true',
+      words: words === 'true',
+      rules: rules === 'true',
+      lessons: lessons === 'true',
+    });
   }
 
   @Post()

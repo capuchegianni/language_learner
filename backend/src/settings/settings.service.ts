@@ -277,4 +277,81 @@ export class SettingsService {
 
     return { success: true, message: 'Data imported successfully' };
   }
+
+  async exportData(
+    userId: string,
+    include: { settings?: boolean; words?: boolean; rules?: boolean; lessons?: boolean },
+  ): Promise<Record<string, any>> {
+    return this.prisma.$transaction(async (tx) => {
+      const result: Record<string, any> = {};
+
+      if (include.settings) {
+        const records = await tx.setting.findMany({
+          where: { userId, key: { not: SECRET_SETTING_KEY } },
+          select: { key: true, value: true },
+        });
+        result.settings = records;
+      }
+
+      if (include.words) {
+        result.words = await tx.word.findMany({
+          where: { userId },
+          select: {
+            korean: true,
+            english: true,
+            pronunciation: true,
+            partOfSpeech: true,
+            notes: true,
+            createdAt: true,
+          },
+          orderBy: { createdAt: 'asc' },
+        });
+      }
+
+      if (include.rules) {
+        result.rules = await tx.rule.findMany({
+          where: { userId },
+          select: {
+            title: true,
+            explanation: true,
+            examples: true,
+            exceptions: true,
+            createdAt: true,
+          },
+          orderBy: { createdAt: 'asc' },
+        });
+      }
+
+      if (include.lessons) {
+        const lessons = await tx.lesson.findMany({
+          where: { userId },
+          select: {
+            title: true,
+            date: true,
+            isReview: true,
+            wordsCount: true,
+            lessonData: true,
+            status: true,
+            userSubmission: true,
+            aiFeedback: true,
+            overallScore: true,
+            rawPrompt: true,
+            rule: { select: { title: true } },
+            words: { select: { word: { select: { korean: true } } } },
+          },
+          orderBy: { date: 'asc' },
+        });
+
+        result.lessons = lessons.map((l) => ({
+          ...l,
+          ruleTitle: l.rule?.title ?? null,
+          targetWords: l.words.map((w) => w.word.korean),
+          rule: undefined,
+          words: undefined,
+        }));
+      }
+
+      return result;
+    });
+  }
 }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { api, API_BASE } from '../services/api';
-import { Settings as SettingsIcon, Key, Cpu, Save, CheckCircle2, Trash2, AlertTriangle, ExternalLink, LogOut, User, Upload, X } from 'lucide-react';
+import { Settings as SettingsIcon, Key, Cpu, Save, CheckCircle2, Trash2, AlertTriangle, ExternalLink, LogOut, User, Upload, Download, X } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 interface ProviderPreset {
@@ -91,6 +91,17 @@ export const Settings: React.FC = () => {
   const [importSuccess, setImportSuccess] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Export State
+  const [showExportModal, setShowExportModal] = useState(false);
+  const [exporting, setExporting] = useState(false);
+  const [exportError, setExportError] = useState<string | null>(null);
+  const [exportInclude, setExportInclude] = useState({
+    settings: true,
+    words: true,
+    rules: true,
+    lessons: true,
+  });
 
   const isLocalOllamaBaseURL = /(^https?:\/\/(localhost|127\.0\.0\.1|0\.0\.0\.0):11434\/v1$)|ollama/i.test(baseURL);
   const activePreset = PROVIDER_PRESETS.find((preset) => preset.baseURL === baseURL) || selectedPreset;
@@ -386,23 +397,33 @@ export const Settings: React.FC = () => {
         </div>
       </form>
 
-      {/* Import Data Section */}
+      {/* Import / Export Data Section */}
       <div className="glass-card" style={{ marginTop: '1.5rem', borderColor: 'rgba(99,102,241,0.3)', background: 'rgba(99,102,241,0.05)' }}>
         <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-primary)' }}>
           <Upload size={20} />
-          <span>Import Data</span>
+          <span>Import / Export Data</span>
         </h3>
         <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
-          Import words, rules, lessons, and settings from a JSON file.
+          Import or export your words, rules, lessons, and settings as a JSON file.
         </p>
-        <button
-          type="button"
-          className="btn btn-secondary"
-          onClick={() => setShowImportModal(true)}
-        >
-          <Upload size={16} />
-          <span>Import JSON File</span>
-        </button>
+        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={() => setShowImportModal(true)}
+          >
+            <Download size={16} />
+            <span>Import JSON File</span>
+          </button>
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={() => { setExportError(null); setShowExportModal(true); }}
+          >
+            <Upload size={16} />
+            <span>Export Data</span>
+          </button>
+        </div>
       </div>
 
       {importSuccess && (
@@ -497,6 +518,79 @@ export const Settings: React.FC = () => {
                   disabled={importing}
                 />
               </label>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Export Modal */}
+      {showExportModal && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
+          <div className="glass-card" style={{ width: '90%', maxWidth: '500px', position: 'relative' }}>
+            <button
+              onClick={() => setShowExportModal(false)}
+              style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }}
+            >
+              <X size={24} />
+            </button>
+            <h3 style={{ fontSize: '1.3rem', fontWeight: 700, marginBottom: '0.5rem', color: '#fff' }}>Export Data</h3>
+            <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
+              Select which data you would like to include in the exported JSON file.
+            </p>
+            <div style={{ fontSize: '0.82rem', color: '#fbbf24', background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.3)', borderRadius: 'var(--radius-sm)', padding: '0.6rem 0.85rem', marginBottom: '1.5rem' }}>
+              ⚠️ Your API key is never included in the export for security reasons.
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.5rem' }}>
+              {(['settings', 'words', 'rules', 'lessons'] as const).map((key) => (
+                <label key={key} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer', padding: '0.65rem 0.9rem', borderRadius: 'var(--radius-sm)', border: `1px solid ${exportInclude[key] ? 'var(--accent-primary)' : 'var(--border-color)'}`, background: exportInclude[key] ? 'rgba(99,102,241,0.1)' : 'transparent', transition: 'all 0.15s ease' }}>
+                  <input
+                    type="checkbox"
+                    checked={exportInclude[key]}
+                    onChange={(e) => setExportInclude((prev) => ({ ...prev, [key]: e.target.checked }))}
+                  />
+                  <span style={{ fontWeight: 600, textTransform: 'capitalize', color: exportInclude[key] ? '#fff' : 'var(--text-secondary)' }}>{key}</span>
+                </label>
+              ))}
+            </div>
+
+            {exportError && (
+              <div style={{ background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.5)', padding: '0.75rem', borderRadius: 'var(--radius-sm)', color: '#fca5a5', marginBottom: '1rem', fontSize: '0.85rem' }}>
+                {exportError}
+              </div>
+            )}
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
+              <button className="btn btn-secondary" onClick={() => setShowExportModal(false)}>Cancel</button>
+              <button
+                className="btn btn-primary"
+                disabled={exporting || !Object.values(exportInclude).some(Boolean)}
+                onClick={async () => {
+                  try {
+                    setExporting(true);
+                    setExportError(null);
+                    const data = await api.exportData(exportInclude);
+                    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `language-learner-export-${new Date().toISOString().slice(0, 10)}.json`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    setShowExportModal(false);
+                  } catch (err: any) {
+                    setExportError(err.response?.data?.message || err.message || 'Export failed. Please try again.');
+                  } finally {
+                    setExporting(false);
+                  }
+                }}
+              >
+                {exporting ? (
+                  <><div className="spinner" /><span>Exporting...</span></>
+                ) : (
+                  <><Download size={18} /><span>Download JSON</span></>
+                )}
+              </button>
             </div>
           </div>
         </div>

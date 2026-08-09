@@ -151,4 +151,14 @@ export const api = {
     const res = await axios.post(`${API_BASE}/settings/import`, data);
     return res.data;
   },
+
+  async exportData(include: { settings?: boolean; words?: boolean; rules?: boolean; lessons?: boolean }): Promise<any> {
+    const params = new URLSearchParams();
+    if (include.settings) params.set('settings', 'true');
+    if (include.words) params.set('words', 'true');
+    if (include.rules) params.set('rules', 'true');
+    if (include.lessons) params.set('lessons', 'true');
+    const res = await axios.get(`${API_BASE}/settings/export?${params.toString()}`);
+    return res.data;
+  },
 };
