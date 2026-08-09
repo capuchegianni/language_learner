@@ -60,7 +60,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
       </div>
 
       {loadingProposals ? (
-        <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '3rem' }}>
+        <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '3rem', marginBottom: '2rem' }}>
           <div className="spinner" style={{ marginBottom: '1rem' }} />
           <p style={{ color: 'var(--text-secondary)' }}>AI is curating rule proposals based on your rule bank...</p>
         </div>
