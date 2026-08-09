@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import * as express from 'express';
 import * as fs from 'fs';
 import * as path from 'path';
 import session from 'express-session';
@@ -14,6 +15,9 @@ async function bootstrap() {
   }
 
   const app = await NestFactory.create(AppModule);
+
+  app.use(express.json({ limit: '10mb' }));
+  app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
   // Session store using SQLite (custom store, no unmaintained deps)
   const dbUrl = process.env.DATABASE_URL || 'file:./data/dev.db';
