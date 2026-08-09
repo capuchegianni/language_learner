@@ -101,13 +101,15 @@ export class AiService {
     wordsCount: number,
     knownWordsList: string[],
     knownRulesList: string[],
+    nativeLanguage: string,
+    targetLanguage: string,
   ): string {
     return `Lesson architecture:
 - ${wordsCount} new daily words
 - daily rule with explanations, usage (examples), exceptions if any
 - exercise 1: apply the rule on ${wordsCount} words (based on some of the new daily words + other words in the bank)
-- exercise 2: translate 3 sentences from english to korean that use the new rule and the new vocabulary (no literal translations, use proper english, don't give the answer)
-- exercise 3: translate a text from english to korean (from 30 to 50 words) that is using some of the previous rules + the new one at least once and the new vocabulary + words from the bank. The text must have a meaning and small story between the sentences and it's not mandatory to use all tenses (no literal translations, use proper english, don't give the answer)
+- exercise 2: translate 3 sentences from ${nativeLanguage} to ${targetLanguage} that use the new rule and the new vocabulary (no literal translations, use proper ${nativeLanguage}, don't give the answer)
+- exercise 3: translate a text from ${nativeLanguage} to ${targetLanguage} (from 30 to 50 words) that is using some of the previous rules + the new one at least once and the new vocabulary + words from the bank. The text must have a meaning and small story between the sentences and it's not mandatory to use all tenses (no literal translations, use proper ${nativeLanguage}, don't give the answer)
 
 List of known words: \`${knownWordsList.join(', ')}\`
 
@@ -117,21 +119,22 @@ Today's rule -> "${ruleTitle}"`;
   }
 
   /**
-   * Proposes NEW Korean rules/expressions that are NOT yet in knownRules.
+   * Proposes NEW rules/expressions for the target language that are NOT yet in knownRules.
    */
   async proposeRules(userId: string, knownRulesList: string[], count: number = 3, excludeRulesList: string[] = []): Promise<ProposedRule[]> {
     if (count <= 0) return [];
-    const systemPrompt = `You are a Korean language learning expert curriculum planner.
+    const { nativeLanguage, targetLanguage } = await this.getUserLanguages(userId);
+    const systemPrompt = `You are a ${targetLanguage} language learning expert curriculum planner.
 Given the list of known grammar rules/expressions already learned by the student:
 Known rules: [${knownRulesList.join(', ')}]
 ${excludeRulesList.length > 0 ? `\nAlso explicitly EXCLUDE these rules from your proposals, as they were recently proposed or rejected:\nExcluded rules: [${excludeRulesList.join(', ')}]\n` : ''}
-Propose ${count} NEW, highly practical Korean grammar rules or conversational expressions suitable for the next daily lessons.
+Propose ${count} NEW, highly practical ${targetLanguage} grammar rules or conversational expressions suitable for the next daily lessons.
 Output strictly valid JSON with no extra markdown code block delimiters or text, in the following format:
 [
   {
-    "title": "Rule name (e.g. ~(으)ㄹ 수 있다 / ~(으)ㄹ 수 없다)",
+    "title": "Rule name (provide a concise rule name in ${targetLanguage})",
     "category": "Grammar / Conjugation / Expression",
-    "briefExplanation": "Short 1-sentence summary of what it does",
+    "briefExplanation": "Short 1-sentence summary in ${nativeLanguage} of what it does",
     "difficulty": "Beginner"
   }
 ]`;
@@ -160,25 +163,26 @@ Output strictly valid JSON with no extra markdown code block delimiters or text,
     knownWordsList: string[],
     knownRulesList: string[],
   ): Promise<LessonContent> {
-    const rawPrompt = this.buildPromptTemplate(ruleTitle, wordsCount, knownWordsList, knownRulesList);
+    const { nativeLanguage, targetLanguage } = await this.getUserLanguages(userId);
+    const rawPrompt = this.buildPromptTemplate(ruleTitle, wordsCount, knownWordsList, knownRulesList, nativeLanguage, targetLanguage);
 
-    const systemInstructions = `You are a Korean language instructor AI. Respond strictly with valid JSON without markdown codeblock wrapper or outside commentary.
-If the requested rule or topic in the USER PROMPT is completely unrelated to learning Korean, nonsense, or inappropriate, return exactly this JSON:
-{ "error": "This topic is invalid or unrelated to learning Korean. Please enter a valid grammar rule, vocabulary topic, or conversational phrase." }
+    const systemInstructions = `You are a ${targetLanguage} language instructor AI. Respond strictly with valid JSON without markdown codeblock wrapper or outside commentary.
+If the requested rule or topic in the USER PROMPT is completely unrelated to learning ${targetLanguage}, nonsense, or inappropriate, return exactly this JSON:
+{ "error": "This topic is invalid or unrelated to learning ${targetLanguage}. Please enter a valid grammar rule, vocabulary topic, or conversational phrase." }
 
 Otherwise, follow this exact JSON structure:
 {
   "rule": {
     "title": "${ruleTitle}",
-    "explanation": "Clear explanation of rule usage and formation",
+    "explanation": "Clear explanation of rule usage and formation in ${nativeLanguage}",
     "examples": [
-      { "korean": "example 1", "english": "translation 1", "explanation": "optional explanation" },
-      { "korean": "example 2", "english": "translation 2" }
+      { "korean": "example in ${targetLanguage}", "english": "translation in ${nativeLanguage}", "explanation": "optional explanation in ${nativeLanguage}" },
+      { "korean": "example in ${targetLanguage}", "english": "translation in ${nativeLanguage}" }
     ],
-    "exceptions": "Exceptions or nuances if applicable"
+    "exceptions": "Exceptions or nuances if applicable, explained in ${nativeLanguage}"
   },
   "newWords": [
-    { "korean": "word1", "english": "meaning1", "pronunciation": "romaja", "partOfSpeech": "verb/noun" }
+    { "korean": "word in ${targetLanguage}", "english": "meaning in ${nativeLanguage}", "pronunciation": "romanized pronunciation", "partOfSpeech": "verb/noun" }
     // total ${wordsCount} items
   ],
   "exercise1": {
@@ -187,16 +191,16 @@ Otherwise, follow this exact JSON structure:
     "sampleWords": ["word1", "word2", "word3", "word4", "word5"]
   },
   "exercise2": {
-    "instruction": "Translate 3 sentences from English to Korean (do NOT give answers)",
+    "instruction": "Translate 3 sentences from ${nativeLanguage} to ${targetLanguage} (do NOT give answers)",
     "sentencesToTranslate": [
-      "Sentence 1 in English...",
-      "Sentence 2 in English...",
-      "Sentence 3 in English..."
+      "Sentence 1 in ${nativeLanguage}...",
+      "Sentence 2 in ${nativeLanguage}...",
+      "Sentence 3 in ${nativeLanguage}..."
     ]
   },
   "exercise3": {
-    "instruction": "Translate this text (30-50 words story) from English to Korean (do NOT give answers)",
-    "englishTextToTranslate": "Story text in natural English using target vocabulary and grammar..."
+    "instruction": "Translate this text (30-50 words story) from ${nativeLanguage} to ${targetLanguage} (do NOT give answers)",
+    "englishTextToTranslate": "Story text in natural ${nativeLanguage} using target vocabulary and grammar..."
   }
 }`;
 
@@ -231,7 +235,8 @@ Otherwise, follow this exact JSON structure:
     userAnswersText: { ex1?: string; ex2?: string; ex3?: string },
     imagePaths?: string[],
   ): Promise<GradingResult> {
-    const gradingInstructions = `You are an expert Korean teacher grading a student's exercise submission.
+    const { nativeLanguage, targetLanguage } = await this.getUserLanguages(userId);
+    const gradingInstructions = `You are an expert ${targetLanguage} teacher grading a student's exercise submission. The student's native language is ${nativeLanguage}.
 Lesson Details:
 Rule: ${lessonData.rule.title} (${lessonData.rule.explanation})
 Target Words: ${lessonData.newWords.map((w) => `${w.korean} (${w.english})`).join(', ')}
@@ -247,11 +252,11 @@ Exercise 3 Answer: ${userAnswersText.ex3 || 'N/A'}
 
 ${imagePaths && imagePaths.length > 0 ? 'NOTE: Images of handwritten answers are attached. Perform OCR on the handwriting first.' : ''}
 
-Grade the student's work accurately with constructive feedback and corrections.
+Grade the student's work accurately with constructive feedback and corrections. Provide all feedback in ${nativeLanguage}.
 Return STRICT JSON format (no markdown formatting, no extra text):
 {
   "overallScore": 85,
-  "generalFeedback": "Encouraging overall feedback summary",
+  "generalFeedback": "Encouraging overall feedback summary in ${nativeLanguage}",
   "handwrittenOcrText": "Transcribed text if image was provided, else null",
   "exercise1": {
     "score": 90,
@@ -285,6 +290,26 @@ Return STRICT JSON format (no markdown formatting, no extra text):
       this.logger.error(`Error grading submission via AI API: ${err.message}`);
       throw new InternalServerErrorException(`Failed to grade submission. Please check your AI API configuration. Details: ${err.message}`);
     }
+  }
+
+  /**
+   * Fetches the user's configured native and target languages from settings.
+   * Defaults to English -> Korean if not configured.
+   */
+  private async getUserLanguages(userId: string): Promise<{ nativeLanguage: string; targetLanguage: string }> {
+    let nativeLanguage = 'English';
+    let targetLanguage = 'Korean';
+    try {
+      nativeLanguage = await this.settingsService.getSetting(userId, 'NATIVE_LANGUAGE');
+    } catch {
+      // Not set yet, use default
+    }
+    try {
+      targetLanguage = await this.settingsService.getSetting(userId, 'TARGET_LANGUAGE');
+    } catch {
+      // Not set yet, use default
+    }
+    return { nativeLanguage, targetLanguage };
   }
 
   /**

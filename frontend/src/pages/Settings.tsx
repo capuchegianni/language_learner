@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { api, API_BASE } from '../services/api';
-import { Settings as SettingsIcon, Key, Cpu, Save, CheckCircle2, Trash2, AlertTriangle, ExternalLink, LogOut, User, Upload, Download, X } from 'lucide-react';
+import { Settings as SettingsIcon, Key, Cpu, Save, CheckCircle2, Trash2, AlertTriangle, ExternalLink, LogOut, User, Upload, Download, X, Globe } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 interface ProviderPreset {
@@ -70,6 +70,36 @@ const PROVIDER_PRESETS: ProviderPreset[] = [
   },
 ];
 
+const LANGUAGES = [
+  'Afrikaans', 'Albanian', 'Amharic', 'Arabic', 'Armenian', 'Azerbaijani',
+  'Basque', 'Belarusian', 'Bengali', 'Bosnian', 'Bulgarian', 'Burmese',
+  'Catalan', 'Cebuano', 'Chinese (Mandarin)', 'Chinese (Cantonese)', 'Croatian', 'Czech',
+  'Danish', 'Dutch',
+  'English', 'Esperanto', 'Estonian',
+  'Filipino', 'Finnish', 'French',
+  'Galician', 'Georgian', 'German', 'Greek', 'Gujarati',
+  'Haitian Creole', 'Hausa', 'Hawaiian', 'Hebrew', 'Hindi', 'Hmong', 'Hungarian',
+  'Icelandic', 'Igbo', 'Indonesian', 'Irish', 'Italian',
+  'Japanese', 'Javanese',
+  'Kannada', 'Kazakh', 'Khmer', 'Kinyarwanda', 'Korean', 'Kurdish', 'Kyrgyz',
+  'Lao', 'Latin', 'Latvian', 'Lithuanian', 'Luxembourgish',
+  'Macedonian', 'Malagasy', 'Malay', 'Malayalam', 'Maltese', 'Maori', 'Marathi', 'Mongolian',
+  'Nepali', 'Norwegian',
+  'Odia', 'Oromo',
+  'Pashto', 'Persian', 'Polish', 'Portuguese',
+  'Punjabi',
+  'Quechua',
+  'Romanian', 'Russian',
+  'Samoan', 'Scottish Gaelic', 'Serbian', 'Shona', 'Sindhi', 'Sinhala', 'Slovak', 'Slovenian', 'Somali', 'Spanish', 'Sundanese', 'Swahili', 'Swedish',
+  'Tajik', 'Tamil', 'Tatar', 'Telugu', 'Thai', 'Tibetan', 'Tigrinya', 'Turkish', 'Turkmen',
+  'Ukrainian', 'Urdu', 'Uyghur', 'Uzbek',
+  'Vietnamese',
+  'Welsh',
+  'Xhosa',
+  'Yiddish', 'Yoruba',
+  'Zulu',
+];
+
 export const Settings: React.FC = () => {
   const { user } = useAuth();
   const [model, setModel] = useState('gpt-4o-mini');
@@ -77,6 +107,8 @@ export const Settings: React.FC = () => {
   const [apiKey, setApiKey] = useState('');
   const [hasApiKey, setHasApiKey] = useState(false);
   const [selectedPreset, setSelectedPreset] = useState<ProviderPreset>(PROVIDER_PRESETS[0]);
+  const [nativeLanguage, setNativeLanguage] = useState('English');
+  const [targetLanguage, setTargetLanguage] = useState('Korean');
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -119,6 +151,8 @@ export const Settings: React.FC = () => {
         setModel(savedModel);
         const matchedPreset = PROVIDER_PRESETS.find((p) => p.baseURL === savedBaseURL);
         if (matchedPreset) setSelectedPreset(matchedPreset);
+        setNativeLanguage(data.NATIVE_LANGUAGE || 'English');
+        setTargetLanguage(data.TARGET_LANGUAGE || 'Korean');
       } catch (err) {
         console.error('Failed to load settings', err);
       } finally {
@@ -144,6 +178,8 @@ export const Settings: React.FC = () => {
       await api.updateSettings({
         AI_MODEL: model,
         AI_BASE_URL: baseURL,
+        NATIVE_LANGUAGE: nativeLanguage,
+        TARGET_LANGUAGE: targetLanguage,
         ...(apiKey.trim() && !isLocalOllamaBaseURL ? { api_key: apiKey.trim() } : {}),
       });
       setSavedSuccess(true);
@@ -201,6 +237,8 @@ export const Settings: React.FC = () => {
       setModel(savedModel);
       const matchedPreset = PROVIDER_PRESETS.find((p) => p.baseURL === savedBaseURL);
       if (matchedPreset) setSelectedPreset(matchedPreset);
+      setNativeLanguage(data.NATIVE_LANGUAGE || 'English');
+      setTargetLanguage(data.TARGET_LANGUAGE || 'Korean');
     } catch (err: any) {
       console.error('Failed to import data', err);
       setImportError(err.response?.data?.message || err.message || 'Failed to import data. Please check your JSON format.');
@@ -287,6 +325,52 @@ export const Settings: React.FC = () => {
       )}
 
       <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        {/* Language Preferences */}
+        <div className="glass-card">
+          <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-secondary)' }}>
+            <Globe size={20} />
+            <span>Language Preferences</span>
+          </h3>
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1.25rem' }}>
+            Choose your native language and the language you want to learn. All AI-generated lessons, exercises, and feedback will adapt to your selection.
+          </p>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
+            <div className="input-group">
+              <label>I speak (native language)</label>
+              <select
+                value={nativeLanguage}
+                onChange={(e) => setNativeLanguage(e.target.value)}
+                id="native-language-select"
+                style={{ width: '100%' }}
+              >
+                {LANGUAGES.map((lang) => (
+                  <option key={`native-${lang}`} value={lang}>{lang}</option>
+                ))}
+              </select>
+            </div>
+            <div className="input-group">
+              <label>I want to learn</label>
+              <select
+                value={targetLanguage}
+                onChange={(e) => setTargetLanguage(e.target.value)}
+                id="target-language-select"
+                style={{ width: '100%' }}
+              >
+                {LANGUAGES.filter((lang) => lang !== nativeLanguage).map((lang) => (
+                  <option key={`target-${lang}`} value={lang}>{lang}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {nativeLanguage === targetLanguage && (
+            <div style={{ marginTop: '0.75rem', fontSize: '0.85rem', color: 'var(--accent-danger)', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 'var(--radius-sm)', padding: '0.6rem 0.85rem' }}>
+              ⚠️ Native and target languages cannot be the same.
+            </div>
+          )}
+        </div>
+
         {/* Provider Presets */}
         <div className="glass-card">
           <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-secondary)' }}>
