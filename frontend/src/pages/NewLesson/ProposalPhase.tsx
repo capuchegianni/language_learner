@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ProposedRule } from '../../types';
 import { RefreshCw, BookOpen, Sparkles, Check } from 'lucide-react';
 
@@ -33,6 +33,26 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
   generatingLesson,
   fetchProposals,
 }) => {
+  const [customRule, setCustomRule] = useState('');
+
+  const isCustomSelected =
+    selectedRuleTitle !== '' &&
+    !proposals.find(p => p.title === selectedRuleTitle) &&
+    (!reviewRule || reviewRule.title !== selectedRuleTitle);
+
+  const handleCustomRuleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setCustomRule(val);
+    if (val.trim()) {
+      onSelectRule(val, false);
+    }
+  };
+
+  const handleCustomCardClick = () => {
+    if (customRule.trim()) {
+      onSelectRule(customRule, false);
+    }
+  };
   return (
     <div>
       <div className="glass-card" style={{ marginBottom: '1.5rem', textAlign: 'center' }}>
@@ -66,7 +86,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2rem' }}>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text-secondary)' }}>AI Proposed New Rules:</h3>
+          <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text-secondary)' }}>AI Proposed New Rules</h3>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
             {proposals.map((prop, idx) => {
@@ -132,11 +152,52 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
             })}
           </div>
 
+          {/* Custom Rule Input */}
+          <div style={{ marginTop: '1rem' }}>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.75rem' }}>
+              Create Your Own Lesson
+            </h3>
+            <div
+              className="glass-card"
+              style={{
+                borderColor: isCustomSelected ? 'var(--accent-primary)' : 'var(--border-color)',
+                background: isCustomSelected ? 'rgba(99, 102, 241, 0.12)' : 'var(--bg-card)',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '2rem',
+              }}
+              onClick={handleCustomCardClick}
+            >
+              <div style={{ width: '100%' }}>
+                <input
+                  type="text"
+                  placeholder="e.g., How to say 'I want to...' in Korean"
+                  value={customRule}
+                  onChange={handleCustomRuleChange}
+                  style={{
+                    width: '100%',
+                    background: 'transparent',
+                    border: 'none',
+                    color: '#fff',
+                    outline: 'none',
+                    fontSize: '1.05rem',
+                  }}
+                />
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: isCustomSelected ? 'var(--accent-primary)' : 'var(--text-muted)', fontWeight: 600, flexShrink: 0 }}>
+                {isCustomSelected ? <Check size={18} /> : <div style={{ width: 18, height: 18, borderRadius: '50%', border: '2px solid var(--border-color)' }} />}
+                <span>{isCustomSelected ? 'Selected' : 'Select'}</span>
+              </div>
+            </div>
+          </div>
+
           {/* Spaced Repetition Review Rule Option */}
           {reviewRule && (
             <div style={{ marginTop: '1rem' }}>
               <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.75rem' }}>
-                Option 4: Spaced Repetition Review
+                Spaced Repetition Review
               </h3>
               <div
                 className="glass-card"

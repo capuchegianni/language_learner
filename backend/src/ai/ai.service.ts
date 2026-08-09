@@ -1,4 +1,4 @@
-import { Injectable, Logger, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, Logger, InternalServerErrorException, BadRequestException } from '@nestjs/common';
 import { SettingsService } from '../settings/settings.service';
 import OpenAI from 'openai';
 import * as fs from 'fs';
@@ -163,7 +163,10 @@ Output strictly valid JSON with no extra markdown code block delimiters or text,
     const rawPrompt = this.buildPromptTemplate(ruleTitle, wordsCount, knownWordsList, knownRulesList);
 
     const systemInstructions = `You are a Korean language instructor AI. Respond strictly with valid JSON without markdown codeblock wrapper or outside commentary.
-Follow this exact JSON structure:
+If the requested rule or topic in the USER PROMPT is completely unrelated to learning Korean, nonsense, or inappropriate, return exactly this JSON:
+{ "error": "This topic is invalid or unrelated to learning Korean. Please enter a valid grammar rule, vocabulary topic, or conversational phrase." }
+
+Otherwise, follow this exact JSON structure:
 {
   "rule": {
     "title": "${ruleTitle}",
@@ -202,11 +205,17 @@ Follow this exact JSON structure:
       const rawResponse = await this.callLlm(userId, fullPrompt);
       const cleaned = this.cleanJsonResponse(rawResponse);
       const parsed = JSON.parse(cleaned);
+      if (parsed.error) {
+        throw new BadRequestException(parsed.error);
+      }
       return {
         ...parsed,
         rawPrompt,
       };
-    } catch (err) {
+    } catch (err: any) {
+      if (err instanceof BadRequestException) {
+        throw err;
+      }
       this.logger.error(`Failed to generate lesson from AI API: ${err.message}`);
       throw new InternalServerErrorException(`Failed to generate lesson. Please check your AI API key and model settings. Details: ${err.message}`);
     }
