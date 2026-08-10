@@ -89,7 +89,7 @@ export const ExercisePhase: React.FC<ExercisePhaseProps> = ({
                     newAns[idx] = e.target.value;
                     setEx2Answers(newAns);
                   }}
-                  placeholder="Korean translation..."
+                  placeholder="Your translation..."
                   className="kr-text"
                   style={{ width: '100%', padding: '0.6rem 0.85rem', background: 'rgba(15,23,42,0.6)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)', color: '#fff' }}
                 />
@@ -104,12 +104,12 @@ export const ExercisePhase: React.FC<ExercisePhaseProps> = ({
             Exercise 3: Mini Story Translation (30-50 words)
           </h4>
           <div style={{ background: 'rgba(15,23,42,0.6)', padding: '0.85rem', borderRadius: 'var(--radius-sm)', marginBottom: '0.75rem', fontSize: '0.9rem', fontStyle: 'italic', border: '1px solid var(--border-color)' }}>
-            "{lessonContent.exercise3.englishTextToTranslate}"
+            "{lessonContent.exercise3.textToTranslate}"
           </div>
           <textarea
             value={ex3Answer}
             onChange={(e) => setEx3Answer(e.target.value)}
-            placeholder="Type your Korean translation of the story..."
+            placeholder="Type your translation of the story..."
             className="kr-text"
           />
         </div>

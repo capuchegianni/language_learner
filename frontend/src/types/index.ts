@@ -7,8 +7,8 @@ export interface User {
 
 export interface Word {
   id: string;
-  korean: string;
-  english: string;
+  targetLanguage: string;
+  nativeLanguage: string;
   pronunciation?: string;
   partOfSpeech?: string;
   notes?: string;
@@ -39,12 +39,12 @@ export interface LessonContent {
   rule: {
     title: string;
     explanation: string;
-    examples: Array<{ korean: string; english: string; explanation?: string }>;
+    examples: Array<{ targetLanguage: string; nativeLanguage: string; explanation?: string }>;
     exceptions?: string;
   };
   newWords: Array<{
-    korean: string;
-    english: string;
+    targetLanguage: string;
+    nativeLanguage: string;
     pronunciation?: string;
     partOfSpeech?: string;
   }>;
@@ -59,7 +59,7 @@ export interface LessonContent {
   };
   exercise3: {
     instruction: string;
-    englishTextToTranslate: string;
+    textToTranslate: string;
   };
 }
 

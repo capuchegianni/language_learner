@@ -24,8 +24,8 @@ model User {
 
 model Word {
   id            String       @id @default(uuid())
-  korean        String
-  english       String
+  targetLanguage String
+  nativeLanguage String
   pronunciation String?
   partOfSpeech  String?
   notes         String?
@@ -37,7 +37,7 @@ model Word {
 
   lessons       LessonWord[]
 
-  @@unique([userId, korean])
+  @@unique([userId, targetLanguage])
   @@index([userId])
 }
 

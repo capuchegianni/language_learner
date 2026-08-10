@@ -26,8 +26,8 @@ export type AggregateWord = {
 
 export type WordMinAggregateOutputType = {
   id: string | null
-  korean: string | null
-  english: string | null
+  targetLanguage: string | null
+  nativeLanguage: string | null
   pronunciation: string | null
   partOfSpeech: string | null
   notes: string | null
@@ -38,8 +38,8 @@ export type WordMinAggregateOutputType = {
 
 export type WordMaxAggregateOutputType = {
   id: string | null
-  korean: string | null
-  english: string | null
+  targetLanguage: string | null
+  nativeLanguage: string | null
   pronunciation: string | null
   partOfSpeech: string | null
   notes: string | null
@@ -50,8 +50,8 @@ export type WordMaxAggregateOutputType = {
 
 export type WordCountAggregateOutputType = {
   id: number
-  korean: number
-  english: number
+  targetLanguage: number
+  nativeLanguage: number
   pronunciation: number
   partOfSpeech: number
   notes: number
@@ -64,8 +64,8 @@ export type WordCountAggregateOutputType = {
 
 export type WordMinAggregateInputType = {
   id?: true
-  korean?: true
-  english?: true
+  targetLanguage?: true
+  nativeLanguage?: true
   pronunciation?: true
   partOfSpeech?: true
   notes?: true
@@ -76,8 +76,8 @@ export type WordMinAggregateInputType = {
 
 export type WordMaxAggregateInputType = {
   id?: true
-  korean?: true
-  english?: true
+  targetLanguage?: true
+  nativeLanguage?: true
   pronunciation?: true
   partOfSpeech?: true
   notes?: true
@@ -88,8 +88,8 @@ export type WordMaxAggregateInputType = {
 
 export type WordCountAggregateInputType = {
   id?: true
-  korean?: true
-  english?: true
+  targetLanguage?: true
+  nativeLanguage?: true
   pronunciation?: true
   partOfSpeech?: true
   notes?: true
@@ -173,8 +173,8 @@ export type WordGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 
 export type WordGroupByOutputType = {
   id: string
-  korean: string
-  english: string
+  targetLanguage: string
+  nativeLanguage: string
   pronunciation: string | null
   partOfSpeech: string | null
   notes: string | null
@@ -206,8 +206,8 @@ export type WordWhereInput = {
   OR?: Prisma.WordWhereInput[]
   NOT?: Prisma.WordWhereInput | Prisma.WordWhereInput[]
   id?: Prisma.StringFilter<"Word"> | string
-  korean?: Prisma.StringFilter<"Word"> | string
-  english?: Prisma.StringFilter<"Word"> | string
+  targetLanguage?: Prisma.StringFilter<"Word"> | string
+  nativeLanguage?: Prisma.StringFilter<"Word"> | string
   pronunciation?: Prisma.StringNullableFilter<"Word"> | string | null
   partOfSpeech?: Prisma.StringNullableFilter<"Word"> | string | null
   notes?: Prisma.StringNullableFilter<"Word"> | string | null
@@ -220,8 +220,8 @@ export type WordWhereInput = {
 
 export type WordOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  korean?: Prisma.SortOrder
-  english?: Prisma.SortOrder
+  targetLanguage?: Prisma.SortOrder
+  nativeLanguage?: Prisma.SortOrder
   pronunciation?: Prisma.SortOrderInput | Prisma.SortOrder
   partOfSpeech?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -234,12 +234,12 @@ export type WordOrderByWithRelationInput = {
 
 export type WordWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  userId_korean?: Prisma.WordUserIdKoreanCompoundUniqueInput
+  userId_targetLanguage?: Prisma.WordUserIdTargetLanguageCompoundUniqueInput
   AND?: Prisma.WordWhereInput | Prisma.WordWhereInput[]
   OR?: Prisma.WordWhereInput[]
   NOT?: Prisma.WordWhereInput | Prisma.WordWhereInput[]
-  korean?: Prisma.StringFilter<"Word"> | string
-  english?: Prisma.StringFilter<"Word"> | string
+  targetLanguage?: Prisma.StringFilter<"Word"> | string
+  nativeLanguage?: Prisma.StringFilter<"Word"> | string
   pronunciation?: Prisma.StringNullableFilter<"Word"> | string | null
   partOfSpeech?: Prisma.StringNullableFilter<"Word"> | string | null
   notes?: Prisma.StringNullableFilter<"Word"> | string | null
@@ -248,12 +248,12 @@ export type WordWhereUniqueInput = Prisma.AtLeast<{
   userId?: Prisma.StringFilter<"Word"> | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   lessons?: Prisma.LessonWordListRelationFilter
-}, "id" | "userId_korean">
+}, "id" | "userId_targetLanguage">
 
 export type WordOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  korean?: Prisma.SortOrder
-  english?: Prisma.SortOrder
+  targetLanguage?: Prisma.SortOrder
+  nativeLanguage?: Prisma.SortOrder
   pronunciation?: Prisma.SortOrderInput | Prisma.SortOrder
   partOfSpeech?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -270,8 +270,8 @@ export type WordScalarWhereWithAggregatesInput = {
   OR?: Prisma.WordScalarWhereWithAggregatesInput[]
   NOT?: Prisma.WordScalarWhereWithAggregatesInput | Prisma.WordScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Word"> | string
-  korean?: Prisma.StringWithAggregatesFilter<"Word"> | string
-  english?: Prisma.StringWithAggregatesFilter<"Word"> | string
+  targetLanguage?: Prisma.StringWithAggregatesFilter<"Word"> | string
+  nativeLanguage?: Prisma.StringWithAggregatesFilter<"Word"> | string
   pronunciation?: Prisma.StringNullableWithAggregatesFilter<"Word"> | string | null
   partOfSpeech?: Prisma.StringNullableWithAggregatesFilter<"Word"> | string | null
   notes?: Prisma.StringNullableWithAggregatesFilter<"Word"> | string | null
@@ -282,8 +282,8 @@ export type WordScalarWhereWithAggregatesInput = {
 
 export type WordCreateInput = {
   id?: string
-  korean: string
-  english: string
+  targetLanguage: string
+  nativeLanguage: string
   pronunciation?: string | null
   partOfSpeech?: string | null
   notes?: string | null
@@ -295,8 +295,8 @@ export type WordCreateInput = {
 
 export type WordUncheckedCreateInput = {
   id?: string
-  korean: string
-  english: string
+  targetLanguage: string
+  nativeLanguage: string
   pronunciation?: string | null
   partOfSpeech?: string | null
   notes?: string | null
@@ -308,8 +308,8 @@ export type WordUncheckedCreateInput = {
 
 export type WordUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  korean?: Prisma.StringFieldUpdateOperationsInput | string
-  english?: Prisma.StringFieldUpdateOperationsInput | string
+  targetLanguage?: Prisma.StringFieldUpdateOperationsInput | string
+  nativeLanguage?: Prisma.StringFieldUpdateOperationsInput | string
   pronunciation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   partOfSpeech?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -321,8 +321,8 @@ export type WordUpdateInput = {
 
 export type WordUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  korean?: Prisma.StringFieldUpdateOperationsInput | string
-  english?: Prisma.StringFieldUpdateOperationsInput | string
+  targetLanguage?: Prisma.StringFieldUpdateOperationsInput | string
+  nativeLanguage?: Prisma.StringFieldUpdateOperationsInput | string
   pronunciation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   partOfSpeech?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -334,8 +334,8 @@ export type WordUncheckedUpdateInput = {
 
 export type WordCreateManyInput = {
   id?: string
-  korean: string
-  english: string
+  targetLanguage: string
+  nativeLanguage: string
   pronunciation?: string | null
   partOfSpeech?: string | null
   notes?: string | null
@@ -346,8 +346,8 @@ export type WordCreateManyInput = {
 
 export type WordUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  korean?: Prisma.StringFieldUpdateOperationsInput | string
-  english?: Prisma.StringFieldUpdateOperationsInput | string
+  targetLanguage?: Prisma.StringFieldUpdateOperationsInput | string
+  nativeLanguage?: Prisma.StringFieldUpdateOperationsInput | string
   pronunciation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   partOfSpeech?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -357,8 +357,8 @@ export type WordUpdateManyMutationInput = {
 
 export type WordUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  korean?: Prisma.StringFieldUpdateOperationsInput | string
-  english?: Prisma.StringFieldUpdateOperationsInput | string
+  targetLanguage?: Prisma.StringFieldUpdateOperationsInput | string
+  nativeLanguage?: Prisma.StringFieldUpdateOperationsInput | string
   pronunciation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   partOfSpeech?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -377,15 +377,15 @@ export type WordOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type WordUserIdKoreanCompoundUniqueInput = {
+export type WordUserIdTargetLanguageCompoundUniqueInput = {
   userId: string
-  korean: string
+  targetLanguage: string
 }
 
 export type WordCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  korean?: Prisma.SortOrder
-  english?: Prisma.SortOrder
+  targetLanguage?: Prisma.SortOrder
+  nativeLanguage?: Prisma.SortOrder
   pronunciation?: Prisma.SortOrder
   partOfSpeech?: Prisma.SortOrder
   notes?: Prisma.SortOrder
@@ -396,8 +396,8 @@ export type WordCountOrderByAggregateInput = {
 
 export type WordMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  korean?: Prisma.SortOrder
-  english?: Prisma.SortOrder
+  targetLanguage?: Prisma.SortOrder
+  nativeLanguage?: Prisma.SortOrder
   pronunciation?: Prisma.SortOrder
   partOfSpeech?: Prisma.SortOrder
   notes?: Prisma.SortOrder
@@ -408,8 +408,8 @@ export type WordMaxOrderByAggregateInput = {
 
 export type WordMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  korean?: Prisma.SortOrder
-  english?: Prisma.SortOrder
+  targetLanguage?: Prisma.SortOrder
+  nativeLanguage?: Prisma.SortOrder
   pronunciation?: Prisma.SortOrder
   partOfSpeech?: Prisma.SortOrder
   notes?: Prisma.SortOrder
@@ -481,8 +481,8 @@ export type WordUpdateOneRequiredWithoutLessonsNestedInput = {
 
 export type WordCreateWithoutUserInput = {
   id?: string
-  korean: string
-  english: string
+  targetLanguage: string
+  nativeLanguage: string
   pronunciation?: string | null
   partOfSpeech?: string | null
   notes?: string | null
@@ -493,8 +493,8 @@ export type WordCreateWithoutUserInput = {
 
 export type WordUncheckedCreateWithoutUserInput = {
   id?: string
-  korean: string
-  english: string
+  targetLanguage: string
+  nativeLanguage: string
   pronunciation?: string | null
   partOfSpeech?: string | null
   notes?: string | null
@@ -533,8 +533,8 @@ export type WordScalarWhereInput = {
   OR?: Prisma.WordScalarWhereInput[]
   NOT?: Prisma.WordScalarWhereInput | Prisma.WordScalarWhereInput[]
   id?: Prisma.StringFilter<"Word"> | string
-  korean?: Prisma.StringFilter<"Word"> | string
-  english?: Prisma.StringFilter<"Word"> | string
+  targetLanguage?: Prisma.StringFilter<"Word"> | string
+  nativeLanguage?: Prisma.StringFilter<"Word"> | string
   pronunciation?: Prisma.StringNullableFilter<"Word"> | string | null
   partOfSpeech?: Prisma.StringNullableFilter<"Word"> | string | null
   notes?: Prisma.StringNullableFilter<"Word"> | string | null
@@ -545,8 +545,8 @@ export type WordScalarWhereInput = {
 
 export type WordCreateWithoutLessonsInput = {
   id?: string
-  korean: string
-  english: string
+  targetLanguage: string
+  nativeLanguage: string
   pronunciation?: string | null
   partOfSpeech?: string | null
   notes?: string | null
@@ -557,8 +557,8 @@ export type WordCreateWithoutLessonsInput = {
 
 export type WordUncheckedCreateWithoutLessonsInput = {
   id?: string
-  korean: string
-  english: string
+  targetLanguage: string
+  nativeLanguage: string
   pronunciation?: string | null
   partOfSpeech?: string | null
   notes?: string | null
@@ -585,8 +585,8 @@ export type WordUpdateToOneWithWhereWithoutLessonsInput = {
 
 export type WordUpdateWithoutLessonsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  korean?: Prisma.StringFieldUpdateOperationsInput | string
-  english?: Prisma.StringFieldUpdateOperationsInput | string
+  targetLanguage?: Prisma.StringFieldUpdateOperationsInput | string
+  nativeLanguage?: Prisma.StringFieldUpdateOperationsInput | string
   pronunciation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   partOfSpeech?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -597,8 +597,8 @@ export type WordUpdateWithoutLessonsInput = {
 
 export type WordUncheckedUpdateWithoutLessonsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  korean?: Prisma.StringFieldUpdateOperationsInput | string
-  english?: Prisma.StringFieldUpdateOperationsInput | string
+  targetLanguage?: Prisma.StringFieldUpdateOperationsInput | string
+  nativeLanguage?: Prisma.StringFieldUpdateOperationsInput | string
   pronunciation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   partOfSpeech?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -609,8 +609,8 @@ export type WordUncheckedUpdateWithoutLessonsInput = {
 
 export type WordCreateManyUserInput = {
   id?: string
-  korean: string
-  english: string
+  targetLanguage: string
+  nativeLanguage: string
   pronunciation?: string | null
   partOfSpeech?: string | null
   notes?: string | null
@@ -620,8 +620,8 @@ export type WordCreateManyUserInput = {
 
 export type WordUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  korean?: Prisma.StringFieldUpdateOperationsInput | string
-  english?: Prisma.StringFieldUpdateOperationsInput | string
+  targetLanguage?: Prisma.StringFieldUpdateOperationsInput | string
+  nativeLanguage?: Prisma.StringFieldUpdateOperationsInput | string
   pronunciation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   partOfSpeech?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -632,8 +632,8 @@ export type WordUpdateWithoutUserInput = {
 
 export type WordUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  korean?: Prisma.StringFieldUpdateOperationsInput | string
-  english?: Prisma.StringFieldUpdateOperationsInput | string
+  targetLanguage?: Prisma.StringFieldUpdateOperationsInput | string
+  nativeLanguage?: Prisma.StringFieldUpdateOperationsInput | string
   pronunciation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   partOfSpeech?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -644,8 +644,8 @@ export type WordUncheckedUpdateWithoutUserInput = {
 
 export type WordUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  korean?: Prisma.StringFieldUpdateOperationsInput | string
-  english?: Prisma.StringFieldUpdateOperationsInput | string
+  targetLanguage?: Prisma.StringFieldUpdateOperationsInput | string
+  nativeLanguage?: Prisma.StringFieldUpdateOperationsInput | string
   pronunciation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   partOfSpeech?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -686,8 +686,8 @@ export type WordCountOutputTypeCountLessonsArgs<ExtArgs extends runtime.Types.Ex
 
 export type WordSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  korean?: boolean
-  english?: boolean
+  targetLanguage?: boolean
+  nativeLanguage?: boolean
   pronunciation?: boolean
   partOfSpeech?: boolean
   notes?: boolean
@@ -701,8 +701,8 @@ export type WordSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 
 export type WordSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  korean?: boolean
-  english?: boolean
+  targetLanguage?: boolean
+  nativeLanguage?: boolean
   pronunciation?: boolean
   partOfSpeech?: boolean
   notes?: boolean
@@ -714,8 +714,8 @@ export type WordSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 
 export type WordSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  korean?: boolean
-  english?: boolean
+  targetLanguage?: boolean
+  nativeLanguage?: boolean
   pronunciation?: boolean
   partOfSpeech?: boolean
   notes?: boolean
@@ -727,8 +727,8 @@ export type WordSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 
 export type WordSelectScalar = {
   id?: boolean
-  korean?: boolean
-  english?: boolean
+  targetLanguage?: boolean
+  nativeLanguage?: boolean
   pronunciation?: boolean
   partOfSpeech?: boolean
   notes?: boolean
@@ -737,7 +737,7 @@ export type WordSelectScalar = {
   userId?: boolean
 }
 
-export type WordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "korean" | "english" | "pronunciation" | "partOfSpeech" | "notes" | "createdAt" | "updatedAt" | "userId", ExtArgs["result"]["word"]>
+export type WordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "targetLanguage" | "nativeLanguage" | "pronunciation" | "partOfSpeech" | "notes" | "createdAt" | "updatedAt" | "userId", ExtArgs["result"]["word"]>
 export type WordInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   lessons?: boolean | Prisma.Word$lessonsArgs<ExtArgs>
@@ -758,8 +758,8 @@ export type $WordPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    korean: string
-    english: string
+    targetLanguage: string
+    nativeLanguage: string
     pronunciation: string | null
     partOfSpeech: string | null
     notes: string | null
@@ -1192,8 +1192,8 @@ export interface Prisma__WordClient<T, Null = never, ExtArgs extends runtime.Typ
  */
 export interface WordFieldRefs {
   readonly id: Prisma.FieldRef<"Word", 'String'>
-  readonly korean: Prisma.FieldRef<"Word", 'String'>
-  readonly english: Prisma.FieldRef<"Word", 'String'>
+  readonly targetLanguage: Prisma.FieldRef<"Word", 'String'>
+  readonly nativeLanguage: Prisma.FieldRef<"Word", 'String'>
   readonly pronunciation: Prisma.FieldRef<"Word", 'String'>
   readonly partOfSpeech: Prisma.FieldRef<"Word", 'String'>
   readonly notes: Prisma.FieldRef<"Word", 'String'>

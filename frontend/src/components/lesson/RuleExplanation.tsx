@@ -19,8 +19,8 @@ export const RuleExplanation: React.FC<RuleExplanationProps> = ({ lessonContent 
           <p style={{ color: 'var(--text-secondary)', marginBottom: '1rem', whiteSpace: 'pre-wrap', lineHeight: 1.5 }}>{lessonContent.rule.explanation}</p>
           {lessonContent.rule.examples?.map((ex, idx) => (
             <div key={idx} style={{ background: 'rgba(15,23,42,0.5)', padding: '0.5rem 0.85rem', borderRadius: 'var(--radius-sm)', marginBottom: '0.5rem', borderLeft: '3px solid var(--accent-primary)' }}>
-              <div className="kr-text" style={{ fontWeight: 600 }}>{ex.korean}</div>
-              <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>{ex.english}</div>
+              <div className="kr-text" style={{ fontWeight: 600 }}>{ex.targetLanguage}</div>
+              <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>{ex.nativeLanguage}</div>
             </div>
           ))}
           {lessonContent.rule.exceptions && (

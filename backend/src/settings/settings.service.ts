@@ -168,24 +168,24 @@ export class SettingsService {
       // 2. Words
       if (Array.isArray(words)) {
         for (const w of words) {
-          if (!w.korean || !w.english) continue;
-          let korean = w.korean;
+          if (!w.targetLanguage || !w.nativeLanguage) continue;
+          let targetLang = w.targetLanguage;
           let counter = 0;
-          while (await tx.word.findUnique({ where: { userId_korean: { userId, korean } } })) {
-            korean = `${w.korean}_${counter}`;
+          while (await tx.word.findUnique({ where: { userId_targetLanguage: { userId, targetLanguage: targetLang } } })) {
+            targetLang = `${w.targetLanguage}_${counter}`;
             counter++;
           }
           const newWord = await tx.word.create({
             data: {
-              korean,
-              english: w.english,
+              targetLanguage: targetLang,
+              nativeLanguage: w.nativeLanguage,
               pronunciation: w.pronunciation || null,
               partOfSpeech: w.partOfSpeech || null,
               notes: w.notes || null,
               userId,
             },
           });
-          wordMap.set(w.korean, newWord.id);
+          wordMap.set(w.targetLanguage, newWord.id);
         }
       }
 
@@ -225,15 +225,15 @@ export class SettingsService {
         return newRule.id;
       };
 
-      const resolveWord = async (korean: string) => {
-        if (!korean) return null;
-        if (wordMap.has(korean)) return wordMap.get(korean);
-        const existing = await tx.word.findUnique({ where: { userId_korean: { userId, korean } } });
+      const resolveWord = async (targetLang: string) => {
+        if (!targetLang) return null;
+        if (wordMap.has(targetLang)) return wordMap.get(targetLang);
+        const existing = await tx.word.findUnique({ where: { userId_targetLanguage: { userId, targetLanguage: targetLang } } });
         if (existing) return existing.id;
         const newWord = await tx.word.create({
-          data: { korean, english: 'Imported word', userId }
+          data: { targetLanguage: targetLang, nativeLanguage: 'Imported word', userId }
         });
-        wordMap.set(korean, newWord.id);
+        wordMap.set(targetLang, newWord.id);
         return newWord.id;
       };
 
@@ -297,8 +297,8 @@ export class SettingsService {
         result.words = await tx.word.findMany({
           where: { userId },
           select: {
-            korean: true,
-            english: true,
+            targetLanguage: true,
+            nativeLanguage: true,
             pronunciation: true,
             partOfSpeech: true,
             notes: true,
@@ -337,7 +337,7 @@ export class SettingsService {
             overallScore: true,
             rawPrompt: true,
             rule: { select: { title: true } },
-            words: { select: { word: { select: { korean: true } } } },
+            words: { select: { word: { select: { targetLanguage: true } } } },
           },
           orderBy: { date: 'asc' },
         });
@@ -345,7 +345,7 @@ export class SettingsService {
         result.lessons = lessons.map((l) => ({
           ...l,
           ruleTitle: l.rule?.title ?? null,
-          targetWords: l.words.map((w) => w.word.korean),
+          targetWords: l.words.map((w) => w.word.targetLanguage),
           rule: undefined,
           words: undefined,
         }));

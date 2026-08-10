@@ -87,8 +87,8 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 
 export const WordScalarFieldEnum = {
   id: 'id',
-  korean: 'korean',
-  english: 'english',
+  targetLanguage: 'targetLanguage',
+  nativeLanguage: 'nativeLanguage',
   pronunciation: 'pronunciation',
   partOfSpeech: 'partOfSpeech',
   notes: 'notes',

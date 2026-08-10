@@ -15,12 +15,12 @@ export interface LessonContent {
   rule: {
     title: string;
     explanation: string;
-    examples: Array<{ korean: string; english: string; explanation?: string }>;
+    examples: Array<{ targetLanguage: string; nativeLanguage: string; explanation?: string }>;
     exceptions?: string;
   };
   newWords: Array<{
-    korean: string;
-    english: string;
+    targetLanguage: string;
+    nativeLanguage: string;
     pronunciation?: string;
     partOfSpeech?: string;
   }>;
@@ -31,11 +31,11 @@ export interface LessonContent {
   };
   exercise2: {
     instruction: string;
-    sentencesToTranslate: string[]; // 3 English sentences
+    sentencesToTranslate: string[];
   };
   exercise3: {
     instruction: string;
-    englishTextToTranslate: string; // 30-50 word story
+    textToTranslate: string;
   };
   rawPrompt: string;
 }
@@ -176,13 +176,13 @@ Otherwise, follow this exact JSON structure:
     "title": "${ruleTitle}",
     "explanation": "Clear explanation of rule usage and formation in ${nativeLanguage}",
     "examples": [
-      { "korean": "example in ${targetLanguage}", "english": "translation in ${nativeLanguage}", "explanation": "optional explanation in ${nativeLanguage}" },
-      { "korean": "example in ${targetLanguage}", "english": "translation in ${nativeLanguage}" }
+      { "targetLanguage": "example in ${targetLanguage}", "nativeLanguage": "translation in ${nativeLanguage}", "explanation": "optional explanation in ${nativeLanguage}" },
+      { "targetLanguage": "example in ${targetLanguage}", "nativeLanguage": "translation in ${nativeLanguage}" }
     ],
     "exceptions": "Exceptions or nuances if applicable, explained in ${nativeLanguage}"
   },
   "newWords": [
-    { "korean": "word in ${targetLanguage}", "english": "meaning in ${nativeLanguage}", "pronunciation": "romanized pronunciation", "partOfSpeech": "verb/noun" }
+    { "targetLanguage": "word in ${targetLanguage}", "nativeLanguage": "meaning in ${nativeLanguage}", "pronunciation": "romanized pronunciation", "partOfSpeech": "verb/noun" }
     // total ${wordsCount} items
   ],
   "exercise1": {
@@ -200,7 +200,7 @@ Otherwise, follow this exact JSON structure:
   },
   "exercise3": {
     "instruction": "Translate this text (30-50 words story) from ${nativeLanguage} to ${targetLanguage} (do NOT give answers)",
-    "englishTextToTranslate": "Story text in natural ${nativeLanguage} using target vocabulary and grammar..."
+    "textToTranslate": "Story text in natural ${nativeLanguage} using target vocabulary and grammar..."
   }
 }`;
 
@@ -239,11 +239,11 @@ Otherwise, follow this exact JSON structure:
     const gradingInstructions = `You are an expert ${targetLanguage} teacher grading a student's exercise submission. The student's native language is ${nativeLanguage}.
 Lesson Details:
 Rule: ${lessonData.rule.title} (${lessonData.rule.explanation})
-Target Words: ${lessonData.newWords.map((w) => `${w.korean} (${w.english})`).join(', ')}
+Target Words: ${lessonData.newWords.map((w) => `${w.targetLanguage} (${w.nativeLanguage})`).join(', ')}
 
 Exercise 1 Prompt: ${lessonData.exercise1.instruction} (Target words: ${lessonData.exercise1.targetWords.join(', ')})
 Exercise 2 Prompt: ${lessonData.exercise2.sentencesToTranslate.join(' | ')}
-Exercise 3 Prompt: ${lessonData.exercise3.englishTextToTranslate}
+Exercise 3 Prompt: ${lessonData.exercise3.textToTranslate}
 
 Student Text Submission:
 Exercise 1 Answer: ${userAnswersText.ex1 || 'N/A'}

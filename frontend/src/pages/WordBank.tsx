@@ -3,16 +3,18 @@ import { api } from '../services/api';
 import { Word } from '../types';
 import { BookOpen, Plus, Trash2, Edit, X, Volume2 } from 'lucide-react';
 import { FilterInput } from '../components/FilterInput';
+import { useLanguages } from '../contexts/LanguageContext';
 
 export const WordBank: React.FC = () => {
+  const { targetLanguage, nativeLanguage } = useLanguages();
   const [words, setWords] = useState<Word[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingWord, setEditingWord] = useState<Word | null>(null);
 
-  const [korean, setKorean] = useState('');
-  const [english, setEnglish] = useState('');
+  const [targetLangValue, setTargetLangValue] = useState('');
+  const [nativeLangValue, setNativeLangValue] = useState('');
   const [pronunciation, setPronunciation] = useState('');
   const [partOfSpeech, setPartOfSpeech] = useState('');
   const [notes, setNotes] = useState('');
@@ -41,8 +43,8 @@ export const WordBank: React.FC = () => {
 
   const handleOpenAddModal = () => {
     setEditingWord(null);
-    setKorean('');
-    setEnglish('');
+    setTargetLangValue('');
+    setNativeLangValue('');
     setPronunciation('');
     setPartOfSpeech('');
     setNotes('');
@@ -51,8 +53,8 @@ export const WordBank: React.FC = () => {
 
   const handleOpenEditModal = (word: Word) => {
     setEditingWord(word);
-    setKorean(word.korean);
-    setEnglish(word.english);
+    setTargetLangValue(word.targetLanguage);
+    setNativeLangValue(word.nativeLanguage);
     setPronunciation(word.pronunciation || '');
     setPartOfSpeech(word.partOfSpeech || '');
     setNotes(word.notes || '');
@@ -61,13 +63,13 @@ export const WordBank: React.FC = () => {
 
   const handleSaveWord = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!korean || !english) return;
+    if (!targetLangValue || !nativeLangValue) return;
 
     try {
       if (editingWord) {
-        await api.updateWord(editingWord.id, { korean, english, pronunciation, partOfSpeech, notes });
+        await api.updateWord(editingWord.id, { targetLanguage: targetLangValue, nativeLanguage: nativeLangValue, pronunciation, partOfSpeech, notes });
       } else {
-        await api.createWord({ korean, english, pronunciation, partOfSpeech, notes });
+        await api.createWord({ targetLanguage: targetLangValue, nativeLanguage: nativeLangValue, pronunciation, partOfSpeech, notes });
       }
       setIsModalOpen(false);
       loadWords(searchQuery);
@@ -103,16 +105,17 @@ export const WordBank: React.FC = () => {
     playStateRef.current = { id: word.id, isSlow: newIsSlow };
     setPlayingWordId(word.id);
 
-    const utterance = new SpeechSynthesisUtterance(word.korean);
-    utterance.lang = 'ko-KR';
-    utterance.rate = newSpeed;
+    const utterance = new SpeechSynthesisUtterance(word.targetLanguage);
 
+    // Try to find a voice matching the target language
     const voices = window.speechSynthesis.getVoices();
-    const koVoice = voices.find(v => v.lang === 'ko-KR' || v.lang === 'ko_KR');
-    if (koVoice) {
-      utterance.voice = koVoice;
+    const langVoice = voices.find(v => v.lang.toLowerCase().startsWith(targetLanguage.toLowerCase().slice(0, 2)));
+    if (langVoice) {
+      utterance.voice = langVoice;
+      utterance.lang = langVoice.lang;
     }
 
+    utterance.rate = newSpeed;
     utterance.onend = () => setPlayingWordId(null);
     utterance.onerror = () => setPlayingWordId(null);
 
@@ -126,7 +129,7 @@ export const WordBank: React.FC = () => {
         <div>
           <h1 style={{ fontSize: '1.8rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <BookOpen style={{ color: 'var(--accent-secondary)' }} />
-            <span>Korean Word Bank</span>
+            <span>{targetLanguage} Word Bank</span>
           </h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
             All learned vocabulary automatically tracked from lessons or added manually. Total: {words.length} words.
@@ -144,7 +147,7 @@ export const WordBank: React.FC = () => {
         <FilterInput
           value={searchQuery}
           onChange={setSearchQuery}
-          placeholder="Search word in Korean or English..."
+          placeholder={`Search word in ${targetLanguage} or ${nativeLanguage}...`}
           containerStyle={{ flex: 1, minWidth: '250px' }}
         />
         <div className="glass-card" style={{ padding: '0.85rem 1.25rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -179,7 +182,7 @@ export const WordBank: React.FC = () => {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
                     <span className="kr-text" style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--accent-secondary)' }}>
-                      {word.korean}
+                      {word.targetLanguage}
                     </span>
                     <button
                       className="btn"
@@ -198,7 +201,7 @@ export const WordBank: React.FC = () => {
                   {word.partOfSpeech && <span className="pill pill-primary">{word.partOfSpeech}</span>}
                 </div>
                 <div style={{ fontSize: '1rem', fontWeight: 500, marginBottom: '0.25rem' }}>
-                  {word.english}
+                  {word.nativeLanguage}
                 </div>
                 {word.pronunciation && (
                   <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontStyle: 'italic', marginBottom: '0.5rem' }}>
@@ -240,18 +243,18 @@ export const WordBank: React.FC = () => {
 
             <form onSubmit={handleSaveWord} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div className="input-group">
-                <label>Korean (Hangul)*</label>
-                <input autoFocus type="text" className="kr-text" value={korean} onChange={(e) => setKorean(e.target.value)} required placeholder="e.g. 공부하다" />
+                <label>{targetLanguage}*</label>
+                <input autoFocus type="text" className="kr-text" value={targetLangValue} onChange={(e) => setTargetLangValue(e.target.value)} required placeholder={`Word in ${targetLanguage}`} />
               </div>
 
               <div className="input-group">
-                <label>English Meaning*</label>
-                <input type="text" value={english} onChange={(e) => setEnglish(e.target.value)} required placeholder="e.g. To study" />
+                <label>{nativeLanguage} Meaning*</label>
+                <input type="text" value={nativeLangValue} onChange={(e) => setNativeLangValue(e.target.value)} required placeholder={`Meaning in ${nativeLanguage}`} />
               </div>
 
               <div className="input-group">
-                <label>Pronunciation (Romaja)</label>
-                <input type="text" value={pronunciation} onChange={(e) => setPronunciation(e.target.value)} placeholder="e.g. gong-bu-ha-da" />
+                <label>Pronunciation</label>
+                <input type="text" value={pronunciation} onChange={(e) => setPronunciation(e.target.value)} placeholder="e.g. romanized pronunciation" />
               </div>
 
               <div className="input-group">

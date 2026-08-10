@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { api, API_BASE } from '../services/api';
 import { Settings as SettingsIcon, Key, Cpu, Save, CheckCircle2, Trash2, AlertTriangle, ExternalLink, LogOut, User, Upload, Download, X, Globe } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguages } from '../contexts/LanguageContext';
 
 interface ProviderPreset {
   name: string;
@@ -102,6 +103,7 @@ const LANGUAGES = [
 
 export const Settings: React.FC = () => {
   const { user } = useAuth();
+  const { refreshLanguages } = useLanguages();
   const [model, setModel] = useState('gpt-4o-mini');
   const [baseURL, setBaseURL] = useState('https://api.openai.com/v1');
   const [apiKey, setApiKey] = useState('');
@@ -182,6 +184,7 @@ export const Settings: React.FC = () => {
         TARGET_LANGUAGE: targetLanguage,
         ...(apiKey.trim() && !isLocalOllamaBaseURL ? { api_key: apiKey.trim() } : {}),
       });
+      await refreshLanguages();
       setSavedSuccess(true);
       if (apiKey.trim() && !isLocalOllamaBaseURL) {
         setHasApiKey(true);
@@ -556,7 +559,7 @@ export const Settings: React.FC = () => {
               {`{
   "settings": [{ "key": "AI_MODEL", "value": "gpt-4o-mini" }],
   "words": [
-    { "korean": "안녕하세요", "english": "Hello", "pronunciation": "annyeonghaseyo", "partOfSpeech": "noun", "notes": "" }
+    { "targetLanguage": "안녕하세요", "nativeLanguage": "Hello", "pronunciation": "annyeonghaseyo", "partOfSpeech": "noun", "notes": "" }
   ],
   "rules": [
     { "title": "Present Tense", "explanation": "Add -아요/어요", "examples": "[]" }

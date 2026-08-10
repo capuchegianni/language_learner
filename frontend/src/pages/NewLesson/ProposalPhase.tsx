@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ProposedRule } from '../../types';
 import { RefreshCw, BookOpen, Sparkles, Check } from 'lucide-react';
+import { useLanguages } from '../../contexts/LanguageContext';
 
 interface ProposalPhaseProps {
   proposals: ProposedRule[];
@@ -33,6 +34,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
   generatingLesson,
   fetchProposals,
 }) => {
+  const { targetLanguage } = useLanguages();
   const [customRule, setCustomRule] = useState('');
 
   const isCustomSelected =
@@ -57,7 +59,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
     <div>
       <div className="glass-card" style={{ marginBottom: '1.5rem', textAlign: 'center' }}>
         <h2 style={{ fontSize: '1.6rem', fontWeight: 700, marginBottom: '0.5rem' }}>
-          Select Today's Korean Rule
+          Select Today's {targetLanguage} Rule
         </h2>
         <p style={{ color: 'var(--text-secondary)', maxWidth: '600px', margin: '0 auto 1.5rem' }}>
           The AI analyzed your mastered rules and proposed 3 new daily grammar rules, or choose a random revision rule to refresh your knowledge.
@@ -173,7 +175,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
               <div style={{ width: '100%' }}>
                 <input
                   type="text"
-                  placeholder="e.g., How to say 'I want to...' in Korean"
+                  placeholder={`e.g., How to say 'I want to...' in ${targetLanguage}`}
                   value={customRule}
                   onChange={handleCustomRuleChange}
                   style={{

@@ -20,7 +20,7 @@ export class VocabularyController {
   @Post()
   async createWord(
     @Req() req: AuthenticatedRequest,
-    @Body() body: { korean: string; english: string; pronunciation?: string; partOfSpeech?: string; notes?: string },
+    @Body() body: { targetLanguage: string; nativeLanguage: string; pronunciation?: string; partOfSpeech?: string; notes?: string },
   ) {
     const userId = req.user.id;
     return this.vocabularyService.createWord(userId, body);
@@ -30,7 +30,7 @@ export class VocabularyController {
   async updateWord(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
-    @Body() body: { korean?: string; english?: string; pronunciation?: string; partOfSpeech?: string; notes?: string },
+    @Body() body: { targetLanguage?: string; nativeLanguage?: string; pronunciation?: string; partOfSpeech?: string; notes?: string },
   ) {
     const userId = req.user.id;
     return this.vocabularyService.updateWord(userId, id, body);

@@ -54,14 +54,14 @@ export class LessonsService {
 
     const knownWords = await this.prisma.word.findMany({
       where: { userId },
-      select: { korean: true },
+      select: { targetLanguage: true },
     });
     const knownRules = await this.prisma.rule.findMany({
       where: { userId },
       select: { title: true },
     });
 
-    const knownWordsList = knownWords.map((w) => w.korean);
+    const knownWordsList = knownWords.map((w) => w.targetLanguage);
     const knownRulesList = knownRules.map((r) => r.title);
 
     // Call AI service to construct & execute prompt
@@ -93,15 +93,15 @@ export class LessonsService {
     // Upsert new daily words into word bank (scoped to user)
     const wordEntities = [];
     for (const nw of content.newWords || []) {
-      if (!nw.korean) continue;
+      if (!nw.targetLanguage) continue;
       let word = await this.prisma.word.findUnique({
-        where: { userId_korean: { userId, korean: nw.korean } },
+        where: { userId_targetLanguage: { userId, targetLanguage: nw.targetLanguage } },
       });
       if (!word) {
         word = await this.prisma.word.create({
           data: {
-            korean: nw.korean,
-            english: nw.english || '',
+            targetLanguage: nw.targetLanguage,
+            nativeLanguage: nw.nativeLanguage || '',
             pronunciation: nw.pronunciation || null,
             partOfSpeech: nw.partOfSpeech || null,
             userId,

@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
 import { DashboardStats, Lesson } from '../types';
 import { Sparkles, BookOpen, Scroll, Award, ArrowRight, CheckCircle2, Clock, Trash2 } from 'lucide-react';
+import { useLanguages } from '../contexts/LanguageContext';
 
 export const Dashboard: React.FC = () => {
   const navigate = useNavigate();
+  const { targetLanguage } = useLanguages();
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -40,7 +42,7 @@ export const Dashboard: React.FC = () => {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
             <h1 style={{ fontSize: '1.8rem', fontWeight: 700, marginBottom: '0.5rem' }}>
-              안녕하세요! Ready for Today's Korean Lesson?
+              Ready for Today's {targetLanguage} Lesson?
             </h1>
             <p style={{ color: 'var(--text-secondary)', maxWidth: '650px' }}>
               Your personal AI tutor generates custom rules, manages your vocabulary bank, and evaluates your handwritten or typed exercise submissions in real time.
@@ -130,7 +132,7 @@ export const Dashboard: React.FC = () => {
               </div>
               <div style={{ flex: 1 }}>
                 <h3 style={{ fontSize: '1.1rem', fontWeight: 600 }}>Manage Vocabulary Bank</h3>
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>View, search, or add custom Korean words & meanings.</p>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>View, search, or add custom {targetLanguage} words & meanings.</p>
               </div>
               <ArrowRight size={18} color="var(--text-secondary)" />
             </div>

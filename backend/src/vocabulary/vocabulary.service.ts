@@ -17,8 +17,8 @@ export class VocabularyService {
       where: {
         userId,
         OR: [
-          { korean: { contains: query } },
-          { english: { contains: query } },
+          { targetLanguage: { contains: query } },
+          { nativeLanguage: { contains: query } },
         ],
       },
       orderBy: { createdAt: 'desc' },
@@ -28,8 +28,8 @@ export class VocabularyService {
   async createWord(
     userId: string,
     data: {
-      korean: string;
-      english: string;
+      targetLanguage: string;
+      nativeLanguage: string;
       pronunciation?: string;
       partOfSpeech?: string;
       notes?: string;
@@ -42,8 +42,8 @@ export class VocabularyService {
     userId: string,
     id: string,
     data: {
-      korean?: string;
-      english?: string;
+      targetLanguage?: string;
+      nativeLanguage?: string;
       pronunciation?: string;
       partOfSpeech?: string;
       notes?: string;

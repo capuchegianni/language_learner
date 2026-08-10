@@ -4,9 +4,11 @@ import { api } from '../services/api';
 import { Rule } from '../types';
 import { Scroll, Plus, Trash2, Edit, X, Clock } from 'lucide-react';
 import { FilterInput } from '../components/FilterInput';
+import { useLanguages } from '../contexts/LanguageContext';
 
 export const RuleBank: React.FC = () => {
   const navigate = useNavigate();
+  const { targetLanguage, nativeLanguage } = useLanguages();
   const [rules, setRules] = useState<Rule[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
@@ -50,7 +52,7 @@ export const RuleBank: React.FC = () => {
     setExceptions(rule.exceptions || '');
     try {
       const parsedEx = JSON.parse(rule.examples || '[]');
-      setExamplesText(parsedEx.map((e: any) => `${e.korean} = ${e.english}`).join('\n'));
+      setExamplesText(parsedEx.map((e: any) => `${e.targetLanguage} = ${e.nativeLanguage}`).join('\n'));
     } catch {
       setExamplesText(rule.examples || '');
     }
@@ -67,8 +69,8 @@ export const RuleBank: React.FC = () => {
       .map((line) => {
         const parts = line.split('=');
         return {
-          korean: parts[0]?.trim() || line,
-          english: parts[1]?.trim() || '',
+          targetLanguage: parts[0]?.trim() || line,
+          nativeLanguage: parts[1]?.trim() || '',
         };
       });
 
@@ -112,7 +114,7 @@ export const RuleBank: React.FC = () => {
             <span>Mastered Grammar Rule Bank</span>
           </h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-            A comprehensive index of all Korean grammar rules learned in lessons. Total: {rules.length} rules.
+            A comprehensive index of all {targetLanguage} grammar rules learned in lessons. Total: {rules.length} rules.
           </p>
         </div>
 
@@ -142,7 +144,7 @@ export const RuleBank: React.FC = () => {
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           {rules.map((rule) => {
-            let parsedExamples: Array<{ korean: string; english: string }> = [];
+            let parsedExamples: Array<{ targetLanguage: string; nativeLanguage: string }> = [];
             try {
               parsedExamples = JSON.parse(rule.examples || '[]');
             } catch {
@@ -188,8 +190,8 @@ export const RuleBank: React.FC = () => {
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                       {parsedExamples.map((ex, idx) => (
                         <div key={idx} style={{ background: 'rgba(15,23,42,0.5)', padding: '0.5rem 0.85rem', borderRadius: 'var(--radius-sm)', borderLeft: '3px solid var(--accent-purple)' }}>
-                          <span className="kr-text" style={{ fontWeight: 600, color: '#fff', fontSize: '1rem' }}>{ex.korean}</span>
-                          {ex.english && <span style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', marginLeft: '0.75rem' }}>({ex.english})</span>}
+                          <span className="kr-text" style={{ fontWeight: 600, color: '#fff', fontSize: '1rem' }}>{ex.targetLanguage}</span>
+                          {ex.nativeLanguage && <span style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', marginLeft: '0.75rem' }}>({ex.nativeLanguage})</span>}
                         </div>
                       ))}
                     </div>
@@ -232,8 +234,8 @@ export const RuleBank: React.FC = () => {
               </div>
 
               <div className="input-group">
-                <label>Examples (Format: Korean = English translation per line)</label>
-                <textarea value={examplesText} onChange={(e) => setExamplesText(e.target.value)} placeholder="한국어를 배울 수 있어요 = I can learn Korean" />
+                <label>Examples (Format: {targetLanguage} = {nativeLanguage} translation per line)</label>
+                <textarea value={examplesText} onChange={(e) => setExamplesText(e.target.value)} placeholder={`Example in ${targetLanguage} = Translation in ${nativeLanguage}`} />
               </div>
 
               <div className="input-group">
