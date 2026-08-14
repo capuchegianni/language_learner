@@ -99,7 +99,13 @@ export const LessonDetail: React.FC = () => {
       {lessonContent && <RuleExplanation lessonContent={lessonContent} />}
 
       {/* AI Teacher Grading & User Answers */}
-      {aiFeedback && <AIFeedbackDisplay gradingResult={aiFeedback} userSubmission={userSubmission} />}
+      {aiFeedback && (
+        <AIFeedbackDisplay
+          gradingResult={aiFeedback}
+          userSubmission={userSubmission}
+          lessonContent={lessonContent}
+        />
+      )}
 
       {/* Raw Prompt */}
       {lesson.rawPrompt && (

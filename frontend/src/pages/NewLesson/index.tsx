@@ -339,7 +339,18 @@ export const NewLesson: React.FC = () => {
       {/* PHASE 3: GRADED FEEDBACK & CORRECTIONS */}
       {phase === 'GRADED' && gradingResult && (
         <div>
-          <AIFeedbackDisplay gradingResult={gradingResult} title="Lesson Evaluation Complete!" />
+          <AIFeedbackDisplay
+            gradingResult={gradingResult}
+            userSubmission={
+              currentLesson?.userSubmission
+                ? (typeof currentLesson.userSubmission === 'string'
+                    ? JSON.parse(currentLesson.userSubmission)
+                    : currentLesson.userSubmission)
+                : null
+            }
+            lessonContent={lessonContent}
+            title="Lesson Evaluation Complete!"
+          />
 
           <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
             <button
