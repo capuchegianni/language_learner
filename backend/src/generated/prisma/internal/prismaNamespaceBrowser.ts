@@ -56,7 +56,8 @@ export const ModelName = {
   Rule: 'Rule',
   Lesson: 'Lesson',
   LessonWord: 'LessonWord',
-  Setting: 'Setting'
+  Setting: 'Setting',
+  LessonProposal: 'LessonProposal'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -153,6 +154,22 @@ export const SettingScalarFieldEnum = {
 } as const
 
 export type SettingScalarFieldEnum = (typeof SettingScalarFieldEnum)[keyof typeof SettingScalarFieldEnum]
+
+
+export const LessonProposalScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  explanation: 'explanation',
+  category: 'category',
+  difficulty: 'difficulty',
+  isReview: 'isReview',
+  targetLanguage: 'targetLanguage',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  userId: 'userId'
+} as const
+
+export type LessonProposalScalarFieldEnum = (typeof LessonProposalScalarFieldEnum)[keyof typeof LessonProposalScalarFieldEnum]
 
 
 export const SortOrder = {

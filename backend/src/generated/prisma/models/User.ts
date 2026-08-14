@@ -202,6 +202,7 @@ export type UserWhereInput = {
   rules?: Prisma.RuleListRelationFilter
   lessons?: Prisma.LessonListRelationFilter
   settings?: Prisma.SettingListRelationFilter
+  lessonProposals?: Prisma.LessonProposalListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -216,6 +217,7 @@ export type UserOrderByWithRelationInput = {
   rules?: Prisma.RuleOrderByRelationAggregateInput
   lessons?: Prisma.LessonOrderByRelationAggregateInput
   settings?: Prisma.SettingOrderByRelationAggregateInput
+  lessonProposals?: Prisma.LessonProposalOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -233,6 +235,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   rules?: Prisma.RuleListRelationFilter
   lessons?: Prisma.LessonListRelationFilter
   settings?: Prisma.SettingListRelationFilter
+  lessonProposals?: Prisma.LessonProposalListRelationFilter
 }, "id" | "googleId" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -273,6 +276,7 @@ export type UserCreateInput = {
   rules?: Prisma.RuleCreateNestedManyWithoutUserInput
   lessons?: Prisma.LessonCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingCreateNestedManyWithoutUserInput
+  lessonProposals?: Prisma.LessonProposalCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -287,6 +291,7 @@ export type UserUncheckedCreateInput = {
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutUserInput
   lessons?: Prisma.LessonUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingUncheckedCreateNestedManyWithoutUserInput
+  lessonProposals?: Prisma.LessonProposalUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -301,6 +306,7 @@ export type UserUpdateInput = {
   rules?: Prisma.RuleUpdateManyWithoutUserNestedInput
   lessons?: Prisma.LessonUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingUpdateManyWithoutUserNestedInput
+  lessonProposals?: Prisma.LessonProposalUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -315,6 +321,7 @@ export type UserUncheckedUpdateInput = {
   rules?: Prisma.RuleUncheckedUpdateManyWithoutUserNestedInput
   lessons?: Prisma.LessonUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingUncheckedUpdateManyWithoutUserNestedInput
+  lessonProposals?: Prisma.LessonProposalUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -450,6 +457,20 @@ export type UserUpdateOneRequiredWithoutSettingsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSettingsInput, Prisma.UserUpdateWithoutSettingsInput>, Prisma.UserUncheckedUpdateWithoutSettingsInput>
 }
 
+export type UserCreateNestedOneWithoutLessonProposalsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutLessonProposalsInput, Prisma.UserUncheckedCreateWithoutLessonProposalsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutLessonProposalsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutLessonProposalsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutLessonProposalsInput, Prisma.UserUncheckedCreateWithoutLessonProposalsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutLessonProposalsInput
+  upsert?: Prisma.UserUpsertWithoutLessonProposalsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutLessonProposalsInput, Prisma.UserUpdateWithoutLessonProposalsInput>, Prisma.UserUncheckedUpdateWithoutLessonProposalsInput>
+}
+
 export type UserCreateWithoutWordsInput = {
   id?: string
   googleId: string
@@ -461,6 +482,7 @@ export type UserCreateWithoutWordsInput = {
   rules?: Prisma.RuleCreateNestedManyWithoutUserInput
   lessons?: Prisma.LessonCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingCreateNestedManyWithoutUserInput
+  lessonProposals?: Prisma.LessonProposalCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutWordsInput = {
@@ -474,6 +496,7 @@ export type UserUncheckedCreateWithoutWordsInput = {
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutUserInput
   lessons?: Prisma.LessonUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingUncheckedCreateNestedManyWithoutUserInput
+  lessonProposals?: Prisma.LessonProposalUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutWordsInput = {
@@ -503,6 +526,7 @@ export type UserUpdateWithoutWordsInput = {
   rules?: Prisma.RuleUpdateManyWithoutUserNestedInput
   lessons?: Prisma.LessonUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingUpdateManyWithoutUserNestedInput
+  lessonProposals?: Prisma.LessonProposalUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutWordsInput = {
@@ -516,6 +540,7 @@ export type UserUncheckedUpdateWithoutWordsInput = {
   rules?: Prisma.RuleUncheckedUpdateManyWithoutUserNestedInput
   lessons?: Prisma.LessonUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingUncheckedUpdateManyWithoutUserNestedInput
+  lessonProposals?: Prisma.LessonProposalUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutRulesInput = {
@@ -529,6 +554,7 @@ export type UserCreateWithoutRulesInput = {
   words?: Prisma.WordCreateNestedManyWithoutUserInput
   lessons?: Prisma.LessonCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingCreateNestedManyWithoutUserInput
+  lessonProposals?: Prisma.LessonProposalCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutRulesInput = {
@@ -542,6 +568,7 @@ export type UserUncheckedCreateWithoutRulesInput = {
   words?: Prisma.WordUncheckedCreateNestedManyWithoutUserInput
   lessons?: Prisma.LessonUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingUncheckedCreateNestedManyWithoutUserInput
+  lessonProposals?: Prisma.LessonProposalUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutRulesInput = {
@@ -571,6 +598,7 @@ export type UserUpdateWithoutRulesInput = {
   words?: Prisma.WordUpdateManyWithoutUserNestedInput
   lessons?: Prisma.LessonUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingUpdateManyWithoutUserNestedInput
+  lessonProposals?: Prisma.LessonProposalUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRulesInput = {
@@ -584,6 +612,7 @@ export type UserUncheckedUpdateWithoutRulesInput = {
   words?: Prisma.WordUncheckedUpdateManyWithoutUserNestedInput
   lessons?: Prisma.LessonUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingUncheckedUpdateManyWithoutUserNestedInput
+  lessonProposals?: Prisma.LessonProposalUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutLessonsInput = {
@@ -597,6 +626,7 @@ export type UserCreateWithoutLessonsInput = {
   words?: Prisma.WordCreateNestedManyWithoutUserInput
   rules?: Prisma.RuleCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingCreateNestedManyWithoutUserInput
+  lessonProposals?: Prisma.LessonProposalCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLessonsInput = {
@@ -610,6 +640,7 @@ export type UserUncheckedCreateWithoutLessonsInput = {
   words?: Prisma.WordUncheckedCreateNestedManyWithoutUserInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingUncheckedCreateNestedManyWithoutUserInput
+  lessonProposals?: Prisma.LessonProposalUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLessonsInput = {
@@ -639,6 +670,7 @@ export type UserUpdateWithoutLessonsInput = {
   words?: Prisma.WordUpdateManyWithoutUserNestedInput
   rules?: Prisma.RuleUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingUpdateManyWithoutUserNestedInput
+  lessonProposals?: Prisma.LessonProposalUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLessonsInput = {
@@ -652,6 +684,7 @@ export type UserUncheckedUpdateWithoutLessonsInput = {
   words?: Prisma.WordUncheckedUpdateManyWithoutUserNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingUncheckedUpdateManyWithoutUserNestedInput
+  lessonProposals?: Prisma.LessonProposalUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSettingsInput = {
@@ -665,6 +698,7 @@ export type UserCreateWithoutSettingsInput = {
   words?: Prisma.WordCreateNestedManyWithoutUserInput
   rules?: Prisma.RuleCreateNestedManyWithoutUserInput
   lessons?: Prisma.LessonCreateNestedManyWithoutUserInput
+  lessonProposals?: Prisma.LessonProposalCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSettingsInput = {
@@ -678,6 +712,7 @@ export type UserUncheckedCreateWithoutSettingsInput = {
   words?: Prisma.WordUncheckedCreateNestedManyWithoutUserInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutUserInput
   lessons?: Prisma.LessonUncheckedCreateNestedManyWithoutUserInput
+  lessonProposals?: Prisma.LessonProposalUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSettingsInput = {
@@ -707,6 +742,7 @@ export type UserUpdateWithoutSettingsInput = {
   words?: Prisma.WordUpdateManyWithoutUserNestedInput
   rules?: Prisma.RuleUpdateManyWithoutUserNestedInput
   lessons?: Prisma.LessonUpdateManyWithoutUserNestedInput
+  lessonProposals?: Prisma.LessonProposalUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSettingsInput = {
@@ -720,6 +756,79 @@ export type UserUncheckedUpdateWithoutSettingsInput = {
   words?: Prisma.WordUncheckedUpdateManyWithoutUserNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutUserNestedInput
   lessons?: Prisma.LessonUncheckedUpdateManyWithoutUserNestedInput
+  lessonProposals?: Prisma.LessonProposalUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutLessonProposalsInput = {
+  id?: string
+  googleId: string
+  displayName: string
+  email: string
+  avatarUrl?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  words?: Prisma.WordCreateNestedManyWithoutUserInput
+  rules?: Prisma.RuleCreateNestedManyWithoutUserInput
+  lessons?: Prisma.LessonCreateNestedManyWithoutUserInput
+  settings?: Prisma.SettingCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutLessonProposalsInput = {
+  id?: string
+  googleId: string
+  displayName: string
+  email: string
+  avatarUrl?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  words?: Prisma.WordUncheckedCreateNestedManyWithoutUserInput
+  rules?: Prisma.RuleUncheckedCreateNestedManyWithoutUserInput
+  lessons?: Prisma.LessonUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.SettingUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutLessonProposalsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutLessonProposalsInput, Prisma.UserUncheckedCreateWithoutLessonProposalsInput>
+}
+
+export type UserUpsertWithoutLessonProposalsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutLessonProposalsInput, Prisma.UserUncheckedUpdateWithoutLessonProposalsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutLessonProposalsInput, Prisma.UserUncheckedCreateWithoutLessonProposalsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutLessonProposalsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutLessonProposalsInput, Prisma.UserUncheckedUpdateWithoutLessonProposalsInput>
+}
+
+export type UserUpdateWithoutLessonProposalsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  googleId?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  words?: Prisma.WordUpdateManyWithoutUserNestedInput
+  rules?: Prisma.RuleUpdateManyWithoutUserNestedInput
+  lessons?: Prisma.LessonUpdateManyWithoutUserNestedInput
+  settings?: Prisma.SettingUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutLessonProposalsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  googleId?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  words?: Prisma.WordUncheckedUpdateManyWithoutUserNestedInput
+  rules?: Prisma.RuleUncheckedUpdateManyWithoutUserNestedInput
+  lessons?: Prisma.LessonUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.SettingUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -732,6 +841,7 @@ export type UserCountOutputType = {
   rules: number
   lessons: number
   settings: number
+  lessonProposals: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -739,6 +849,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   rules?: boolean | UserCountOutputTypeCountRulesArgs
   lessons?: boolean | UserCountOutputTypeCountLessonsArgs
   settings?: boolean | UserCountOutputTypeCountSettingsArgs
+  lessonProposals?: boolean | UserCountOutputTypeCountLessonProposalsArgs
 }
 
 /**
@@ -779,6 +890,13 @@ export type UserCountOutputTypeCountSettingsArgs<ExtArgs extends runtime.Types.E
   where?: Prisma.SettingWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountLessonProposalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LessonProposalWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -792,6 +910,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   rules?: boolean | Prisma.User$rulesArgs<ExtArgs>
   lessons?: boolean | Prisma.User$lessonsArgs<ExtArgs>
   settings?: boolean | Prisma.User$settingsArgs<ExtArgs>
+  lessonProposals?: boolean | Prisma.User$lessonProposalsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -831,6 +950,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   rules?: boolean | Prisma.User$rulesArgs<ExtArgs>
   lessons?: boolean | Prisma.User$lessonsArgs<ExtArgs>
   settings?: boolean | Prisma.User$settingsArgs<ExtArgs>
+  lessonProposals?: boolean | Prisma.User$lessonProposalsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -843,6 +963,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     rules: Prisma.$RulePayload<ExtArgs>[]
     lessons: Prisma.$LessonPayload<ExtArgs>[]
     settings: Prisma.$SettingPayload<ExtArgs>[]
+    lessonProposals: Prisma.$LessonProposalPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1250,6 +1371,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   rules<T extends Prisma.User$rulesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$rulesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   lessons<T extends Prisma.User$lessonsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$lessonsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LessonPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   settings<T extends Prisma.User$settingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$settingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SettingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  lessonProposals<T extends Prisma.User$lessonProposalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$lessonProposalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LessonProposalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1765,6 +1887,30 @@ export type User$settingsArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.SettingScalarFieldEnum | Prisma.SettingScalarFieldEnum[]
+}
+
+/**
+ * User.lessonProposals
+ */
+export type User$lessonProposalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LessonProposal
+   */
+  select?: Prisma.LessonProposalSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LessonProposal
+   */
+  omit?: Prisma.LessonProposalOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LessonProposalInclude<ExtArgs> | null
+  where?: Prisma.LessonProposalWhereInput
+  orderBy?: Prisma.LessonProposalOrderByWithRelationInput | Prisma.LessonProposalOrderByWithRelationInput[]
+  cursor?: Prisma.LessonProposalWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LessonProposalScalarFieldEnum | Prisma.LessonProposalScalarFieldEnum[]
 }
 
 /**

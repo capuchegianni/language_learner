@@ -389,7 +389,8 @@ export const ModelName = {
   Rule: 'Rule',
   Lesson: 'Lesson',
   LessonWord: 'LessonWord',
-  Setting: 'Setting'
+  Setting: 'Setting',
+  LessonProposal: 'LessonProposal'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -405,7 +406,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "word" | "rule" | "lesson" | "lessonWord" | "setting"
+    modelProps: "user" | "word" | "rule" | "lesson" | "lessonWord" | "setting" | "lessonProposal"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -853,6 +854,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    LessonProposal: {
+      payload: Prisma.$LessonProposalPayload<ExtArgs>
+      fields: Prisma.LessonProposalFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LessonProposalFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LessonProposalPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LessonProposalFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LessonProposalPayload>
+        }
+        findFirst: {
+          args: Prisma.LessonProposalFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LessonProposalPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LessonProposalFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LessonProposalPayload>
+        }
+        findMany: {
+          args: Prisma.LessonProposalFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LessonProposalPayload>[]
+        }
+        create: {
+          args: Prisma.LessonProposalCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LessonProposalPayload>
+        }
+        createMany: {
+          args: Prisma.LessonProposalCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LessonProposalCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LessonProposalPayload>[]
+        }
+        delete: {
+          args: Prisma.LessonProposalDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LessonProposalPayload>
+        }
+        update: {
+          args: Prisma.LessonProposalUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LessonProposalPayload>
+        }
+        deleteMany: {
+          args: Prisma.LessonProposalDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LessonProposalUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LessonProposalUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LessonProposalPayload>[]
+        }
+        upsert: {
+          args: Prisma.LessonProposalUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LessonProposalPayload>
+        }
+        aggregate: {
+          args: Prisma.LessonProposalAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLessonProposal>
+        }
+        groupBy: {
+          args: Prisma.LessonProposalGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LessonProposalGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LessonProposalCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LessonProposalCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -970,6 +1045,22 @@ export const SettingScalarFieldEnum = {
 } as const
 
 export type SettingScalarFieldEnum = (typeof SettingScalarFieldEnum)[keyof typeof SettingScalarFieldEnum]
+
+
+export const LessonProposalScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  explanation: 'explanation',
+  category: 'category',
+  difficulty: 'difficulty',
+  isReview: 'isReview',
+  targetLanguage: 'targetLanguage',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  userId: 'userId'
+} as const
+
+export type LessonProposalScalarFieldEnum = (typeof LessonProposalScalarFieldEnum)[keyof typeof LessonProposalScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1129,6 +1220,7 @@ export type GlobalOmitConfig = {
   lesson?: Prisma.LessonOmit
   lessonWord?: Prisma.LessonWordOmit
   setting?: Prisma.SettingOmit
+  lessonProposal?: Prisma.LessonProposalOmit
 }
 
 /* Types for Logging */
