@@ -38,12 +38,6 @@ export class LessonsController {
     return this.lessonsService.getDashboardStats(userId);
   }
 
-  @Delete('stats')
-  async resetStats(@Req() req: AuthenticatedRequest) {
-    const userId = req.user.id;
-    return this.lessonsService.resetStats(userId);
-  }
-
   @Get('propose-rules')
   async getRuleProposals(@Req() req: AuthenticatedRequest, @Query('count') count?: string, @Query('exclude') exclude?: string) {
     const userId = req.user.id;

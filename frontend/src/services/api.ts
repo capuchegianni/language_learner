@@ -60,7 +60,7 @@ export const api = {
     if (answers.ex1) formData.append('ex1', answers.ex1);
     if (answers.ex2) formData.append('ex2', answers.ex2);
     if (answers.ex3) formData.append('ex3', answers.ex3);
-    
+
     if (imageFiles && imageFiles.length > 0) {
       imageFiles.forEach(file => {
         formData.append('images', file);
@@ -86,10 +86,6 @@ export const api = {
 
   async deleteLesson(id: string): Promise<void> {
     await axios.delete(`${API_BASE}/lessons/${id}`);
-  },
-
-  async resetStats(): Promise<void> {
-    await axios.delete(`${API_BASE}/lessons/stats`);
   },
 
   // Vocabulary Bank
@@ -161,4 +157,10 @@ export const api = {
     const res = await axios.get(`${API_BASE}/settings/export?${params.toString()}`);
     return res.data;
   },
+
+  async resetData(include: { settings?: boolean; words?: boolean; rules?: boolean; lessons?: boolean }): Promise<{ success: boolean; message: string; resetItems: string[] }> {
+    const res = await axios.post(`${API_BASE}/settings/reset`, include);
+    return res.data;
+  },
 };
+
