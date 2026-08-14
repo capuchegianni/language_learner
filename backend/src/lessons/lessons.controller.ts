@@ -85,9 +85,13 @@ export class LessonsController {
   }
 
   @Get()
-  async getLessons(@Req() req: AuthenticatedRequest) {
+  async getLessons(
+    @Req() req: AuthenticatedRequest,
+    @Query('status') status?: string,
+    @Query('q') q?: string,
+  ) {
     const userId = req.user.id;
-    return this.lessonsService.getLessons(userId);
+    return this.lessonsService.getLessons(userId, { status, q });
   }
 
   @Get(':id')

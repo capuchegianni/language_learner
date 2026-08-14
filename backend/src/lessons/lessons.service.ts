@@ -335,9 +335,23 @@ export class LessonsService {
     return updated;
   }
 
-  async getLessons(userId: string) {
+  async getLessons(userId: string, options?: { status?: string; q?: string }) {
+    const where: any = { userId };
+    if (options?.status) {
+      where.status = options.status.toUpperCase();
+    }
+    if (options?.q) {
+      const q = options.q.trim();
+      if (q) {
+        where.OR = [
+          { title: { contains: q } },
+          { rule: { title: { contains: q } } },
+        ];
+      }
+    }
+
     return this.prisma.lesson.findMany({
-      where: { userId },
+      where,
       orderBy: { createdAt: 'desc' },
       include: {
         rule: true,

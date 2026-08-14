@@ -84,8 +84,8 @@ export const api = {
   },
 
   // Lessons History
-  async getLessons(): Promise<Lesson[]> {
-    const res = await axios.get(`${API_BASE}/lessons`);
+  async getLessons(params?: { status?: string; q?: string }): Promise<Lesson[]> {
+    const res = await axios.get(`${API_BASE}/lessons`, { params });
     return res.data;
   },
 
