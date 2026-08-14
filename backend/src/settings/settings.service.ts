@@ -124,39 +124,56 @@ export class SettingsService {
     return this.getAllSettings(userId);
   }
 
+  private parseDate(val: any): Date | undefined {
+    if (!val) return undefined;
+    const d = new Date(val);
+    return isNaN(d.getTime()) ? undefined : d;
+  }
+
   async importData(userId: string, data: any): Promise<{ success: boolean; message: string }> {
     const { overrideSettings, settings, words, rules, lessons } = data;
 
     await this.prisma.$transaction(async (tx) => {
       // 1. Settings
       if (settings && typeof settings === 'object') {
-        const settingsObj = Array.isArray(settings)
-          ? settings.reduce<Record<string, string>>((acc, s) => {
-            if (s && typeof s.key === 'string' && typeof s.value === 'string') {
-              acc[this.normalizeKey(s.key)] = s.value;
-            }
-            return acc;
-          }, {})
-          : settings;
+        const settingsList: Array<{ key: string; value: string; updatedAt?: any }> = Array.isArray(settings)
+          ? settings
+          : Object.entries(settings).map(([key, value]) => ({ key, value: value as string }));
 
-        for (const [key, value] of Object.entries(settingsObj)) {
-          if (typeof value !== 'string') continue;
-          const normalizedKey = this.normalizeKey(key);
+        for (const s of settingsList) {
+          if (!s || typeof s.key !== 'string' || typeof s.value !== 'string') continue;
+          const normalizedKey = this.normalizeKey(s.key);
 
-          if (normalizedKey === SECRET_SETTING_KEY && !value.trim()) continue;
+          if (normalizedKey === SECRET_SETTING_KEY && !s.value.trim()) continue;
+
+          const storedValue = normalizedKey === SECRET_SETTING_KEY ? this.encryptSecret(s.value) : s.value;
+          const updatedAt = this.parseDate(s.updatedAt);
 
           if (overrideSettings) {
-            const storedValue = normalizedKey === SECRET_SETTING_KEY ? this.encryptSecret(value) : value;
             await tx.setting.upsert({
               where: { userId_key: { userId, key: normalizedKey } },
-              update: { value: storedValue },
-              create: { key: normalizedKey, value: storedValue, userId },
+              update: {
+                value: storedValue,
+                ...(updatedAt ? { updatedAt } : {}),
+              },
+              create: {
+                key: normalizedKey,
+                value: storedValue,
+                userId,
+                ...(updatedAt ? { updatedAt } : {}),
+              },
             });
           } else {
             const existing = await tx.setting.findUnique({ where: { userId_key: { userId, key: normalizedKey } } });
             if (!existing) {
-              const storedValue = normalizedKey === SECRET_SETTING_KEY ? this.encryptSecret(value) : value;
-              await tx.setting.create({ data: { key: normalizedKey, value: storedValue, userId } });
+              await tx.setting.create({
+                data: {
+                  key: normalizedKey,
+                  value: storedValue,
+                  userId,
+                  ...(updatedAt ? { updatedAt } : {}),
+                },
+              });
             }
           }
         }
@@ -175,6 +192,8 @@ export class SettingsService {
             targetLang = `${w.targetLanguage}_${counter}`;
             counter++;
           }
+          const createdAt = this.parseDate(w.createdAt);
+          const updatedAt = this.parseDate(w.updatedAt);
           const newWord = await tx.word.create({
             data: {
               targetLanguage: targetLang,
@@ -183,6 +202,8 @@ export class SettingsService {
               partOfSpeech: w.partOfSpeech || null,
               notes: w.notes || null,
               userId,
+              ...(createdAt ? { createdAt } : {}),
+              ...(updatedAt ? { updatedAt } : {}),
             },
           });
           wordMap.set(w.targetLanguage, newWord.id);
@@ -200,6 +221,8 @@ export class SettingsService {
             counter++;
           }
           let examplesStr = typeof r.examples === 'string' ? r.examples : JSON.stringify(r.examples);
+          const createdAt = this.parseDate(r.createdAt);
+          const updatedAt = this.parseDate(r.updatedAt);
           const newRule = await tx.rule.create({
             data: {
               title,
@@ -207,6 +230,8 @@ export class SettingsService {
               examples: examplesStr,
               exceptions: r.exceptions ? (typeof r.exceptions === 'string' ? r.exceptions : JSON.stringify(r.exceptions)) : null,
               userId,
+              ...(createdAt ? { createdAt } : {}),
+              ...(updatedAt ? { updatedAt } : {}),
             },
           });
           ruleMap.set(r.title, newRule.id);
@@ -244,21 +269,26 @@ export class SettingsService {
           const ruleId = await resolveRule(l.ruleTitle || (l.rule ? l.rule.title : null));
 
           let lessonDataStr = typeof l.lessonData === 'string' ? l.lessonData : JSON.stringify(l.lessonData);
+          const createdAt = this.parseDate(l.createdAt);
+          const updatedAt = this.parseDate(l.updatedAt);
 
           const newLesson = await tx.lesson.create({
             data: {
               title: l.title || null,
-              date: l.date ? new Date(l.date) : new Date(),
+              date: this.parseDate(l.date) || new Date(),
               ruleId,
               isReview: !!l.isReview,
               wordsCount: l.wordsCount || 5,
               lessonData: lessonDataStr,
               status: l.status || 'GENERATED',
               userSubmission: l.userSubmission ? (typeof l.userSubmission === 'string' ? l.userSubmission : JSON.stringify(l.userSubmission)) : null,
+              submissionImage: l.submissionImage || null,
               aiFeedback: l.aiFeedback ? (typeof l.aiFeedback === 'string' ? l.aiFeedback : JSON.stringify(l.aiFeedback)) : null,
               overallScore: l.overallScore || null,
               rawPrompt: l.rawPrompt || null,
               userId,
+              ...(createdAt ? { createdAt } : {}),
+              ...(updatedAt ? { updatedAt } : {}),
             },
           });
 
@@ -288,7 +318,7 @@ export class SettingsService {
       if (include.settings) {
         const records = await tx.setting.findMany({
           where: { userId, key: { not: SECRET_SETTING_KEY } },
-          select: { key: true, value: true },
+          select: { key: true, value: true, updatedAt: true },
         });
         result.settings = records;
       }
@@ -303,6 +333,7 @@ export class SettingsService {
             partOfSpeech: true,
             notes: true,
             createdAt: true,
+            updatedAt: true,
           },
           orderBy: { createdAt: 'asc' },
         });
@@ -317,6 +348,7 @@ export class SettingsService {
             examples: true,
             exceptions: true,
             createdAt: true,
+            updatedAt: true,
           },
           orderBy: { createdAt: 'asc' },
         });
@@ -333,9 +365,12 @@ export class SettingsService {
             lessonData: true,
             status: true,
             userSubmission: true,
+            submissionImage: true,
             aiFeedback: true,
             overallScore: true,
             rawPrompt: true,
+            createdAt: true,
+            updatedAt: true,
             rule: { select: { title: true } },
             words: { select: { word: { select: { targetLanguage: true } } } },
           },
