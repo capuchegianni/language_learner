@@ -27,16 +27,26 @@ export const api = {
   },
 
   // Rule Proposals
-  async getRuleProposals(count?: number, excludeTitles?: string[]): Promise<{
+  async getRuleProposals(options?: { refresh?: boolean }): Promise<{
     proposedNewRules: ProposedRule[];
     reviewRuleOption: { id: string; title: string; explanation: string } | null;
     totalKnownWords: number;
     totalKnownRules: number;
   }> {
     const params = new URLSearchParams();
-    if (count !== undefined) params.append('count', count.toString());
-    if (excludeTitles && excludeTitles.length > 0) params.append('exclude', excludeTitles.join(','));
+    if (options?.refresh) params.append('refresh', 'true');
     const res = await axios.get(`${API_BASE}/lessons/propose-rules?${params.toString()}`);
+    return res.data;
+  },
+
+  // Replace Single Proposal
+  async replaceProposal(index: number): Promise<{
+    proposedNewRules: ProposedRule[];
+    reviewRuleOption: { id: string; title: string; explanation: string } | null;
+    totalKnownWords: number;
+    totalKnownRules: number;
+  }> {
+    const res = await axios.post(`${API_BASE}/lessons/propose-rules/replace`, { index });
     return res.data;
   },
 

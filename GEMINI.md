@@ -68,6 +68,7 @@ All models are **user-scoped** — every query MUST filter by `userId`.
 - **Rule** — Grammar rules. Unique per `(userId, title)`. Fields `examples` and `exceptions` are stored as JSON strings.
 - **Lesson** — Generated lessons. `lessonData`, `userSubmission`, `aiFeedback` are stored as **JSON strings** (parsed at runtime). Status: `GENERATED` → `SUBMITTED` → `GRADED`.
 - **LessonWord** — Many-to-many join between Lesson ↔ Word.
+- **LessonProposal** — User's active proposed rules and review rule entries (one-to-many with User: `title`, `explanation`, `category`, `difficulty`, `isReview`).
 - **Setting** — Key-value pairs per user. The `api_key` setting is AES-256-GCM encrypted.
 
 ### Important: JSON String Fields
@@ -158,15 +159,16 @@ All routes are defined in `App.tsx`. Protected routes wrap children with `<Prote
 | DELETE | `/api/auth/account`     | Yes  | Deletes user + all data        |
 
 ### Lessons (`/api/lessons`)
-| Method | Path                        | Auth | Description                    |
-| ------ | --------------------------- | ---- | ------------------------------ |
-| GET    | `/api/lessons/stats`        | Yes  | Dashboard stats                |
-| GET    | `/api/lessons/propose-rules`| Yes  | AI proposes new rules (?count, ?exclude) |
-| POST   | `/api/lessons/generate`     | Yes  | Generate lesson from rule      |
-| POST   | `/api/lessons/:id/submit`   | Yes  | Submit answers (multipart: text + images) |
-| GET    | `/api/lessons`              | Yes  | List all lessons               |
-| GET    | `/api/lessons/:id`          | Yes  | Get lesson by ID               |
-| DELETE | `/api/lessons/:id`          | Yes  | Delete lesson                  |
+| Method | Path                            | Auth | Description                           |
+| ------ | ------------------------------- | ---- | ------------------------------------- |
+| GET    | `/api/lessons/stats`            | Yes  | Dashboard stats                       |
+| GET    | `/api/lessons/propose-rules`    | Yes  | Get or top-up active rule proposals (?refresh) |
+| POST   | `/api/lessons/propose-rules/replace` | Yes | Replace a single proposal card ({ index }) |
+| POST   | `/api/lessons/generate`         | Yes  | Generate lesson from rule             |
+| POST   | `/api/lessons/:id/submit`       | Yes  | Submit answers (multipart: text + images) |
+| GET    | `/api/lessons`                  | Yes  | List all lessons                      |
+| GET    | `/api/lessons/:id`              | Yes  | Get lesson by ID                      |
+| DELETE | `/api/lessons/:id`              | Yes  | Delete lesson                         |
 
 ### Vocabulary (`/api/vocabulary`)
 | Method | Path                   | Auth | Description                    |
