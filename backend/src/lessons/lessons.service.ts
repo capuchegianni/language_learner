@@ -231,9 +231,5 @@ export class LessonsService {
       recentLessons,
     };
   }
-
-  async resetStats(userId: string) {
-    await this.prisma.lesson.deleteMany({ where: { userId } });
-    return { success: true, message: 'All lesson history has been reset.' };
-  }
 }
+
