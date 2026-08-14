@@ -129,6 +129,11 @@ export const Settings: React.FC = () => {
     lessons: false,
   });
 
+  // Delete Account State
+  const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
+  const [deletingAccount, setDeletingAccount] = useState(false);
+  const [deleteAccountError, setDeleteAccountError] = useState<string | null>(null);
+
   // Import State
   const [showImportModal, setShowImportModal] = useState(false);
   const [overrideSettings, setOverrideSettings] = useState(false);
@@ -250,6 +255,19 @@ export const Settings: React.FC = () => {
       setResetError(err.response?.data?.message || err.message || 'Failed to reset data. Please try again.');
     } finally {
       setResetting(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    try {
+      setDeletingAccount(true);
+      setDeleteAccountError(null);
+      await api.deleteAccount();
+      window.location.href = '/login';
+    } catch (err: any) {
+      console.error('Failed to delete account', err);
+      setDeleteAccountError(err.response?.data?.message || err.message || 'Failed to delete account. Please try again.');
+      setDeletingAccount(false);
     }
   };
 
@@ -568,22 +586,58 @@ export const Settings: React.FC = () => {
           <AlertTriangle size={20} />
           <span>Danger Zone</span>
         </h3>
-        <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
-          Permanently delete data from your account. You can select specific data categories to reset (Settings, Words, Rules, Lessons) or reset everything.
+        <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', marginBottom: '1.25rem' }}>
+          Irreversible actions for your data and account. Proceed with caution.
         </p>
-        <button
-          type="button"
-          className="btn"
-          id="open-reset-modal-btn"
-          style={{ background: 'rgba(239,68,68,0.15)', color: 'var(--accent-danger)', border: '1px solid rgba(239,68,68,0.3)' }}
-          onClick={() => {
-            setResetError(null);
-            setShowResetModal(true);
-          }}
-        >
-          <Trash2 size={16} />
-          <span>Reset Data...</span>
-        </button>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+          {/* Reset Specific Data */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', paddingBottom: '1.25rem', borderBottom: '1px solid rgba(239,68,68,0.15)' }}>
+            <div>
+              <div style={{ fontWeight: 600, fontSize: '0.95rem', color: '#fff' }}>Reset Specific Data</div>
+              <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: '0.2rem' }}>
+                Select specific data categories (Settings, Words, Rules, Lessons) to permanently clear.
+              </div>
+            </div>
+            <button
+              type="button"
+              className="btn"
+              id="open-reset-modal-btn"
+              style={{ background: 'rgba(239,68,68,0.15)', color: 'var(--accent-danger)', border: '1px solid rgba(239,68,68,0.3)', whiteSpace: 'nowrap' }}
+              onClick={() => {
+                setResetError(null);
+                setShowResetModal(true);
+              }}
+            >
+              <Trash2 size={16} />
+              <span>Reset Data...</span>
+            </button>
+          </div>
+
+          {/* Delete Account */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+            <div>
+              <div style={{ fontWeight: 600, fontSize: '0.95rem', color: '#fff' }}>Delete Account</div>
+              <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: '0.2rem' }}>
+                Permanently delete your user account and all associated data.
+              </div>
+            </div>
+            <button
+              type="button"
+              className="btn"
+              id="open-delete-account-modal-btn"
+              style={{ background: 'rgba(239,68,68,0.15)', color: 'var(--accent-danger)', border: '1px solid rgba(239,68,68,0.3)', whiteSpace: 'nowrap' }}
+              onClick={() => {
+                setDeleteAccountError(null);
+                setShowDeleteAccountModal(true);
+              }}
+            >
+              <Trash2 size={16} />
+              <span>Delete Account...</span>
+            </button>
+          </div>
+        </div>
+
       </div>
 
       {/* Import Modal */}
@@ -826,7 +880,57 @@ export const Settings: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Delete Account Modal */}
+      {showDeleteAccountModal && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.75)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
+          <div className="glass-card" style={{ width: '90%', maxWidth: '500px', position: 'relative', borderColor: 'rgba(239,68,68,0.5)' }}>
+            <button
+              onClick={() => setShowDeleteAccountModal(false)}
+              style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }}
+            >
+              <X size={24} />
+            </button>
+            <h3 style={{ fontSize: '1.3rem', fontWeight: 700, marginBottom: '0.5rem', color: 'var(--accent-danger)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <AlertTriangle size={22} />
+              <span>Delete Account</span>
+            </h3>
+            <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
+              Are you sure you want to permanently delete your account (<strong>{user?.email}</strong>)?
+            </p>
+            <div style={{ fontSize: '0.82rem', color: '#fca5a5', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 'var(--radius-sm)', padding: '0.75rem 0.9rem', marginBottom: '1.25rem', lineHeight: '1.4' }}>
+              ⚠️ <strong>Warning:</strong> All your progress, vocabulary words, grammar rules, completed lessons, exercise scores, and settings will be permanently wiped. You will be logged out immediately and cannot recover this data.
+            </div>
+
+            {deleteAccountError && (
+              <div style={{ background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.5)', padding: '0.75rem', borderRadius: 'var(--radius-sm)', color: '#fca5a5', marginBottom: '1rem', fontSize: '0.85rem' }}>
+                {deleteAccountError}
+              </div>
+            )}
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
+              <button className="btn btn-secondary" onClick={() => setShowDeleteAccountModal(false)} disabled={deletingAccount}>
+                Cancel
+              </button>
+              <button
+                className="btn"
+                id="confirm-delete-account-btn"
+                style={{ background: 'var(--accent-danger)', color: '#fff' }}
+                disabled={deletingAccount}
+                onClick={handleDeleteAccount}
+              >
+                {deletingAccount ? (
+                  <><div className="spinner" /><span>Deleting Account...</span></>
+                ) : (
+                  <><Trash2 size={16} /><span>Permanently Delete Account</span></>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
+
 
