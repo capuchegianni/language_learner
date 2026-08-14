@@ -162,5 +162,11 @@ export const api = {
     const res = await axios.post(`${API_BASE}/settings/reset`, include);
     return res.data;
   },
+
+  async deleteAccount(): Promise<{ success: boolean; message: string }> {
+    const res = await axios.delete(`${API_BASE}/auth/account`);
+    return res.data;
+  },
 };
+
 
