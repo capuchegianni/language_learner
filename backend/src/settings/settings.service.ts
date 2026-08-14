@@ -354,4 +354,64 @@ export class SettingsService {
       return result;
     });
   }
+
+  async resetData(
+    userId: string,
+    options: { settings?: boolean; words?: boolean; rules?: boolean; lessons?: boolean },
+  ): Promise<{ success: boolean; message: string; resetItems: string[] }> {
+    const resetItems: string[] = [];
+
+    await this.prisma.$transaction(async (tx) => {
+      // 1. Lessons
+      if (options.lessons) {
+        await tx.lessonWord.deleteMany({
+          where: { lesson: { userId } },
+        });
+        await tx.lesson.deleteMany({
+          where: { userId },
+        });
+        resetItems.push('lessons');
+      }
+
+      // 2. Words
+      if (options.words) {
+        await tx.lessonWord.deleteMany({
+          where: { word: { userId } },
+        });
+        await tx.word.deleteMany({
+          where: { userId },
+        });
+        resetItems.push('words');
+      }
+
+      // 3. Rules
+      if (options.rules) {
+        await tx.lesson.updateMany({
+          where: { userId },
+          data: { ruleId: null },
+        });
+        await tx.rule.deleteMany({
+          where: { userId },
+        });
+        resetItems.push('rules');
+      }
+
+      // 4. Settings
+      if (options.settings) {
+        await tx.setting.deleteMany({
+          where: { userId },
+        });
+        resetItems.push('settings');
+      }
+    });
+
+    const formattedNames = resetItems.map((item) => item.charAt(0).toUpperCase() + item.slice(1));
+    return {
+      success: true,
+      message: resetItems.length > 0
+        ? `Successfully reset ${formattedNames.join(', ')}.`
+        : 'No data selected to reset.',
+      resetItems,
+    };
+  }
 }

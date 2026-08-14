@@ -157,4 +157,10 @@ export const api = {
     const res = await axios.get(`${API_BASE}/settings/export?${params.toString()}`);
     return res.data;
   },
+
+  async resetData(include: { settings?: boolean; words?: boolean; rules?: boolean; lessons?: boolean }): Promise<{ success: boolean; message: string; resetItems: string[] }> {
+    const res = await axios.post(`${API_BASE}/settings/reset`, include);
+    return res.data;
+  },
 };
+
