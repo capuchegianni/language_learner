@@ -12,34 +12,182 @@ export class LessonsService {
   /**
    * Returns AI proposed new rules + 1 random review rule if existing rules exist.
    */
-  async getRuleProposals(userId: string, count: number = 3, excludeTitles: string[] = []) {
+  async getRuleProposals(userId: string, options?: { forceRefresh?: boolean }) {
+    const forceRefresh = !!options?.forceRefresh;
+    const { targetLanguage } = await this.aiService.getUserLanguages(userId);
+
     const knownRules = await this.prisma.rule.findMany({
       where: { userId },
-      select: { title: true },
+      select: { id: true, title: true, explanation: true },
     });
     const knownRuleTitles = knownRules.map((r) => r.title);
 
-    const proposed = await this.aiService.proposeRules(userId, knownRuleTitles, count, excludeTitles);
+    if (forceRefresh) {
+      await this.prisma.lessonProposal.deleteMany({ where: { userId } });
+    }
 
-    let reviewRule = null;
-    if (knownRuleTitles.length > 0) {
-      const randomIndex = Math.floor(Math.random() * knownRuleTitles.length);
-      const randomRule = await this.prisma.rule.findFirst({
-        where: { userId, title: knownRuleTitles[randomIndex] },
-      });
-      if (randomRule) {
-        reviewRule = {
-          id: randomRule.id,
-          title: randomRule.title,
-          explanation: randomRule.explanation,
-          isReview: true,
-        };
+    let existingProposals = await this.prisma.lessonProposal.findMany({
+      where: { userId },
+      orderBy: { createdAt: 'asc' },
+    });
+
+    // If target language changed, reset proposals for this user
+    if (existingProposals.some((p) => p.targetLanguage && p.targetLanguage !== targetLanguage)) {
+      await this.prisma.lessonProposal.deleteMany({ where: { userId } });
+      existingProposals = [];
+    }
+
+    let newRules = existingProposals.filter((p) => !p.isReview);
+    let reviewProposal = existingProposals.find((p) => p.isReview);
+
+    // Validate review proposal against known rules
+    if (reviewProposal && !knownRules.some((r) => r.title === reviewProposal!.title)) {
+      await this.prisma.lessonProposal.delete({ where: { id: reviewProposal.id } });
+      reviewProposal = undefined;
+    }
+
+    const missingCount = Math.max(0, 3 - newRules.length);
+
+    if (missingCount > 0) {
+      const excludeTitles = newRules.map((p) => p.title);
+      const generated = await this.aiService.proposeRules(userId, knownRuleTitles, missingCount, excludeTitles);
+
+      for (const p of generated) {
+        const created = await this.prisma.lessonProposal.create({
+          data: {
+            userId,
+            title: p.title,
+            explanation: p.briefExplanation || '',
+            category: p.category || 'Grammar',
+            difficulty: p.difficulty || 'Beginner',
+            isReview: false,
+            targetLanguage,
+          },
+        });
+        newRules.push(created);
       }
     }
 
+    if (!reviewProposal && knownRules.length > 0) {
+      const randomIndex = Math.floor(Math.random() * knownRules.length);
+      const randomRule = knownRules[randomIndex];
+      reviewProposal = await this.prisma.lessonProposal.create({
+        data: {
+          userId,
+          title: randomRule.title,
+          explanation: randomRule.explanation,
+          isReview: true,
+          targetLanguage,
+        },
+      });
+    }
+
     return {
-      proposedNewRules: proposed,
-      reviewRuleOption: reviewRule,
+      proposedNewRules: newRules.map((p) => ({
+        id: p.id,
+        title: p.title,
+        explanation: p.explanation,
+        briefExplanation: p.explanation,
+        category: p.category || 'Grammar',
+        difficulty: p.difficulty || 'Beginner',
+      })),
+      reviewRuleOption: reviewProposal
+        ? {
+            id: reviewProposal.id,
+            title: reviewProposal.title,
+            explanation: reviewProposal.explanation,
+            isReview: true,
+          }
+        : null,
+      totalKnownWords: await this.prisma.word.count({ where: { userId } }),
+      totalKnownRules: knownRuleTitles.length,
+    };
+  }
+
+  /**
+   * Replaces a single proposal card by generating a new one and updating the DB.
+   */
+  async replaceProposal(userId: string, index: number) {
+    const { targetLanguage } = await this.aiService.getUserLanguages(userId);
+    const knownRules = await this.prisma.rule.findMany({
+      where: { userId },
+      select: { id: true, title: true, explanation: true },
+    });
+    const knownRuleTitles = knownRules.map((r) => r.title);
+
+    const activeProposals = await this.prisma.lessonProposal.findMany({
+      where: { userId, isReview: false },
+      orderBy: { createdAt: 'asc' },
+    });
+
+    const targetProposal = index >= 0 && index < activeProposals.length ? activeProposals[index] : undefined;
+    const excludeTitles = activeProposals.map((p) => p.title);
+    const newRules = await this.aiService.proposeRules(userId, knownRuleTitles, 1, excludeTitles);
+
+    if (newRules.length > 0) {
+      if (targetProposal) {
+        const updated = await this.prisma.lessonProposal.update({
+          where: { id: targetProposal.id },
+          data: {
+            title: newRules[0].title,
+            explanation: newRules[0].briefExplanation || '',
+            category: newRules[0].category || 'Grammar',
+            difficulty: newRules[0].difficulty || 'Beginner',
+            targetLanguage,
+          },
+        });
+        activeProposals[index] = updated;
+      } else {
+        const created = await this.prisma.lessonProposal.create({
+          data: {
+            userId,
+            title: newRules[0].title,
+            explanation: newRules[0].briefExplanation || '',
+            category: newRules[0].category || 'Grammar',
+            difficulty: newRules[0].difficulty || 'Beginner',
+            isReview: false,
+            targetLanguage,
+          },
+        });
+        activeProposals.push(created);
+      }
+    }
+
+    let reviewProposal = await this.prisma.lessonProposal.findFirst({
+      where: { userId, isReview: true },
+    });
+
+    if (!reviewProposal && knownRules.length > 0) {
+      const randomIndex = Math.floor(Math.random() * knownRules.length);
+      const randomRule = knownRules[randomIndex];
+      reviewProposal = await this.prisma.lessonProposal.create({
+        data: {
+          userId,
+          title: randomRule.title,
+          explanation: randomRule.explanation,
+          isReview: true,
+          targetLanguage,
+        },
+      });
+    }
+
+    return {
+      proposedNewRules: activeProposals.map((p) => ({
+        id: p.id,
+        title: p.title,
+        explanation: p.explanation,
+        briefExplanation: p.explanation,
+        category: p.category || 'Grammar',
+        difficulty: p.difficulty || 'Beginner',
+      })),
+      reviewRuleOption: reviewProposal
+        ? {
+            id: reviewProposal.id,
+            title: reviewProposal.title,
+            explanation: reviewProposal.explanation,
+            isReview: true,
+          }
+        : null,
       totalKnownWords: await this.prisma.word.count({ where: { userId } }),
       totalKnownRules: knownRuleTitles.length,
     };
@@ -73,66 +221,78 @@ export class LessonsService {
       knownRulesList,
     );
 
-    // Find or create rule entity in database (scoped to user)
-    let ruleEntity = await this.prisma.rule.findUnique({
-      where: { userId_title: { userId, title: dto.ruleTitle } },
-    });
-
-    if (!ruleEntity) {
-      ruleEntity = await this.prisma.rule.create({
-        data: {
-          title: content.rule.title,
-          explanation: content.rule.explanation,
-          examples: JSON.stringify(content.rule.examples || []),
-          exceptions: content.rule.exceptions || null,
-          userId,
-        },
+    // Execute all database operations inside a single transaction
+    return this.prisma.$transaction(async (tx) => {
+      // Find or create rule entity in database (scoped to user)
+      let ruleEntity = await tx.rule.findUnique({
+        where: { userId_title: { userId, title: dto.ruleTitle } },
       });
-    }
 
-    // Upsert new daily words into word bank (scoped to user)
-    const wordEntities = [];
-    for (const nw of content.newWords || []) {
-      if (!nw.targetLanguage) continue;
-      let word = await this.prisma.word.findUnique({
-        where: { userId_targetLanguage: { userId, targetLanguage: nw.targetLanguage } },
-      });
-      if (!word) {
-        word = await this.prisma.word.create({
+      if (!ruleEntity) {
+        ruleEntity = await tx.rule.create({
           data: {
-            targetLanguage: nw.targetLanguage,
-            nativeLanguage: nw.nativeLanguage || '',
-            pronunciation: nw.pronunciation || null,
-            partOfSpeech: nw.partOfSpeech || null,
+            title: content.rule.title,
+            explanation: content.rule.explanation,
+            examples: JSON.stringify(content.rule.examples || []),
+            exceptions: content.rule.exceptions || null,
             userId,
           },
         });
       }
-      wordEntities.push(word);
-    }
 
-    // Save generated lesson entity
-    const lesson = await this.prisma.lesson.create({
-      data: {
-        title: `Lesson: ${content.rule.title}`,
-        ruleId: ruleEntity.id,
-        isReview,
-        wordsCount,
-        lessonData: JSON.stringify(content),
-        rawPrompt: content.rawPrompt,
-        status: 'GENERATED',
-        userId,
-        words: {
-          create: wordEntities.map((w) => ({ wordId: w.id })),
+      // Upsert new daily words into word bank (scoped to user)
+      const wordEntities = [];
+      for (const nw of content.newWords || []) {
+        if (!nw.targetLanguage) continue;
+        let word = await tx.word.findUnique({
+          where: { userId_targetLanguage: { userId, targetLanguage: nw.targetLanguage } },
+        });
+        if (!word) {
+          word = await tx.word.create({
+            data: {
+              targetLanguage: nw.targetLanguage,
+              nativeLanguage: nw.nativeLanguage || '',
+              pronunciation: nw.pronunciation || null,
+              partOfSpeech: nw.partOfSpeech || null,
+              userId,
+            },
+          });
+        }
+        wordEntities.push(word);
+      }
+
+      // Save generated lesson entity
+      const lesson = await tx.lesson.create({
+        data: {
+          title: `Lesson: ${content.rule.title}`,
+          ruleId: ruleEntity.id,
+          isReview,
+          wordsCount,
+          lessonData: JSON.stringify(content),
+          rawPrompt: content.rawPrompt,
+          status: 'GENERATED',
+          userId,
+          words: {
+            create: wordEntities.map((w) => ({ wordId: w.id })),
+          },
         },
-      },
-      include: {
-        rule: true,
-        words: { include: { word: true } },
-      },
-    });
+        include: {
+          rule: true,
+          words: { include: { word: true } },
+        },
+      });
 
-    return lesson;
+      // Remove selected proposal from user's active proposals in DB (if matched)
+      await tx.lessonProposal.deleteMany({
+        where: {
+          userId,
+          title: dto.ruleTitle,
+          isReview: false,
+        },
+      });
+
+      return lesson;
+    });
   }
 
   /**
@@ -175,9 +335,23 @@ export class LessonsService {
     return updated;
   }
 
-  async getLessons(userId: string) {
+  async getLessons(userId: string, options?: { status?: string; q?: string }) {
+    const where: any = { userId };
+    if (options?.status) {
+      where.status = options.status.toUpperCase();
+    }
+    if (options?.q) {
+      const q = options.q.trim();
+      if (q) {
+        where.OR = [
+          { title: { contains: q } },
+          { rule: { title: { contains: q } } },
+        ];
+      }
+    }
+
     return this.prisma.lesson.findMany({
-      where: { userId },
+      where,
       orderBy: { createdAt: 'desc' },
       include: {
         rule: true,
@@ -231,9 +405,5 @@ export class LessonsService {
       recentLessons,
     };
   }
-
-  async resetStats(userId: string) {
-    await this.prisma.lesson.deleteMany({ where: { userId } });
-    return { success: true, message: 'All lesson history has been reset.' };
-  }
 }
+

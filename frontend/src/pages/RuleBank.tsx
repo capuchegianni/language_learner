@@ -59,7 +59,7 @@ export const RuleBank: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const handleSaveRule = async (e: React.FormEvent) => {
+  const handleSaveRule = async (e: React.SubmitEvent) => {
     e.preventDefault();
     if (!title || !explanation) return;
 

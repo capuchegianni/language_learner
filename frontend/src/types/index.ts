@@ -120,3 +120,9 @@ export interface SettingsUpdatePayload {
   NATIVE_LANGUAGE?: string;
   TARGET_LANGUAGE?: string;
 }
+
+export interface LanguageOption {
+  name: string;
+  voiceCode: string;
+}
+

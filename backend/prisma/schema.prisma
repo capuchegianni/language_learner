@@ -16,85 +16,86 @@ model User {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  words    Word[]
-  rules    Rule[]
-  lessons  Lesson[]
-  settings Setting[]
+  words           Word[]
+  rules           Rule[]
+  lessons         Lesson[]
+  settings        Setting[]
+  lessonProposals LessonProposal[]
 }
 
 model Word {
-  id            String       @id @default(uuid())
+  id             String   @id @default(uuid())
   targetLanguage String
   nativeLanguage String
-  pronunciation String?
-  partOfSpeech  String?
-  notes         String?
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
+  pronunciation  String?
+  partOfSpeech   String?
+  notes          String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
-  userId        String
-  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  lessons       LessonWord[]
+  lessons LessonWord[]
 
   @@unique([userId, targetLanguage])
   @@index([userId])
 }
 
 model Rule {
-  id           String   @id @default(uuid())
-  title        String
-  explanation  String
-  examples     String   // Stored as JSON string
-  exceptions   String?  // Stored as JSON string or text
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id          String   @id @default(uuid())
+  title       String
+  explanation String
+  examples    String // Stored as JSON string
+  exceptions  String? // Stored as JSON string or text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  userId       String
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  lessons      Lesson[]
+  lessons Lesson[]
 
   @@unique([userId, title])
   @@index([userId])
 }
 
 model Lesson {
-  id              String       @id @default(uuid())
-  title           String?
-  date            DateTime     @default(now())
-  ruleId          String?
-  rule            Rule?        @relation(fields: [ruleId], references: [id], onDelete: SetNull)
-  isReview        Boolean      @default(false)
+  id       String   @id @default(uuid())
+  title    String?
+  date     DateTime @default(now())
+  ruleId   String?
+  rule     Rule?    @relation(fields: [ruleId], references: [id], onDelete: SetNull)
+  isReview Boolean  @default(false)
 
-  wordsCount      Int          @default(5)
-  lessonData      String       // JSON string containing 5 words, rules, Ex1, Ex2, Ex3
+  wordsCount Int    @default(5)
+  lessonData String // JSON string containing 5 words, rules, Ex1, Ex2, Ex3
 
-  status          String       @default("GENERATED") // GENERATED | SUBMITTED | GRADED
-  userSubmission  String?      // JSON string of user answers
-  submissionImage String?      // Image file relative path if handwritten photo uploaded
-  aiFeedback      String?      // JSON string of AI feedback & score breakdown
+  status          String  @default("GENERATED") // GENERATED | SUBMITTED | GRADED
+  userSubmission  String? // JSON string of user answers
+  submissionImage String? // Image file relative path if handwritten photo uploaded
+  aiFeedback      String? // JSON string of AI feedback & score breakdown
   overallScore    Int?
 
-  rawPrompt       String?      // The exact generated prompt text
+  rawPrompt String? // The exact generated prompt text
 
-  userId          String
-  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  words           LessonWord[]
+  words LessonWord[]
 
   @@index([ruleId])
   @@index([userId])
 }
 
 model LessonWord {
-  lessonId  String
-  wordId    String
-  lesson    Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
-  word      Word   @relation(fields: [wordId], references: [id], onDelete: Cascade)
+  lessonId String
+  wordId   String
+  lesson   Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  word     Word   @relation(fields: [wordId], references: [id], onDelete: Cascade)
 
   @@id([lessonId, wordId])
   @@index([wordId])
@@ -107,9 +108,26 @@ model Setting {
   value     String
   updatedAt DateTime @updatedAt
 
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, key])
+  @@index([userId])
+}
+
+model LessonProposal {
+  id             String   @id @default(uuid())
+  title          String
+  explanation    String
+  category       String?
+  difficulty     String?
+  isReview       Boolean  @default(false)
+  targetLanguage String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([userId])
 }

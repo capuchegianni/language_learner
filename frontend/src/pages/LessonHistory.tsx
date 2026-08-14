@@ -11,15 +11,12 @@ export const LessonHistory: React.FC = () => {
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState(searchParams.get('q') || '');
+  const [filterStatus, setFilterStatus] = useState(searchParams.get('status') || '');
 
-  useEffect(() => {
-    setSearch(searchParams.get('q') || '');
-  }, [searchParams]);
-
-  const loadLessons = async () => {
+  const loadLessons = async (q?: string, status?: string) => {
     try {
       setLoading(true);
-      const data = await api.getLessons();
+      const data = await api.getLessons({ q: q || undefined, status: status || undefined });
       setLessons(data);
     } catch (err) {
       console.error('Failed to load lessons', err);
@@ -29,50 +26,67 @@ export const LessonHistory: React.FC = () => {
   };
 
   useEffect(() => {
-    loadLessons();
-  }, []);
+    loadLessons(search, filterStatus);
+  }, [search, filterStatus]);
 
   const handleDelete = async (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
     if (confirm('Are you sure you want to delete this lesson?')) {
       await api.deleteLesson(id);
-      loadLessons();
+      loadLessons(search, filterStatus);
     }
   };
 
-  const filtered = lessons.filter((l) => {
-    const title = (l.rule?.title || l.title || '').toLowerCase();
-    return title.includes(search.toLowerCase());
+  const displayedLessons = lessons.filter((lesson) => {
+    const title = (lesson.rule?.title || lesson.title || '').toLowerCase();
+    const matchesSearch = !search || title.includes(search.toLowerCase());
+    const matchesStatus = !filterStatus || lesson.status?.toUpperCase() === filterStatus.toUpperCase();
+    return matchesSearch && matchesStatus;
   });
 
   return (
     <div style={{ maxWidth: '900px', margin: '0 auto' }}>
       <div className="glass-card" style={{ marginBottom: '1.5rem' }}>
-        <h1 style={{ fontSize: '1.6rem', fontWeight: 700, marginBottom: '0.5rem' }}>
+        <h1 style={{ fontSize: '1.6rem', fontWeight: 700, margin: 0 }}>
           Lesson History
         </h1>
       </div>
 
-      {/* Search Input */}
-      <FilterInput
-        value={search}
-        onChange={setSearch}
-        placeholder="Search lessons by rule title..."
-        containerStyle={{ marginBottom: '1.5rem' }}
-      />
+      {/* Search Input and Filter */}
+      <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+        <FilterInput
+          value={search}
+          onChange={setSearch}
+          placeholder="Search lessons by rule title..."
+          containerStyle={{ flex: 1, minWidth: '250px' }}
+        />
+        <div className="glass-card" style={{ padding: '0.85rem 1.25rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <label style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Filter Status:</label>
+          <select
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+            style={{ background: 'transparent', color: '#fff', border: 'none', outline: 'none', fontSize: '1rem', cursor: 'pointer' }}
+          >
+            <option value="" style={{ background: '#1e293b' }}>All Lessons</option>
+            <option value="GENERATED" style={{ background: '#1e293b' }}>Generated</option>
+            <option value="GRADED" style={{ background: '#1e293b' }}>Graded</option>
+            <option value="SUBMITTED" style={{ background: '#1e293b' }}>Submitted</option>
+          </select>
+        </div>
+      </div>
 
       {loading ? (
         <div className="glass-card" style={{ display: 'flex', justifyContent: 'center', padding: '3rem' }}>
           <div className="spinner" />
         </div>
-      ) : filtered.length === 0 ? (
+      ) : displayedLessons.length === 0 ? (
         <div className="glass-card" style={{ textAlign: 'center', padding: '2.5rem 1rem', color: 'var(--text-secondary)' }}>
           <Clock size={40} style={{ margin: '0 auto 1rem', opacity: 0.5 }} />
-          <p>{search ? 'No lessons match your search.' : 'No lessons yet.'}</p>
+          <p>{search || filterStatus ? 'No lessons match your search and filter criteria.' : 'No lessons yet.'}</p>
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-          {filtered.map((lesson) => (
+          {displayedLessons.map((lesson) => (
             <div
               key={lesson.id}
               className="glass-card"

@@ -6,7 +6,7 @@ import { FilterInput } from '../components/FilterInput';
 import { useLanguages } from '../contexts/LanguageContext';
 
 export const WordBank: React.FC = () => {
-  const { targetLanguage, nativeLanguage } = useLanguages();
+  const { targetLanguage, nativeLanguage, targetVoiceCode, getVoiceCode } = useLanguages();
   const [words, setWords] = useState<Word[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
@@ -61,7 +61,7 @@ export const WordBank: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const handleSaveWord = async (e: React.FormEvent) => {
+  const handleSaveWord = async (e: React.SubmitEvent) => {
     e.preventDefault();
     if (!targetLangValue || !nativeLangValue) return;
 
@@ -106,10 +106,17 @@ export const WordBank: React.FC = () => {
     setPlayingWordId(word.id);
 
     const utterance = new SpeechSynthesisUtterance(word.targetLanguage);
+    const voiceCode = targetVoiceCode || getVoiceCode(targetLanguage);
+    utterance.lang = voiceCode;
 
-    // Try to find a voice matching the target language
+    // Try to find a voice matching the target voice code
     const voices = window.speechSynthesis.getVoices();
-    const langVoice = voices.find(v => v.lang.toLowerCase().startsWith(targetLanguage.toLowerCase().slice(0, 2)));
+    const baseCode = voiceCode.split('-')[0].toLowerCase();
+    const langVoice = voices.find(v => {
+      const normalizedVoiceLang = v.lang.replace('_', '-').toLowerCase();
+      return normalizedVoiceLang === voiceCode.toLowerCase() || normalizedVoiceLang.startsWith(baseCode);
+    });
+
     if (langVoice) {
       utterance.voice = langVoice;
       utterance.lang = langVoice.lang;

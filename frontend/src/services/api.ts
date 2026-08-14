@@ -27,16 +27,26 @@ export const api = {
   },
 
   // Rule Proposals
-  async getRuleProposals(count?: number, excludeTitles?: string[]): Promise<{
+  async getRuleProposals(options?: { refresh?: boolean }): Promise<{
     proposedNewRules: ProposedRule[];
     reviewRuleOption: { id: string; title: string; explanation: string } | null;
     totalKnownWords: number;
     totalKnownRules: number;
   }> {
     const params = new URLSearchParams();
-    if (count !== undefined) params.append('count', count.toString());
-    if (excludeTitles && excludeTitles.length > 0) params.append('exclude', excludeTitles.join(','));
+    if (options?.refresh) params.append('refresh', 'true');
     const res = await axios.get(`${API_BASE}/lessons/propose-rules?${params.toString()}`);
+    return res.data;
+  },
+
+  // Replace Single Proposal
+  async replaceProposal(index: number): Promise<{
+    proposedNewRules: ProposedRule[];
+    reviewRuleOption: { id: string; title: string; explanation: string } | null;
+    totalKnownWords: number;
+    totalKnownRules: number;
+  }> {
+    const res = await axios.post(`${API_BASE}/lessons/propose-rules/replace`, { index });
     return res.data;
   },
 
@@ -60,7 +70,7 @@ export const api = {
     if (answers.ex1) formData.append('ex1', answers.ex1);
     if (answers.ex2) formData.append('ex2', answers.ex2);
     if (answers.ex3) formData.append('ex3', answers.ex3);
-    
+
     if (imageFiles && imageFiles.length > 0) {
       imageFiles.forEach(file => {
         formData.append('images', file);
@@ -74,8 +84,8 @@ export const api = {
   },
 
   // Lessons History
-  async getLessons(): Promise<Lesson[]> {
-    const res = await axios.get(`${API_BASE}/lessons`);
+  async getLessons(params?: { status?: string; q?: string }): Promise<Lesson[]> {
+    const res = await axios.get(`${API_BASE}/lessons`, { params });
     return res.data;
   },
 
@@ -86,10 +96,6 @@ export const api = {
 
   async deleteLesson(id: string): Promise<void> {
     await axios.delete(`${API_BASE}/lessons/${id}`);
-  },
-
-  async resetStats(): Promise<void> {
-    await axios.delete(`${API_BASE}/lessons/stats`);
   },
 
   // Vocabulary Bank
@@ -161,4 +167,16 @@ export const api = {
     const res = await axios.get(`${API_BASE}/settings/export?${params.toString()}`);
     return res.data;
   },
+
+  async resetData(include: { settings?: boolean; words?: boolean; rules?: boolean; lessons?: boolean }): Promise<{ success: boolean; message: string; resetItems: string[] }> {
+    const res = await axios.post(`${API_BASE}/settings/reset`, include);
+    return res.data;
+  },
+
+  async deleteAccount(): Promise<{ success: boolean; message: string }> {
+    const res = await axios.delete(`${API_BASE}/auth/account`);
+    return res.data;
+  },
 };
+
+

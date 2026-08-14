@@ -42,4 +42,14 @@ export class SettingsController {
     const userId = req.user.id;
     return this.settingsService.importData(userId, body);
   }
+
+  @Post('reset')
+  async resetData(
+    @Req() req: AuthenticatedRequest,
+    @Body() body: { settings?: boolean; words?: boolean; rules?: boolean; lessons?: boolean },
+  ) {
+    const userId = req.user.id;
+    return this.settingsService.resetData(userId, body || {});
+  }
 }
+

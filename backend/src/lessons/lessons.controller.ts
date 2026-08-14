@@ -38,18 +38,23 @@ export class LessonsController {
     return this.lessonsService.getDashboardStats(userId);
   }
 
-  @Delete('stats')
-  async resetStats(@Req() req: AuthenticatedRequest) {
+  @Get('propose-rules')
+  async getRuleProposals(
+    @Req() req: AuthenticatedRequest,
+    @Query('refresh') refresh?: string,
+  ) {
     const userId = req.user.id;
-    return this.lessonsService.resetStats(userId);
+    const forceRefresh = refresh === 'true';
+    return this.lessonsService.getRuleProposals(userId, { forceRefresh });
   }
 
-  @Get('propose-rules')
-  async getRuleProposals(@Req() req: AuthenticatedRequest, @Query('count') count?: string, @Query('exclude') exclude?: string) {
+  @Post('propose-rules/replace')
+  async replaceProposal(
+    @Req() req: AuthenticatedRequest,
+    @Body('index') index: number,
+  ) {
     const userId = req.user.id;
-    const numCount = count !== undefined ? parseInt(count, 10) : 3;
-    const excludeTitles = exclude ? exclude.split(',') : [];
-    return this.lessonsService.getRuleProposals(userId, numCount, excludeTitles);
+    return this.lessonsService.replaceProposal(userId, Number(index) || 0);
   }
 
   @Post('generate')
@@ -80,9 +85,13 @@ export class LessonsController {
   }
 
   @Get()
-  async getLessons(@Req() req: AuthenticatedRequest) {
+  async getLessons(
+    @Req() req: AuthenticatedRequest,
+    @Query('status') status?: string,
+    @Query('q') q?: string,
+  ) {
     const userId = req.user.id;
-    return this.lessonsService.getLessons(userId);
+    return this.lessonsService.getLessons(userId, { status, q });
   }
 
   @Get(':id')

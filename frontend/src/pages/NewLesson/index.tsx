@@ -67,47 +67,17 @@ export const NewLesson: React.FC = () => {
     }
   };
 
-  // Fetch proposals on component mount
+  // Fetch proposals from database/AI
   const fetchProposals = async (forceRefresh: boolean = false) => {
     try {
       setError(null);
       setLoadingProposals(true);
-      let cachedData: { proposals: ProposedRule[]; reviewRule: any } | null = null;
-      let titlesToExclude: string[] = [];
-
-      const stored = localStorage.getItem('korean_proposals');
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (!forceRefresh) {
-          cachedData = parsed;
-          titlesToExclude = parsed.proposals.map((p: ProposedRule) => p.title);
-        } else {
-          titlesToExclude = parsed.proposals.map((p: ProposedRule) => p.title);
-        }
-      }
-
-      const existingProposals = cachedData?.proposals || [];
-      const missingCount = forceRefresh ? 3 : Math.max(0, 3 - existingProposals.length);
-
-      if (missingCount > 0 || !cachedData?.reviewRule) {
-        const res = await api.getRuleProposals(missingCount, titlesToExclude);
-        const combinedProposals = forceRefresh ? res.proposedNewRules : [...existingProposals, ...res.proposedNewRules];
-        const newReviewRule = res.reviewRuleOption || cachedData?.reviewRule;
-
-        const newData = { proposals: combinedProposals, reviewRule: newReviewRule };
-        localStorage.setItem('korean_proposals', JSON.stringify(newData));
-
-        setProposals(newData.proposals);
-        setReviewRule(newData.reviewRule);
-        if (newData.proposals.length > 0) {
-          setSelectedRuleTitle(newData.proposals[0].title);
-        }
-      } else {
-        setProposals(cachedData!.proposals);
-        setReviewRule(cachedData!.reviewRule);
-        if (cachedData!.proposals.length > 0) {
-          setSelectedRuleTitle(cachedData!.proposals[0].title);
-        }
+      const res = await api.getRuleProposals({ refresh: forceRefresh });
+      setProposals(res.proposedNewRules);
+      setReviewRule(res.reviewRuleOption);
+      if (res.proposedNewRules.length > 0) {
+        setSelectedRuleTitle(res.proposedNewRules[0].title);
+        setIsReviewSelection(false);
       }
     } catch (err: any) {
       console.error('Failed to fetch rule proposals', err);
@@ -122,19 +92,13 @@ export const NewLesson: React.FC = () => {
     try {
       setError(null);
       setReplacingIndex(indexToReplace);
-      const currentExcludeTitles = proposals.map(p => p.title);
-      const res = await api.getRuleProposals(1, currentExcludeTitles);
-
-      if (res.proposedNewRules.length > 0) {
-        const newProposals = [...proposals];
-        newProposals[indexToReplace] = res.proposedNewRules[0];
-
-        setProposals(newProposals);
-        localStorage.setItem('korean_proposals', JSON.stringify({ proposals: newProposals, reviewRule }));
-
-        if (selectedRuleTitle === proposals[indexToReplace].title) {
-          setSelectedRuleTitle(newProposals[indexToReplace].title);
-        }
+      const res = await api.replaceProposal(indexToReplace);
+      setProposals(res.proposedNewRules);
+      if (res.reviewRuleOption) {
+        setReviewRule(res.reviewRuleOption);
+      }
+      if (selectedRuleTitle === proposals[indexToReplace]?.title && res.proposedNewRules[indexToReplace]) {
+        setSelectedRuleTitle(res.proposedNewRules[indexToReplace].title);
       }
     } catch (err: any) {
       console.error('Failed to replace proposal', err);
@@ -196,17 +160,6 @@ export const NewLesson: React.FC = () => {
       loadSavedAnswers(lesson.id);
       setCurrentLesson(lesson);
       setPhase('GENERATED_WORKSPACE');
-      // Only remove the selected proposal from cache, keep the rest
-      const stored = localStorage.getItem('korean_proposals');
-      if (stored) {
-        const cachedData = JSON.parse(stored);
-        const remaining = cachedData.proposals.filter((p: ProposedRule) => p.title !== selectedRuleTitle);
-        if (remaining.length > 0) {
-          localStorage.setItem('korean_proposals', JSON.stringify({ proposals: remaining, reviewRule: cachedData.reviewRule }));
-        } else {
-          localStorage.removeItem('korean_proposals');
-        }
-      }
     } catch (err: any) {
       console.error('Error generating lesson', err);
       setError(err.response?.data?.message || 'Failed to generate lesson. Please check your AI API configuration.');
@@ -239,7 +192,7 @@ export const NewLesson: React.FC = () => {
     }
   };
 
-  const handleSubmitExercises = async (e: React.FormEvent) => {
+  const handleSubmitExercises = async (e: React.SubmitEvent) => {
     e.preventDefault();
     if (!currentLesson) return;
 
@@ -386,7 +339,18 @@ export const NewLesson: React.FC = () => {
       {/* PHASE 3: GRADED FEEDBACK & CORRECTIONS */}
       {phase === 'GRADED' && gradingResult && (
         <div>
-          <AIFeedbackDisplay gradingResult={gradingResult} title="Lesson Evaluation Complete!" />
+          <AIFeedbackDisplay
+            gradingResult={gradingResult}
+            userSubmission={
+              currentLesson?.userSubmission
+                ? (typeof currentLesson.userSubmission === 'string'
+                    ? JSON.parse(currentLesson.userSubmission)
+                    : currentLesson.userSubmission)
+                : null
+            }
+            lessonContent={lessonContent}
+            title="Lesson Evaluation Complete!"
+          />
 
           <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
             <button
