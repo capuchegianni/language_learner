@@ -39,11 +39,22 @@ export class LessonsController {
   }
 
   @Get('propose-rules')
-  async getRuleProposals(@Req() req: AuthenticatedRequest, @Query('count') count?: string, @Query('exclude') exclude?: string) {
+  async getRuleProposals(
+    @Req() req: AuthenticatedRequest,
+    @Query('refresh') refresh?: string,
+  ) {
     const userId = req.user.id;
-    const numCount = count !== undefined ? parseInt(count, 10) : 3;
-    const excludeTitles = exclude ? exclude.split(',') : [];
-    return this.lessonsService.getRuleProposals(userId, numCount, excludeTitles);
+    const forceRefresh = refresh === 'true';
+    return this.lessonsService.getRuleProposals(userId, { forceRefresh });
+  }
+
+  @Post('propose-rules/replace')
+  async replaceProposal(
+    @Req() req: AuthenticatedRequest,
+    @Body('index') index: number,
+  ) {
+    const userId = req.user.id;
+    return this.lessonsService.replaceProposal(userId, Number(index) || 0);
   }
 
   @Post('generate')

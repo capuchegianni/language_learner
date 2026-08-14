@@ -47,3 +47,8 @@ export type LessonWord = Prisma.LessonWordModel
  * 
  */
 export type Setting = Prisma.SettingModel
+/**
+ * Model LessonProposal
+ * 
+ */
+export type LessonProposal = Prisma.LessonProposalModel

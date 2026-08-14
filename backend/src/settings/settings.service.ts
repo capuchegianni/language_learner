@@ -405,6 +405,9 @@ export class SettingsService {
         await tx.lesson.deleteMany({
           where: { userId },
         });
+        await tx.lessonProposal.deleteMany({
+          where: { userId },
+        });
         resetItems.push('lessons');
       }
 

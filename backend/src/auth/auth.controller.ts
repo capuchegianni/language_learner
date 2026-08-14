@@ -88,6 +88,7 @@ export class AuthController {
         await tx.word.deleteMany({ where: { userId } });
         await tx.rule.deleteMany({ where: { userId } });
         await tx.setting.deleteMany({ where: { userId } });
+        await tx.lessonProposal.deleteMany({ where: { userId } });
         await tx.user.delete({ where: { id: userId } });
       });
 

@@ -296,7 +296,7 @@ Return STRICT JSON format (no markdown formatting, no extra text):
    * Fetches the user's configured native and target languages from settings.
    * Defaults to English -> Korean if not configured.
    */
-  private async getUserLanguages(userId: string): Promise<{ nativeLanguage: string; targetLanguage: string }> {
+  async getUserLanguages(userId: string): Promise<{ nativeLanguage: string; targetLanguage: string }> {
     let nativeLanguage = 'English';
     let targetLanguage = 'Korean';
     try {
