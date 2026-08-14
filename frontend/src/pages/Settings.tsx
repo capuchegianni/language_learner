@@ -117,6 +117,17 @@ export const Settings: React.FC = () => {
   const [savedSuccess, setSavedSuccess] = useState(false);
   const [resetting, setResetting] = useState(false);
   const [resetSuccess, setResetSuccess] = useState(false);
+  const [resetMessage, setResetMessage] = useState<string | null>(null);
+
+  // Reset State
+  const [showResetModal, setShowResetModal] = useState(false);
+  const [resetError, setResetError] = useState<string | null>(null);
+  const [resetInclude, setResetInclude] = useState({
+    settings: false,
+    words: false,
+    rules: false,
+    lessons: false,
+  });
 
   // Import State
   const [showImportModal, setShowImportModal] = useState(false);
@@ -140,28 +151,29 @@ export const Settings: React.FC = () => {
   const isLocalOllamaBaseURL = /(^https?:\/\/(localhost|127\.0\.0\.1|0\.0\.0\.0):11434\/v1$)|ollama/i.test(baseURL);
   const activePreset = PROVIDER_PRESETS.find((preset) => preset.baseURL === baseURL) || selectedPreset;
 
+  const loadSettings = async () => {
+    try {
+      setLoading(true);
+      const data = await api.getSettings();
+      const savedBaseURL = data.AI_BASE_URL || 'https://api.openai.com/v1';
+      const savedModel = data.AI_MODEL || 'gpt-4o-mini';
+      setHasApiKey(!!data.hasApiKey);
+      setApiKey('');
+      setBaseURL(savedBaseURL);
+      setModel(savedModel);
+      const matchedPreset = PROVIDER_PRESETS.find((p) => p.baseURL === savedBaseURL);
+      if (matchedPreset) setSelectedPreset(matchedPreset);
+      setNativeLanguage(data.NATIVE_LANGUAGE || 'English');
+      setTargetLanguage(data.TARGET_LANGUAGE || 'Korean');
+    } catch (err) {
+      console.error('Failed to load settings', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchSettings = async () => {
-      try {
-        setLoading(true);
-        const data = await api.getSettings();
-        const savedBaseURL = data.AI_BASE_URL || 'https://api.openai.com/v1';
-        const savedModel = data.AI_MODEL || 'gpt-4o-mini';
-        setHasApiKey(!!data.hasApiKey);
-        setApiKey('');
-        setBaseURL(savedBaseURL);
-        setModel(savedModel);
-        const matchedPreset = PROVIDER_PRESETS.find((p) => p.baseURL === savedBaseURL);
-        if (matchedPreset) setSelectedPreset(matchedPreset);
-        setNativeLanguage(data.NATIVE_LANGUAGE || 'English');
-        setTargetLanguage(data.TARGET_LANGUAGE || 'Korean');
-      } catch (err) {
-        console.error('Failed to load settings', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchSettings();
+    loadSettings();
   }, []);
 
   const handleSelectPreset = (preset: ProviderPreset) => {
@@ -198,19 +210,49 @@ export const Settings: React.FC = () => {
     }
   };
 
-  const handleResetStats = async () => {
-    if (!confirm('Are you sure you want to reset all lesson history? This will delete all completed lessons, recent lessons, and scores. Words and rules will NOT be affected.')) return;
+  const handleResetData = async () => {
+    const selectedKeys = (Object.keys(resetInclude) as (keyof typeof resetInclude)[]).filter(
+      (k) => resetInclude[k],
+    );
+    if (selectedKeys.length === 0) return;
+
+    const itemsFormatted = selectedKeys
+      .map((k) => k.charAt(0).toUpperCase() + k.slice(1))
+      .join(', ');
+
+    if (
+      !confirm(
+        `Are you sure you want to permanently reset: ${itemsFormatted}? This action cannot be undone.`,
+      )
+    ) {
+      return;
+    }
+
     try {
       setResetting(true);
-      await api.resetStats();
+      setResetError(null);
+      const res = await api.resetData(resetInclude);
+
+      if (resetInclude.settings) {
+        await refreshLanguages();
+        await loadSettings();
+      }
+
       setResetSuccess(true);
-      setTimeout(() => setResetSuccess(false), 4000);
-    } catch (err) {
-      console.error('Failed to reset stats', err);
+      setResetMessage(res.message || 'Data reset successfully!');
+      setShowResetModal(false);
+      setTimeout(() => {
+        setResetSuccess(false);
+        setResetMessage(null);
+      }, 4000);
+    } catch (err: any) {
+      console.error('Failed to reset data', err);
+      setResetError(err.response?.data?.message || err.message || 'Failed to reset data. Please try again.');
     } finally {
       setResetting(false);
     }
   };
+
 
   const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -323,7 +365,7 @@ export const Settings: React.FC = () => {
       {resetSuccess && (
         <div className="glass-card" style={{ marginBottom: '1.5rem', background: 'rgba(16,185,129,0.15)', borderColor: 'rgba(16,185,129,0.4)', display: 'flex', alignItems: 'center', gap: '0.75rem', color: '#6ee7b7' }}>
           <CheckCircle2 size={20} />
-          <span>Lesson history has been reset successfully!</span>
+          <span>{resetMessage || 'Data has been reset successfully!'}</span>
         </div>
       )}
 
@@ -527,16 +569,20 @@ export const Settings: React.FC = () => {
           <span>Danger Zone</span>
         </h3>
         <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
-          Reset all lesson history including completed lessons, recent lessons, and scores. Words and grammar rules in your bank will <strong>not</strong> be affected.
+          Permanently delete data from your account. You can select specific data categories to reset (Settings, Words, Rules, Lessons) or reset everything.
         </p>
         <button
           type="button"
           className="btn"
+          id="open-reset-modal-btn"
           style={{ background: 'rgba(239,68,68,0.15)', color: 'var(--accent-danger)', border: '1px solid rgba(239,68,68,0.3)' }}
-          onClick={handleResetStats}
-          disabled={resetting}
+          onClick={() => {
+            setResetError(null);
+            setShowResetModal(true);
+          }}
         >
-          {resetting ? <><div className="spinner" /><span>Resetting...</span></> : <><Trash2 size={16} /><span>Reset Lesson History & Scores</span></>}
+          <Trash2 size={16} />
+          <span>Reset Data...</span>
         </button>
       </div>
 
@@ -682,6 +728,105 @@ export const Settings: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Reset Modal */}
+      {showResetModal && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
+          <div className="glass-card" style={{ width: '90%', maxWidth: '520px', position: 'relative', borderColor: 'rgba(239,68,68,0.4)' }}>
+            <button
+              onClick={() => setShowResetModal(false)}
+              style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }}
+            >
+              <X size={24} />
+            </button>
+            <h3 style={{ fontSize: '1.3rem', fontWeight: 700, marginBottom: '0.5rem', color: 'var(--accent-danger)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <AlertTriangle size={22} />
+              <span>Reset Data</span>
+            </h3>
+            <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
+              Select which data you would like to permanently delete from your account.
+            </p>
+            <div style={{ fontSize: '0.82rem', color: '#fca5a5', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 'var(--radius-sm)', padding: '0.6rem 0.85rem', marginBottom: '1.25rem' }}>
+              ⚠️ Warning: Selected data will be permanently removed. This action cannot be undone.
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+              <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>Choose items to delete:</span>
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <button
+                  type="button"
+                  style={{ background: 'transparent', border: 'none', color: 'var(--accent-primary)', fontSize: '0.78rem', cursor: 'pointer', textDecoration: 'underline' }}
+                  onClick={() => setResetInclude({ settings: true, words: true, rules: true, lessons: true })}
+                >
+                  Select All
+                </button>
+                <span style={{ color: 'var(--text-muted)', fontSize: '0.78rem' }}>|</span>
+                <button
+                  type="button"
+                  style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', fontSize: '0.78rem', cursor: 'pointer', textDecoration: 'underline' }}
+                  onClick={() => setResetInclude({ settings: false, words: false, rules: false, lessons: false })}
+                >
+                  Deselect All
+                </button>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.5rem' }}>
+              {(['settings', 'words', 'rules', 'lessons'] as const).map((key) => (
+                <label
+                  key={key}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.75rem',
+                    cursor: 'pointer',
+                    padding: '0.65rem 0.9rem',
+                    borderRadius: 'var(--radius-sm)',
+                    border: `1px solid ${resetInclude[key] ? 'var(--accent-danger)' : 'var(--border-color)'}`,
+                    background: resetInclude[key] ? 'rgba(239,68,68,0.1)' : 'transparent',
+                    transition: 'all 0.15s ease',
+                  }}
+                >
+                  <input
+                    type="checkbox"
+                    checked={resetInclude[key]}
+                    onChange={(e) => setResetInclude((prev) => ({ ...prev, [key]: e.target.checked }))}
+                  />
+                  <span style={{ fontWeight: 600, textTransform: 'capitalize', color: resetInclude[key] ? '#fca5a5' : 'var(--text-secondary)' }}>
+                    {key}
+                  </span>
+                </label>
+              ))}
+            </div>
+
+            {resetError && (
+              <div style={{ background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.5)', padding: '0.75rem', borderRadius: 'var(--radius-sm)', color: '#fca5a5', marginBottom: '1rem', fontSize: '0.85rem' }}>
+                {resetError}
+              </div>
+            )}
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
+              <button className="btn btn-secondary" onClick={() => setShowResetModal(false)} disabled={resetting}>
+                Cancel
+              </button>
+              <button
+                className="btn"
+                id="confirm-reset-btn"
+                style={{ background: 'var(--accent-danger)', color: '#fff' }}
+                disabled={resetting || !Object.values(resetInclude).some(Boolean)}
+                onClick={handleResetData}
+              >
+                {resetting ? (
+                  <><div className="spinner" /><span>Resetting...</span></>
+                ) : (
+                  <><Trash2 size={18} /><span>Reset Selected Data</span></>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
+
