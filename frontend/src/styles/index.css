@@ -572,3 +572,120 @@ body {
   text-align: center;
   margin-top: 1.25rem;
 }
+
+/* Floating Unsaved Changes Warning Bubble */
+.unsaved-changes-bubble {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 200;
+  width: calc(100% - 2rem);
+  max-width: 680px;
+  background: rgba(15, 23, 42, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(245, 158, 11, 0.45);
+  border-radius: var(--radius-lg);
+  padding: 0.9rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.7),
+              0 0 25px rgba(245, 158, 11, 0.2);
+  animation: unsavedBubbleSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.2s ease;
+}
+
+.unsaved-changes-content {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  min-width: 0;
+}
+
+.unsaved-changes-icon-badge {
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  border-radius: 50%;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: var(--accent-warning);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: unsavedIconPulse 2s infinite ease-in-out;
+}
+
+.unsaved-changes-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.unsaved-changes-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.unsaved-changes-desc {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.unsaved-changes-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+@keyframes unsavedBubbleSlideUp {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 24px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+@keyframes unsavedIconPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4);
+  }
+  50% {
+    transform: scale(1.06);
+    box-shadow: 0 0 12px 2px rgba(245, 158, 11, 0.25);
+  }
+}
+
+@media (max-width: 640px) {
+  .unsaved-changes-bubble {
+    bottom: 1rem;
+    padding: 0.85rem 1rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.85rem;
+  }
+
+  .unsaved-changes-desc {
+    white-space: normal;
+  }
+
+  .unsaved-changes-actions {
+    justify-content: flex-end;
+  }
+}

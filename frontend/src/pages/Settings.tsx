@@ -71,16 +71,29 @@ const PROVIDER_PRESETS: ProviderPreset[] = [
   },
 ];
 
+interface SettingsFormData {
+  model: string;
+  baseURL: string;
+  apiKey: string;
+  nativeLanguage: string;
+  targetLanguage: string;
+}
+
+const DEFAULT_SETTINGS: SettingsFormData = {
+  model: 'gpt-4o-mini',
+  baseURL: 'https://api.openai.com/v1',
+  apiKey: '',
+  nativeLanguage: 'English',
+  targetLanguage: 'Korean',
+};
+
 export const Settings: React.FC = () => {
   const { user } = useAuth();
   const { refreshLanguages, languages } = useLanguages();
-  const [model, setModel] = useState('gpt-4o-mini');
-  const [baseURL, setBaseURL] = useState('https://api.openai.com/v1');
-  const [apiKey, setApiKey] = useState('');
+  const [formData, setFormData] = useState<SettingsFormData>(DEFAULT_SETTINGS);
+  const [savedSettings, setSavedSettings] = useState<SettingsFormData>(DEFAULT_SETTINGS);
   const [hasApiKey, setHasApiKey] = useState(false);
   const [selectedPreset, setSelectedPreset] = useState<ProviderPreset>(PROVIDER_PRESETS[0]);
-  const [nativeLanguage, setNativeLanguage] = useState('English');
-  const [targetLanguage, setTargetLanguage] = useState('Korean');
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -123,23 +136,50 @@ export const Settings: React.FC = () => {
     lessons: true,
   });
 
+  const { model, baseURL, apiKey, nativeLanguage, targetLanguage } = formData;
+
+  const updateField = <K extends keyof SettingsFormData>(field: K, value: SettingsFormData[K]) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
   const isLocalOllamaBaseURL = /(^https?:\/\/(localhost|127\.0\.0\.1|0\.0\.0\.0):11434\/v1$)|ollama/i.test(baseURL);
   const activePreset = PROVIDER_PRESETS.find((preset) => preset.baseURL === baseURL) || selectedPreset;
+
+  const hasUnsavedChanges =
+    !loading &&
+    (baseURL !== savedSettings.baseURL ||
+      model !== savedSettings.model ||
+      nativeLanguage !== savedSettings.nativeLanguage ||
+      targetLanguage !== savedSettings.targetLanguage ||
+      (apiKey.trim().length > 0 && !isLocalOllamaBaseURL));
+
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (hasUnsavedChanges) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [hasUnsavedChanges]);
 
   const loadSettings = async () => {
     try {
       setLoading(true);
       const data = await api.getSettings();
-      const savedBaseURL = data.AI_BASE_URL || 'https://api.openai.com/v1';
-      const savedModel = data.AI_MODEL || 'gpt-4o-mini';
+      const loaded: SettingsFormData = {
+        model: data.AI_MODEL || DEFAULT_SETTINGS.model,
+        baseURL: data.AI_BASE_URL || DEFAULT_SETTINGS.baseURL,
+        apiKey: '',
+        nativeLanguage: data.NATIVE_LANGUAGE || DEFAULT_SETTINGS.nativeLanguage,
+        targetLanguage: data.TARGET_LANGUAGE || DEFAULT_SETTINGS.targetLanguage,
+      };
       setHasApiKey(!!data.hasApiKey);
-      setApiKey('');
-      setBaseURL(savedBaseURL);
-      setModel(savedModel);
-      const matchedPreset = PROVIDER_PRESETS.find((p) => p.baseURL === savedBaseURL);
+      setFormData(loaded);
+      setSavedSettings(loaded);
+      const matchedPreset = PROVIDER_PRESETS.find((p) => p.baseURL === loaded.baseURL);
       if (matchedPreset) setSelectedPreset(matchedPreset);
-      setNativeLanguage(data.NATIVE_LANGUAGE || 'English');
-      setTargetLanguage(data.TARGET_LANGUAGE || 'Korean');
     } catch (err) {
       console.error('Failed to load settings', err);
     } finally {
@@ -153,15 +193,23 @@ export const Settings: React.FC = () => {
 
   const handleSelectPreset = (preset: ProviderPreset) => {
     setSelectedPreset(preset);
-    setBaseURL(preset.baseURL);
-    setModel(preset.defaultModel);
-    if (preset.name === 'Ollama (local)') {
-      setApiKey('');
-    }
+    setFormData((prev) => ({
+      ...prev,
+      baseURL: preset.baseURL,
+      model: preset.defaultModel,
+      ...(preset.name === 'Ollama (local)' ? { apiKey: '' } : {}),
+    }));
   };
 
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleDiscard = () => {
+    setFormData(savedSettings);
+    const matchedPreset = PROVIDER_PRESETS.find((p) => p.baseURL === savedSettings.baseURL);
+    if (matchedPreset) setSelectedPreset(matchedPreset);
+  };
+
+  const handleSave = async (e?: React.SubmitEvent) => {
+    if (e) e.preventDefault();
+    if (nativeLanguage === targetLanguage) return;
     try {
       setSaving(true);
       await api.updateSettings({
@@ -175,8 +223,13 @@ export const Settings: React.FC = () => {
       setSavedSuccess(true);
       if (apiKey.trim() && !isLocalOllamaBaseURL) {
         setHasApiKey(true);
-        setApiKey('');
       }
+      const updatedSaved: SettingsFormData = {
+        ...formData,
+        apiKey: '',
+      };
+      setFormData(updatedSaved);
+      setSavedSettings(updatedSaved);
       setTimeout(() => setSavedSuccess(false), 3000);
     } catch (err) {
       console.error('Failed to save settings', err);
@@ -256,22 +309,11 @@ export const Settings: React.FC = () => {
       jsonData.overrideSettings = overrideSettings;
 
       await api.importData(jsonData);
+      await refreshLanguages();
+      await loadSettings();
       setImportSuccess(true);
       setShowImportModal(false);
       setTimeout(() => setImportSuccess(false), 4000);
-
-      // reload settings just in case they were updated
-      const data = await api.getSettings();
-      const savedBaseURL = data.AI_BASE_URL || 'https://api.openai.com/v1';
-      const savedModel = data.AI_MODEL || 'gpt-4o-mini';
-      setHasApiKey(!!data.hasApiKey);
-      setApiKey('');
-      setBaseURL(savedBaseURL);
-      setModel(savedModel);
-      const matchedPreset = PROVIDER_PRESETS.find((p) => p.baseURL === savedBaseURL);
-      if (matchedPreset) setSelectedPreset(matchedPreset);
-      setNativeLanguage(data.NATIVE_LANGUAGE || 'English');
-      setTargetLanguage(data.TARGET_LANGUAGE || 'Korean');
     } catch (err: any) {
       console.error('Failed to import data', err);
       setImportError(err.response?.data?.message || err.message || 'Failed to import data. Please check your JSON format.');
@@ -294,7 +336,7 @@ export const Settings: React.FC = () => {
   };
 
   return (
-    <div style={{ maxWidth: '750px', margin: '0 auto' }}>
+    <div style={{ maxWidth: '750px', margin: '0 auto', paddingBottom: hasUnsavedChanges ? '6rem' : '2rem' }}>
       <div style={{ marginBottom: '1.5rem' }}>
         <h1 style={{ fontSize: '1.8rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <SettingsIcon style={{ color: 'var(--accent-primary)' }} />
@@ -373,7 +415,7 @@ export const Settings: React.FC = () => {
               <label>I speak (native language)</label>
               <select
                 value={nativeLanguage}
-                onChange={(e) => setNativeLanguage(e.target.value)}
+                onChange={(e) => updateField('nativeLanguage', e.target.value)}
                 id="native-language-select"
                 style={{ width: '100%' }}
               >
@@ -386,7 +428,7 @@ export const Settings: React.FC = () => {
               <label>I want to learn</label>
               <select
                 value={targetLanguage}
-                onChange={(e) => setTargetLanguage(e.target.value)}
+                onChange={(e) => updateField('targetLanguage', e.target.value)}
                 id="target-language-select"
                 style={{ width: '100%' }}
               >
@@ -451,7 +493,7 @@ export const Settings: React.FC = () => {
             <input
               type="text"
               value={baseURL}
-              onChange={(e) => setBaseURL(e.target.value)}
+              onChange={(e) => updateField('baseURL', e.target.value)}
               placeholder="https://api.openai.com/v1"
             />
             <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'block', marginTop: '0.25rem' }}>
@@ -464,7 +506,7 @@ export const Settings: React.FC = () => {
             <input
               type="text"
               value={model}
-              onChange={(e) => setModel(e.target.value)}
+              onChange={(e) => updateField('model', e.target.value)}
               placeholder="e.g. gpt-4o-mini"
               list="model-suggestions"
             />
@@ -483,7 +525,7 @@ export const Settings: React.FC = () => {
                 <input
                   type="password"
                   value={apiKey}
-                  onChange={(e) => setApiKey(e.target.value)}
+                  onChange={(e) => updateField('apiKey', e.target.value)}
                   placeholder={hasApiKey ? 'Stored securely - enter a new key to replace it' : 'sk-...'}
                   autoComplete="new-api-key"
                   spellCheck={false}
@@ -492,25 +534,15 @@ export const Settings: React.FC = () => {
                   {hasApiKey && !apiKey ? 'A key is already stored securely. Leave this blank to keep it unchanged.' : 'The key is encrypted in the database and never returned to the browser.'}
                 </span>
               </div>
-              <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.2)', borderRadius: 'var(--radius-sm)', padding: '0.65rem 0.9rem', marginBottom: '1.25rem' }}>
+              <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.2)', borderRadius: 'var(--radius-sm)', padding: '0.65rem 0.9rem' }}>
                 🔑 The API key is stored encrypted in the database and is never sent back to the browser.
               </div>
             </>
           ) : (
-            <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.2)', borderRadius: 'var(--radius-sm)', padding: '0.65rem 0.9rem', marginBottom: '1.25rem' }}>
+            <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.2)', borderRadius: 'var(--radius-sm)', padding: '0.65rem 0.9rem' }}>
               Ollama runs locally and does not require an API key.
             </div>
           )}
-
-          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <button type="submit" className="btn btn-primary" style={{ minWidth: '180px' }} disabled={saving}>
-              {saving ? (
-                <><div className="spinner" /><span>Saving...</span></>
-              ) : (
-                <><Save size={18} /><span>Save Settings</span></>
-              )}
-            </button>
-          </div>
         </div>
       </form>
 
@@ -896,6 +928,53 @@ export const Settings: React.FC = () => {
                 )}
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Floating Unsaved Changes Warning Bubble */}
+      {hasUnsavedChanges && (
+        <div className="unsaved-changes-bubble" role="alert" id="unsaved-changes-warning">
+          <div className="unsaved-changes-content">
+            <div className="unsaved-changes-icon-badge">
+              <AlertTriangle size={20} />
+            </div>
+            <div className="unsaved-changes-text">
+              <div className="unsaved-changes-title">Unsaved Changes</div>
+              <div className="unsaved-changes-desc">Settings changes haven't been saved yet.</div>
+            </div>
+          </div>
+          <div className="unsaved-changes-actions">
+            <button
+              type="button"
+              className="btn btn-secondary"
+              style={{ padding: '0.45rem 0.9rem', fontSize: '0.85rem' }}
+              onClick={handleDiscard}
+              disabled={saving}
+              id="discard-settings-btn"
+            >
+              Discard
+            </button>
+            <button
+              type="button"
+              className="btn btn-primary"
+              style={{ padding: '0.45rem 1.1rem', fontSize: '0.85rem' }}
+              onClick={() => handleSave()}
+              disabled={saving || nativeLanguage === targetLanguage}
+              id="save-settings-btn"
+            >
+              {saving ? (
+                <>
+                  <div className="spinner" style={{ width: 14, height: 14 }} />
+                  <span>Saving...</span>
+                </>
+              ) : (
+                <>
+                  <Save size={16} />
+                  <span>Save Settings</span>
+                </>
+              )}
+            </button>
           </div>
         </div>
       )}
