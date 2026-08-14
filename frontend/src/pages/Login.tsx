@@ -31,9 +31,9 @@ export const Login: React.FC = () => {
 
       <div className="login-card">
         <div className="login-logo">
-          <div className="login-logo-badge">🇰🇷</div>
+          <div className="login-logo-badge">🌍</div>
           <h1 className="login-title">Language Learner</h1>
-          <p className="login-subtitle">AI-Powered Korean Language Tutor</p>
+          <p className="login-subtitle">AI-Powered Language Tutor</p>
         </div>
 
         <div className="login-divider" />

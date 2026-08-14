@@ -7,7 +7,7 @@ export const Navbar: React.FC = () => {
     <nav className="navbar">
       <div className="navbar-container">
         <NavLink to="/" className="logo-brand" style={{ cursor: 'pointer', textDecoration: 'none', color: 'inherit' }}>
-          <div className="logo-badge">🇰🇷</div>
+          <div className="logo-badge">🌍</div>
           <div>
             <div style={{ fontSize: '1.1rem', fontWeight: 700, letterSpacing: '-0.02em' }}>
               Language Learner

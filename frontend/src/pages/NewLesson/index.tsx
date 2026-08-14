@@ -75,7 +75,7 @@ export const NewLesson: React.FC = () => {
       let cachedData: { proposals: ProposedRule[]; reviewRule: any } | null = null;
       let titlesToExclude: string[] = [];
 
-      const stored = localStorage.getItem('korean_proposals');
+      const stored = localStorage.getItem('lesson_proposals');
       if (stored) {
         const parsed = JSON.parse(stored);
         if (!forceRefresh) {
@@ -95,7 +95,7 @@ export const NewLesson: React.FC = () => {
         const newReviewRule = res.reviewRuleOption || cachedData?.reviewRule;
 
         const newData = { proposals: combinedProposals, reviewRule: newReviewRule };
-        localStorage.setItem('korean_proposals', JSON.stringify(newData));
+        localStorage.setItem('lesson_proposals', JSON.stringify(newData));
 
         setProposals(newData.proposals);
         setReviewRule(newData.reviewRule);
@@ -130,7 +130,7 @@ export const NewLesson: React.FC = () => {
         newProposals[indexToReplace] = res.proposedNewRules[0];
 
         setProposals(newProposals);
-        localStorage.setItem('korean_proposals', JSON.stringify({ proposals: newProposals, reviewRule }));
+        localStorage.setItem('lesson_proposals', JSON.stringify({ proposals: newProposals, reviewRule }));
 
         if (selectedRuleTitle === proposals[indexToReplace].title) {
           setSelectedRuleTitle(newProposals[indexToReplace].title);
@@ -197,14 +197,14 @@ export const NewLesson: React.FC = () => {
       setCurrentLesson(lesson);
       setPhase('GENERATED_WORKSPACE');
       // Only remove the selected proposal from cache, keep the rest
-      const stored = localStorage.getItem('korean_proposals');
+      const stored = localStorage.getItem('lesson_proposals');
       if (stored) {
         const cachedData = JSON.parse(stored);
         const remaining = cachedData.proposals.filter((p: ProposedRule) => p.title !== selectedRuleTitle);
         if (remaining.length > 0) {
-          localStorage.setItem('korean_proposals', JSON.stringify({ proposals: remaining, reviewRule: cachedData.reviewRule }));
+          localStorage.setItem('lesson_proposals', JSON.stringify({ proposals: remaining, reviewRule: cachedData.reviewRule }));
         } else {
-          localStorage.removeItem('korean_proposals');
+          localStorage.removeItem('lesson_proposals');
         }
       }
     } catch (err: any) {
