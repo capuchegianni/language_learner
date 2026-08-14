@@ -61,7 +61,7 @@ export const WordBank: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const handleSaveWord = async (e: React.FormEvent) => {
+  const handleSaveWord = async (e: React.SubmitEvent) => {
     e.preventDefault();
     if (!targetLangValue || !nativeLangValue) return;
 

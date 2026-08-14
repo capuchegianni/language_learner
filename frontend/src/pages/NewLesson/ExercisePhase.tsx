@@ -15,7 +15,7 @@ interface ExercisePhaseProps {
   handleImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   clearImages: () => void;
   submitting: boolean;
-  onSubmit: (e: React.ChangeEvent<HTMLFormElement>) => void;
+  onSubmit: (e: React.SubmitEvent) => void;
   onBack: () => void;
 }
 

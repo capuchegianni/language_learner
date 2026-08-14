@@ -192,7 +192,7 @@ export const NewLesson: React.FC = () => {
     }
   };
 
-  const handleSubmitExercises = async (e: React.FormEvent) => {
+  const handleSubmitExercises = async (e: React.SubmitEvent) => {
     e.preventDefault();
     if (!currentLesson) return;
 
