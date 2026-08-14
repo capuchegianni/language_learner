@@ -1,13 +1,17 @@
-import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
+import { Controller, Delete, Get, Req, Res, UseGuards } from '@nestjs/common';
 import { GoogleOAuthGuard } from './google-oauth.guard';
 import { AuthenticatedGuard } from './authenticated.guard';
 import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
 import { AuthenticatedRequest } from '../types/request';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Controller('api/auth')
 export class AuthController {
-  constructor(private configService: ConfigService) {}
+  constructor(
+    private configService: ConfigService,
+    private prisma: PrismaService,
+  ) {}
 
   @Get('google')
   @UseGuards(GoogleOAuthGuard)
@@ -70,4 +74,39 @@ export class AuthController {
       });
     });
   }
+
+  @Delete('account')
+  @UseGuards(AuthenticatedGuard)
+  async deleteAccount(@Req() req: AuthenticatedRequest, @Res() res: Response) {
+    const userId = req.user.id;
+
+    try {
+      await this.prisma.$transaction(async (tx) => {
+        await tx.lessonWord.deleteMany({ where: { lesson: { userId } } });
+        await tx.lessonWord.deleteMany({ where: { word: { userId } } });
+        await tx.lesson.deleteMany({ where: { userId } });
+        await tx.word.deleteMany({ where: { userId } });
+        await tx.rule.deleteMany({ where: { userId } });
+        await tx.setting.deleteMany({ where: { userId } });
+        await tx.user.delete({ where: { id: userId } });
+      });
+
+      req.logout((err) => {
+        if (err) {
+          return res.status(500).json({ message: 'Account deleted but logout failed' });
+        }
+
+        req.session.destroy((sessionErr) => {
+          if (sessionErr) {
+            return res.status(500).json({ message: 'Account deleted but session destroy failed' });
+          }
+          res.clearCookie('connect.sid');
+          return res.json({ success: true, message: 'Account and all associated data deleted successfully.' });
+        });
+      });
+    } catch (err: any) {
+      return res.status(500).json({ message: err.message || 'Failed to delete account' });
+    }
+  }
 }
+
