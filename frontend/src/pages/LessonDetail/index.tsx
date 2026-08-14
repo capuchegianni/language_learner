@@ -65,16 +65,16 @@ export const LessonDetail: React.FC = () => {
   };
 
   return (
-    <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-      <button className="btn btn-secondary" onClick={() => navigate(-1)} style={{ marginBottom: '1.5rem' }}>
+    <div className="lesson-detail-container" style={{ maxWidth: '900px', margin: '0 auto' }}>
+      <button className="btn btn-secondary back-btn" onClick={() => navigate(-1)} style={{ marginBottom: '1.5rem' }}>
         <ArrowLeft size={18} />
         <span>Back</span>
       </button>
 
-      <div className="glass-card" style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-            <h1 className="kr-text" style={{ fontSize: '1.6rem', fontWeight: 700 }}>
+      <div className="glass-card lesson-detail-header" style={{ marginBottom: '1.5rem' }}>
+        <div className="lesson-detail-title-group">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem', flexWrap: 'wrap' }}>
+            <h1 className="kr-text lesson-detail-title">
               {lesson.rule?.title || lesson.title}
             </h1>
             {lesson.isReview && <span className="pill pill-warning">Review</span>}
@@ -85,8 +85,8 @@ export const LessonDetail: React.FC = () => {
         </div>
 
         {lesson.overallScore !== null && lesson.overallScore !== undefined && (
-          <div style={{ textAlign: 'right' }}>
-            <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--accent-success)' }}>
+          <div className="lesson-detail-score-box">
+            <div className="lesson-detail-score-value">
               {lesson.overallScore}%
             </div>
             <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Overall Score</div>
@@ -110,7 +110,7 @@ export const LessonDetail: React.FC = () => {
       {/* Raw Prompt */}
       {lesson.rawPrompt && (
         <div className="glass-card">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '0.5rem' }}>
             <h3 style={{ fontSize: '1rem', fontWeight: 600 }}>Raw Generated Prompt</h3>
             <button className="btn btn-secondary" style={{ padding: '0.3rem 0.75rem', fontSize: '0.8rem' }} onClick={handleCopyPrompt}>
               {copiedPrompt ? <Check size={14} /> : <Copy size={14} />}

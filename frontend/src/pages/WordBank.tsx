@@ -130,39 +130,39 @@ export const WordBank: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="wordbank-container">
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem' }}>
+      <div className="page-header">
         <div>
-          <h1 style={{ fontSize: '1.8rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <h1 className="page-title">
             <BookOpen style={{ color: 'var(--accent-secondary)' }} />
             <span>{targetLanguage} Word Bank</span>
           </h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+          <p className="page-subtitle">
             All learned vocabulary automatically tracked from lessons or added manually. Total: {words.length} words.
           </p>
         </div>
 
-        <button className="btn btn-primary" onClick={handleOpenAddModal}>
+        <button className="btn btn-primary page-header-btn" onClick={handleOpenAddModal}>
           <Plus size={18} />
           <span>Add Custom Word</span>
         </button>
       </div>
 
       {/* Search Input and Filter */}
-      <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+      <div className="filter-bar">
         <FilterInput
           value={searchQuery}
           onChange={setSearchQuery}
           placeholder={`Search word in ${targetLanguage} or ${nativeLanguage}...`}
-          containerStyle={{ flex: 1, minWidth: '250px' }}
+          containerStyle={{ flex: 1 }}
         />
-        <div className="glass-card" style={{ padding: '0.85rem 1.25rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <label style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Filter Category:</label>
+        <div className="glass-card filter-select-card">
+          <label className="filter-select-label">Category:</label>
           <select
             value={filterCategory}
             onChange={(e) => setFilterCategory(e.target.value)}
-            style={{ background: 'transparent', color: '#fff', border: 'none', outline: 'none', fontSize: '1rem', cursor: 'pointer' }}
+            className="filter-select-input"
           >
             <option value="" style={{ background: '#1e293b' }}>All Categories</option>
             {categories.map(cat => (
@@ -182,17 +182,17 @@ export const WordBank: React.FC = () => {
           <p>No words found matching your search and filter criteria.</p>
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1.25rem' }}>
+        <div className="words-grid">
           {displayedWords.map((word) => (
-            <div key={word.id} className="glass-card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+            <div key={word.id} className="glass-card word-card">
               <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                    <span className="kr-text" style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--accent-secondary)' }}>
+                <div className="word-card-header">
+                  <div className="word-card-target">
+                    <span className="kr-text word-target-text">
                       {word.targetLanguage}
                     </span>
                     <button
-                      className="btn"
+                      className="btn icon-btn-audio"
                       style={{
                         padding: '0.35rem',
                         color: playingWordId === word.id ? 'var(--accent-primary)' : 'var(--text-secondary)',
@@ -216,17 +216,17 @@ export const WordBank: React.FC = () => {
                   </div>
                 )}
                 {word.notes && (
-                  <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', background: 'rgba(15,23,42,0.5)', padding: '0.4rem 0.6rem', borderRadius: 'var(--radius-sm)' }}>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', background: 'rgba(15,23,42,0.5)', padding: '0.4rem 0.6rem', borderRadius: 'var(--radius-sm)', wordBreak: 'break-word' }}>
                     {word.notes}
                   </div>
                 )}
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '1rem', borderTop: '1px solid var(--border-color)', paddingTop: '0.75rem' }}>
-                <button className="btn" style={{ padding: '0.35rem 0.6rem', color: 'var(--accent-warning)' }} onClick={() => handleOpenEditModal(word)}>
+              <div className="word-card-footer">
+                <button className="btn icon-btn" style={{ padding: '0.35rem 0.6rem', color: 'var(--accent-warning)' }} onClick={() => handleOpenEditModal(word)}>
                   <Edit size={16} />
                 </button>
-                <button className="btn" style={{ padding: '0.35rem 0.6rem', color: 'var(--accent-danger)' }} onClick={() => handleDeleteWord(word.id)}>
+                <button className="btn icon-btn" style={{ padding: '0.35rem 0.6rem', color: 'var(--accent-danger)' }} onClick={() => handleDeleteWord(word.id)}>
                   <Trash2 size={16} />
                 </button>
               </div>

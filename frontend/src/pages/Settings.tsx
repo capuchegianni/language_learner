@@ -336,25 +336,25 @@ export const Settings: React.FC = () => {
   };
 
   return (
-    <div style={{ maxWidth: '750px', margin: '0 auto', paddingBottom: hasUnsavedChanges ? '6rem' : '2rem' }}>
-      <div style={{ marginBottom: '1.5rem' }}>
-        <h1 style={{ fontSize: '1.8rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+    <div className="settings-container" style={{ maxWidth: '750px', margin: '0 auto', paddingBottom: hasUnsavedChanges ? '6rem' : '2rem' }}>
+      <div className="settings-page-header" style={{ marginBottom: '1.5rem' }}>
+        <h1 className="page-title" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <SettingsIcon style={{ color: 'var(--accent-primary)' }} />
-          <span>AI & Application Settings</span>
+          <span>AI &amp; Application Settings</span>
         </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+        <p className="page-subtitle">
           Configure any OpenAI-compatible AI provider. All providers share the same unified API format.
         </p>
       </div>
 
       {/* Account Section */}
-      <div className="glass-card" style={{ marginBottom: '1.5rem' }}>
+      <div className="glass-card settings-account-card" style={{ marginBottom: '1.5rem' }}>
         <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-success)' }}>
           <User size={20} />
           <span>Account</span>
         </h3>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        <div className="settings-account-content">
+          <div className="settings-account-profile">
             {user?.avatarUrl ? (
               <img
                 src={user.avatarUrl}
@@ -367,16 +367,15 @@ export const Settings: React.FC = () => {
                 {user?.displayName?.[0] || '?'}
               </div>
             )}
-            <div>
-              <div style={{ fontWeight: 600, fontSize: '1rem' }}>{user?.displayName}</div>
-              <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{user?.email}</div>
+            <div style={{ minWidth: 0 }}>
+              <div style={{ fontWeight: 600, fontSize: '1rem', wordBreak: 'break-word' }}>{user?.displayName}</div>
+              <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', wordBreak: 'break-word' }}>{user?.email}</div>
             </div>
           </div>
           <button
             type="button"
-            className="btn btn-secondary"
+            className="btn btn-secondary settings-logout-btn"
             onClick={handleLogout}
-            style={{ gap: '0.5rem' }}
             id="logout-button"
           >
             <LogOut size={16} />
@@ -406,11 +405,11 @@ export const Settings: React.FC = () => {
             <Globe size={20} />
             <span>Language Preferences</span>
           </h3>
-          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1.25rem' }}>
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1.25rem', lineHeight: 1.4 }}>
             Choose your native language and the language you want to learn. All AI-generated lessons, exercises, and feedback will adapt to your selection.
           </p>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
+          <div className="settings-language-grid">
             <div className="input-group">
               <label>I speak (native language)</label>
               <select
@@ -452,7 +451,7 @@ export const Settings: React.FC = () => {
             <Cpu size={20} />
             <span>Provider Presets</span>
           </h3>
-          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1rem', lineHeight: 1.4 }}>
             Select a preset to autofill the base URL and a suggested model, or configure them manually below.
           </p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem' }}>
@@ -461,9 +460,9 @@ export const Settings: React.FC = () => {
                 key={preset.name}
                 type="button"
                 onClick={() => handleSelectPreset(preset)}
-                className="btn"
+                className="btn preset-chip"
                 style={{
-                  padding: '0.4rem 0.9rem',
+                  padding: '0.45rem 0.9rem',
                   fontSize: '0.85rem',
                   background: selectedPreset.name === preset.name ? 'rgba(99,102,241,0.3)' : 'rgba(255,255,255,0.05)',
                   border: `1px solid ${selectedPreset.name === preset.name ? 'var(--accent-primary)' : 'var(--border-color)'}`,
@@ -484,7 +483,7 @@ export const Settings: React.FC = () => {
           </h3>
 
           <div className="input-group" style={{ marginBottom: '1.25rem' }}>
-            <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
               <span>Base URL</span>
               <a href={activePreset.docsURL} target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.78rem', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
                 <ExternalLink size={12} /> {activePreset.name} docs
@@ -513,7 +512,7 @@ export const Settings: React.FC = () => {
             <datalist id="model-suggestions">
               {activePreset.exampleModels.map((m) => <option key={m} value={m} />)}
             </datalist>
-            <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'block', marginTop: '0.25rem' }}>
+            <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'block', marginTop: '0.25rem', wordBreak: 'break-word' }}>
               Suggestions: {activePreset.exampleModels.join(', ')}
             </span>
           </div>
@@ -534,7 +533,7 @@ export const Settings: React.FC = () => {
                   {hasApiKey && !apiKey ? 'A key is already stored securely. Leave this blank to keep it unchanged.' : 'The key is encrypted in the database and never returned to the browser.'}
                 </span>
               </div>
-              <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.2)', borderRadius: 'var(--radius-sm)', padding: '0.65rem 0.9rem' }}>
+              <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.2)', borderRadius: 'var(--radius-sm)', padding: '0.65rem 0.9rem', lineHeight: 1.4 }}>
                 🔑 The API key is stored encrypted in the database and is never sent back to the browser.
               </div>
             </>
@@ -552,10 +551,10 @@ export const Settings: React.FC = () => {
           <Upload size={20} />
           <span>Import / Export Data</span>
         </h3>
-        <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
+        <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', marginBottom: '1rem', lineHeight: 1.4 }}>
           Import or export your words, rules, lessons, and settings as a JSON file.
         </p>
-        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+        <div className="settings-import-export-actions">
           <button
             type="button"
             className="btn btn-secondary"
@@ -588,24 +587,24 @@ export const Settings: React.FC = () => {
           <AlertTriangle size={20} />
           <span>Danger Zone</span>
         </h3>
-        <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', marginBottom: '1.25rem' }}>
+        <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', marginBottom: '1.25rem', lineHeight: 1.4 }}>
           Irreversible actions for your data and account. Proceed with caution.
         </p>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           {/* Reset Specific Data */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', paddingBottom: '1.25rem', borderBottom: '1px solid rgba(239,68,68,0.15)' }}>
+          <div className="danger-zone-item" style={{ paddingBottom: '1.25rem', borderBottom: '1px solid rgba(239,68,68,0.15)' }}>
             <div>
               <div style={{ fontWeight: 600, fontSize: '0.95rem', color: '#fff' }}>Reset Specific Data</div>
-              <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: '0.2rem' }}>
+              <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: '0.2rem', lineHeight: 1.4 }}>
                 Select specific data categories (Settings, Words, Rules, Lessons) to permanently clear.
               </div>
             </div>
             <button
               type="button"
-              className="btn"
+              className="btn danger-zone-btn"
               id="open-reset-modal-btn"
-              style={{ background: 'rgba(239,68,68,0.15)', color: 'var(--accent-danger)', border: '1px solid rgba(239,68,68,0.3)', whiteSpace: 'nowrap' }}
+              style={{ background: 'rgba(239,68,68,0.15)', color: 'var(--accent-danger)', border: '1px solid rgba(239,68,68,0.3)' }}
               onClick={() => {
                 setResetError(null);
                 setShowResetModal(true);
@@ -617,18 +616,18 @@ export const Settings: React.FC = () => {
           </div>
 
           {/* Delete Account */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+          <div className="danger-zone-item">
             <div>
               <div style={{ fontWeight: 600, fontSize: '0.95rem', color: '#fff' }}>Delete Account</div>
-              <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: '0.2rem' }}>
+              <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: '0.2rem', lineHeight: 1.4 }}>
                 Permanently delete your user account and all associated data.
               </div>
             </div>
             <button
               type="button"
-              className="btn"
+              className="btn danger-zone-btn"
               id="open-delete-account-modal-btn"
-              style={{ background: 'rgba(239,68,68,0.15)', color: 'var(--accent-danger)', border: '1px solid rgba(239,68,68,0.3)', whiteSpace: 'nowrap' }}
+              style={{ background: 'rgba(239,68,68,0.15)', color: 'var(--accent-danger)', border: '1px solid rgba(239,68,68,0.3)' }}
               onClick={() => {
                 setDeleteAccountError(null);
                 setShowDeleteAccountModal(true);
@@ -644,20 +643,21 @@ export const Settings: React.FC = () => {
 
       {/* Import Modal */}
       {showImportModal && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
-          <div className="glass-card" style={{ width: '90%', maxWidth: '600px', maxHeight: '90vh', overflowY: 'auto', position: 'relative' }}>
+        <div className="modal-overlay" onMouseDown={(e) => { if (e.target === e.currentTarget) setShowImportModal(false); }}>
+          <div className="modal-content" style={{ maxWidth: '600px', position: 'relative' }}>
             <button
               onClick={() => setShowImportModal(false)}
+              className="modal-close-btn"
               style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }}
             >
               <X size={24} />
             </button>
             <h3 style={{ fontSize: '1.3rem', fontWeight: 700, marginBottom: '1rem', color: '#fff' }}>Import Data</h3>
 
-            <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
+            <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '1rem', lineHeight: 1.4 }}>
               Your JSON file should have the following structure. Any fields not matching the format will be skipped.
             </p>
-            <pre style={{ background: 'rgba(0,0,0,0.3)', padding: '1rem', borderRadius: 'var(--radius-sm)', fontSize: '0.8rem', color: 'var(--text-muted)', overflowX: 'auto', marginBottom: '1rem' }}>
+            <pre className="code-block" style={{ background: 'rgba(0,0,0,0.3)', padding: '0.85rem', borderRadius: 'var(--radius-sm)', fontSize: '0.78rem', color: 'var(--text-muted)', overflowX: 'auto', marginBottom: '1rem', maxHeight: '180px' }}>
               {`{
   "settings": [{ "key": "AI_MODEL", "value": "gpt-4o-mini" }],
   "words": [
@@ -690,13 +690,13 @@ export const Settings: React.FC = () => {
               </label>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', flexWrap: 'wrap' }}>
               <button className="btn btn-secondary" onClick={() => setShowImportModal(false)}>Cancel</button>
               <label className="btn btn-primary" style={{ cursor: 'pointer' }}>
                 {importing ? (
                   <><div className="spinner" /><span>Importing...</span></>
                 ) : (
-                  <><Upload size={18} /><span>Select & Import JSON</span></>
+                  <><Upload size={18} /><span>Select &amp; Import JSON</span></>
                 )}
                 <input
                   type="file"
@@ -714,10 +714,11 @@ export const Settings: React.FC = () => {
 
       {/* Export Modal */}
       {showExportModal && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
-          <div className="glass-card" style={{ width: '90%', maxWidth: '500px', position: 'relative' }}>
+        <div className="modal-overlay" onMouseDown={(e) => { if (e.target === e.currentTarget) setShowExportModal(false); }}>
+          <div className="modal-content" style={{ maxWidth: '500px', position: 'relative' }}>
             <button
               onClick={() => setShowExportModal(false)}
+              className="modal-close-btn"
               style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }}
             >
               <X size={24} />
@@ -726,7 +727,7 @@ export const Settings: React.FC = () => {
             <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
               Select which data you would like to include in the exported JSON file.
             </p>
-            <div style={{ fontSize: '0.82rem', color: '#fbbf24', background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.3)', borderRadius: 'var(--radius-sm)', padding: '0.6rem 0.85rem', marginBottom: '1.5rem' }}>
+            <div style={{ fontSize: '0.82rem', color: '#fbbf24', background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.3)', borderRadius: 'var(--radius-sm)', padding: '0.6rem 0.85rem', marginBottom: '1.5rem', lineHeight: 1.4 }}>
               ⚠️ Your API key is never included in the export for security reasons.
             </div>
 
@@ -749,7 +750,7 @@ export const Settings: React.FC = () => {
               </div>
             )}
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', flexWrap: 'wrap' }}>
               <button className="btn btn-secondary" onClick={() => setShowExportModal(false)}>Cancel</button>
               <button
                 className="btn btn-primary"
@@ -787,10 +788,11 @@ export const Settings: React.FC = () => {
 
       {/* Reset Modal */}
       {showResetModal && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
-          <div className="glass-card" style={{ width: '90%', maxWidth: '520px', position: 'relative', borderColor: 'rgba(239,68,68,0.4)' }}>
+        <div className="modal-overlay" onMouseDown={(e) => { if (e.target === e.currentTarget) setShowResetModal(false); }}>
+          <div className="modal-content" style={{ maxWidth: '520px', position: 'relative', borderColor: 'rgba(239,68,68,0.4)' }}>
             <button
               onClick={() => setShowResetModal(false)}
+              className="modal-close-btn"
               style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }}
             >
               <X size={24} />
@@ -802,11 +804,11 @@ export const Settings: React.FC = () => {
             <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
               Select which data you would like to permanently delete from your account.
             </p>
-            <div style={{ fontSize: '0.82rem', color: '#fca5a5', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 'var(--radius-sm)', padding: '0.6rem 0.85rem', marginBottom: '1.25rem' }}>
+            <div style={{ fontSize: '0.82rem', color: '#fca5a5', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 'var(--radius-sm)', padding: '0.6rem 0.85rem', marginBottom: '1.25rem', lineHeight: 1.4 }}>
               ⚠️ Warning: Selected data will be permanently removed. This action cannot be undone.
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '0.5rem' }}>
               <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>Choose items to delete:</span>
               <div style={{ display: 'flex', gap: '0.5rem' }}>
                 <button
@@ -861,7 +863,7 @@ export const Settings: React.FC = () => {
               </div>
             )}
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', flexWrap: 'wrap' }}>
               <button className="btn btn-secondary" onClick={() => setShowResetModal(false)} disabled={resetting}>
                 Cancel
               </button>
@@ -885,10 +887,11 @@ export const Settings: React.FC = () => {
 
       {/* Delete Account Modal */}
       {showDeleteAccountModal && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.75)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
-          <div className="glass-card" style={{ width: '90%', maxWidth: '500px', position: 'relative', borderColor: 'rgba(239,68,68,0.5)' }}>
+        <div className="modal-overlay" onMouseDown={(e) => { if (e.target === e.currentTarget) setShowDeleteAccountModal(false); }}>
+          <div className="modal-content" style={{ maxWidth: '500px', position: 'relative', borderColor: 'rgba(239,68,68,0.5)' }}>
             <button
               onClick={() => setShowDeleteAccountModal(false)}
+              className="modal-close-btn"
               style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }}
             >
               <X size={24} />
@@ -910,7 +913,7 @@ export const Settings: React.FC = () => {
               </div>
             )}
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', flexWrap: 'wrap' }}>
               <button className="btn btn-secondary" onClick={() => setShowDeleteAccountModal(false)} disabled={deletingAccount}>
                 Cancel
               </button>

@@ -45,27 +45,27 @@ export const LessonHistory: React.FC = () => {
   });
 
   return (
-    <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-      <div className="glass-card" style={{ marginBottom: '1.5rem' }}>
-        <h1 style={{ fontSize: '1.6rem', fontWeight: 700, margin: 0 }}>
+    <div className="history-container">
+      <div className="glass-card page-header-card" style={{ marginBottom: '1.5rem' }}>
+        <h1 className="page-title" style={{ margin: 0 }}>
           Lesson History
         </h1>
       </div>
 
       {/* Search Input and Filter */}
-      <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+      <div className="filter-bar">
         <FilterInput
           value={search}
           onChange={setSearch}
           placeholder="Search lessons by rule title..."
-          containerStyle={{ flex: 1, minWidth: '250px' }}
+          containerStyle={{ flex: 1 }}
         />
-        <div className="glass-card" style={{ padding: '0.85rem 1.25rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <label style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Filter Status:</label>
+        <div className="glass-card filter-select-card">
+          <label className="filter-select-label">Status:</label>
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            style={{ background: 'transparent', color: '#fff', border: 'none', outline: 'none', fontSize: '1rem', cursor: 'pointer' }}
+            className="filter-select-input"
           >
             <option value="" style={{ background: '#1e293b' }}>All Lessons</option>
             <option value="GENERATED" style={{ background: '#1e293b' }}>Generated</option>
@@ -89,8 +89,8 @@ export const LessonHistory: React.FC = () => {
           {displayedLessons.map((lesson) => (
             <div
               key={lesson.id}
-              className="glass-card"
-              style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 1.25rem', transition: 'all 0.2s ease' }}
+              className="glass-card history-item-card"
+              style={{ cursor: 'pointer', transition: 'all 0.2s ease' }}
               onClick={() => {
                 if (lesson.status === 'GENERATED' || lesson.status === 'SUBMITTED') {
                   navigate(`/lessons/${lesson.id}/resume`);
@@ -99,29 +99,31 @@ export const LessonHistory: React.FC = () => {
                 }
               }}
             >
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-                  <span className="kr-text" style={{ fontWeight: 600, fontSize: '1rem' }}>
+              <div className="history-item-info">
+                <div className="history-item-title-row">
+                  <span className="kr-text history-item-title">
                     {lesson.rule?.title || lesson.title}
                   </span>
-                  {lesson.isReview && <span className="pill pill-warning">Review</span>}
-                  <span className={`pill ${lesson.status === 'GRADED' ? 'pill-success' : lesson.status === 'SUBMITTED' ? 'pill-primary' : 'pill-warning'}`}>
-                    {lesson.status}
-                  </span>
+                  <div className="history-item-pills">
+                    {lesson.isReview && <span className="pill pill-warning">Review</span>}
+                    <span className={`pill ${lesson.status === 'GRADED' ? 'pill-success' : lesson.status === 'SUBMITTED' ? 'pill-primary' : 'pill-warning'}`}>
+                      {lesson.status}
+                    </span>
+                  </div>
                 </div>
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                <div className="history-item-meta">
                   {new Date(lesson.createdAt).toLocaleDateString()} • {lesson.wordsCount} Words
                 </div>
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <div className="history-item-actions">
                 {lesson.overallScore !== null && lesson.overallScore !== undefined ? (
                   <span className={`pill ${lesson.overallScore >= 80 ? 'pill-success' : 'pill-primary'}`}>
                     {lesson.overallScore}% Score
                   </span>
                 ) : null}
                 <button
-                  className="btn"
+                  className="btn icon-btn-delete"
                   style={{ padding: '0.4rem', color: 'var(--accent-danger)' }}
                   onClick={(e) => handleDelete(e, lesson.id)}
                   title="Delete Lesson"

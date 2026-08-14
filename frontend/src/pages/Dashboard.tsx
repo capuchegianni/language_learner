@@ -36,19 +36,19 @@ export const Dashboard: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="dashboard-container">
       {/* Welcome Banner */}
-      <div className="glass-card" style={{ marginBottom: '2rem', background: 'var(--gradient-glow)', borderColor: 'var(--border-color-glow)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+      <div className="glass-card welcome-banner" style={{ marginBottom: '2rem', background: 'var(--gradient-glow)', borderColor: 'var(--border-color-glow)' }}>
+        <div className="welcome-banner-content">
           <div>
-            <h1 style={{ fontSize: '1.8rem', fontWeight: 700, marginBottom: '0.5rem' }}>
+            <h1 className="welcome-title">
               Ready for Today's {targetLanguage} Lesson?
             </h1>
-            <p style={{ color: 'var(--text-secondary)', maxWidth: '650px' }}>
+            <p className="welcome-subtitle">
               Your personal AI tutor generates custom rules, manages your vocabulary bank, and evaluates your handwritten or typed exercise submissions in real time.
             </p>
           </div>
-          <button className="btn btn-primary" onClick={() => navigate('/lessons/new')}>
+          <button className="btn btn-primary welcome-action-btn" onClick={() => navigate('/lessons/new')}>
             <Sparkles size={20} />
             <span>Start Daily Lesson</span>
           </button>
@@ -99,59 +99,59 @@ export const Dashboard: React.FC = () => {
       </div>
 
       {/* Main Grid Actions & Recent History */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
+      <div className="dashboard-main-grid">
         {/* Quick Hub Navigation */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           <h2 style={{ fontSize: '1.3rem', fontWeight: 600 }}>Quick Learning Hub</h2>
 
           <div
-            className="glass-card"
+            className="glass-card quick-hub-card"
             style={{ cursor: 'pointer', transition: 'all 0.2s ease' }}
             onClick={() => navigate('/lessons/new')}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.75rem', borderRadius: 'var(--radius-md)', background: 'rgba(99, 102, 241, 0.2)', color: 'var(--accent-primary)' }}>
+            <div className="quick-hub-card-content">
+              <div className="quick-hub-icon" style={{ background: 'rgba(99, 102, 241, 0.2)', color: 'var(--accent-primary)' }}>
                 <Sparkles size={24} />
               </div>
-              <div style={{ flex: 1 }}>
+              <div style={{ flex: 1, minWidth: 0 }}>
                 <h3 style={{ fontSize: '1.1rem', fontWeight: 600 }}>Generate Daily Lesson</h3>
                 <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Get 3 AI rule proposals or start a spaced review session.</p>
               </div>
-              <ArrowRight size={18} color="var(--text-secondary)" />
+              <ArrowRight size={18} color="var(--text-secondary)" className="quick-hub-arrow" />
             </div>
           </div>
 
           <div
-            className="glass-card"
+            className="glass-card quick-hub-card"
             style={{ cursor: 'pointer', transition: 'all 0.2s ease' }}
             onClick={() => navigate('/words')}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.75rem', borderRadius: 'var(--radius-md)', background: 'rgba(6, 182, 212, 0.2)', color: 'var(--accent-secondary)' }}>
+            <div className="quick-hub-card-content">
+              <div className="quick-hub-icon" style={{ background: 'rgba(6, 182, 212, 0.2)', color: 'var(--accent-secondary)' }}>
                 <BookOpen size={24} />
               </div>
-              <div style={{ flex: 1 }}>
+              <div style={{ flex: 1, minWidth: 0 }}>
                 <h3 style={{ fontSize: '1.1rem', fontWeight: 600 }}>Manage Vocabulary Bank</h3>
                 <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>View, search, or add custom {targetLanguage} words & meanings.</p>
               </div>
-              <ArrowRight size={18} color="var(--text-secondary)" />
+              <ArrowRight size={18} color="var(--text-secondary)" className="quick-hub-arrow" />
             </div>
           </div>
 
           <div
-            className="glass-card"
+            className="glass-card quick-hub-card"
             style={{ cursor: 'pointer', transition: 'all 0.2s ease' }}
             onClick={() => navigate('/rules')}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.75rem', borderRadius: 'var(--radius-md)', background: 'rgba(168, 85, 247, 0.2)', color: 'var(--accent-purple)' }}>
+            <div className="quick-hub-card-content">
+              <div className="quick-hub-icon" style={{ background: 'rgba(168, 85, 247, 0.2)', color: 'var(--accent-purple)' }}>
                 <Scroll size={24} />
               </div>
-              <div style={{ flex: 1 }}>
+              <div style={{ flex: 1, minWidth: 0 }}>
                 <h3 style={{ fontSize: '1.1rem', fontWeight: 600 }}>Browse Grammar Rule Bank</h3>
                 <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Review all previously mastered rules and sentence patterns.</p>
               </div>
-              <ArrowRight size={18} color="var(--text-secondary)" />
+              <ArrowRight size={18} color="var(--text-secondary)" className="quick-hub-arrow" />
             </div>
           </div>
         </div>
@@ -180,8 +180,8 @@ export const Dashboard: React.FC = () => {
               {stats?.recentLessons?.slice(0, 3).map((lesson: Lesson) => (
                 <div
                   key={lesson.id}
-                  className="glass-card"
-                  style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 1.25rem' }}
+                  className="glass-card recent-lesson-item"
+                  style={{ cursor: 'pointer' }}
                   onClick={() => {
                     if (lesson.status === 'GENERATED' || lesson.status === 'SUBMITTED') {
                       navigate(`/lessons/${lesson.id}/resume`);
@@ -190,28 +190,28 @@ export const Dashboard: React.FC = () => {
                     }
                   }}
                 >
-                  <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-                      <span className="kr-text" style={{ fontWeight: 600, fontSize: '1rem' }}>
+                  <div className="recent-lesson-info">
+                    <div className="recent-lesson-title-row">
+                      <span className="kr-text recent-lesson-title">
                         {lesson.rule?.title || lesson.title}
                       </span>
                       {lesson.isReview && <span className="pill pill-warning">Review</span>}
                     </div>
-                    <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                    <div className="recent-lesson-meta">
                       {new Date(lesson.createdAt).toLocaleDateString()} • {lesson.wordsCount} Words
                     </div>
                   </div>
 
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                  <div className="recent-lesson-actions">
                     {lesson.overallScore !== null && lesson.overallScore !== undefined ? (
                       <span className={`pill ${lesson.overallScore >= 80 ? 'pill-success' : 'pill-primary'}`}>
                         {lesson.overallScore}% Score
                       </span>
                     ) : (
-                      <span className="pill pill-warning">Pending Submission</span>
+                      <span className="pill pill-warning">Pending</span>
                     )}
                     <button
-                      className="btn"
+                      className="btn icon-btn-delete"
                       style={{ padding: '0.4rem', color: 'var(--text-muted)' }}
                       onClick={(e) => handleDeleteLesson(e, lesson.id)}
                       title="Delete Lesson"
@@ -224,7 +224,7 @@ export const Dashboard: React.FC = () => {
               {(stats?.recentLessons?.length ?? 0) > 3 && (
                 <button
                   className="btn btn-secondary"
-                  style={{ alignSelf: 'center', marginTop: '0.5rem' }}
+                  style={{ alignSelf: 'center', marginTop: '0.5rem', width: '100%', maxWidth: '280px' }}
                   onClick={() => navigate('/history')}
                 >
                   <span>View All Lessons</span>
