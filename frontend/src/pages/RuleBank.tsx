@@ -105,20 +105,20 @@ export const RuleBank: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="rulebank-container">
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem' }}>
+      <div className="page-header">
         <div>
-          <h1 style={{ fontSize: '1.8rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <h1 className="page-title">
             <Scroll style={{ color: 'var(--accent-purple)' }} />
             <span>Mastered Grammar Rule Bank</span>
           </h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+          <p className="page-subtitle">
             A comprehensive index of all {targetLanguage} grammar rules learned in lessons. Total: {rules.length} rules.
           </p>
         </div>
 
-        <button className="btn btn-primary" onClick={handleOpenAddModal}>
+        <button className="btn btn-primary page-header-btn" onClick={handleOpenAddModal}>
           <Plus size={18} />
           <span>Add Custom Rule</span>
         </button>
@@ -152,35 +152,34 @@ export const RuleBank: React.FC = () => {
             }
 
             return (
-              <div key={rule.id} className="glass-card">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <h3 className="kr-text" style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--accent-purple)' }}>
+              <div key={rule.id} className="glass-card rule-card">
+                <div className="rule-card-header">
+                  <div className="rule-card-title-group">
+                    <h3 className="kr-text rule-card-title">
                       {rule.title}
                     </h3>
                     {rule._count && rule._count.lessons > 0 && (
                       <button
-                        className="btn btn-secondary"
-                        style={{ padding: '0.2rem 0.5rem', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}
+                        className="btn btn-secondary rule-count-badge"
                         onClick={() => navigate(`/history?q=${encodeURIComponent(rule.title)}`)}
                         title={`View ${rule._count.lessons} linked lesson(s)`}
                       >
                         <Clock size={14} />
-                        {rule._count.lessons} Lesson{rule._count.lessons !== 1 ? 's' : ''}
+                        <span>{rule._count.lessons} Lesson{rule._count.lessons !== 1 ? 's' : ''}</span>
                       </button>
                     )}
                   </div>
-                  <div style={{ display: 'flex', gap: '0.5rem' }}>
-                    <button className="btn" style={{ padding: '0.35rem 0.6rem', color: 'var(--accent-warning)' }} onClick={() => handleOpenEditModal(rule)}>
+                  <div className="rule-card-actions">
+                    <button className="btn icon-btn" style={{ padding: '0.35rem 0.6rem', color: 'var(--accent-warning)' }} onClick={() => handleOpenEditModal(rule)}>
                       <Edit size={16} />
                     </button>
-                    <button className="btn" style={{ padding: '0.35rem 0.6rem', color: 'var(--accent-danger)' }} onClick={() => handleDeleteRule(rule.id)}>
+                    <button className="btn icon-btn" style={{ padding: '0.35rem 0.6rem', color: 'var(--accent-danger)' }} onClick={() => handleDeleteRule(rule.id)}>
                       <Trash2 size={16} />
                     </button>
                   </div>
                 </div>
 
-                <p style={{ color: 'var(--text-primary)', marginBottom: '1rem', lineHeight: 1.6, fontSize: '1rem', whiteSpace: 'pre-line' }}>
+                <p className="rule-explanation-text">
                   {rule.explanation}
                 </p>
 
@@ -189,9 +188,9 @@ export const RuleBank: React.FC = () => {
                     <div style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.35rem' }}>Examples:</div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                       {parsedExamples.map((ex, idx) => (
-                        <div key={idx} style={{ background: 'rgba(15,23,42,0.5)', padding: '0.5rem 0.85rem', borderRadius: 'var(--radius-sm)', borderLeft: '3px solid var(--accent-purple)' }}>
-                          <span className="kr-text" style={{ fontWeight: 600, color: '#fff', fontSize: '1rem' }}>{ex.targetLanguage}</span>
-                          {ex.nativeLanguage && <span style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', marginLeft: '0.75rem' }}>({ex.nativeLanguage})</span>}
+                        <div key={idx} className="rule-example-box">
+                          <span className="kr-text rule-example-target">{ex.targetLanguage}</span>
+                          {ex.nativeLanguage && <span className="rule-example-native">({ex.nativeLanguage})</span>}
                         </div>
                       ))}
                     </div>
@@ -199,7 +198,7 @@ export const RuleBank: React.FC = () => {
                 )}
 
                 {rule.exceptions && (
-                  <div style={{ fontSize: '0.95rem', color: 'var(--accent-warning)', background: 'rgba(245,158,11,0.1)', padding: '0.5rem 0.75rem', borderRadius: 'var(--radius-sm)' }}>
+                  <div className="rule-exceptions-box">
                     <strong>Exceptions:</strong> {rule.exceptions}
                   </div>
                 )}

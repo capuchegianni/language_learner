@@ -36,7 +36,7 @@ export const ExercisePhase: React.FC<ExercisePhaseProps> = ({
   onBack,
 }) => {
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={onSubmit} className="exercise-phase-form">
       <div className="glass-card" style={{ marginBottom: '1.5rem' }}>
         <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <PenTool size={18} color="var(--accent-primary)" />
@@ -48,13 +48,13 @@ export const ExercisePhase: React.FC<ExercisePhaseProps> = ({
           <h4 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#fff', marginBottom: '0.5rem' }}>
             Exercise 1: Rule Application
           </h4>
-          <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
-            {lessonContent.exercise1.instruction} (Target: {lessonContent.exercise1.targetWords?.join(', ')})
+          <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '1rem', lineHeight: 1.5 }}>
+            {lessonContent.exercise1.instruction} (Target: <strong className="kr-text" style={{ color: 'var(--text-primary)' }}>{lessonContent.exercise1.targetWords?.join(', ')}</strong>)
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             {lessonContent.exercise1.targetWords?.map((word, idx) => (
-              <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <span className="kr-text" style={{ minWidth: '80px', fontWeight: 600 }}>{word}</span>
+              <div key={idx} className="exercise-input-row">
+                <span className="kr-text exercise-target-word">{word}</span>
                 <input
                   type="text"
                   value={ex1Answers[idx] || ''}
@@ -64,8 +64,7 @@ export const ExercisePhase: React.FC<ExercisePhaseProps> = ({
                     setEx1Answers(newAns);
                   }}
                   placeholder="Conjugated answer..."
-                  className="kr-text"
-                  style={{ flex: 1, padding: '0.6rem 0.85rem', background: 'rgba(15,23,42,0.6)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)', color: '#fff' }}
+                  className="kr-text exercise-text-input"
                 />
               </div>
             ))}
@@ -80,7 +79,7 @@ export const ExercisePhase: React.FC<ExercisePhaseProps> = ({
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             {lessonContent.exercise2.sentencesToTranslate?.map((sentence, idx) => (
               <div key={idx}>
-                <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>{idx + 1}. {sentence}</p>
+                <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '0.5rem', lineHeight: 1.4 }}>{idx + 1}. {sentence}</p>
                 <input
                   type="text"
                   value={ex2Answers[idx] || ''}
@@ -91,7 +90,7 @@ export const ExercisePhase: React.FC<ExercisePhaseProps> = ({
                   }}
                   placeholder="Your translation..."
                   className="kr-text"
-                  style={{ width: '100%', padding: '0.6rem 0.85rem', background: 'rgba(15,23,42,0.6)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-sm)', color: '#fff' }}
+                  style={{ width: '100%', padding: '0.65rem 0.85rem' }}
                 />
               </div>
             ))}
@@ -103,7 +102,7 @@ export const ExercisePhase: React.FC<ExercisePhaseProps> = ({
           <h4 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#fff', marginBottom: '0.75rem' }}>
             Exercise 3: Mini Story Translation (30-50 words)
           </h4>
-          <div style={{ background: 'rgba(15,23,42,0.6)', padding: '0.85rem', borderRadius: 'var(--radius-sm)', marginBottom: '0.75rem', fontSize: '0.9rem', fontStyle: 'italic', border: '1px solid var(--border-color)' }}>
+          <div style={{ background: 'rgba(15,23,42,0.6)', padding: '0.85rem', borderRadius: 'var(--radius-sm)', marginBottom: '0.75rem', fontSize: '0.9rem', fontStyle: 'italic', border: '1px solid var(--border-color)', lineHeight: 1.5, whiteSpace: 'pre-wrap' }}>
             "{lessonContent.exercise3.textToTranslate}"
           </div>
           <textarea
@@ -111,21 +110,22 @@ export const ExercisePhase: React.FC<ExercisePhaseProps> = ({
             onChange={(e) => setEx3Answer(e.target.value)}
             placeholder="Type your translation of the story..."
             className="kr-text"
+            style={{ minHeight: '120px' }}
           />
         </div>
 
         {/* Multimodal Vision Upload Option */}
-        <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '1.25rem', marginTop: '1.5rem' }}>
-          <label style={{ fontWeight: 600, color: 'var(--accent-secondary)', display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+        <div className="vision-upload-section" style={{ borderTop: '1px solid var(--border-color)', paddingTop: '1.25rem', marginTop: '1.5rem' }}>
+          <label style={{ fontWeight: 600, color: 'var(--accent-secondary)', display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
             <ImageIcon size={18} />
             <span>Or Upload Photo of Handwritten Exercises (Vision AI OCR)</span>
           </label>
-          <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: '0.75rem' }}>
+          <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: '0.75rem', lineHeight: 1.4 }}>
             Wrote your answers in a physical notebook? Snap up to 3 photos and upload them! Vision AI will read your handwriting and evaluate it.
           </p>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-            <label className="btn btn-secondary" style={{ cursor: 'pointer' }}>
+          <div className="vision-upload-controls" style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+            <label className="btn btn-secondary vision-file-btn" style={{ cursor: 'pointer' }}>
               <Upload size={18} />
               <span>Choose Photo(s)</span>
               <input type="file" accept="image/*" multiple onChange={handleImageChange} style={{ display: 'none' }} />
@@ -133,7 +133,7 @@ export const ExercisePhase: React.FC<ExercisePhaseProps> = ({
             {imageFiles.length > 0 && (
               <div style={{ display: 'flex', gap: '0.5rem', flexDirection: 'column' }}>
                 {imageFiles.map((f, i) => (
-                  <span key={i} style={{ fontSize: '0.85rem', color: 'var(--accent-success)' }}>Selected: {f.name}</span>
+                  <span key={i} style={{ fontSize: '0.85rem', color: 'var(--accent-success)', wordBreak: 'break-all' }}>Selected: {f.name}</span>
                 ))}
               </div>
             )}
@@ -145,9 +145,9 @@ export const ExercisePhase: React.FC<ExercisePhaseProps> = ({
           </div>
 
           {imagePreviews.length > 0 && (
-            <div style={{ marginTop: '1rem', display: 'flex', gap: '0.75rem', overflowX: 'auto', paddingBottom: '0.5rem' }}>
+            <div className="vision-previews-container" style={{ marginTop: '1rem', display: 'flex', gap: '0.75rem', overflowX: 'auto', paddingBottom: '0.5rem' }}>
               {imagePreviews.map((preview, i) => (
-                <img key={i} src={preview} alt={`Handwritten preview ${i + 1}`} style={{ height: '120px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color-glow)', objectFit: 'cover' }} />
+                <img key={i} src={preview} alt={`Handwritten preview ${i + 1}`} style={{ height: '110px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color-glow)', objectFit: 'cover' }} />
               ))}
             </div>
           )}
@@ -155,18 +155,17 @@ export const ExercisePhase: React.FC<ExercisePhaseProps> = ({
       </div>
 
       {/* Submit Form Button */}
-      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
+      <div className="exercise-action-buttons">
         <button
           type="button"
-          className="btn btn-secondary"
+          className="btn btn-secondary exercise-btn"
           onClick={onBack}
         >
           Back to Selection
         </button>
         <button
           type="submit"
-          className="btn btn-primary"
-          style={{ minWidth: '220px' }}
+          className="btn btn-primary exercise-btn"
           disabled={submitting}
         >
           {submitting ? (

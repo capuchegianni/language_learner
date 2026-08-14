@@ -56,17 +56,17 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
     }
   };
   return (
-    <div>
-      <div className="glass-card" style={{ marginBottom: '1.5rem', textAlign: 'center' }}>
-        <h2 style={{ fontSize: '1.6rem', fontWeight: 700, marginBottom: '0.5rem' }}>
+    <div className="proposal-phase-container">
+      <div className="glass-card proposal-header-card" style={{ marginBottom: '1.5rem', textAlign: 'center' }}>
+        <h2 className="proposal-header-title">
           Select Today's {targetLanguage} Rule
         </h2>
-        <p style={{ color: 'var(--text-secondary)', maxWidth: '600px', margin: '0 auto 1.5rem' }}>
+        <p className="proposal-header-subtitle">
           The AI analyzed your mastered rules and proposed 3 new daily grammar rules, or choose a random revision rule to refresh your knowledge.
         </p>
 
         {/* Word Count Selector */}
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '1rem', background: 'rgba(15,23,42,0.6)', padding: '0.5rem 1.25rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+        <div className="word-count-selector">
           <label style={{ fontSize: '0.9rem', fontWeight: 500 }}>Target New Words:</label>
           <select
             value={wordsCount}
@@ -90,13 +90,13 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2rem' }}>
           <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text-secondary)' }}>AI Proposed New Rules</h3>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
+          <div className="proposal-grid">
             {proposals.map((prop, idx) => {
               const isSelected = selectedRuleTitle === prop.title && !isReviewSelection;
               return (
                 <div
                   key={idx}
-                  className="glass-card"
+                  className="glass-card proposal-card"
                   style={{
                     borderColor: isSelected ? 'var(--accent-primary)' : 'var(--border-color)',
                     background: isSelected ? 'rgba(99, 102, 241, 0.12)' : 'var(--bg-card)',
@@ -121,7 +121,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
                     <>
                       <div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
-                          <div style={{ display: 'flex', gap: '0.5rem' }}>
+                          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                             <span className="pill pill-primary">{prop.category}</span>
                             <span className="pill pill-warning">{prop.difficulty}</span>
                           </div>
@@ -160,35 +160,24 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
               Create Your Own Lesson
             </h3>
             <div
-              className="glass-card"
+              className="glass-card custom-rule-card"
               style={{
                 borderColor: isCustomSelected ? 'var(--accent-primary)' : 'var(--border-color)',
                 background: isCustomSelected ? 'rgba(99, 102, 241, 0.12)' : 'var(--bg-card)',
                 cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                gap: '2rem',
               }}
               onClick={handleCustomCardClick}
             >
-              <div style={{ width: '100%' }}>
+              <div className="custom-rule-input-wrapper">
                 <input
                   type="text"
                   placeholder={`e.g., How to say 'I want to...' in ${targetLanguage}`}
                   value={customRule}
                   onChange={handleCustomRuleChange}
-                  style={{
-                    width: '100%',
-                    background: 'transparent',
-                    border: 'none',
-                    color: '#fff',
-                    outline: 'none',
-                    fontSize: '1.05rem',
-                  }}
+                  className="custom-rule-input"
                 />
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: isCustomSelected ? 'var(--accent-primary)' : 'var(--text-muted)', fontWeight: 600, flexShrink: 0 }}>
+              <div className="custom-rule-badge" style={{ color: isCustomSelected ? 'var(--accent-primary)' : 'var(--text-muted)' }}>
                 {isCustomSelected ? <Check size={18} /> : <div style={{ width: 18, height: 18, borderRadius: '50%', border: '2px solid var(--border-color)' }} />}
                 <span>{isCustomSelected ? 'Selected' : 'Select'}</span>
               </div>
@@ -202,26 +191,22 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
                 Spaced Repetition Review
               </h3>
               <div
-                className="glass-card"
+                className="glass-card review-rule-card"
                 style={{
                   borderColor: isReviewSelection ? 'var(--accent-warning)' : 'var(--border-color)',
                   background: isReviewSelection ? 'rgba(245, 158, 11, 0.12)' : 'var(--bg-card)',
                   cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  gap: '2rem',
                 }}
                 onClick={() => onSelectRule(reviewRule.title, true)}
               >
-                <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem', flexWrap: 'wrap' }}>
                     <span className="pill pill-warning">Review Mode</span>
                     <h4 className="kr-text" style={{ fontSize: '1.1rem', fontWeight: 700 }}>{reviewRule.title}</h4>
                   </div>
                   <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{reviewRule.explanation}</p>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: isReviewSelection ? 'var(--accent-warning)' : 'var(--text-muted)', fontWeight: 600, flexShrink: 0 }}>
+                <div className="review-rule-badge" style={{ color: isReviewSelection ? 'var(--accent-warning)' : 'var(--text-muted)' }}>
                   {isReviewSelection ? <Check size={18} /> : <BookOpen size={18} />}
                   <span>{isReviewSelection ? 'Selected Review' : 'Select Review'}</span>
                 </div>
@@ -232,9 +217,9 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
       )}
 
       {/* Action Button */}
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
+      <div className="proposal-action-buttons">
         <button
-          className="btn btn-secondary"
+          className="btn btn-secondary proposal-btn"
           onClick={() => fetchProposals(true)}
           disabled={loadingProposals || generatingLesson}
         >
@@ -242,8 +227,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
           <span>Refresh Proposals</span>
         </button>
         <button
-          className="btn btn-primary"
-          style={{ minWidth: '220px' }}
+          className="btn btn-primary proposal-btn"
           disabled={!selectedRuleTitle || generatingLesson}
           onClick={onGenerateLesson}
         >
@@ -255,7 +239,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
           ) : (
             <>
               <Sparkles size={20} />
-              <span>Generate Lesson & Exercises</span>
+              <span>Generate Lesson &amp; Exercises</span>
             </>
           )}
         </button>

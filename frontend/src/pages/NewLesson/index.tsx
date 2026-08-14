@@ -235,22 +235,25 @@ export const NewLesson: React.FC = () => {
   }, [ex1Answers, ex2Answers, ex3Answer, currentLesson?.id, phase]);
 
   return (
-    <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+    <div className="new-lesson-container" style={{ maxWidth: '1000px', margin: '0 auto' }}>
       {/* Step Indicator Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', marginBottom: '2rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: phase === 'PROPOSAL' ? 'var(--accent-primary)' : 'var(--accent-success)' }}>
-          <div className="pill pill-primary" style={{ background: phase === 'PROPOSAL' ? 'var(--accent-primary)' : 'var(--accent-success)', color: '#fff' }}>1</div>
-          <span style={{ fontWeight: 600, fontSize: '0.9rem' }}>Pick Daily Rule</span>
+      <div className="step-indicator-container">
+        <div className={`step-indicator-item ${phase === 'PROPOSAL' ? 'active' : 'completed'}`}>
+          <div className="step-badge">1</div>
+          <span className="step-label">Pick Daily Rule</span>
+          <span className="step-label-mobile">Rule</span>
         </div>
-        <ChevronRight size={16} color="var(--text-muted)" />
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: phase === 'GENERATED_WORKSPACE' ? 'var(--accent-primary)' : phase === 'GRADED' ? 'var(--accent-success)' : 'var(--text-muted)' }}>
-          <div className="pill" style={{ background: phase === 'GENERATED_WORKSPACE' ? 'var(--accent-primary)' : phase === 'GRADED' ? 'var(--accent-success)' : 'rgba(255,255,255,0.1)', color: '#fff' }}>2</div>
-          <span style={{ fontWeight: 600, fontSize: '0.9rem' }}>Practice Exercises</span>
+        <ChevronRight size={16} className="step-separator" />
+        <div className={`step-indicator-item ${phase === 'GENERATED_WORKSPACE' ? 'active' : phase === 'GRADED' ? 'completed' : 'pending'}`}>
+          <div className="step-badge">2</div>
+          <span className="step-label">Practice Exercises</span>
+          <span className="step-label-mobile">Exercises</span>
         </div>
-        <ChevronRight size={16} color="var(--text-muted)" />
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: phase === 'GRADED' ? 'var(--accent-success)' : 'var(--text-muted)' }}>
-          <div className="pill" style={{ background: phase === 'GRADED' ? 'var(--accent-success)' : 'rgba(255,255,255,0.1)', color: '#fff' }}>3</div>
-          <span style={{ fontWeight: 600, fontSize: '0.9rem' }}>AI Feedback & Score</span>
+        <ChevronRight size={16} className="step-separator" />
+        <div className={`step-indicator-item ${phase === 'GRADED' ? 'completed' : 'pending'}`}>
+          <div className="step-badge">3</div>
+          <span className="step-label">AI Feedback &amp; Score</span>
+          <span className="step-label-mobile">Results</span>
         </div>
       </div>
 
@@ -286,7 +289,7 @@ export const NewLesson: React.FC = () => {
           <WordsLearned lessonContent={lessonContent} />
           <RuleExplanation lessonContent={lessonContent} />
 
-          <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem' }}>
+          <div className="lesson-tab-buttons" style={{ display: 'flex', gap: '0.75rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
             <button className={`btn ${activeTab === 'interactive' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setActiveTab('interactive')}>Interactive Exercise</button>
             <button className={`btn ${activeTab === 'raw_prompt' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setActiveTab('raw_prompt')}>View Raw Compiled Prompt</button>
           </div>
