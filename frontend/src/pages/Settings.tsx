@@ -71,39 +71,9 @@ const PROVIDER_PRESETS: ProviderPreset[] = [
   },
 ];
 
-const LANGUAGES = [
-  'Afrikaans', 'Albanian', 'Amharic', 'Arabic', 'Armenian', 'Azerbaijani',
-  'Basque', 'Belarusian', 'Bengali', 'Bosnian', 'Bulgarian', 'Burmese',
-  'Catalan', 'Cebuano', 'Chinese (Mandarin)', 'Chinese (Cantonese)', 'Croatian', 'Czech',
-  'Danish', 'Dutch',
-  'English', 'Esperanto', 'Estonian',
-  'Filipino', 'Finnish', 'French',
-  'Galician', 'Georgian', 'German', 'Greek', 'Gujarati',
-  'Haitian Creole', 'Hausa', 'Hawaiian', 'Hebrew', 'Hindi', 'Hmong', 'Hungarian',
-  'Icelandic', 'Igbo', 'Indonesian', 'Irish', 'Italian',
-  'Japanese', 'Javanese',
-  'Kannada', 'Kazakh', 'Khmer', 'Kinyarwanda', 'Korean', 'Kurdish', 'Kyrgyz',
-  'Lao', 'Latin', 'Latvian', 'Lithuanian', 'Luxembourgish',
-  'Macedonian', 'Malagasy', 'Malay', 'Malayalam', 'Maltese', 'Maori', 'Marathi', 'Mongolian',
-  'Nepali', 'Norwegian',
-  'Odia', 'Oromo',
-  'Pashto', 'Persian', 'Polish', 'Portuguese',
-  'Punjabi',
-  'Quechua',
-  'Romanian', 'Russian',
-  'Samoan', 'Scottish Gaelic', 'Serbian', 'Shona', 'Sindhi', 'Sinhala', 'Slovak', 'Slovenian', 'Somali', 'Spanish', 'Sundanese', 'Swahili', 'Swedish',
-  'Tajik', 'Tamil', 'Tatar', 'Telugu', 'Thai', 'Tibetan', 'Tigrinya', 'Turkish', 'Turkmen',
-  'Ukrainian', 'Urdu', 'Uyghur', 'Uzbek',
-  'Vietnamese',
-  'Welsh',
-  'Xhosa',
-  'Yiddish', 'Yoruba',
-  'Zulu',
-];
-
 export const Settings: React.FC = () => {
   const { user } = useAuth();
-  const { refreshLanguages } = useLanguages();
+  const { refreshLanguages, languages } = useLanguages();
   const [model, setModel] = useState('gpt-4o-mini');
   const [baseURL, setBaseURL] = useState('https://api.openai.com/v1');
   const [apiKey, setApiKey] = useState('');
@@ -407,8 +377,8 @@ export const Settings: React.FC = () => {
                 id="native-language-select"
                 style={{ width: '100%' }}
               >
-                {LANGUAGES.map((lang) => (
-                  <option key={`native-${lang}`} value={lang}>{lang}</option>
+                {languages.map((lang) => (
+                  <option key={`native-${lang.name}`} value={lang.name}>{lang.name}</option>
                 ))}
               </select>
             </div>
@@ -420,8 +390,8 @@ export const Settings: React.FC = () => {
                 id="target-language-select"
                 style={{ width: '100%' }}
               >
-                {LANGUAGES.filter((lang) => lang !== nativeLanguage).map((lang) => (
-                  <option key={`target-${lang}`} value={lang}>{lang}</option>
+                {languages.filter((lang) => lang.name !== nativeLanguage).map((lang) => (
+                  <option key={`target-${lang.name}`} value={lang.name}>{lang.name}</option>
                 ))}
               </select>
             </div>
