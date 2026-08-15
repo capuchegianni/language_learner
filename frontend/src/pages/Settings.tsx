@@ -1,8 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { api, API_BASE } from '../services/api';
-import { Settings as SettingsIcon, Key, Cpu, Save, CheckCircle2, Trash2, AlertTriangle, ExternalLink, LogOut, User, Upload, Download, X, Globe } from 'lucide-react';
+import { Settings as SettingsIcon, Key, Cpu, Save, CheckCircle2, Trash2, AlertTriangle, ExternalLink, LogOut, User, Upload, Download, X, Globe, HelpCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguages } from '../contexts/LanguageContext';
+import { useTutorial } from '../components/Tutorial';
+
 
 interface ProviderPreset {
   name: string;
@@ -90,6 +92,7 @@ const DEFAULT_SETTINGS: SettingsFormData = {
 export const Settings: React.FC = () => {
   const { user } = useAuth();
   const { refreshLanguages, languages } = useLanguages();
+  const { startTutorial } = useTutorial();
   const [formData, setFormData] = useState<SettingsFormData>(DEFAULT_SETTINGS);
   const [savedSettings, setSavedSettings] = useState<SettingsFormData>(DEFAULT_SETTINGS);
   const [hasApiKey, setHasApiKey] = useState(false);
@@ -348,7 +351,7 @@ export const Settings: React.FC = () => {
       </div>
 
       {/* Account Section */}
-      <div className="glass-card settings-account-card" style={{ marginBottom: '1.5rem' }}>
+      <div className="glass-card settings-account-card" id="tutorial-account-card" style={{ marginBottom: '1.5rem' }}>
         <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-success)' }}>
           <User size={20} />
           <span>Account</span>
@@ -372,15 +375,27 @@ export const Settings: React.FC = () => {
               <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', wordBreak: 'break-word' }}>{user?.email}</div>
             </div>
           </div>
-          <button
-            type="button"
-            className="btn btn-secondary settings-logout-btn"
-            onClick={handleLogout}
-            id="logout-button"
-          >
-            <LogOut size={16} />
-            <span>Sign Out</span>
-          </button>
+          <div className="settings-account-actions">
+            <button
+              type="button"
+              className="btn btn-secondary settings-replay-btn"
+              onClick={() => startTutorial(0)}
+              id="replay-tutorial-btn"
+              title="Replay the onboarding walkthrough"
+            >
+              <HelpCircle size={16} />
+              <span>Replay Tutorial</span>
+            </button>
+            <button
+              type="button"
+              className="btn btn-secondary settings-logout-btn"
+              onClick={handleLogout}
+              id="logout-button"
+            >
+              <LogOut size={16} />
+              <span>Sign Out</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -400,7 +415,7 @@ export const Settings: React.FC = () => {
 
       <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
         {/* Language Preferences */}
-        <div className="glass-card">
+        <div className="glass-card" id="tutorial-language-prefs">
           <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-secondary)' }}>
             <Globe size={20} />
             <span>Language Preferences</span>
@@ -446,7 +461,7 @@ export const Settings: React.FC = () => {
         </div>
 
         {/* Provider Presets */}
-        <div className="glass-card">
+        <div className="glass-card" id="tutorial-provider-presets">
           <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-secondary)' }}>
             <Cpu size={20} />
             <span>Provider Presets</span>
@@ -476,7 +491,7 @@ export const Settings: React.FC = () => {
         </div>
 
         {/* Configuration */}
-        <div className="glass-card">
+        <div className="glass-card" id="tutorial-ai-config">
           <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-purple)' }}>
             <Key size={20} />
             <span>Configuration</span>

@@ -38,7 +38,7 @@ export const Dashboard: React.FC = () => {
   return (
     <div className="dashboard-container">
       {/* Welcome Banner */}
-      <div className="glass-card welcome-banner" style={{ marginBottom: '2rem', background: 'var(--gradient-glow)', borderColor: 'var(--border-color-glow)' }}>
+      <div className="glass-card welcome-banner" id="tutorial-welcome-banner" style={{ marginBottom: '2rem', background: 'var(--gradient-glow)', borderColor: 'var(--border-color-glow)' }}>
         <div className="welcome-banner-content">
           <div>
             <h1 className="welcome-title">
@@ -48,7 +48,7 @@ export const Dashboard: React.FC = () => {
               Your personal AI tutor generates custom rules, manages your vocabulary bank, and evaluates your handwritten or typed exercise submissions in real time.
             </p>
           </div>
-          <button className="btn btn-primary welcome-action-btn" onClick={() => navigate('/lessons/new')}>
+          <button className="btn btn-primary welcome-action-btn" id="tutorial-start-lesson-btn" onClick={() => navigate('/lessons/new')}>
             <Sparkles size={20} />
             <span>Start Daily Lesson</span>
           </button>
@@ -56,7 +56,7 @@ export const Dashboard: React.FC = () => {
       </div>
 
       {/* Stats Grid */}
-      <div className="stats-grid">
+      <div className="stats-grid" id="tutorial-stats-grid">
         <div className="glass-card stat-card">
           <div className="stat-icon">
             <BookOpen size={24} />
@@ -101,7 +101,7 @@ export const Dashboard: React.FC = () => {
       {/* Main Grid Actions & Recent History */}
       <div className="dashboard-main-grid">
         {/* Quick Hub Navigation */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+        <div id="tutorial-quick-hub" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           <h2 style={{ fontSize: '1.3rem', fontWeight: 600 }}>Quick Learning Hub</h2>
 
           <div

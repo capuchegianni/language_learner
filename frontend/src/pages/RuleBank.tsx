@@ -107,7 +107,7 @@ export const RuleBank: React.FC = () => {
   return (
     <div className="rulebank-container">
       {/* Header */}
-      <div className="page-header">
+      <div className="page-header" id="tutorial-rulebank-header">
         <div>
           <h1 className="page-title">
             <Scroll style={{ color: 'var(--accent-purple)' }} />
@@ -118,95 +118,99 @@ export const RuleBank: React.FC = () => {
           </p>
         </div>
 
-        <button className="btn btn-primary page-header-btn" onClick={handleOpenAddModal}>
+        <button className="btn btn-primary page-header-btn" id="tutorial-rulebank-add-btn" onClick={handleOpenAddModal}>
           <Plus size={18} />
           <span>Add Custom Rule</span>
         </button>
       </div>
 
       {/* Search Input */}
-      <FilterInput
-        value={searchQuery}
-        onChange={setSearchQuery}
-        placeholder="Search rule title or explanation..."
-        containerStyle={{ marginBottom: '1.5rem' }}
-      />
+      <div id="tutorial-rulebank-filter">
+        <FilterInput
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Search rule title or explanation..."
+          containerStyle={{ marginBottom: '1.5rem' }}
+        />
+      </div>
 
       {/* Rules List */}
-      {loading ? (
-        <div className="glass-card" style={{ display: 'flex', justifyContent: 'center', padding: '3rem' }}>
-          <div className="spinner" />
-        </div>
-      ) : rules.length === 0 ? (
-        <div className="glass-card" style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-secondary)' }}>
-          <p>No grammar rules found matching your search.</p>
-        </div>
-      ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-          {rules.map((rule) => {
-            let parsedExamples: Array<{ targetLanguage: string; nativeLanguage: string }> = [];
-            try {
-              parsedExamples = JSON.parse(rule.examples || '[]');
-            } catch {
-              // fallback
-            }
+      <div id="tutorial-rulebank-list">
+        {loading ? (
+          <div className="glass-card" style={{ display: 'flex', justifyContent: 'center', padding: '3rem' }}>
+            <div className="spinner" />
+          </div>
+        ) : rules.length === 0 ? (
+          <div className="glass-card" style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-secondary)' }}>
+            <p>No grammar rules found matching your search.</p>
+          </div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+            {rules.map((rule) => {
+              let parsedExamples: Array<{ targetLanguage: string; nativeLanguage: string }> = [];
+              try {
+                parsedExamples = JSON.parse(rule.examples || '[]');
+              } catch {
+                // fallback
+              }
 
-            return (
-              <div key={rule.id} className="glass-card rule-card">
-                <div className="rule-card-header">
-                  <div className="rule-card-title-group">
-                    <h3 className="kr-text rule-card-title">
-                      {rule.title}
-                    </h3>
-                    {rule._count && rule._count.lessons > 0 && (
-                      <button
-                        className="btn btn-secondary rule-count-badge"
-                        onClick={() => navigate(`/history?q=${encodeURIComponent(rule.title)}`)}
-                        title={`View ${rule._count.lessons} linked lesson(s)`}
-                      >
-                        <Clock size={14} />
-                        <span>{rule._count.lessons} Lesson{rule._count.lessons !== 1 ? 's' : ''}</span>
+              return (
+                <div key={rule.id} className="glass-card rule-card">
+                  <div className="rule-card-header">
+                    <div className="rule-card-title-group">
+                      <h3 className="kr-text rule-card-title">
+                        {rule.title}
+                      </h3>
+                      {rule._count && rule._count.lessons > 0 && (
+                        <button
+                          className="btn btn-secondary rule-count-badge"
+                          onClick={() => navigate(`/history?q=${encodeURIComponent(rule.title)}`)}
+                          title={`View ${rule._count.lessons} linked lesson(s)`}
+                        >
+                          <Clock size={14} />
+                          <span>{rule._count.lessons} Lesson{rule._count.lessons !== 1 ? 's' : ''}</span>
+                        </button>
+                      )}
+                    </div>
+                    <div className="rule-card-actions">
+                      <button className="btn icon-btn" style={{ padding: '0.35rem 0.6rem', color: 'var(--accent-warning)' }} onClick={() => handleOpenEditModal(rule)}>
+                        <Edit size={16} />
                       </button>
-                    )}
-                  </div>
-                  <div className="rule-card-actions">
-                    <button className="btn icon-btn" style={{ padding: '0.35rem 0.6rem', color: 'var(--accent-warning)' }} onClick={() => handleOpenEditModal(rule)}>
-                      <Edit size={16} />
-                    </button>
-                    <button className="btn icon-btn" style={{ padding: '0.35rem 0.6rem', color: 'var(--accent-danger)' }} onClick={() => handleDeleteRule(rule.id)}>
-                      <Trash2 size={16} />
-                    </button>
-                  </div>
-                </div>
-
-                <p className="rule-explanation-text">
-                  {rule.explanation}
-                </p>
-
-                {parsedExamples.length > 0 && (
-                  <div style={{ marginBottom: '0.75rem' }}>
-                    <div style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.35rem' }}>Examples:</div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                      {parsedExamples.map((ex, idx) => (
-                        <div key={idx} className="rule-example-box">
-                          <span className="kr-text rule-example-target">{ex.targetLanguage}</span>
-                          {ex.nativeLanguage && <span className="rule-example-native">({ex.nativeLanguage})</span>}
-                        </div>
-                      ))}
+                      <button className="btn icon-btn" style={{ padding: '0.35rem 0.6rem', color: 'var(--accent-danger)' }} onClick={() => handleDeleteRule(rule.id)}>
+                        <Trash2 size={16} />
+                      </button>
                     </div>
                   </div>
-                )}
 
-                {rule.exceptions && (
-                  <div className="rule-exceptions-box">
-                    <strong>Exceptions:</strong> {rule.exceptions}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      )}
+                  <p className="rule-explanation-text">
+                    {rule.explanation}
+                  </p>
+
+                  {parsedExamples.length > 0 && (
+                    <div style={{ marginBottom: '0.75rem' }}>
+                      <div style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.35rem' }}>Examples:</div>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                        {parsedExamples.map((ex, idx) => (
+                          <div key={idx} className="rule-example-box">
+                            <span className="kr-text rule-example-target">{ex.targetLanguage}</span>
+                            {ex.nativeLanguage && <span className="rule-example-native">({ex.nativeLanguage})</span>}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {rule.exceptions && (
+                    <div className="rule-exceptions-box">
+                      <strong>Exceptions:</strong> {rule.exceptions}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
 
       {/* Add / Edit Rule Modal */}
       {isModalOpen && (

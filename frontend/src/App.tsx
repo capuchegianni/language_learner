@@ -11,6 +11,7 @@ import { RuleBank } from './pages/RuleBank';
 import { Settings } from './pages/Settings';
 import { Login } from './pages/Login';
 import { useAuth } from './contexts/AuthContext';
+import { TutorialOverlay } from './components/Tutorial/TutorialOverlay';
 
 export const App: React.FC = () => {
   const { user } = useAuth();
@@ -38,6 +39,8 @@ export const App: React.FC = () => {
           Created by Gianni H using Vite and React.
         </footer>
       )}
+
+      {user && <TutorialOverlay />}
     </div>
   );
 };
