@@ -111,6 +111,7 @@ export interface Settings {
   NATIVE_LANGUAGE?: string;
   TARGET_LANGUAGE?: string;
   hasApiKey?: boolean;
+  TUTORIAL_COMPLETED?: string;
 }
 
 export interface SettingsUpdatePayload {
@@ -119,6 +120,7 @@ export interface SettingsUpdatePayload {
   api_key?: string;
   NATIVE_LANGUAGE?: string;
   TARGET_LANGUAGE?: string;
+  TUTORIAL_COMPLETED?: string;
 }
 
 export interface LanguageOption {

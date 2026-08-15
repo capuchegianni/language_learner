@@ -56,7 +56,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
     }
   };
   return (
-    <div className="proposal-phase-container">
+    <div id="tutorial-lesson-container" className="proposal-phase-container">
       <div className="glass-card proposal-header-card" style={{ marginBottom: '1.5rem', textAlign: 'center' }}>
         <h2 className="proposal-header-title">
           Select Today's {targetLanguage} Rule
@@ -155,7 +155,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
           </div>
 
           {/* Custom Rule Input */}
-          <div style={{ marginTop: '1rem' }}>
+          <div id="tutorial-custom-rule" style={{ marginTop: '1rem' }}>
             <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.75rem' }}>
               Create Your Own Lesson
             </h3>
@@ -186,7 +186,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
 
           {/* Spaced Repetition Review Rule Option */}
           {reviewRule && (
-            <div style={{ marginTop: '1rem' }}>
+            <div id="tutorial-review-rule" style={{ marginTop: '1rem' }}>
               <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.75rem' }}>
                 Spaced Repetition Review
               </h3>
@@ -228,6 +228,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
         </button>
         <button
           className="btn btn-primary proposal-btn"
+          id="tutorial-generate-btn"
           disabled={!selectedRuleTitle || generatingLesson}
           onClick={onGenerateLesson}
         >

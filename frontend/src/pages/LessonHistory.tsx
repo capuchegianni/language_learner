@@ -53,7 +53,7 @@ export const LessonHistory: React.FC = () => {
       </div>
 
       {/* Search Input and Filter */}
-      <div className="filter-bar">
+      <div className="filter-bar" id="tutorial-history-filter">
         <FilterInput
           value={search}
           onChange={setSearch}
@@ -75,18 +75,20 @@ export const LessonHistory: React.FC = () => {
         </div>
       </div>
 
-      {loading ? (
-        <div className="glass-card" style={{ display: 'flex', justifyContent: 'center', padding: '3rem' }}>
-          <div className="spinner" />
-        </div>
-      ) : displayedLessons.length === 0 ? (
-        <div className="glass-card" style={{ textAlign: 'center', padding: '2.5rem 1rem', color: 'var(--text-secondary)' }}>
-          <Clock size={40} style={{ margin: '0 auto 1rem', opacity: 0.5 }} />
-          <p>{search || filterStatus ? 'No lessons match your search and filter criteria.' : 'No lessons yet.'}</p>
-        </div>
-      ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-          {displayedLessons.map((lesson) => (
+      {/* History List */}
+      <div id="tutorial-history-list">
+        {loading ? (
+          <div className="glass-card" style={{ display: 'flex', justifyContent: 'center', padding: '3rem' }}>
+            <div className="spinner" />
+          </div>
+        ) : displayedLessons.length === 0 ? (
+          <div className="glass-card" style={{ textAlign: 'center', padding: '2.5rem 1rem', color: 'var(--text-secondary)' }}>
+            <Clock size={40} style={{ margin: '0 auto 1rem', opacity: 0.5 }} />
+            <p>{search || filterStatus ? 'No lessons match your search and filter criteria.' : 'No lessons yet.'}</p>
+          </div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            {displayedLessons.map((lesson) => (
             <div
               key={lesson.id}
               className="glass-card history-item-card"
@@ -135,6 +137,7 @@ export const LessonHistory: React.FC = () => {
           ))}
         </div>
       )}
+      </div>
     </div>
   );
 };

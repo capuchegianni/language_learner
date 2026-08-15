@@ -132,7 +132,7 @@ export const WordBank: React.FC = () => {
   return (
     <div className="wordbank-container">
       {/* Header */}
-      <div className="page-header">
+      <div className="page-header" id="tutorial-wordbank-header">
         <div>
           <h1 className="page-title">
             <BookOpen style={{ color: 'var(--accent-secondary)' }} />
@@ -143,14 +143,14 @@ export const WordBank: React.FC = () => {
           </p>
         </div>
 
-        <button className="btn btn-primary page-header-btn" onClick={handleOpenAddModal}>
+        <button className="btn btn-primary page-header-btn" id="tutorial-wordbank-add-btn" onClick={handleOpenAddModal}>
           <Plus size={18} />
           <span>Add Custom Word</span>
         </button>
       </div>
 
       {/* Search Input and Filter */}
-      <div className="filter-bar">
+      <div className="filter-bar" id="tutorial-wordbank-filter">
         <FilterInput
           value={searchQuery}
           onChange={setSearchQuery}
@@ -173,67 +173,69 @@ export const WordBank: React.FC = () => {
       </div>
 
       {/* Words Grid */}
-      {loading ? (
-        <div className="glass-card" style={{ display: 'flex', justifyContent: 'center', padding: '3rem' }}>
-          <div className="spinner" />
-        </div>
-      ) : displayedWords.length === 0 ? (
+      <div id="tutorial-wordbank-list">
+        {loading ? (
+          <div className="glass-card" style={{ display: 'flex', justifyContent: 'center', padding: '3rem' }}>
+            <div className="spinner" />
+          </div>
+        ) : displayedWords.length === 0 ? (
         <div className="glass-card" style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-secondary)' }}>
           <p>No words found matching your search and filter criteria.</p>
         </div>
-      ) : (
-        <div className="words-grid">
-          {displayedWords.map((word) => (
-            <div key={word.id} className="glass-card word-card">
-              <div>
-                <div className="word-card-header">
-                  <div className="word-card-target">
-                    <span className="kr-text word-target-text">
-                      {word.targetLanguage}
-                    </span>
-                    <button
-                      className="btn icon-btn-audio"
-                      style={{
-                        padding: '0.35rem',
-                        color: playingWordId === word.id ? 'var(--accent-primary)' : 'var(--text-secondary)',
-                        borderRadius: '50%',
-                        background: playingWordId === word.id ? 'rgba(59, 130, 246, 0.1)' : 'transparent'
-                      }}
-                      onClick={() => handlePlayAudio(word)}
-                      title="Play pronunciation (Click again to play slower)"
-                    >
-                      <Volume2 size={18} />
-                    </button>
+        ) : (
+          <div className="words-grid">
+            {displayedWords.map((word) => (
+              <div key={word.id} className="glass-card word-card">
+                <div>
+                  <div className="word-card-header">
+                    <div className="word-card-target">
+                      <span className="kr-text word-target-text">
+                        {word.targetLanguage}
+                      </span>
+                      <button
+                        className="btn icon-btn-audio"
+                        style={{
+                          padding: '0.35rem',
+                          color: playingWordId === word.id ? 'var(--accent-primary)' : 'var(--text-secondary)',
+                          borderRadius: '50%',
+                          background: playingWordId === word.id ? 'rgba(59, 130, 246, 0.1)' : 'transparent'
+                        }}
+                        onClick={() => handlePlayAudio(word)}
+                        title="Play pronunciation (Click again to play slower)"
+                      >
+                        <Volume2 size={18} />
+                      </button>
+                    </div>
+                    {word.partOfSpeech && <span className="pill pill-primary">{word.partOfSpeech}</span>}
                   </div>
-                  {word.partOfSpeech && <span className="pill pill-primary">{word.partOfSpeech}</span>}
+                  <div style={{ fontSize: '1rem', fontWeight: 500, marginBottom: '0.25rem' }}>
+                    {word.nativeLanguage}
+                  </div>
+                  {word.pronunciation && (
+                    <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontStyle: 'italic', marginBottom: '0.5rem' }}>
+                      [{word.pronunciation}]
+                    </div>
+                  )}
+                  {word.notes && (
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', background: 'rgba(15,23,42,0.5)', padding: '0.4rem 0.6rem', borderRadius: 'var(--radius-sm)', wordBreak: 'break-word' }}>
+                      {word.notes}
+                    </div>
+                  )}
                 </div>
-                <div style={{ fontSize: '1rem', fontWeight: 500, marginBottom: '0.25rem' }}>
-                  {word.nativeLanguage}
-                </div>
-                {word.pronunciation && (
-                  <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontStyle: 'italic', marginBottom: '0.5rem' }}>
-                    [{word.pronunciation}]
-                  </div>
-                )}
-                {word.notes && (
-                  <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', background: 'rgba(15,23,42,0.5)', padding: '0.4rem 0.6rem', borderRadius: 'var(--radius-sm)', wordBreak: 'break-word' }}>
-                    {word.notes}
-                  </div>
-                )}
-              </div>
 
-              <div className="word-card-footer">
-                <button className="btn icon-btn" style={{ padding: '0.35rem 0.6rem', color: 'var(--accent-warning)' }} onClick={() => handleOpenEditModal(word)}>
-                  <Edit size={16} />
-                </button>
-                <button className="btn icon-btn" style={{ padding: '0.35rem 0.6rem', color: 'var(--accent-danger)' }} onClick={() => handleDeleteWord(word.id)}>
-                  <Trash2 size={16} />
-                </button>
+                <div className="word-card-footer">
+                  <button className="btn icon-btn" style={{ padding: '0.35rem 0.6rem', color: 'var(--accent-warning)' }} onClick={() => handleOpenEditModal(word)}>
+                    <Edit size={16} />
+                  </button>
+                  <button className="btn icon-btn" style={{ padding: '0.35rem 0.6rem', color: 'var(--accent-danger)' }} onClick={() => handleDeleteWord(word.id)}>
+                    <Trash2 size={16} />
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
+            ))}
+          </div>
+        )}
+      </div>
 
       {/* Add / Edit Word Modal */}
       {isModalOpen && (

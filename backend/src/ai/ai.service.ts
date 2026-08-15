@@ -105,13 +105,13 @@ export class AiService {
     targetLanguage: string,
   ): string {
     return `Lesson architecture:
-- ${wordsCount} new daily words
+- ${wordsCount} new daily words (MUST be words the student does NOT yet know — strictly NOT from the "List of known words" below)
 - daily rule with explanations, usage (examples), exceptions if any
 - exercise 1: apply the rule on ${wordsCount} words (based on some of the new daily words + other words in the bank)
 - exercise 2: translate 3 sentences from ${nativeLanguage} to ${targetLanguage} that use the new rule and the new vocabulary (no literal translations, use proper ${nativeLanguage}, don't give the answer)
 - exercise 3: translate a text from ${nativeLanguage} to ${targetLanguage} (from 30 to 50 words) that is using some of the previous rules + the new one at least once and the new vocabulary + words from the bank. The text must have a meaning and small story between the sentences and it's not mandatory to use all tenses (no literal translations, use proper ${nativeLanguage}, don't give the answer)
 
-List of known words: \`${knownWordsList.join(', ')}\`
+List of known words (DO NOT use any of these as new words): \`${knownWordsList.join(', ')}\`
 
 List of known rules: \`${knownRulesList.join(', ')}\`
 
@@ -183,7 +183,7 @@ Otherwise, follow this exact JSON structure:
   },
   "newWords": [
     { "targetLanguage": "word in ${targetLanguage}", "nativeLanguage": "meaning in ${nativeLanguage}", "pronunciation": "romanized pronunciation", "partOfSpeech": "verb/noun" }
-    // total ${wordsCount} items
+    // IMPORTANT: exactly ${wordsCount} items — every word here MUST be brand new and must NOT appear in the "List of known words" from the user prompt
   ],
   "exercise1": {
     "instruction": "Apply the rule on 5 words (new daily words + bank words)",
