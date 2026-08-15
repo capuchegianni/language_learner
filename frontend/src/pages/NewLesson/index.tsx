@@ -235,7 +235,7 @@ export const NewLesson: React.FC = () => {
   }, [ex1Answers, ex2Answers, ex3Answer, currentLesson?.id, phase]);
 
   return (
-    <div className="new-lesson-container" style={{ maxWidth: '1000px', margin: '0 auto' }}>
+    <div className="tutorial-lesson-container" style={{ maxWidth: '1000px', margin: '0 auto' }}>
       {/* Step Indicator Header */}
       <div className="step-indicator-container">
         <div className={`step-indicator-item ${phase === 'PROPOSAL' ? 'active' : 'completed'}`}>
@@ -347,8 +347,8 @@ export const NewLesson: React.FC = () => {
             userSubmission={
               currentLesson?.userSubmission
                 ? (typeof currentLesson.userSubmission === 'string'
-                    ? JSON.parse(currentLesson.userSubmission)
-                    : currentLesson.userSubmission)
+                  ? JSON.parse(currentLesson.userSubmission)
+                  : currentLesson.userSubmission)
                 : null
             }
             lessonContent={lessonContent}
