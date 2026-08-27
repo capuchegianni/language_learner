@@ -1,10 +1,15 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Navigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { API_BASE } from '../services/api';
+import { AlertCircle, AlertTriangle, X } from 'lucide-react';
 
 export const Login: React.FC = () => {
   const { user, loading } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [dismissed, setDismissed] = useState(false);
+
+  const errorParam = searchParams.get('error');
 
   if (loading) {
     return (
@@ -24,6 +29,33 @@ export const Login: React.FC = () => {
     window.location.href = `${API_BASE}/auth/google`;
   };
 
+  const handleDismissError = () => {
+    setDismissed(true);
+    const newParams = new URLSearchParams(searchParams);
+    newParams.delete('error');
+    setSearchParams(newParams, { replace: true });
+  };
+
+  const getErrorMessage = () => {
+    if (!errorParam || dismissed) return null;
+
+    if (errorParam === 'cancelled' || errorParam === 'access_denied') {
+      return {
+        type: 'warning',
+        title: 'Sign-in cancelled',
+        description: 'Google sign-in was cancelled. Click below to try again whenever you’re ready.',
+      };
+    }
+
+    return {
+      type: 'error',
+      title: 'Sign-in failed',
+      description: 'Unable to complete sign-in with Google. Please try again.',
+    };
+  };
+
+  const errorDetails = getErrorMessage();
+
   return (
     <div className="login-page">
       <div className="login-ambient-glow login-ambient-glow-1" />
@@ -37,6 +69,33 @@ export const Login: React.FC = () => {
         </div>
 
         <div className="login-divider" />
+
+        {errorDetails && (
+          <div
+            className={`login-alert ${errorDetails.type === 'warning' ? 'login-alert-warning' : 'login-alert-danger'}`}
+            role="alert"
+          >
+            <div className="login-alert-icon">
+              {errorDetails.type === 'warning' ? (
+                <AlertTriangle size={18} />
+              ) : (
+                <AlertCircle size={18} />
+              )}
+            </div>
+            <div className="login-alert-content">
+              <div className="login-alert-title">{errorDetails.title}</div>
+              <div className="login-alert-description">{errorDetails.description}</div>
+            </div>
+            <button
+              className="login-alert-close"
+              onClick={handleDismissError}
+              aria-label="Dismiss error"
+              type="button"
+            >
+              <X size={16} />
+            </button>
+          </div>
+        )}
 
         <p className="login-description">
           Sign in to track your progress, manage your vocabulary bank, and generate personalized AI lessons.
