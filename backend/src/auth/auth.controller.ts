@@ -1,5 +1,6 @@
-import { Controller, Delete, Get, Req, Res, UseGuards } from '@nestjs/common';
+import { Controller, Delete, Get, Req, Res, UseFilters, UseGuards } from '@nestjs/common';
 import { GoogleOAuthGuard } from './google-oauth.guard';
+import { GoogleOAuthExceptionFilter } from './google-oauth.filter';
 import { AuthenticatedGuard } from './authenticated.guard';
 import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
@@ -15,12 +16,14 @@ export class AuthController {
 
   @Get('google')
   @UseGuards(GoogleOAuthGuard)
+  @UseFilters(GoogleOAuthExceptionFilter)
   googleLogin() {
     // Guard will redirect to Google
   }
 
   @Get('google/callback')
   @UseGuards(GoogleOAuthGuard)
+  @UseFilters(GoogleOAuthExceptionFilter)
   googleCallback(@Res() res: Response) {
     // After successful login, redirect to frontend
     const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:5173';
