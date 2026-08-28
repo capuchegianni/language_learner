@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Search } from 'lucide-react';
 
 interface FilterInputProps {
@@ -14,32 +14,26 @@ export const FilterInput: React.FC<FilterInputProps> = ({
   placeholder = 'Search...',
   containerStyle,
 }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+
   return (
-    <div
-      className="glass-card"
+    <label
+      className="glass-card filter-search-card"
       style={{
-        padding: '0.85rem 1.25rem',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '0.75rem',
         ...containerStyle,
       }}
+      onClick={() => inputRef.current?.focus()}
     >
-      <Search size={20} color="var(--text-secondary)" />
+      <Search size={20} className="filter-search-icon" />
       <input
+        ref={inputRef}
         type="text"
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        style={{
-          background: 'transparent',
-          border: 'none',
-          color: '#fff',
-          outline: 'none',
-          width: '100%',
-          fontSize: '1rem',
-        }}
+        className="filter-search-input"
       />
-    </div>
+    </label>
   );
 };
+

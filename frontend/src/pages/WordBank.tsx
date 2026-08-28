@@ -19,6 +19,7 @@ export const WordBank: React.FC = () => {
   const [partOfSpeech, setPartOfSpeech] = useState('');
   const [notes, setNotes] = useState('');
   const [filterCategory, setFilterCategory] = useState('');
+  const categorySelectRef = useRef<HTMLSelectElement>(null);
   const [playingWordId, setPlayingWordId] = useState<string | null>(null);
   const playStateRef = useRef({ id: null as string | null, isSlow: false });
 
@@ -157,9 +158,20 @@ export const WordBank: React.FC = () => {
           placeholder={`Search word in ${targetLanguage} or ${nativeLanguage}...`}
           containerStyle={{ flex: 1 }}
         />
-        <div className="glass-card filter-select-card">
-          <label className="filter-select-label">Category:</label>
+        <label
+          htmlFor="wordbank-category-filter"
+          className="glass-card filter-select-card"
+          onClick={(e) => {
+            if (e.target !== categorySelectRef.current) {
+              try { categorySelectRef.current?.showPicker?.(); } catch {}
+              categorySelectRef.current?.focus();
+            }
+          }}
+        >
+          <span className="filter-select-label">Category:</span>
           <select
+            id="wordbank-category-filter"
+            ref={categorySelectRef}
             value={filterCategory}
             onChange={(e) => setFilterCategory(e.target.value)}
             className="filter-select-input"
@@ -169,7 +181,7 @@ export const WordBank: React.FC = () => {
               <option key={cat} value={cat} style={{ background: '#1e293b' }}>{cat}</option>
             ))}
           </select>
-        </div>
+        </label>
       </div>
 
       {/* Words Grid */}

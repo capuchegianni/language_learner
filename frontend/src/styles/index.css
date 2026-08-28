@@ -639,12 +639,59 @@ button:focus-visible,
   align-items: stretch;
 }
 
+.filter-search-card {
+  padding: 0.85rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: text;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: var(--border-color-glow);
+  }
+
+  &:focus-within {
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+  }
+}
+
+.filter-search-icon {
+  color: var(--text-secondary);
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.filter-search-input {
+  background: transparent;
+  border: none;
+  color: #fff;
+  outline: none;
+  width: 100%;
+  font-size: 1rem;
+  font-family: var(--font-main);
+  cursor: text;
+}
+
 .filter-select-card {
   padding: 0.85rem 1.25rem;
   display: flex;
   align-items: center;
   gap: 0.75rem;
   flex-shrink: 0;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: var(--border-color-glow);
+  }
+
+  &:focus-within {
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+  }
 }
 
 .filter-select-label {
@@ -652,6 +699,8 @@ button:focus-visible,
   color: var(--text-secondary);
   font-weight: 600;
   white-space: nowrap;
+  cursor: pointer;
+  pointer-events: none;
 }
 
 .filter-select-input {
@@ -662,6 +711,8 @@ button:focus-visible,
   font-size: 1rem;
   cursor: pointer;
   font-family: var(--font-main);
+  flex: 1;
+  width: 100%;
 }
 
 /* Dashboard Styles */
@@ -1058,11 +1109,26 @@ button:focus-visible,
   gap: 1.25rem;
   flex-wrap: wrap;
   padding: 1.25rem;
+  transition: all 0.2s ease;
+}
+
+.custom-rule-card {
+  cursor: text;
+
+  &:hover {
+    border-color: var(--border-color-glow);
+  }
+
+  &:focus-within {
+    border-color: var(--accent-primary) !important;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+  }
 }
 
 .custom-rule-input-wrapper {
   flex: 1;
   min-width: 200px;
+  cursor: text;
 }
 
 .custom-rule-input {
@@ -1073,6 +1139,7 @@ button:focus-visible,
   outline: none;
   font-size: 1.05rem;
   font-family: var(--font-main);
+  cursor: text;
 }
 
 .custom-rule-badge, .review-rule-badge {
@@ -1082,6 +1149,11 @@ button:focus-visible,
   font-weight: 600;
   font-size: 0.9rem;
   flex-shrink: 0;
+  user-select: none;
+}
+
+.custom-rule-badge {
+  cursor: pointer;
 }
 
 .proposal-action-buttons, .exercise-action-buttons {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { ProposedRule } from '../../types';
 import { RefreshCw, BookOpen, Sparkles, Check } from 'lucide-react';
 import { useLanguages } from '../../contexts/LanguageContext';
@@ -36,6 +36,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
 }) => {
   const { targetLanguage } = useLanguages();
   const [customRule, setCustomRule] = useState('');
+  const customInputRef = useRef<HTMLInputElement>(null);
 
   const isCustomSelected =
     selectedRuleTitle !== '' &&
@@ -51,6 +52,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
   };
 
   const handleCustomCardClick = () => {
+    customInputRef.current?.focus();
     if (customRule.trim()) {
       onSelectRule(customRule, false);
     }
@@ -160,29 +162,47 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
             <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.75rem' }}>
               Create Your Own Lesson
             </h3>
-            <div
+            <label
+              htmlFor="custom-lesson-rule-input"
               className="glass-card custom-rule-card"
               style={{
                 borderColor: isCustomSelected ? 'var(--accent-primary)' : 'var(--border-color)',
                 background: isCustomSelected ? 'rgba(99, 102, 241, 0.12)' : 'var(--bg-card)',
-                cursor: 'pointer',
+                cursor: 'text',
               }}
               onClick={handleCustomCardClick}
             >
               <div className="custom-rule-input-wrapper">
                 <input
+                  id="custom-lesson-rule-input"
+                  ref={customInputRef}
                   type="text"
                   placeholder={`e.g., How to say 'I want to...' in ${targetLanguage}`}
                   value={customRule}
                   onChange={handleCustomRuleChange}
+                  onFocus={() => {
+                    if (customRule.trim()) {
+                      onSelectRule(customRule, false);
+                    }
+                  }}
                   className="custom-rule-input"
                 />
               </div>
-              <div className="custom-rule-badge" style={{ color: isCustomSelected ? 'var(--accent-primary)' : 'var(--text-muted)' }}>
+              <div
+                className="custom-rule-badge"
+                style={{ color: isCustomSelected ? 'var(--accent-primary)' : 'var(--text-muted)', cursor: 'pointer' }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  customInputRef.current?.focus();
+                  if (customRule.trim()) {
+                    onSelectRule(customRule, false);
+                  }
+                }}
+              >
                 {isCustomSelected ? <Check size={18} /> : <div style={{ width: 18, height: 18, borderRadius: '50%', border: '2px solid var(--border-color)' }} />}
                 <span>{isCustomSelected ? 'Selected' : 'Select'}</span>
               </div>
-            </div>
+            </label>
           </div>
 
           {/* Spaced Repetition Review Rule Option */}

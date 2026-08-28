@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { api } from '../services/api';
 import { Lesson } from '../types';
@@ -12,6 +12,7 @@ export const LessonHistory: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState(searchParams.get('q') || '');
   const [filterStatus, setFilterStatus] = useState(searchParams.get('status') || '');
+  const statusSelectRef = useRef<HTMLSelectElement>(null);
 
   const loadLessons = async (q?: string, status?: string) => {
     try {
@@ -60,9 +61,20 @@ export const LessonHistory: React.FC = () => {
           placeholder="Search lessons by rule title..."
           containerStyle={{ flex: 1 }}
         />
-        <div className="glass-card filter-select-card">
-          <label className="filter-select-label">Status:</label>
+        <label
+          htmlFor="history-status-filter"
+          className="glass-card filter-select-card"
+          onClick={(e) => {
+            if (e.target !== statusSelectRef.current) {
+              try { statusSelectRef.current?.showPicker?.(); } catch {}
+              statusSelectRef.current?.focus();
+            }
+          }}
+        >
+          <span className="filter-select-label">Status:</span>
           <select
+            id="history-status-filter"
+            ref={statusSelectRef}
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
             className="filter-select-input"
@@ -72,7 +84,7 @@ export const LessonHistory: React.FC = () => {
             <option value="GRADED" style={{ background: '#1e293b' }}>Graded</option>
             <option value="SUBMITTED" style={{ background: '#1e293b' }}>Submitted</option>
           </select>
-        </div>
+        </label>
       </div>
 
       {/* History List */}
