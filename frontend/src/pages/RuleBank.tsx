@@ -161,8 +161,11 @@ export const RuleBank: React.FC = () => {
                       <h3 className="kr-text rule-card-title">
                         {rule.title}
                       </h3>
+                    </div>
+                    <div className="rule-card-actions">
                       {rule._count && rule._count.lessons > 0 && (
                         <button
+                          type="button"
                           className="btn btn-secondary rule-count-badge"
                           onClick={() => navigate(`/history?q=${encodeURIComponent(rule.title)}`)}
                           title={`View ${rule._count.lessons} linked lesson(s)`}
@@ -171,8 +174,6 @@ export const RuleBank: React.FC = () => {
                           <span>{rule._count.lessons} Lesson{rule._count.lessons !== 1 ? 's' : ''}</span>
                         </button>
                       )}
-                    </div>
-                    <div className="rule-card-actions">
                       <button
                         type="button"
                         className="icon-btn icon-btn-edit"
