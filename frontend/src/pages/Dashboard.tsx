@@ -57,7 +57,13 @@ export const Dashboard: React.FC = () => {
 
       {/* Stats Grid */}
       <div className="stats-grid" id="tutorial-stats-grid">
-        <div className="glass-card stat-card">
+        <button
+          type="button"
+          className="glass-card stat-card stat-card-clickable"
+          onClick={() => navigate('/words')}
+          aria-label="View Words in Bank"
+          title="Go to Word Bank"
+        >
           <div className="stat-icon">
             <BookOpen size={24} />
           </div>
@@ -65,9 +71,15 @@ export const Dashboard: React.FC = () => {
             <div className="stat-value">{loading ? '-' : stats?.totalWords || 0}</div>
             <div className="stat-label">Words in Bank</div>
           </div>
-        </div>
+        </button>
 
-        <div className="glass-card stat-card">
+        <button
+          type="button"
+          className="glass-card stat-card stat-card-clickable"
+          onClick={() => navigate('/rules')}
+          aria-label="View Mastered Rules"
+          title="Go to Rule Bank"
+        >
           <div className="stat-icon" style={{ color: 'var(--accent-purple)' }}>
             <Scroll size={24} />
           </div>
@@ -75,9 +87,15 @@ export const Dashboard: React.FC = () => {
             <div className="stat-value">{loading ? '-' : stats?.totalRules || 0}</div>
             <div className="stat-label">Mastered Rules</div>
           </div>
-        </div>
+        </button>
 
-        <div className="glass-card stat-card">
+        <button
+          type="button"
+          className="glass-card stat-card stat-card-clickable"
+          onClick={() => navigate('/history?status=GRADED')}
+          aria-label="View Completed Lessons"
+          title="Go to History (Graded Lessons)"
+        >
           <div className="stat-icon" style={{ color: 'var(--accent-success)' }}>
             <CheckCircle2 size={24} />
           </div>
@@ -85,7 +103,7 @@ export const Dashboard: React.FC = () => {
             <div className="stat-value">{loading ? '-' : stats?.completedLessons || 0}</div>
             <div className="stat-label">Completed Lessons</div>
           </div>
-        </div>
+        </button>
 
         <div className="glass-card stat-card">
           <div className="stat-icon" style={{ color: 'var(--accent-warning)' }}>

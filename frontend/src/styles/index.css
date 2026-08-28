@@ -749,6 +749,10 @@ button:focus-visible,
   display: flex;
   align-items: center;
   gap: 1.25rem;
+  text-align: left;
+  font-family: inherit;
+  color: inherit;
+  width: 100%;
 
   .stat-icon {
     width: 52px;
@@ -761,6 +765,7 @@ button:focus-visible,
     align-items: center;
     justify-content: center;
     color: var(--accent-primary);
+    transition: transform 0.2s ease;
   }
 
   .stat-value {
@@ -772,6 +777,32 @@ button:focus-visible,
   .stat-label {
     font-size: 0.85rem;
     color: var(--text-secondary);
+  }
+}
+
+.stat-card-clickable {
+  cursor: pointer;
+  border: 1px solid var(--border-color);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: var(--border-color-glow);
+    box-shadow: var(--shadow-glow);
+
+    .stat-icon {
+      transform: scale(1.06);
+    }
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.35);
   }
 }
 

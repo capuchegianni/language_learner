@@ -14,6 +14,13 @@ export const LessonHistory: React.FC = () => {
   const [filterStatus, setFilterStatus] = useState(searchParams.get('status') || '');
   const statusSelectRef = useRef<HTMLSelectElement>(null);
 
+  useEffect(() => {
+    const statusParam = searchParams.get('status') || '';
+    const qParam = searchParams.get('q') || '';
+    setFilterStatus(statusParam);
+    setSearch(qParam);
+  }, [searchParams]);
+
   const loadLessons = async (q?: string, status?: string) => {
     try {
       setLoading(true);
