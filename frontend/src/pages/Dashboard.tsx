@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
 import { DashboardStats, Lesson } from '../types';
-import { Sparkles, BookOpen, Scroll, Award, ArrowRight, CheckCircle2, Clock, Trash2 } from 'lucide-react';
+import { Sparkles, BookOpen, Scroll, Award, ArrowRight, CheckCircle2, Clock, Trash2, History } from 'lucide-react';
 import { useLanguages } from '../contexts/LanguageContext';
 
 export const Dashboard: React.FC = () => {
@@ -172,13 +172,13 @@ export const Dashboard: React.FC = () => {
         </div>
 
         {/* Recent Lessons List */}
-        <div>
-          <h2 style={{ fontSize: '1.3rem', fontWeight: 600, marginBottom: '1.25rem' }}>Recent Lessons</h2>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+          <h2 style={{ fontSize: '1.3rem', fontWeight: 600 }}>Recent Lessons</h2>
           {loading ? (
             <div className="glass-card" style={{ display: 'flex', justifyContent: 'center', padding: '2rem' }}>
               <div className="spinner" />
             </div>
-          ) : stats?.recentLessons?.length === 0 ? (
+          ) : !stats?.recentLessons || stats.recentLessons.length === 0 ? (
             <div className="glass-card" style={{ textAlign: 'center', padding: '2.5rem 1rem', color: 'var(--text-secondary)' }}>
               <Clock size={40} style={{ margin: '0 auto 1rem', opacity: 0.5 }} />
               <p>No lessons generated yet.</p>
@@ -191,12 +191,11 @@ export const Dashboard: React.FC = () => {
               </button>
             </div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {stats?.recentLessons?.slice(0, 3).map((lesson: Lesson) => (
+            <>
+              {stats.recentLessons.slice(0, stats.recentLessons.length >= 3 ? 2 : stats.recentLessons.length).map((lesson: Lesson) => (
                 <div
                   key={lesson.id}
                   className="glass-card recent-lesson-item"
-                  style={{ cursor: 'pointer' }}
                   onClick={() => {
                     if (lesson.status === 'GENERATED' || lesson.status === 'SUBMITTED') {
                       navigate(`/lessons/${lesson.id}/resume`);
@@ -237,17 +236,25 @@ export const Dashboard: React.FC = () => {
                   </div>
                 </div>
               ))}
-              {(stats?.recentLessons?.length ?? 0) > 3 && (
-                <button
-                  className="btn btn-secondary"
-                  style={{ alignSelf: 'center', marginTop: '0.5rem', width: '100%', maxWidth: '280px' }}
+
+              {stats.recentLessons.length >= 3 && (
+                <div
+                  className="glass-card quick-hub-card"
                   onClick={() => navigate('/history')}
                 >
-                  <span>View All Lessons</span>
-                  <ArrowRight size={16} />
-                </button>
+                  <div className="quick-hub-card-content">
+                    <div className="quick-hub-icon" style={{ background: 'rgba(234, 179, 8, 0.2)', color: 'var(--accent-warning)' }}>
+                      <History size={24} />
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <h3 style={{ fontSize: '1.1rem', fontWeight: 600 }}>View All Past Lessons</h3>
+                      <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Browse full history, scores, submissions, and detailed feedback.</p>
+                    </div>
+                    <ArrowRight size={18} color="var(--text-secondary)" className="quick-hub-arrow" />
+                  </div>
+                </div>
               )}
-            </div>
+            </>
           )}
         </div>
       </div>
