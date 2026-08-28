@@ -124,7 +124,6 @@ export const Dashboard: React.FC = () => {
 
           <div
             className="glass-card quick-hub-card"
-            style={{ cursor: 'pointer', transition: 'all 0.2s ease' }}
             onClick={() => navigate('/lessons/new')}
           >
             <div className="quick-hub-card-content">
@@ -141,7 +140,6 @@ export const Dashboard: React.FC = () => {
 
           <div
             className="glass-card quick-hub-card"
-            style={{ cursor: 'pointer', transition: 'all 0.2s ease' }}
             onClick={() => navigate('/words')}
           >
             <div className="quick-hub-card-content">
@@ -158,7 +156,6 @@ export const Dashboard: React.FC = () => {
 
           <div
             className="glass-card quick-hub-card"
-            style={{ cursor: 'pointer', transition: 'all 0.2s ease' }}
             onClick={() => navigate('/rules')}
           >
             <div className="quick-hub-card-content">

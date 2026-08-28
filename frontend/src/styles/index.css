@@ -249,11 +249,7 @@ input, select, textarea {
   border-radius: var(--radius-lg);
   padding: 1.5rem;
   box-shadow: var(--shadow-lg);
-  transition: transform 0.2s ease, border-color 0.2s ease;
-
-  &:hover {
-    border-color: var(--border-color-glow);
-  }
+  transition: border-color 0.2s ease;
 }
 
 /* Buttons */
@@ -783,26 +779,15 @@ button:focus-visible,
 .stat-card-clickable {
   cursor: pointer;
   border: 1px solid var(--border-color);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: border-color 0.2s ease;
 
   &:hover {
-    transform: translateY(-2px);
     border-color: var(--border-color-glow);
-    box-shadow: var(--shadow-glow);
-
-    .stat-icon {
-      transform: scale(1.06);
-    }
-  }
-
-  &:active {
-    transform: translateY(0);
   }
 
   &:focus-visible {
     outline: 2px solid var(--accent-primary);
     outline-offset: 2px;
-    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.35);
   }
 }
 
@@ -810,6 +795,28 @@ button:focus-visible,
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
   gap: 1.5rem;
+}
+
+.quick-hub-card {
+  border: 1px solid var(--border-color);
+  transition: border-color 0.2s ease;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--border-color-glow);
+  }
+}
+
+.recent-lesson-card,
+.recent-lesson-item,
+.history-item-card {
+  border: 1px solid var(--border-color);
+  transition: border-color 0.2s ease;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--border-color-glow);
+  }
 }
 
 .quick-hub-card-content {
@@ -1137,6 +1144,22 @@ button:focus-visible,
   gap: 1rem;
 }
 
+.proposal-card {
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  transition: border-color 0.2s ease, background 0.2s ease;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--border-color-glow);
+  }
+
+  &.selected {
+    border-color: var(--accent-primary);
+    background: rgba(99, 102, 241, 0.12);
+  }
+}
+
 .custom-rule-card, .review-rule-card {
   display: flex;
   align-items: center;
@@ -1144,7 +1167,9 @@ button:focus-visible,
   gap: 1.25rem;
   flex-wrap: wrap;
   padding: 1.25rem;
-  transition: all 0.2s ease;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  transition: border-color 0.2s ease, background 0.2s ease;
 }
 
 .custom-rule-card {
@@ -1154,9 +1179,27 @@ button:focus-visible,
     border-color: var(--border-color-glow);
   }
 
+  &.selected {
+    border-color: var(--accent-primary);
+    background: rgba(99, 102, 241, 0.12);
+  }
+
   &:focus-within {
     border-color: var(--accent-primary) !important;
     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+  }
+}
+
+.review-rule-card {
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--border-color-glow);
+  }
+
+  &.selected {
+    border-color: var(--accent-warning);
+    background: rgba(245, 158, 11, 0.12);
   }
 }
 

@@ -98,16 +98,13 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
               return (
                 <div
                   key={idx}
-                  className="glass-card proposal-card"
+                  className={`glass-card proposal-card ${isSelected ? 'selected' : ''}`}
                   style={{
-                    borderColor: isSelected ? 'var(--accent-primary)' : 'var(--border-color)',
-                    background: isSelected ? 'rgba(99, 102, 241, 0.12)' : 'var(--bg-card)',
                     cursor: replacingIndex === idx ? 'default' : 'pointer',
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
                     minHeight: '180px',
-                    transition: 'all 0.2s ease',
                     opacity: replacingIndex === idx ? 0.7 : 1,
                   }}
                   onClick={() => {
@@ -164,12 +161,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
             </h3>
             <label
               htmlFor="custom-lesson-rule-input"
-              className="glass-card custom-rule-card"
-              style={{
-                borderColor: isCustomSelected ? 'var(--accent-primary)' : 'var(--border-color)',
-                background: isCustomSelected ? 'rgba(99, 102, 241, 0.12)' : 'var(--bg-card)',
-                cursor: 'text',
-              }}
+              className={`glass-card custom-rule-card ${isCustomSelected ? 'selected' : ''}`}
               onClick={handleCustomCardClick}
             >
               <div className="custom-rule-input-wrapper">
@@ -190,7 +182,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
               </div>
               <div
                 className="custom-rule-badge"
-                style={{ color: isCustomSelected ? 'var(--accent-primary)' : 'var(--text-muted)', cursor: 'pointer' }}
+                style={{ color: isCustomSelected ? 'var(--accent-primary)' : 'var(--text-muted)' }}
                 onClick={(e) => {
                   e.stopPropagation();
                   customInputRef.current?.focus();
@@ -212,12 +204,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
                 Spaced Repetition Review
               </h3>
               <div
-                className="glass-card review-rule-card"
-                style={{
-                  borderColor: isReviewSelection ? 'var(--accent-warning)' : 'var(--border-color)',
-                  background: isReviewSelection ? 'rgba(245, 158, 11, 0.12)' : 'var(--bg-card)',
-                  cursor: 'pointer',
-                }}
+                className={`glass-card review-rule-card ${isReviewSelection ? 'selected' : ''}`}
                 onClick={() => onSelectRule(reviewRule.title, true)}
               >
                 <div style={{ flex: 1, minWidth: 0 }}>
