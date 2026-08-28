@@ -468,6 +468,34 @@ button:focus-visible,
   }
 }
 
+/* Note Toggle Button */
+.icon-btn-note,
+.icon-btn.icon-btn-note {
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: var(--text-primary);
+    transform: scale(1.08);
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.1);
+  }
+
+  &.active {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+    color: #fff;
+    box-shadow: 0 0 14px rgba(255, 255, 255, 0.15);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
 /* Modal Headers and Close Button */
 .modal-header {
   display: flex;
@@ -879,7 +907,7 @@ button:focus-visible,
 /* Word Bank & Words Grid */
 .words-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.25rem;
 }
 
@@ -912,13 +940,39 @@ button:focus-visible,
   word-break: break-word;
 }
 
+.word-notes-box {
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+  background: rgba(15, 23, 42, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 0.45rem 0.65rem;
+  border-radius: var(--radius-sm);
+  word-break: break-word;
+  line-height: 1.45;
+  margin-top: 0.4rem;
+}
+
 .word-card-footer {
   display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
   margin-top: 1rem;
   border-top: 1px solid var(--border-color);
   padding-top: 0.75rem;
+}
+
+.word-card-category {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.word-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
 }
 
 /* Rule Bank & Rule Cards */
@@ -1840,6 +1894,10 @@ button:focus-visible,
       min-height: 46px;
       justify-content: center;
     }
+  }
+
+  .words-grid {
+    grid-template-columns: 1fr;
   }
 }
 
