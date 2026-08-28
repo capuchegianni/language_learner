@@ -2,10 +2,12 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { api } from '../services/api';
 import { Lesson } from '../types';
-import { Clock, Trash2 } from 'lucide-react';
+import { History, Clock, Trash2, Sparkles } from 'lucide-react';
 import { FilterInput } from '../components/FilterInput';
+import { useLanguages } from '../contexts/LanguageContext';
 
 export const LessonHistory: React.FC = () => {
+  const { targetLanguage } = useLanguages();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [lessons, setLessons] = useState<Lesson[]>([]);
@@ -54,10 +56,22 @@ export const LessonHistory: React.FC = () => {
 
   return (
     <div className="history-container">
-      <div className="glass-card page-header-card" style={{ marginBottom: '1.5rem' }}>
-        <h1 className="page-title" style={{ margin: 0 }}>
-          Lesson History
-        </h1>
+      {/* Header */}
+      <div className="page-header" id="tutorial-history-header">
+        <div>
+          <h1 className="page-title">
+            <History style={{ color: 'var(--accent-primary)' }} />
+            <span>Lesson History</span>
+          </h1>
+          <p className="page-subtitle">
+            All past generated, submitted, and graded {targetLanguage} lessons. Total: {lessons.length} lesson{lessons.length !== 1 ? 's' : ''}.
+          </p>
+        </div>
+
+        <button className="btn btn-primary page-header-btn" onClick={() => navigate('/lessons/new')}>
+          <Sparkles size={18} />
+          <span>New Lesson</span>
+        </button>
       </div>
 
       {/* Search Input and Filter */}
