@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { api } from '../../services/api';
 import { Lesson, LessonContent, ProposedRule, GradingResult } from '../../types';
 import { Check, Copy, ChevronRight } from 'lucide-react';
@@ -14,6 +14,7 @@ import { WordsLearned } from '../../components/lesson/WordsLearned';
 export const NewLesson: React.FC = () => {
   const { id: resumeLessonId } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   // Phase state: 'PROPOSAL' | 'GENERATED_WORKSPACE' | 'GRADED'
   const [phase, setPhase] = useState<'PROPOSAL' | 'GENERATED_WORKSPACE' | 'GRADED'>('PROPOSAL');
 
@@ -126,7 +127,6 @@ export const NewLesson: React.FC = () => {
           } else {
             setPhase('GENERATED_WORKSPACE');
           }
-          setCurrentLesson(lesson);
         } catch (err: any) {
           console.error('Failed to load resumed lesson', err);
           setError('Failed to load resumed lesson.');
@@ -136,9 +136,21 @@ export const NewLesson: React.FC = () => {
       };
       fetchResumedLesson();
     } else {
+      // Reset all in-progress lesson state when returning to /lessons/new
+      setPhase('PROPOSAL');
+      setCurrentLesson(null);
+      setLessonContent(null);
+      setGradingResult(null);
+      setEx1Answers([]);
+      setEx2Answers([]);
+      setEx3Answer('');
+      setImageFiles([]);
+      setImagePreviews([]);
+      setSubmitting(false);
+      setGeneratingLesson(false);
       fetchProposals();
     }
-  }, [resumeLessonId]);
+  }, [resumeLessonId, location.pathname]);
 
   const handleSelectRule = (title: string, isReview: boolean = false) => {
     setSelectedRuleTitle(title);
@@ -160,6 +172,7 @@ export const NewLesson: React.FC = () => {
       loadSavedAnswers(lesson.id);
       setCurrentLesson(lesson);
       setPhase('GENERATED_WORKSPACE');
+      navigate(`/lessons/${lesson.id}/resume`, { replace: true });
     } catch (err: any) {
       console.error('Error generating lesson', err);
       setError(err.response?.data?.message || 'Failed to generate lesson. Please check your AI API configuration.');
