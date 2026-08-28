@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Sparkles, Database, Settings as SettingsIcon, LayoutDashboard, Scroll, History, Menu, X } from 'lucide-react';
+import { Sparkles, BookOpen, Settings as SettingsIcon, LayoutDashboard, Scroll, History, Menu, X } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -77,7 +77,7 @@ export const Navbar: React.FC = () => {
           </NavLink>
 
           <NavLink to="/words" className={({ isActive }) => isActive ? 'active' : ''}>
-            <Database size={18} />
+            <BookOpen size={18} />
             <span>Word Bank</span>
           </NavLink>
 

@@ -35,6 +35,9 @@ export class VocabularyService {
       notes?: string;
     },
   ) {
+    if (data.notes && data.notes.length > 80) {
+      data.notes = data.notes.substring(0, 80);
+    }
     return this.prisma.word.create({ data: { ...data, userId } });
   }
 
@@ -49,6 +52,9 @@ export class VocabularyService {
       notes?: string;
     },
   ) {
+    if (data.notes && data.notes.length > 80) {
+      data.notes = data.notes.substring(0, 80);
+    }
     return this.prisma.word.update({
       where: { id, userId },
       data,

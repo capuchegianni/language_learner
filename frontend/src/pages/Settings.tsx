@@ -617,16 +617,15 @@ export const Settings: React.FC = () => {
             </div>
             <button
               type="button"
-              className="btn danger-zone-btn"
+              className="btn btn-danger"
               id="open-reset-modal-btn"
-              style={{ background: 'rgba(239,68,68,0.15)', color: 'var(--accent-danger)', border: '1px solid rgba(239,68,68,0.3)' }}
               onClick={() => {
                 setResetError(null);
                 setShowResetModal(true);
               }}
             >
               <Trash2 size={16} />
-              <span>Reset Data...</span>
+              <span>Reset Data</span>
             </button>
           </div>
 
@@ -640,16 +639,15 @@ export const Settings: React.FC = () => {
             </div>
             <button
               type="button"
-              className="btn danger-zone-btn"
+              className="btn btn-danger"
               id="open-delete-account-modal-btn"
-              style={{ background: 'rgba(239,68,68,0.15)', color: 'var(--accent-danger)', border: '1px solid rgba(239,68,68,0.3)' }}
               onClick={() => {
                 setDeleteAccountError(null);
                 setShowDeleteAccountModal(true);
               }}
             >
               <Trash2 size={16} />
-              <span>Delete Account...</span>
+              <span>Delete Account</span>
             </button>
           </div>
         </div>
@@ -660,14 +658,18 @@ export const Settings: React.FC = () => {
       {showImportModal && (
         <div className="modal-overlay" onMouseDown={(e) => { if (e.target === e.currentTarget) setShowImportModal(false); }}>
           <div className="modal-content" style={{ maxWidth: '600px', position: 'relative' }}>
-            <button
-              onClick={() => setShowImportModal(false)}
-              className="modal-close-btn"
-              style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }}
-            >
-              <X size={24} />
-            </button>
-            <h3 style={{ fontSize: '1.3rem', fontWeight: 700, marginBottom: '1rem', color: '#fff' }}>Import Data</h3>
+            <div className="modal-header">
+              <h3 className="modal-title">Import Data</h3>
+              <button
+                type="button"
+                onClick={() => setShowImportModal(false)}
+                className="modal-close-btn"
+                title="Close dialog"
+                aria-label="Close dialog"
+              >
+                <X size={18} />
+              </button>
+            </div>
 
             <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '1rem', lineHeight: 1.4 }}>
               Your JSON file should have the following structure. Any fields not matching the format will be skipped.
@@ -731,14 +733,18 @@ export const Settings: React.FC = () => {
       {showExportModal && (
         <div className="modal-overlay" onMouseDown={(e) => { if (e.target === e.currentTarget) setShowExportModal(false); }}>
           <div className="modal-content" style={{ maxWidth: '500px', position: 'relative' }}>
-            <button
-              onClick={() => setShowExportModal(false)}
-              className="modal-close-btn"
-              style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }}
-            >
-              <X size={24} />
-            </button>
-            <h3 style={{ fontSize: '1.3rem', fontWeight: 700, marginBottom: '0.5rem', color: '#fff' }}>Export Data</h3>
+            <div className="modal-header">
+              <h3 className="modal-title">Export Data</h3>
+              <button
+                type="button"
+                onClick={() => setShowExportModal(false)}
+                className="modal-close-btn"
+                title="Close dialog"
+                aria-label="Close dialog"
+              >
+                <X size={18} />
+              </button>
+            </div>
             <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
               Select which data you would like to include in the exported JSON file.
             </p>
@@ -805,17 +811,21 @@ export const Settings: React.FC = () => {
       {showResetModal && (
         <div className="modal-overlay" onMouseDown={(e) => { if (e.target === e.currentTarget) setShowResetModal(false); }}>
           <div className="modal-content" style={{ maxWidth: '520px', position: 'relative', borderColor: 'rgba(239,68,68,0.4)' }}>
-            <button
-              onClick={() => setShowResetModal(false)}
-              className="modal-close-btn"
-              style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }}
-            >
-              <X size={24} />
-            </button>
-            <h3 style={{ fontSize: '1.3rem', fontWeight: 700, marginBottom: '0.5rem', color: 'var(--accent-danger)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <AlertTriangle size={22} />
-              <span>Reset Data</span>
-            </h3>
+            <div className="modal-header">
+              <h3 className="modal-title" style={{ color: 'var(--accent-danger)' }}>
+                <AlertTriangle size={22} />
+                <span>Reset Data</span>
+              </h3>
+              <button
+                type="button"
+                onClick={() => setShowResetModal(false)}
+                className="modal-close-btn"
+                title="Close dialog"
+                aria-label="Close dialog"
+              >
+                <X size={18} />
+              </button>
+            </div>
             <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
               Select which data you would like to permanently delete from your account.
             </p>
@@ -904,17 +914,21 @@ export const Settings: React.FC = () => {
       {showDeleteAccountModal && (
         <div className="modal-overlay" onMouseDown={(e) => { if (e.target === e.currentTarget) setShowDeleteAccountModal(false); }}>
           <div className="modal-content" style={{ maxWidth: '500px', position: 'relative', borderColor: 'rgba(239,68,68,0.5)' }}>
-            <button
-              onClick={() => setShowDeleteAccountModal(false)}
-              className="modal-close-btn"
-              style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }}
-            >
-              <X size={24} />
-            </button>
-            <h3 style={{ fontSize: '1.3rem', fontWeight: 700, marginBottom: '0.5rem', color: 'var(--accent-danger)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <AlertTriangle size={22} />
-              <span>Delete Account</span>
-            </h3>
+            <div className="modal-header">
+              <h3 className="modal-title" style={{ color: 'var(--accent-danger)' }}>
+                <AlertTriangle size={22} />
+                <span>Delete Account</span>
+              </h3>
+              <button
+                type="button"
+                onClick={() => setShowDeleteAccountModal(false)}
+                className="modal-close-btn"
+                title="Close dialog"
+                aria-label="Close dialog"
+              >
+                <X size={18} />
+              </button>
+            </div>
             <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
               Are you sure you want to permanently delete your account (<strong>{user?.email}</strong>)?
             </p>

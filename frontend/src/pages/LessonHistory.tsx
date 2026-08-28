@@ -1,17 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { api } from '../services/api';
 import { Lesson } from '../types';
-import { Clock, Trash2 } from 'lucide-react';
+import { History, Clock, Trash2, Sparkles } from 'lucide-react';
 import { FilterInput } from '../components/FilterInput';
+import { useLanguages } from '../contexts/LanguageContext';
 
 export const LessonHistory: React.FC = () => {
+  const { targetLanguage } = useLanguages();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState(searchParams.get('q') || '');
   const [filterStatus, setFilterStatus] = useState(searchParams.get('status') || '');
+  const statusSelectRef = useRef<HTMLSelectElement>(null);
+
+  useEffect(() => {
+    const statusParam = searchParams.get('status') || '';
+    const qParam = searchParams.get('q') || '';
+    setFilterStatus(statusParam);
+    setSearch(qParam);
+  }, [searchParams]);
 
   const loadLessons = async (q?: string, status?: string) => {
     try {
@@ -46,10 +56,22 @@ export const LessonHistory: React.FC = () => {
 
   return (
     <div className="history-container">
-      <div className="glass-card page-header-card" style={{ marginBottom: '1.5rem' }}>
-        <h1 className="page-title" style={{ margin: 0 }}>
-          Lesson History
-        </h1>
+      {/* Header */}
+      <div className="page-header" id="tutorial-history-header">
+        <div>
+          <h1 className="page-title">
+            <History style={{ color: 'var(--accent-primary)' }} />
+            <span>Lesson History</span>
+          </h1>
+          <p className="page-subtitle">
+            All past generated, submitted, and graded {targetLanguage} lessons. Total: {lessons.length} lesson{lessons.length !== 1 ? 's' : ''}.
+          </p>
+        </div>
+
+        <button className="btn btn-primary page-header-btn" onClick={() => navigate('/lessons/new')}>
+          <Sparkles size={18} />
+          <span>New Lesson</span>
+        </button>
       </div>
 
       {/* Search Input and Filter */}
@@ -60,9 +82,20 @@ export const LessonHistory: React.FC = () => {
           placeholder="Search lessons by rule title..."
           containerStyle={{ flex: 1 }}
         />
-        <div className="glass-card filter-select-card">
-          <label className="filter-select-label">Status:</label>
+        <label
+          htmlFor="history-status-filter"
+          className="glass-card filter-select-card"
+          onClick={(e) => {
+            if (e.target !== statusSelectRef.current) {
+              try { statusSelectRef.current?.showPicker?.(); } catch {}
+              statusSelectRef.current?.focus();
+            }
+          }}
+        >
+          <span className="filter-select-label">Status:</span>
           <select
+            id="history-status-filter"
+            ref={statusSelectRef}
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
             className="filter-select-input"
@@ -72,7 +105,7 @@ export const LessonHistory: React.FC = () => {
             <option value="GRADED" style={{ background: '#1e293b' }}>Graded</option>
             <option value="SUBMITTED" style={{ background: '#1e293b' }}>Submitted</option>
           </select>
-        </div>
+        </label>
       </div>
 
       {/* History List */}
@@ -125,10 +158,11 @@ export const LessonHistory: React.FC = () => {
                   </span>
                 ) : null}
                 <button
-                  className="btn icon-btn-delete"
-                  style={{ padding: '0.4rem', color: 'var(--accent-danger)' }}
+                  type="button"
+                  className="icon-btn icon-btn-delete"
                   onClick={(e) => handleDelete(e, lesson.id)}
-                  title="Delete Lesson"
+                  title="Delete lesson"
+                  aria-label={`Delete lesson: ${lesson.rule?.title || lesson.title}`}
                 >
                   <Trash2 size={16} />
                 </button>

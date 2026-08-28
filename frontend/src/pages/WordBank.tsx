@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { api } from '../services/api';
 import { Word } from '../types';
-import { BookOpen, Plus, Trash2, Edit, X, Volume2 } from 'lucide-react';
+import { BookOpen, Plus, Trash2, Edit, X, Volume2, FileText } from 'lucide-react';
 import { FilterInput } from '../components/FilterInput';
 import { useLanguages } from '../contexts/LanguageContext';
 
@@ -18,11 +18,25 @@ export const WordBank: React.FC = () => {
   const [pronunciation, setPronunciation] = useState('');
   const [partOfSpeech, setPartOfSpeech] = useState('');
   const [notes, setNotes] = useState('');
-  const [filterCategory, setFilterCategory] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [playingWordId, setPlayingWordId] = useState<string | null>(null);
-  const playStateRef = useRef({ id: null as string | null, isSlow: false });
+  const [slowAudio, setSlowAudio] = useState(false);
+  const [expandedNotes, setExpandedNotes] = useState<Set<string>>(new Set());
+  const categorySelectRef = useRef<HTMLSelectElement>(null);
 
-  const loadWords = async (q?: string) => {
+  const toggleNote = (id: string) => {
+    setExpandedNotes(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
+  const fetchWords = async (q?: string) => {
     try {
       setLoading(true);
       const data = await api.getWords(q);
@@ -35,11 +49,19 @@ export const WordBank: React.FC = () => {
   };
 
   useEffect(() => {
-    loadWords(searchQuery);
+    fetchWords(searchQuery);
   }, [searchQuery]);
 
-  const categories = Array.from(new Set(words.map(w => w.partOfSpeech?.toLowerCase()).filter(Boolean))) as string[];
-  const displayedWords = words.filter(w => !filterCategory || w.partOfSpeech?.toLowerCase() === filterCategory.toLowerCase());
+  const categories = Array.from(new Set(words.map(w => w.partOfSpeech).filter(Boolean))) as string[];
+
+  const displayedWords = words.filter(w => {
+    const matchesSearch = !searchQuery ||
+      w.targetLanguage.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      w.nativeLanguage.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (w.pronunciation && w.pronunciation.toLowerCase().includes(searchQuery.toLowerCase()));
+    const matchesCategory = !selectedCategory || w.partOfSpeech === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
 
   const handleOpenAddModal = () => {
     setEditingWord(null);
@@ -61,7 +83,7 @@ export const WordBank: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const handleSaveWord = async (e: React.SubmitEvent) => {
+  const handleSaveWord = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!targetLangValue || !nativeLangValue) return;
 
@@ -72,66 +94,58 @@ export const WordBank: React.FC = () => {
         await api.createWord({ targetLanguage: targetLangValue, nativeLanguage: nativeLangValue, pronunciation, partOfSpeech, notes });
       }
       setIsModalOpen(false);
-      loadWords(searchQuery);
+      fetchWords(searchQuery);
     } catch (err) {
       console.error('Failed to save word', err);
     }
   };
 
   const handleDeleteWord = async (id: string) => {
-    if (confirm('Are you sure you want to delete this word from your bank?')) {
-      await api.deleteWord(id);
-      loadWords(searchQuery);
+    if (confirm('Are you sure you want to delete this word from your vocabulary bank?')) {
+      try {
+        await api.deleteWord(id);
+        fetchWords(searchQuery);
+      } catch (err) {
+        console.error('Failed to delete word', err);
+      }
     }
   };
 
   const handlePlayAudio = (word: Word) => {
-    if (!window.speechSynthesis) {
-      alert("Sorry, your browser doesn't support text to speech!");
+    if (!('speechSynthesis' in window)) {
+      alert('Speech synthesis is not supported in this browser.');
       return;
     }
 
     window.speechSynthesis.cancel();
 
-    const currentState = playStateRef.current;
-    let newSpeed = 1.0;
-    let newIsSlow = false;
+    const utterance = new SpeechSynthesisUtterance(word.targetLanguage);
+    const resolvedVoice = targetVoiceCode || getVoiceCode(targetLanguage);
+    utterance.lang = resolvedVoice;
 
-    if (currentState.id === word.id && !currentState.isSlow) {
-      newSpeed = 0.5;
-      newIsSlow = true;
+    if (playingWordId === word.id && !slowAudio) {
+      utterance.rate = 0.6;
+      setSlowAudio(true);
+    } else {
+      utterance.rate = 0.9;
+      setSlowAudio(false);
     }
 
-    playStateRef.current = { id: word.id, isSlow: newIsSlow };
     setPlayingWordId(word.id);
 
-    const utterance = new SpeechSynthesisUtterance(word.targetLanguage);
-    const voiceCode = targetVoiceCode || getVoiceCode(targetLanguage);
-    utterance.lang = voiceCode;
+    utterance.onend = () => {
+      setPlayingWordId(null);
+    };
 
-    // Try to find a voice matching the target voice code
-    const voices = window.speechSynthesis.getVoices();
-    const baseCode = voiceCode.split('-')[0].toLowerCase();
-    const langVoice = voices.find(v => {
-      const normalizedVoiceLang = v.lang.replace('_', '-').toLowerCase();
-      return normalizedVoiceLang === voiceCode.toLowerCase() || normalizedVoiceLang.startsWith(baseCode);
-    });
-
-    if (langVoice) {
-      utterance.voice = langVoice;
-      utterance.lang = langVoice.lang;
-    }
-
-    utterance.rate = newSpeed;
-    utterance.onend = () => setPlayingWordId(null);
-    utterance.onerror = () => setPlayingWordId(null);
+    utterance.onerror = () => {
+      setPlayingWordId(null);
+    };
 
     window.speechSynthesis.speak(utterance);
   };
 
   return (
     <div className="wordbank-container">
-      {/* Header */}
       <div className="page-header" id="tutorial-wordbank-header">
         <div>
           <h1 className="page-title">
@@ -149,19 +163,29 @@ export const WordBank: React.FC = () => {
         </button>
       </div>
 
-      {/* Search Input and Filter */}
       <div className="filter-bar" id="tutorial-wordbank-filter">
         <FilterInput
           value={searchQuery}
           onChange={setSearchQuery}
-          placeholder={`Search word in ${targetLanguage} or ${nativeLanguage}...`}
+          placeholder="Search vocabulary, meaning, or pronunciation..."
           containerStyle={{ flex: 1 }}
         />
-        <div className="glass-card filter-select-card">
-          <label className="filter-select-label">Category:</label>
+        <label
+          htmlFor="wordbank-category-filter"
+          className="glass-card filter-select-card"
+          onClick={(e) => {
+            if (e.target !== categorySelectRef.current) {
+              try { categorySelectRef.current?.showPicker?.(); } catch { }
+              categorySelectRef.current?.focus();
+            }
+          }}
+        >
+          <span className="filter-select-label">Category:</span>
           <select
-            value={filterCategory}
-            onChange={(e) => setFilterCategory(e.target.value)}
+            id="wordbank-category-filter"
+            ref={categorySelectRef}
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
             className="filter-select-input"
           >
             <option value="" style={{ background: '#1e293b' }}>All Categories</option>
@@ -169,19 +193,18 @@ export const WordBank: React.FC = () => {
               <option key={cat} value={cat} style={{ background: '#1e293b' }}>{cat}</option>
             ))}
           </select>
-        </div>
+        </label>
       </div>
 
-      {/* Words Grid */}
       <div id="tutorial-wordbank-list">
         {loading ? (
           <div className="glass-card" style={{ display: 'flex', justifyContent: 'center', padding: '3rem' }}>
             <div className="spinner" />
           </div>
         ) : displayedWords.length === 0 ? (
-        <div className="glass-card" style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-secondary)' }}>
-          <p>No words found matching your search and filter criteria.</p>
-        </div>
+          <div className="glass-card" style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-secondary)' }}>
+            <p>No words found matching your search and filter criteria.</p>
+          </div>
         ) : (
           <div className="words-grid">
             {displayedWords.map((word) => (
@@ -193,43 +216,66 @@ export const WordBank: React.FC = () => {
                         {word.targetLanguage}
                       </span>
                       <button
-                        className="btn icon-btn-audio"
-                        style={{
-                          padding: '0.35rem',
-                          color: playingWordId === word.id ? 'var(--accent-primary)' : 'var(--text-secondary)',
-                          borderRadius: '50%',
-                          background: playingWordId === word.id ? 'rgba(59, 130, 246, 0.1)' : 'transparent'
-                        }}
+                        type="button"
+                        className={`icon-btn icon-btn-audio ${playingWordId === word.id ? 'active' : ''}`}
                         onClick={() => handlePlayAudio(word)}
                         title="Play pronunciation (Click again to play slower)"
+                        aria-label={`Play pronunciation for ${word.targetLanguage}`}
                       >
-                        <Volume2 size={18} />
+                        <Volume2 size={16} />
                       </button>
+                      {word.notes && (
+                        <button
+                          type="button"
+                          className={`icon-btn icon-btn-note ${expandedNotes.has(word.id) ? 'active' : ''}`}
+                          onClick={() => toggleNote(word.id)}
+                          title={expandedNotes.has(word.id) ? 'Hide note' : 'Show note'}
+                          aria-label={expandedNotes.has(word.id) ? 'Hide note' : 'Show note'}
+                        >
+                          <FileText size={15} />
+                        </button>
+                      )}
                     </div>
-                    {word.partOfSpeech && <span className="pill pill-primary">{word.partOfSpeech}</span>}
                   </div>
                   <div style={{ fontSize: '1rem', fontWeight: 500, marginBottom: '0.25rem' }}>
                     {word.nativeLanguage}
                   </div>
                   {word.pronunciation && (
-                    <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontStyle: 'italic', marginBottom: '0.5rem' }}>
+                    <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontStyle: 'italic', marginBottom: expandedNotes.has(word.id) && word.notes ? '0.5rem' : 0 }}>
                       [{word.pronunciation}]
                     </div>
                   )}
-                  {word.notes && (
-                    <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', background: 'rgba(15,23,42,0.5)', padding: '0.4rem 0.6rem', borderRadius: 'var(--radius-sm)', wordBreak: 'break-word' }}>
+                  {expandedNotes.has(word.id) && word.notes && (
+                    <div className="word-notes-box">
                       {word.notes}
                     </div>
                   )}
                 </div>
 
                 <div className="word-card-footer">
-                  <button className="btn icon-btn" style={{ padding: '0.35rem 0.6rem', color: 'var(--accent-warning)' }} onClick={() => handleOpenEditModal(word)}>
-                    <Edit size={16} />
-                  </button>
-                  <button className="btn icon-btn" style={{ padding: '0.35rem 0.6rem', color: 'var(--accent-danger)' }} onClick={() => handleDeleteWord(word.id)}>
-                    <Trash2 size={16} />
-                  </button>
+                  <div className="word-card-category">
+                    {word.partOfSpeech && <span className="pill pill-primary">{word.partOfSpeech}</span>}
+                  </div>
+                  <div className="word-card-actions">
+                    <button
+                      type="button"
+                      className="icon-btn icon-btn-edit"
+                      onClick={() => handleOpenEditModal(word)}
+                      title="Edit word"
+                      aria-label={`Edit ${word.targetLanguage}`}
+                    >
+                      <Edit size={16} />
+                    </button>
+                    <button
+                      type="button"
+                      className="icon-btn icon-btn-delete"
+                      onClick={() => handleDeleteWord(word.id)}
+                      title="Delete word"
+                      aria-label={`Delete ${word.targetLanguage}`}
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -237,16 +283,21 @@ export const WordBank: React.FC = () => {
         )}
       </div>
 
-      {/* Add / Edit Word Modal */}
       {isModalOpen && (
         <div className="modal-overlay" onMouseDown={(e) => { if (e.target === e.currentTarget) setIsModalOpen(false); }}>
           <div className="modal-content" onMouseDown={(e) => e.stopPropagation()}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
-              <h2 style={{ fontSize: '1.3rem', fontWeight: 700 }}>
+            <div className="modal-header">
+              <h2 className="modal-title">
                 {editingWord ? 'Edit Word' : 'Add New Word to Bank'}
               </h2>
-              <button className="btn" style={{ padding: '0.4rem', color: 'var(--text-secondary)' }} onClick={() => setIsModalOpen(false)}>
-                <X size={20} />
+              <button
+                type="button"
+                className="modal-close-btn"
+                onClick={() => setIsModalOpen(false)}
+                title="Close dialog"
+                aria-label="Close dialog"
+              >
+                <X size={18} />
               </button>
             </div>
 
@@ -275,8 +326,18 @@ export const WordBank: React.FC = () => {
               </div>
 
               <div className="input-group">
-                <label>Notes / Context</label>
-                <textarea value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Usage hints or sentence example..." />
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <label style={{ margin: 0 }}>Notes / Context</label>
+                  <span style={{ fontSize: '0.8rem', color: notes.length === 80 ? 'var(--accent-warning)' : 'var(--text-muted)' }}>
+                    {notes.length}/80
+                  </span>
+                </div>
+                <textarea
+                  maxLength={80}
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  placeholder="Usage hints or sentence example (max 80 characters)..."
+                />
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '1rem' }}>
