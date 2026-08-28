@@ -1,14 +1,39 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, Logger } from '@nestjs/common';
 import * as express from 'express';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as dotenv from 'dotenv';
 import session from 'express-session';
 import passport from 'passport';
 import { SqliteSessionStore } from './auth/sqlite-session-store';
 
+async function waitForSessionSecret(logger: Logger): Promise<string> {
+  const envFilePath = path.resolve(process.cwd(), '../.env');
+
+  while (!process.env.SESSION_SECRET) {
+    if (fs.existsSync(envFilePath)) {
+      dotenv.config({ path: envFilePath, override: true });
+    }
+
+    if (process.env.SESSION_SECRET) {
+      break;
+    }
+
+    logger.warn(
+      '⚠️ SESSION_SECRET environment variable is missing. The application cannot start securely. Retrying in 10s...',
+    );
+    await new Promise((resolve) => setTimeout(resolve, 10000));
+  }
+
+  return process.env.SESSION_SECRET as string;
+}
+
 async function bootstrap() {
+  const logger = new Logger('Bootstrap');
+  const sessionSecret = await waitForSessionSecret(logger);
+
   const uploadsDir = path.join(__dirname, '..', 'uploads');
   if (!fs.existsSync(uploadsDir)) {
     fs.mkdirSync(uploadsDir, { recursive: true });
@@ -52,7 +77,7 @@ async function bootstrap() {
   app.use(
     session({
       store: sessionStore,
-      secret: process.env.SESSION_SECRET,
+      secret: sessionSecret,
       resave: false,
       saveUninitialized: false,
       cookie: {
@@ -77,6 +102,6 @@ async function bootstrap() {
 
   const port = process.env.PORT || 3000;
   await app.listen(port);
-  console.log(`🚀 Korean Language Learner Backend running on http://localhost:${port}`);
+  logger.log(`🚀 Language Learner Backend running on http://localhost:${port}`);
 }
 bootstrap();
