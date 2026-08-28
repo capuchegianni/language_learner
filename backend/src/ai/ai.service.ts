@@ -1,97 +1,25 @@
 import { Injectable, Logger, InternalServerErrorException, BadRequestException } from '@nestjs/common';
 import { SettingsService } from '../settings/settings.service';
-import OpenAI from 'openai';
-import * as fs from 'fs';
-import * as path from 'path';
+import { AiLlmCallerService } from './services/ai-llm-caller.service';
+import { AiPromptService } from './services/ai-prompt.service';
+import {
+  ProposedRule,
+  LessonContent,
+  GradingResult,
+  UserLanguages,
+} from './interfaces/ai.interfaces';
 
-export interface ProposedRule {
-  title: string;
-  category: string;
-  briefExplanation: string;
-  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
-}
-
-export interface LessonContent {
-  rule: {
-    title: string;
-    explanation: string;
-    examples: Array<{ targetLanguage: string; nativeLanguage: string; explanation?: string }>;
-    exceptions?: string;
-  };
-  newWords: Array<{
-    targetLanguage: string;
-    nativeLanguage: string;
-    pronunciation?: string;
-    partOfSpeech?: string;
-  }>;
-  exercise1: {
-    instruction: string;
-    targetWords: string[];
-    sampleWords: string[];
-  };
-  exercise2: {
-    instruction: string;
-    sentencesToTranslate: string[];
-  };
-  exercise3: {
-    instruction: string;
-    textToTranslate: string;
-  };
-  rawPrompt: string;
-}
-
-export interface GradingResult {
-  overallScore: number; // 0-100
-  generalFeedback: string;
-  exercise1: {
-    score: number;
-    corrections: string[];
-    feedback: string;
-  };
-  exercise2: {
-    score: number;
-    corrections: string[];
-    feedback: string;
-  };
-  exercise3: {
-    score: number;
-    corrections: string[];
-    feedback: string;
-  };
-  handwrittenOcrText?: string;
-}
+export * from './interfaces/ai.interfaces';
 
 @Injectable()
 export class AiService {
   private readonly logger = new Logger(AiService.name);
 
-  constructor(private settingsService: SettingsService) {}
-
-  /**
-   * Creates an OpenAI client configured with the user's base URL and API key.
-   * This works with any OpenAI-compatible provider (OpenAI, Gemini, Groq, Mistral, etc.).
-   */
-  private async getClient(userId: string): Promise<{ client: OpenAI; model: string }> {
-    const [model, baseURL] = await Promise.all([
-      this.settingsService.getSetting(userId, 'AI_MODEL'),
-      this.settingsService.getSetting(userId, 'AI_BASE_URL'),
-    ]);
-
-    const apiKey = this.isLocalOllamaBaseURL(baseURL)
-      ? 'ollama'
-      : await this.settingsService.getSetting(userId, 'api_key');
-
-    const client = new OpenAI({
-      apiKey: apiKey,
-      baseURL: baseURL,
-    });
-
-    return { client, model };
-  }
-
-  private isLocalOllamaBaseURL(baseURL: string): boolean {
-    return /(^https?:\/\/(localhost|127\.0\.0\.1|0\.0\.0\.0):11434\/v1$)|ollama/i.test(baseURL);
-  }
+  constructor(
+    private readonly settingsService: SettingsService,
+    private readonly llmCaller: AiLlmCallerService,
+    private readonly promptService: AiPromptService,
+  ) {}
 
   /**
    * Helper to format prompt template according to user specification.
@@ -104,44 +32,38 @@ export class AiService {
     nativeLanguage: string,
     targetLanguage: string,
   ): string {
-    return `Lesson architecture:
-- ${wordsCount} new daily words (MUST be words the student does NOT yet know — strictly NOT from the "List of known words" below)
-- daily rule with explanations, usage (examples), exceptions if any
-- exercise 1: apply the rule on ${wordsCount} words (based on some of the new daily words + other words in the bank)
-- exercise 2: translate 3 sentences from ${nativeLanguage} to ${targetLanguage} that use the new rule and the new vocabulary (no literal translations, use proper ${nativeLanguage}, don't give the answer)
-- exercise 3: translate a text from ${nativeLanguage} to ${targetLanguage} (from 30 to 50 words) that is using some of the previous rules + the new one at least once and the new vocabulary + words from the bank. The text must have a meaning and small story between the sentences and it's not mandatory to use all tenses (no literal translations, use proper ${nativeLanguage}, don't give the answer)
-
-List of known words (DO NOT use any of these as new words): \`${knownWordsList.join(', ')}\`
-
-List of known rules: \`${knownRulesList.join(', ')}\`
-
-Today's rule -> "${ruleTitle}"`;
+    return this.promptService.buildPromptTemplate(
+      ruleTitle,
+      wordsCount,
+      knownWordsList,
+      knownRulesList,
+      nativeLanguage,
+      targetLanguage,
+    );
   }
 
   /**
    * Proposes NEW rules/expressions for the target language that are NOT yet in knownRules.
    */
-  async proposeRules(userId: string, knownRulesList: string[], count: number = 3, excludeRulesList: string[] = []): Promise<ProposedRule[]> {
+  async proposeRules(
+    userId: string,
+    knownRulesList: string[],
+    count: number = 3,
+    excludeRulesList: string[] = [],
+  ): Promise<ProposedRule[]> {
     if (count <= 0) return [];
     const { nativeLanguage, targetLanguage } = await this.getUserLanguages(userId);
-    const systemPrompt = `You are a ${targetLanguage} language learning expert curriculum planner.
-Given the list of known grammar rules/expressions already learned by the student:
-Known rules: [${knownRulesList.join(', ')}]
-${excludeRulesList.length > 0 ? `\nAlso explicitly EXCLUDE these rules from your proposals, as they were recently proposed or rejected:\nExcluded rules: [${excludeRulesList.join(', ')}]\n` : ''}
-Propose ${count} NEW, highly practical ${targetLanguage} grammar rules or conversational expressions suitable for the next daily lessons.
-Output strictly valid JSON with no extra markdown code block delimiters or text, in the following format:
-[
-  {
-    "title": "Rule name (provide a concise rule name in ${targetLanguage})",
-    "category": "Grammar / Conjugation / Expression",
-    "briefExplanation": "Short 1-sentence summary in ${nativeLanguage} of what it does",
-    "difficulty": "Beginner"
-  }
-]`;
+    const systemPrompt = this.promptService.buildRuleProposalsPrompt(
+      knownRulesList,
+      count,
+      excludeRulesList,
+      nativeLanguage,
+      targetLanguage,
+    );
 
     try {
-      const rawResponse = await this.callLlm(userId, systemPrompt);
-      const cleaned = this.cleanJsonResponse(rawResponse);
+      const rawResponse = await this.llmCaller.callLlm(userId, systemPrompt);
+      const cleaned = this.llmCaller.cleanJsonResponse(rawResponse);
       const parsed = JSON.parse(cleaned);
       if (Array.isArray(parsed) && parsed.length >= count) {
         return parsed.slice(0, count);
@@ -164,50 +86,26 @@ Output strictly valid JSON with no extra markdown code block delimiters or text,
     knownRulesList: string[],
   ): Promise<LessonContent> {
     const { nativeLanguage, targetLanguage } = await this.getUserLanguages(userId);
-    const rawPrompt = this.buildPromptTemplate(ruleTitle, wordsCount, knownWordsList, knownRulesList, nativeLanguage, targetLanguage);
+    const rawPrompt = this.promptService.buildPromptTemplate(
+      ruleTitle,
+      wordsCount,
+      knownWordsList,
+      knownRulesList,
+      nativeLanguage,
+      targetLanguage,
+    );
 
-    const systemInstructions = `You are a ${targetLanguage} language instructor AI. Respond strictly with valid JSON without markdown codeblock wrapper or outside commentary.
-If the requested rule or topic in the USER PROMPT is completely unrelated to learning ${targetLanguage}, nonsense, or inappropriate, return exactly this JSON:
-{ "error": "This topic is invalid or unrelated to learning ${targetLanguage}. Please enter a valid grammar rule, vocabulary topic, or conversational phrase." }
-
-Otherwise, follow this exact JSON structure:
-{
-  "rule": {
-    "title": "${ruleTitle}",
-    "explanation": "Clear explanation of rule usage and formation in ${nativeLanguage}",
-    "examples": [
-      { "targetLanguage": "example in ${targetLanguage}", "nativeLanguage": "translation in ${nativeLanguage}", "explanation": "optional explanation in ${nativeLanguage}" },
-      { "targetLanguage": "example in ${targetLanguage}", "nativeLanguage": "translation in ${nativeLanguage}" }
-    ],
-    "exceptions": "Exceptions or nuances if applicable, explained in ${nativeLanguage}"
-  },
-  "newWords": [
-    { "targetLanguage": "word in ${targetLanguage}", "nativeLanguage": "meaning in ${nativeLanguage}", "pronunciation": "romanized pronunciation", "partOfSpeech": "verb/noun" }
-    // IMPORTANT: exactly ${wordsCount} items — every word here MUST be brand new and must NOT appear in the "List of known words" from the user prompt
-  ],
-  "exercise1": {
-    "instruction": "Apply the rule on 5 words (new daily words + bank words)",
-    "targetWords": ["word1", "word2", "word3", "word4", "word5"],
-    "sampleWords": ["word1", "word2", "word3", "word4", "word5"]
-  },
-  "exercise2": {
-    "instruction": "Translate 3 sentences from ${nativeLanguage} to ${targetLanguage} (do NOT give answers)",
-    "sentencesToTranslate": [
-      "Sentence 1 in ${nativeLanguage}...",
-      "Sentence 2 in ${nativeLanguage}...",
-      "Sentence 3 in ${nativeLanguage}..."
-    ]
-  },
-  "exercise3": {
-    "instruction": "Translate this text (30-50 words story) from ${nativeLanguage} to ${targetLanguage} (do NOT give answers)",
-    "textToTranslate": "Story text in natural ${nativeLanguage} using target vocabulary and grammar..."
-  }
-}`;
+    const systemInstructions = this.promptService.buildLessonGenerationPrompt(
+      ruleTitle,
+      wordsCount,
+      nativeLanguage,
+      targetLanguage,
+    );
 
     try {
       const fullPrompt = `${systemInstructions}\n\nUSER PROMPT:\n${rawPrompt}`;
-      const rawResponse = await this.callLlm(userId, fullPrompt);
-      const cleaned = this.cleanJsonResponse(rawResponse);
+      const rawResponse = await this.llmCaller.callLlm(userId, fullPrompt);
+      const cleaned = this.llmCaller.cleanJsonResponse(rawResponse);
       const parsed = JSON.parse(cleaned);
       if (parsed.error) {
         throw new BadRequestException(parsed.error);
@@ -227,7 +125,6 @@ Otherwise, follow this exact JSON structure:
 
   /**
    * Multimodal AI Grading of user answers (Text input or uploaded handwritten image).
-   * Image support works with providers that support vision (OpenAI, Gemini, etc.).
    */
   async gradeSubmission(
     userId: string,
@@ -236,57 +133,27 @@ Otherwise, follow this exact JSON structure:
     imagePaths?: string[],
   ): Promise<GradingResult> {
     const { nativeLanguage, targetLanguage } = await this.getUserLanguages(userId);
-    const gradingInstructions = `You are an expert ${targetLanguage} teacher grading a student's exercise submission. The student's native language is ${nativeLanguage}.
-Lesson Details:
-Rule: ${lessonData.rule.title} (${lessonData.rule.explanation})
-Target Words: ${lessonData.newWords.map((w) => `${w.targetLanguage} (${w.nativeLanguage})`).join(', ')}
-
-Exercise 1 Prompt: ${lessonData.exercise1.instruction} (Target words: ${lessonData.exercise1.targetWords.join(', ')})
-Exercise 2 Prompt: ${lessonData.exercise2.sentencesToTranslate.join(' | ')}
-Exercise 3 Prompt: ${lessonData.exercise3.textToTranslate}
-
-Student Text Submission:
-Exercise 1 Answer: ${userAnswersText.ex1 || 'N/A'}
-Exercise 2 Answer: ${userAnswersText.ex2 || 'N/A'}
-Exercise 3 Answer: ${userAnswersText.ex3 || 'N/A'}
-
-${imagePaths && imagePaths.length > 0 ? 'NOTE: Images of handwritten answers are attached. Perform OCR on the handwriting first.' : ''}
-
-Grade the student's work accurately with constructive feedback and corrections. Provide all feedback in ${nativeLanguage}.
-Return STRICT JSON format (no markdown formatting, no extra text):
-{
-  "overallScore": 85,
-  "generalFeedback": "Encouraging overall feedback summary in ${nativeLanguage}",
-  "handwrittenOcrText": "Transcribed text if image was provided, else null",
-  "exercise1": {
-    "score": 90,
-    "corrections": ["Correction line 1", "Correction line 2"],
-    "feedback": "Feedback for Ex 1"
-  },
-  "exercise2": {
-    "score": 80,
-    "corrections": ["Sentence 1: ...", "Sentence 2: ..."],
-    "feedback": "Feedback for Ex 2"
-  },
-  "exercise3": {
-    "score": 85,
-    "corrections": ["Text correction details..."],
-    "feedback": "Feedback for Ex 3"
-  }
-}`;
+    const hasImages = !!(imagePaths && imagePaths.length > 0);
+    const gradingInstructions = this.promptService.buildGradingPrompt(
+      lessonData,
+      userAnswersText,
+      hasImages,
+      nativeLanguage,
+      targetLanguage,
+    );
 
     try {
       let rawResponse = '';
 
-      if (imagePaths && imagePaths.length > 0) {
-        rawResponse = await this.callLlmWithImages(userId, gradingInstructions, imagePaths);
+      if (hasImages) {
+        rawResponse = await this.llmCaller.callLlmWithImages(userId, gradingInstructions, imagePaths!);
       } else {
-        rawResponse = await this.callLlm(userId, gradingInstructions);
+        rawResponse = await this.llmCaller.callLlm(userId, gradingInstructions);
       }
 
-      const cleaned = this.cleanJsonResponse(rawResponse);
+      const cleaned = this.llmCaller.cleanJsonResponse(rawResponse);
       return JSON.parse(cleaned);
-    } catch (err) {
+    } catch (err: any) {
       this.logger.error(`Error grading submission via AI API: ${err.message}`);
       throw new InternalServerErrorException(`Failed to grade submission. Please check your AI API configuration. Details: ${err.message}`);
     }
@@ -296,7 +163,7 @@ Return STRICT JSON format (no markdown formatting, no extra text):
    * Fetches the user's configured native and target languages from settings.
    * Defaults to English -> Korean if not configured.
    */
-  async getUserLanguages(userId: string): Promise<{ nativeLanguage: string; targetLanguage: string }> {
+  async getUserLanguages(userId: string): Promise<UserLanguages> {
     let nativeLanguage = 'English';
     let targetLanguage = 'Korean';
     try {
@@ -310,84 +177,5 @@ Return STRICT JSON format (no markdown formatting, no extra text):
       // Not set yet, use default
     }
     return { nativeLanguage, targetLanguage };
-  }
-
-  /**
-   * Calls the LLM using a text-only prompt via the configured OpenAI-compatible client.
-   */
-  private async callLlm(userId: string, prompt: string, retries = 2): Promise<string> {
-    const { client, model } = await this.getClient(userId);
-    for (let i = 0; i <= retries; i++) {
-      try {
-        const response = await client.chat.completions.create({
-          model,
-          messages: [{ role: 'user', content: prompt }],
-        });
-        return response.choices[0]?.message?.content || '';
-      } catch (err: any) {
-        if (err?.status === 429 && i < retries) {
-          this.logger.warn(`Rate limit 429 hit. Retrying in ${2 ** i} seconds...`);
-          await new Promise((resolve) => setTimeout(resolve, (2 ** i) * 1000));
-        } else {
-          throw err;
-        }
-      }
-    }
-    return '';
-  }
-
-  /**
-   * Calls the LLM with an image attached (vision).
-   * Works with any provider that supports the OpenAI vision message format.
-   */
-  private async callLlmWithImages(userId: string, prompt: string, imagePaths: string[], retries = 2): Promise<string> {
-    const { client, model } = await this.getClient(userId);
-    
-    const contentParts: any[] = [{ type: 'text', text: prompt }];
-    
-    for (const imagePath of imagePaths) {
-      if (fs.existsSync(imagePath)) {
-        const imageBuffer = fs.readFileSync(imagePath);
-        const base64Image = imageBuffer.toString('base64');
-        const mimeType = path.extname(imagePath).toLowerCase() === '.png' ? 'image/png' : 'image/jpeg';
-        contentParts.push({
-          type: 'image_url',
-          image_url: { url: `data:${mimeType};base64,${base64Image}` },
-        });
-      }
-    }
-
-    for (let i = 0; i <= retries; i++) {
-      try {
-        const response = await client.chat.completions.create({
-          model,
-          messages: [
-            {
-              role: 'user',
-              content: contentParts,
-            },
-          ],
-        });
-        return response.choices[0]?.message?.content || '';
-      } catch (err: any) {
-        if (err?.status === 429 && i < retries) {
-          this.logger.warn(`Rate limit 429 hit (vision). Retrying in ${2 ** i} seconds...`);
-          await new Promise((resolve) => setTimeout(resolve, (2 ** i) * 1000));
-        } else {
-          throw err;
-        }
-      }
-    }
-    return '';
-  }
-
-  private cleanJsonResponse(raw: string): string {
-    let clean = raw.trim();
-    if (clean.startsWith('```json')) {
-      clean = clean.replace(/^```json/, '').replace(/```$/, '').trim();
-    } else if (clean.startsWith('```')) {
-      clean = clean.replace(/^```/, '').replace(/```$/, '').trim();
-    }
-    return clean;
   }
 }
