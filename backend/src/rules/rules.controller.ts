@@ -2,17 +2,18 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query, Req, UseGuards 
 import { RulesService } from './rules.service';
 import { AuthenticatedGuard } from '../auth/authenticated.guard';
 import { AuthenticatedRequest } from '../types/request';
+import { CreateRuleDto, UpdateRuleDto, RuleQueryDto } from './dto/rule.dto';
 
 @Controller('api/rules')
 @UseGuards(AuthenticatedGuard)
 export class RulesController {
-  constructor(private rulesService: RulesService) {}
+  constructor(private readonly rulesService: RulesService) {}
 
   @Get()
-  async getRules(@Req() req: AuthenticatedRequest, @Query('q') q?: string) {
+  async getRules(@Req() req: AuthenticatedRequest, @Query() query: RuleQueryDto) {
     const userId = req.user.id;
-    if (q) {
-      return this.rulesService.searchRules(userId, q);
+    if (query.q) {
+      return this.rulesService.searchRules(userId, query.q);
     }
     return this.rulesService.getAllRules(userId);
   }
@@ -20,20 +21,20 @@ export class RulesController {
   @Post()
   async createRule(
     @Req() req: AuthenticatedRequest,
-    @Body() body: { title: string; explanation: string; examples: string; exceptions?: string },
+    @Body() dto: CreateRuleDto,
   ) {
     const userId = req.user.id;
-    return this.rulesService.createRule(userId, body);
+    return this.rulesService.createRule(userId, dto);
   }
 
   @Put(':id')
   async updateRule(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
-    @Body() body: { title?: string; explanation?: string; examples?: string; exceptions?: string },
+    @Body() dto: UpdateRuleDto,
   ) {
     const userId = req.user.id;
-    return this.rulesService.updateRule(userId, id, body);
+    return this.rulesService.updateRule(userId, id, dto);
   }
 
   @Delete(':id')
