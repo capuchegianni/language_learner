@@ -211,10 +211,11 @@ export const Dashboard: React.FC = () => {
                       <span className="pill pill-warning">Pending</span>
                     )}
                     <button
-                      className="btn icon-btn-delete"
-                      style={{ padding: '0.4rem', color: 'var(--text-muted)' }}
+                      type="button"
+                      className="icon-btn icon-btn-delete"
                       onClick={(e) => handleDeleteLesson(e, lesson.id)}
-                      title="Delete Lesson"
+                      title="Delete lesson"
+                      aria-label={`Delete lesson: ${lesson.rule?.title || lesson.title}`}
                     >
                       <Trash2 size={16} />
                     </button>

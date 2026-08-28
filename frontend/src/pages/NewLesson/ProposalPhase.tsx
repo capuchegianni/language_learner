@@ -127,9 +127,10 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
                           </div>
                           <button
                             type="button"
-                            className="btn"
-                            style={{ padding: '0.25rem', background: 'transparent', color: 'var(--text-muted)' }}
+                            className="icon-btn icon-btn-secondary"
+                            style={{ width: '32px', height: '32px', minWidth: '32px', minHeight: '32px', padding: '0.25rem' }}
                             title="Replace this proposal"
+                            aria-label={`Replace proposal: ${prop.title}`}
                             onClick={(e) => onReplaceProposal(idx, e)}
                             disabled={replacingIndex !== null}
                           >

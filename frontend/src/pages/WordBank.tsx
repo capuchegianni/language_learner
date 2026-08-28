@@ -193,17 +193,13 @@ export const WordBank: React.FC = () => {
                         {word.targetLanguage}
                       </span>
                       <button
-                        className="btn icon-btn-audio"
-                        style={{
-                          padding: '0.35rem',
-                          color: playingWordId === word.id ? 'var(--accent-primary)' : 'var(--text-secondary)',
-                          borderRadius: '50%',
-                          background: playingWordId === word.id ? 'rgba(59, 130, 246, 0.1)' : 'transparent'
-                        }}
+                        type="button"
+                        className={`icon-btn icon-btn-audio ${playingWordId === word.id ? 'active' : ''}`}
                         onClick={() => handlePlayAudio(word)}
                         title="Play pronunciation (Click again to play slower)"
+                        aria-label={`Play pronunciation for ${word.targetLanguage}`}
                       >
-                        <Volume2 size={18} />
+                        <Volume2 size={16} />
                       </button>
                     </div>
                     {word.partOfSpeech && <span className="pill pill-primary">{word.partOfSpeech}</span>}
@@ -224,10 +220,22 @@ export const WordBank: React.FC = () => {
                 </div>
 
                 <div className="word-card-footer">
-                  <button className="btn icon-btn" style={{ padding: '0.35rem 0.6rem', color: 'var(--accent-warning)' }} onClick={() => handleOpenEditModal(word)}>
+                  <button
+                    type="button"
+                    className="icon-btn icon-btn-edit"
+                    onClick={() => handleOpenEditModal(word)}
+                    title="Edit word"
+                    aria-label={`Edit ${word.targetLanguage} (${word.nativeLanguage})`}
+                  >
                     <Edit size={16} />
                   </button>
-                  <button className="btn icon-btn" style={{ padding: '0.35rem 0.6rem', color: 'var(--accent-danger)' }} onClick={() => handleDeleteWord(word.id)}>
+                  <button
+                    type="button"
+                    className="icon-btn icon-btn-delete"
+                    onClick={() => handleDeleteWord(word.id)}
+                    title="Delete word"
+                    aria-label={`Delete ${word.targetLanguage}`}
+                  >
                     <Trash2 size={16} />
                   </button>
                 </div>
@@ -241,12 +249,18 @@ export const WordBank: React.FC = () => {
       {isModalOpen && (
         <div className="modal-overlay" onMouseDown={(e) => { if (e.target === e.currentTarget) setIsModalOpen(false); }}>
           <div className="modal-content" onMouseDown={(e) => e.stopPropagation()}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
-              <h2 style={{ fontSize: '1.3rem', fontWeight: 700 }}>
+            <div className="modal-header">
+              <h2 className="modal-title">
                 {editingWord ? 'Edit Word' : 'Add New Word to Bank'}
               </h2>
-              <button className="btn" style={{ padding: '0.4rem', color: 'var(--text-secondary)' }} onClick={() => setIsModalOpen(false)}>
-                <X size={20} />
+              <button
+                type="button"
+                className="modal-close-btn"
+                onClick={() => setIsModalOpen(false)}
+                title="Close dialog"
+                aria-label="Close dialog"
+              >
+                <X size={18} />
               </button>
             </div>
 

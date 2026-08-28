@@ -125,10 +125,11 @@ export const LessonHistory: React.FC = () => {
                   </span>
                 ) : null}
                 <button
-                  className="btn icon-btn-delete"
-                  style={{ padding: '0.4rem', color: 'var(--accent-danger)' }}
+                  type="button"
+                  className="icon-btn icon-btn-delete"
                   onClick={(e) => handleDelete(e, lesson.id)}
-                  title="Delete Lesson"
+                  title="Delete lesson"
+                  aria-label={`Delete lesson: ${lesson.rule?.title || lesson.title}`}
                 >
                   <Trash2 size={16} />
                 </button>

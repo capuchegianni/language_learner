@@ -173,10 +173,22 @@ export const RuleBank: React.FC = () => {
                       )}
                     </div>
                     <div className="rule-card-actions">
-                      <button className="btn icon-btn" style={{ padding: '0.35rem 0.6rem', color: 'var(--accent-warning)' }} onClick={() => handleOpenEditModal(rule)}>
+                      <button
+                        type="button"
+                        className="icon-btn icon-btn-edit"
+                        onClick={() => handleOpenEditModal(rule)}
+                        title="Edit grammar rule"
+                        aria-label={`Edit rule: ${rule.title}`}
+                      >
                         <Edit size={16} />
                       </button>
-                      <button className="btn icon-btn" style={{ padding: '0.35rem 0.6rem', color: 'var(--accent-danger)' }} onClick={() => handleDeleteRule(rule.id)}>
+                      <button
+                        type="button"
+                        className="icon-btn icon-btn-delete"
+                        onClick={() => handleDeleteRule(rule.id)}
+                        title="Delete grammar rule"
+                        aria-label={`Delete rule: ${rule.title}`}
+                      >
                         <Trash2 size={16} />
                       </button>
                     </div>
@@ -216,12 +228,18 @@ export const RuleBank: React.FC = () => {
       {isModalOpen && (
         <div className="modal-overlay" onMouseDown={(e) => { if (e.target === e.currentTarget) setIsModalOpen(false); }}>
           <div className="modal-content" onMouseDown={(e) => e.stopPropagation()}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
-              <h2 style={{ fontSize: '1.3rem', fontWeight: 700 }}>
+            <div className="modal-header">
+              <h2 className="modal-title">
                 {editingRule ? 'Edit Grammar Rule' : 'Add Rule to Bank'}
               </h2>
-              <button className="btn" style={{ padding: '0.4rem', color: 'var(--text-secondary)' }} onClick={() => setIsModalOpen(false)}>
-                <X size={20} />
+              <button
+                type="button"
+                className="modal-close-btn"
+                onClick={() => setIsModalOpen(false)}
+                title="Close dialog"
+                aria-label="Close dialog"
+              >
+                <X size={18} />
               </button>
             </div>
 
