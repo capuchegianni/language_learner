@@ -4,7 +4,7 @@ import { AuthenticatedGuard } from '../auth/authenticated.guard';
 import { AuthenticatedRequest } from '../types/request';
 import { ExportDataQueryDto, ImportPayload, ResetDataDto } from './dto/settings.dto';
 
-@Controller('api/settings')
+@Controller('settings')
 @UseGuards(AuthenticatedGuard)
 export class SettingsController {
   constructor(private readonly settingsService: SettingsService) {}

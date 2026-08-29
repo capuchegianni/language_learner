@@ -4,7 +4,7 @@ import { AuthenticatedGuard } from '../auth/authenticated.guard';
 import { AuthenticatedRequest } from '../types/request';
 import { CreateWordDto, UpdateWordDto, WordQueryDto } from './dto/word.dto';
 
-@Controller('api/vocabulary')
+@Controller('vocabulary')
 @UseGuards(AuthenticatedGuard)
 export class VocabularyController {
   constructor(private readonly vocabularyService: VocabularyService) {}

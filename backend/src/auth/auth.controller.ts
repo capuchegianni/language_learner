@@ -15,7 +15,7 @@ import { Response } from 'express';
 import { AuthenticatedRequest } from '../types/request';
 import { AuthService } from './auth.service';
 
-@Controller('api/auth')
+@Controller('auth')
 export class AuthController {
   constructor(
     private readonly configService: ConfigService,

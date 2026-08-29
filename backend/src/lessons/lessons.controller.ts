@@ -34,7 +34,7 @@ const uploadStorage = diskStorage({
   },
 });
 
-@Controller('api/lessons')
+@Controller('lessons')
 @UseGuards(AuthenticatedGuard)
 export class LessonsController {
   constructor(private readonly lessonsService: LessonsService) {}

@@ -4,7 +4,7 @@ import { AuthenticatedGuard } from '../auth/authenticated.guard';
 import { AuthenticatedRequest } from '../types/request';
 import { CreateRuleDto, UpdateRuleDto, RuleQueryDto } from './dto/rule.dto';
 
-@Controller('api/rules')
+@Controller('rules')
 @UseGuards(AuthenticatedGuard)
 export class RulesController {
   constructor(private readonly rulesService: RulesService) {}
