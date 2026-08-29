@@ -12,10 +12,6 @@ export default defineConfig({
         target: process.env.VITE_BACKEND_URL || 'http://localhost:3000',
         changeOrigin: true,
       },
-      '/uploads': {
-        target: process.env.VITE_BACKEND_URL || 'http://localhost:3000',
-        changeOrigin: true,
-      },
     },
   },
   preview: {
@@ -23,10 +19,6 @@ export default defineConfig({
     host: true,
     proxy: {
       '/api': {
-        target: process.env.VITE_BACKEND_URL || 'http://localhost:3000',
-        changeOrigin: true,
-      },
-      '/uploads': {
         target: process.env.VITE_BACKEND_URL || 'http://localhost:3000',
         changeOrigin: true,
       },
