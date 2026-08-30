@@ -44,7 +44,7 @@ export const FilterInput: React.FC<FilterInputProps> = ({
       style={{ ...containerStyle, ...style }}
       onClick={handleClick}
     >
-      <Search size={18} className="filter-search-icon" aria-hidden="true" />
+      <Search size={20} className="filter-search-icon" aria-hidden="true" />
       <input
         id={id}
         ref={inputRef}

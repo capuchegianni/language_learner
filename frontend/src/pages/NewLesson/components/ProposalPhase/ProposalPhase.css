@@ -201,12 +201,6 @@ input.custom-rule-input,
   cursor: text;
 }
 
-input.custom-rule-input::placeholder,
-.custom-rule-input::placeholder {
-  color: var(--text-secondary);
-  font-size: 1.05rem;
-}
-
 .custom-rule-badge {
   display: flex;
   align-items: center;
