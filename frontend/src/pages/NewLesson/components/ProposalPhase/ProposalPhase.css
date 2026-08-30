@@ -1,0 +1,404 @@
+/* ========================================================= */
+/* Proposal Phase Component Styles                           */
+/* ========================================================= */
+
+.proposal-phase-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.proposal-header-card {
+  padding: 1.75rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.proposal-header-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #fff;
+}
+
+.proposal-header-subtitle {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  max-width: 650px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+.word-count-selector {
+  margin-top: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(15, 23, 42, 0.6);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  user-select: none;
+}
+
+.word-count-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  color: #fff;
+}
+
+.word-count-select {
+  background: transparent;
+  color: #fff;
+  border: none;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  outline: none;
+  box-shadow: none;
+  min-height: auto;
+  padding: 0.2rem 0.4rem;
+}
+
+.word-count-select:focus,
+.word-count-select:focus-visible {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.word-count-select option {
+  background: #1e293b;
+  color: #fff;
+}
+
+.proposal-loading-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem;
+  margin-bottom: 2rem;
+}
+
+.proposal-loading-spinner {
+  margin-bottom: 1rem;
+}
+
+.proposal-loading-text {
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.proposal-replacing-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.proposal-replacing-text {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.proposal-sections-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.proposal-section-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.proposal-section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.proposal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.proposal-card {
+  padding: 1.5rem;
+  cursor: pointer;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 180px;
+}
+
+.proposal-card:hover,
+.glass-card.custom-rule-card:hover,
+.custom-rule-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(99, 102, 241, 0.4);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 0 20px rgba(99, 102, 241, 0.2);
+}
+
+.proposal-card.selected,
+.glass-card.custom-rule-card.selected,
+.custom-rule-card.selected {
+  border-color: var(--accent-primary) !important;
+  background: rgba(99, 102, 241, 0.12) !important;
+  box-shadow: 0 0 25px rgba(99, 102, 241, 0.35) !important;
+}
+
+.proposal-card.selected:hover,
+.glass-card.custom-rule-card.selected:hover,
+.custom-rule-card.selected:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent-primary) !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 0 25px rgba(99, 102, 241, 0.4) !important;
+}
+
+.proposal-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  gap: 0.5rem;
+}
+
+.proposal-card-pills {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.proposal-card-header .icon-btn.proposal-replace-btn,
+.proposal-replace-btn {
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  min-height: 34px;
+  max-width: 34px;
+  max-height: 34px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+}
+
+.proposal-card-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #fff;
+}
+
+.proposal-card.selected .proposal-card-title {
+  color: var(--accent-secondary);
+}
+
+.proposal-card-desc {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.proposal-select-indicator {
+  margin-top: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.proposal-card.selected .proposal-select-indicator {
+  color: var(--accent-primary);
+}
+
+.proposal-unselected-circle {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--border-color);
+}
+
+.glass-card.custom-rule-card,
+.custom-rule-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  padding: 0.9rem 1.25rem !important;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: text;
+}
+
+.custom-rule-card:focus-within {
+  border-color: var(--accent-primary) !important;
+  box-shadow: 0 0 25px rgba(99, 102, 241, 0.35) !important;
+}
+
+.custom-rule-input-wrapper {
+  flex: 1;
+  min-width: 200px;
+  cursor: text;
+  display: flex;
+  align-items: center;
+}
+
+input.custom-rule-input,
+.custom-rule-input {
+  width: 100%;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  color: #fff;
+  outline: none !important;
+  font-size: 1.05rem !important;
+  font-family: inherit;
+  cursor: text;
+}
+
+input.custom-rule-input::placeholder,
+.custom-rule-input::placeholder {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+}
+
+.custom-rule-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  user-select: none;
+  cursor: pointer;
+  color: var(--text-muted);
+}
+
+.custom-rule-card.selected .custom-rule-badge {
+  color: var(--accent-primary);
+}
+
+.proposal-unselected-circle.large {
+  width: 18px;
+  height: 18px;
+}
+
+/* Review Rule Card */
+.review-rule-card {
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  cursor: pointer;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.review-rule-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(245, 158, 11, 0.4);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 0 20px rgba(245, 158, 11, 0.2);
+}
+
+.review-rule-card.selected {
+  border-color: var(--accent-warning) !important;
+  background: rgba(245, 158, 11, 0.12) !important;
+  box-shadow: 0 0 25px rgba(245, 158, 11, 0.35) !important;
+}
+
+.review-rule-card.selected:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent-warning) !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 0 25px rgba(245, 158, 11, 0.4) !important;
+}
+
+.review-rule-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.review-rule-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.review-rule-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.review-rule-explanation {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.review-rule-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  color: var(--text-muted);
+  user-select: none;
+}
+
+.review-rule-card.selected .review-rule-badge {
+  color: var(--accent-warning);
+}
+
+/* Proposal Action Buttons */
+.proposal-action-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.proposal-btn {
+  padding: 0.8rem 1.5rem;
+  font-size: 1.05rem !important;
+}
+
+/* Responsive Media Queries */
+@media (max-width: 768px) {
+  .proposal-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .proposal-action-buttons {
+    flex-direction: column-reverse;
+    gap: 0.75rem;
+  }
+
+  .proposal-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

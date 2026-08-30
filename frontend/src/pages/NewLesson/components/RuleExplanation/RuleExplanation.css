@@ -1,0 +1,59 @@
+/* ========================================================= */
+/* Rule Explanation Component Styles                         */
+/* ========================================================= */
+
+.rule-explanation-card,
+.lesson-section-card {
+  margin: 0;
+}
+
+.rule-explanation-header,
+.lesson-section-header {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.rule-explanation-desc {
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+  white-space: pre-wrap;
+  line-height: 1.55;
+  font-size: 0.95rem;
+}
+
+.rule-example-card {
+  background: rgba(15, 23, 42, 0.5);
+  padding: 0.6rem 0.9rem;
+  border-radius: var(--radius-sm);
+  margin-bottom: 0.5rem;
+  border-left: 3px solid var(--accent-primary);
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.rule-example-target {
+  font-weight: 600;
+  color: #fff;
+}
+
+.rule-example-native {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+.rule-exceptions-callout {
+  font-size: 0.85rem;
+  color: var(--accent-warning);
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  margin-top: 0.85rem;
+  white-space: pre-wrap;
+  line-height: 1.45;
+}
