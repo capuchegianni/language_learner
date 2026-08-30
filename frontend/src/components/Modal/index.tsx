@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { X } from 'lucide-react';
+import { IconButton } from '../IconButton';
 import './Modal.css';
 
 export interface ModalProps {
@@ -73,15 +74,14 @@ export const Modal: React.FC<ModalProps> = ({
               {icon}
               <span>{title}</span>
             </h3>
-            <button
-              type="button"
-              className="app-modal-close-btn"
+            <IconButton
+              icon={<X />}
+              size={36}
+              iconSize={18}
               onClick={onClose}
               title="Close dialog"
               aria-label="Close dialog"
-            >
-              <X size={18} />
-            </button>
+            />
           </div>
         )}
 

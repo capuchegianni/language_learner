@@ -54,37 +54,6 @@
   color: var(--accent-danger);
 }
 
-.app-modal-close-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  min-width: 36px;
-  min-height: 36px;
-  padding: 0;
-  border-radius: var(--radius-sm);
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid var(--border-color);
-  color: #cbd5e1;
-  cursor: pointer;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  font-family: inherit;
-  flex-shrink: 0;
-}
-
-.app-modal-close-btn:hover {
-  background: rgba(239, 68, 68, 0.18);
-  border-color: rgba(239, 68, 68, 0.45);
-  color: #fca5a5;
-  transform: rotate(90deg);
-}
-
-.app-modal-close-btn:active {
-  transform: rotate(90deg) scale(0.95);
-}
 
 .app-modal-body {
   position: relative;
