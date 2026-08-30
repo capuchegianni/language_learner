@@ -1,0 +1,61 @@
+.filter-select-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1rem;
+  cursor: pointer;
+  user-select: none;
+  flex-shrink: 0;
+  width: fit-content;
+  border-radius: var(--radius-md);
+  position: relative;
+  transition: border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.filter-select-card:hover {
+  border-color: var(--border-color-glow);
+  box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.4), var(--shadow-glow);
+}
+
+.filter-select-card:focus-within {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+}
+
+.filter-select-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+select.filter-select-input {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  font-family: inherit;
+  padding: 0 0.25rem 0 0;
+  min-height: auto;
+  flex: 1;
+}
+
+select.filter-select-input:focus,
+select.filter-select-input:focus-visible {
+  outline: none;
+  border: none;
+  box-shadow: none;
+}
+
+select.filter-select-input option {
+  background: #1e293b;
+  color: #fff;
+  padding: 0.5rem;
+}
+
