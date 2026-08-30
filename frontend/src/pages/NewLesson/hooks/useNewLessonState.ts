@@ -40,7 +40,7 @@ export interface UseNewLessonStateReturn {
   handleGenerateLesson: () => Promise<void>;
   handleImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   clearImages: () => void;
-  handleSubmitExercises: (e: React.FormEvent) => Promise<void>;
+  handleSubmitExercises: (e: React.SubmitEvent) => Promise<void>;
   handleBackFromExercises: () => void;
 }
 
@@ -243,7 +243,7 @@ export function useNewLessonState(resumeLessonId?: string): UseNewLessonStateRet
   }, []);
 
   const handleSubmitExercises = useCallback(
-    async (e: React.FormEvent) => {
+    async (e: React.SubmitEvent) => {
       e.preventDefault();
       if (!currentLesson) return;
 

@@ -22,7 +22,7 @@ export interface UseWordBankReturn {
   openAddModal: () => void;
   openEditModal: (word: Word) => void;
   closeModal: () => void;
-  saveWord: (e: React.FormEvent) => Promise<void>;
+  saveWord: (e: React.SubmitEvent) => Promise<void>;
   deleteWord: (id: string) => Promise<void>;
   playAudio: (word: Word) => void;
   playingWordId: string | null;
@@ -124,7 +124,7 @@ export function useWordBank(): UseWordBankReturn {
   );
 
   const saveWord = useCallback(
-    async (e: React.FormEvent) => {
+    async (e: React.SubmitEvent) => {
       e.preventDefault();
       if (!formData.targetLanguage || !formData.nativeLanguage) return;
 
