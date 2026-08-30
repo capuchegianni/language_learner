@@ -1,6 +1,7 @@
 import React from 'react';
 import { Image as ImageIcon, Upload, Send, PenTool } from 'lucide-react';
 import { LessonContent } from '../../../../types';
+import { LoadingSpinner } from '../../../../components/LoadingSpinner';
 import './ExercisePhase.css';
 
 export interface ExercisePhaseProps {
@@ -217,10 +218,11 @@ export const ExercisePhase: React.FC<ExercisePhaseProps> = ({
           disabled={submitting}
         >
           {submitting ? (
-            <>
-              <div className="spinner" />
-              <span>Grading with AI Teacher...</span>
-            </>
+            <LoadingSpinner
+              variant="button"
+              size={18}
+              message="Grading with AI Teacher..."
+            />
           ) : (
             <>
               <Send size={18} />

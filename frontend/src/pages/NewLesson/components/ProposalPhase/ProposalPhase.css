@@ -28,66 +28,12 @@
   line-height: 1.5;
 }
 
-.word-count-selector {
+.proposal-word-count-filter {
   margin-top: 1rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-  background: rgba(15, 23, 42, 0.6);
-  padding: 0.5rem 1rem;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border-color);
-  cursor: pointer;
-  user-select: none;
-}
-
-.word-count-label {
-  font-size: 0.9rem;
-  font-weight: 500;
-  cursor: pointer;
-  color: #fff;
-}
-
-.word-count-select {
-  background: transparent;
-  color: #fff;
-  border: none;
-  font-size: 0.9rem;
-  font-weight: 700;
-  cursor: pointer;
-  outline: none;
-  box-shadow: none;
-  min-height: auto;
-  padding: 0.2rem 0.4rem;
-}
-
-.word-count-select:focus,
-.word-count-select:focus-visible {
-  outline: none !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-
-.word-count-select option {
-  background: #1e293b;
-  color: #fff;
 }
 
 .proposal-loading-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 3rem;
   margin-bottom: 2rem;
-}
-
-.proposal-loading-spinner {
-  margin-bottom: 1rem;
-}
-
-.proposal-loading-text {
-  color: var(--text-secondary);
-  margin: 0;
 }
 
 .proposal-replacing-state {
@@ -95,6 +41,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 0.75rem;
   height: 100%;
 }
 
@@ -142,7 +89,6 @@
 }
 
 .proposal-card:hover,
-.glass-card.custom-rule-card:hover,
 .custom-rule-card:hover {
   transform: translateY(-3px);
   border-color: rgba(99, 102, 241, 0.4);
@@ -150,19 +96,17 @@
 }
 
 .proposal-card.selected,
-.glass-card.custom-rule-card.selected,
 .custom-rule-card.selected {
-  border-color: var(--accent-primary) !important;
-  background: rgba(99, 102, 241, 0.12) !important;
-  box-shadow: 0 0 25px rgba(99, 102, 241, 0.35) !important;
+  border-color: var(--accent-primary);
+  background: rgba(99, 102, 241, 0.12);
+  box-shadow: 0 0 25px rgba(99, 102, 241, 0.35);
 }
 
 .proposal-card.selected:hover,
-.glass-card.custom-rule-card.selected:hover,
 .custom-rule-card.selected:hover {
   transform: translateY(-3px);
-  border-color: var(--accent-primary) !important;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 0 25px rgba(99, 102, 241, 0.4) !important;
+  border-color: var(--accent-primary);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 0 25px rgba(99, 102, 241, 0.4);
 }
 
 .proposal-card-header {
@@ -178,22 +122,6 @@
   align-items: center;
   gap: 0.5rem;
   flex-wrap: wrap;
-}
-
-.proposal-card-header .icon-btn.proposal-replace-btn,
-.proposal-replace-btn {
-  width: 34px;
-  height: 34px;
-  min-width: 34px;
-  min-height: 34px;
-  max-width: 34px;
-  max-height: 34px;
-  padding: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  border-radius: var(--radius-sm);
 }
 
 .proposal-card-title {
@@ -234,13 +162,12 @@
   border: 2px solid var(--border-color);
 }
 
-.glass-card.custom-rule-card,
 .custom-rule-card {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1.25rem;
-  padding: 0.9rem 1.25rem !important;
+  padding: 0.9rem 1.25rem;
   border: 1px solid var(--border-color);
   background: var(--bg-card);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -248,8 +175,8 @@
 }
 
 .custom-rule-card:focus-within {
-  border-color: var(--accent-primary) !important;
-  box-shadow: 0 0 25px rgba(99, 102, 241, 0.35) !important;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 25px rgba(99, 102, 241, 0.35);
 }
 
 .custom-rule-input-wrapper {
@@ -263,13 +190,13 @@
 input.custom-rule-input,
 .custom-rule-input {
   width: 100%;
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  padding: 0 !important;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
   color: #fff;
-  outline: none !important;
-  font-size: 1.05rem !important;
+  outline: none;
+  font-size: 1.05rem;
   font-family: inherit;
   cursor: text;
 }
@@ -321,15 +248,15 @@ input.custom-rule-input::placeholder,
 }
 
 .review-rule-card.selected {
-  border-color: var(--accent-warning) !important;
-  background: rgba(245, 158, 11, 0.12) !important;
-  box-shadow: 0 0 25px rgba(245, 158, 11, 0.35) !important;
+  border-color: var(--accent-warning);
+  background: rgba(245, 158, 11, 0.12);
+  box-shadow: 0 0 25px rgba(245, 158, 11, 0.35);
 }
 
 .review-rule-card.selected:hover {
   transform: translateY(-3px);
-  border-color: var(--accent-warning) !important;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 0 25px rgba(245, 158, 11, 0.4) !important;
+  border-color: var(--accent-warning);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 0 25px rgba(245, 158, 11, 0.4);
 }
 
 .review-rule-content {
@@ -383,7 +310,7 @@ input.custom-rule-input::placeholder,
 
 .proposal-btn {
   padding: 0.8rem 1.5rem;
-  font-size: 1.05rem !important;
+  font-size: 1.05rem;
 }
 
 /* Responsive Media Queries */

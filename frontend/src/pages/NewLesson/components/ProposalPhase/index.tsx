@@ -3,6 +3,9 @@ import { ProposedRule } from '../../../../types';
 import { RefreshCw, BookOpen, Sparkles, Check } from 'lucide-react';
 import { useLanguages } from '../../../../contexts/LanguageContext';
 import { Pill } from '../../../../components/Pill';
+import { FilterSelect } from '../../../../components/FilterSelect';
+import { IconButton } from '../../../../components/IconButton';
+import { LoadingSpinner } from '../../../../components/LoadingSpinner';
 import './ProposalPhase.css';
 
 export interface ProposalPhaseProps {
@@ -41,7 +44,6 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
   const { targetLanguage } = useLanguages();
   const [customRule, setCustomRule] = useState('');
   const customInputRef = useRef<HTMLInputElement>(null);
-  const selectRef = useRef<HTMLSelectElement>(null);
 
   const isCustomSelected =
     selectedRuleTitle !== '' &&
@@ -63,19 +65,6 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
     }
   };
 
-  const handleSelectorClick = () => {
-    if (selectRef.current) {
-      selectRef.current.focus();
-      if ('showPicker' in HTMLSelectElement.prototype) {
-        try {
-          selectRef.current.showPicker();
-        } catch {
-          // Fallback if browser requires direct user interaction
-        }
-      }
-    }
-  };
-
   return (
     <div id="tutorial-lesson-container" className={`proposal-phase-container ${className}`.trim()}>
       <div className="glass-card proposal-header-card">
@@ -87,33 +76,27 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
         </p>
 
         {/* Word Count Selector */}
-        <label
-          htmlFor="proposal-word-count-select"
-          className="word-count-selector"
-          onClick={handleSelectorClick}
-        >
-          <span className="word-count-label">Target New Words:</span>
-          <select
-            id="proposal-word-count-select"
-            ref={selectRef}
-            value={wordsCount}
-            onChange={(e) => setWordsCount(Number(e.target.value))}
-            className="word-count-select"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <option value={3}>3 Words</option>
-            <option value={5}>5 Words (Standard)</option>
-            <option value={7}>7 Words</option>
-            <option value={10}>10 Words</option>
-          </select>
-        </label>
+        <FilterSelect
+          id="proposal-word-count-select"
+          label="Target New Words:"
+          value={String(wordsCount)}
+          onChange={(val) => setWordsCount(Number(val))}
+          options={[
+            { value: '3', label: '3 Words' },
+            { value: '5', label: '5 Words (Standard)' },
+            { value: '7', label: '7 Words' },
+            { value: '10', label: '10 Words' },
+          ]}
+          className="proposal-word-count-filter"
+        />
       </div>
 
       {loadingProposals ? (
-        <div className="glass-card proposal-loading-card">
-          <div className="spinner proposal-loading-spinner" />
-          <p className="proposal-loading-text">AI is curating rule proposals based on your rule bank...</p>
-        </div>
+        <LoadingSpinner
+          variant="card"
+          className="proposal-loading-card"
+          message="AI is curating rule proposals based on your rule bank..."
+        />
       ) : (
         <div className="proposal-sections-container">
           <div className="proposal-section-group">
@@ -134,7 +117,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
                   >
                     {isReplacing ? (
                       <div className="proposal-replacing-state">
-                        <div className="spinner proposal-loading-spinner" />
+                        <LoadingSpinner size={24} variant="raw" />
                         <span className="proposal-replacing-text">Generating new proposal...</span>
                       </div>
                     ) : (
@@ -145,16 +128,13 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
                               <Pill variant="primary">{prop.category}</Pill>
                               <Pill variant="warning">{prop.difficulty}</Pill>
                             </div>
-                            <button
-                              type="button"
-                              className="icon-btn proposal-replace-btn"
+                            <IconButton
+                              icon={<RefreshCw />}
                               title="Replace this proposal"
                               aria-label={`Replace proposal: ${prop.title}`}
                               onClick={(e) => onReplaceProposal(idx, e)}
                               disabled={replacingIndex !== null}
-                            >
-                              <RefreshCw size={14} />
-                            </button>
+                            />
                           </div>
                           <h4 className="kr-text proposal-card-title">{prop.title}</h4>
                           <p className="proposal-card-desc">{prop.briefExplanation}</p>
@@ -258,10 +238,11 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
           onClick={onGenerateLesson}
         >
           {generatingLesson ? (
-            <>
-              <div className="spinner" />
-              <span>Generating Lesson...</span>
-            </>
+            <LoadingSpinner
+              variant="button"
+              size={18}
+              message="Generating Lesson..."
+            />
           ) : (
             <>
               <Sparkles size={20} />
