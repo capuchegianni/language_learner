@@ -35,7 +35,7 @@ export const RuleBank: React.FC = () => {
         actions={
           <button
             type="button"
-            className="btn btn-primary page-header-btn"
+            className="btn btn-primary"
             id="tutorial-rulebank-add-btn"
             onClick={openAddModal}
           >

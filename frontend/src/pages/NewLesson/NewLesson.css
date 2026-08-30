@@ -41,13 +41,3 @@
   flex-wrap: wrap;
 }
 
-/* Finish Lesson Action */
-.new-lesson-finish-container {
-  display: flex;
-  justify-content: center;
-  margin-top: 2rem;
-}
-
-.new-lesson-finish-btn {
-  padding: 0.75rem 2rem;
-}

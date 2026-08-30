@@ -2,13 +2,11 @@
 /* Rule Explanation Component Styles                         */
 /* ========================================================= */
 
-.rule-explanation-card,
-.lesson-section-card {
+.rule-explanation-card {
   margin: 0;
 }
 
-.rule-explanation-header,
-.lesson-section-header {
+.rule-explanation-header {
   font-size: 1.1rem;
   font-weight: 600;
   margin-bottom: 1rem;

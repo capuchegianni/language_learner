@@ -2,13 +2,11 @@
 /* Words Learned Component Styles                            */
 /* ========================================================= */
 
-.words-learned-card,
-.lesson-section-card {
+.words-learned-card {
   margin: 0;
 }
 
-.words-learned-header,
-.lesson-section-header {
+.words-learned-header {
   font-size: 1.1rem;
   font-weight: 600;
   margin-bottom: 1rem;

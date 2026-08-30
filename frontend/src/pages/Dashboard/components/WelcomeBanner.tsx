@@ -9,7 +9,7 @@ export const WelcomeBanner: React.FC = () => {
 
   return (
     <div
-      className="glass-card welcome-banner dashboard-welcome-banner"
+      className="glass-card welcome-banner"
       id="tutorial-welcome-banner"
     >
       <div className="welcome-banner-content">

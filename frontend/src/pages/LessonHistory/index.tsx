@@ -34,7 +34,7 @@ export const LessonHistory: React.FC = () => {
         actions={
           <button
             type="button"
-            className="btn btn-primary page-header-btn"
+            className="btn btn-primary"
             onClick={() => navigate('/lessons/new')}
           >
             <Sparkles size={18} />

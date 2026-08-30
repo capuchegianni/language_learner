@@ -46,7 +46,7 @@ export const WordBank: React.FC = () => {
         actions={
           <button
             type="button"
-            className="btn btn-primary page-header-btn"
+            className="btn btn-primary"
             id="tutorial-wordbank-add-btn"
             onClick={openAddModal}
           >
