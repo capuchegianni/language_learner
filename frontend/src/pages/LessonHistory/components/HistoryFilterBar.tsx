@@ -1,6 +1,5 @@
 import React from 'react';
-import { FilterInput } from '../../../components/FilterInput';
-import { FilterSelect } from '../../../components/FilterSelect';
+import { FilterBar, FilterInput, FilterSelect } from '../../../components';
 
 export interface HistoryFilterBarProps {
   search: string;
@@ -22,7 +21,7 @@ export const HistoryFilterBar: React.FC<HistoryFilterBarProps> = ({
   onFilterStatusChange,
 }) => {
   return (
-    <div className="filter-bar" id="tutorial-history-filter">
+    <FilterBar id="tutorial-history-filter">
       <FilterInput
         id="history-search-input"
         value={search}
@@ -37,6 +36,6 @@ export const HistoryFilterBar: React.FC<HistoryFilterBarProps> = ({
         options={STATUS_OPTIONS}
         allLabel="All Lessons"
       />
-    </div>
+    </FilterBar>
   );
 };

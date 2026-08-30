@@ -5,6 +5,7 @@
   padding: 1rem;
   cursor: text;
   flex: 1;
+  box-sizing: border-box;
   border-radius: var(--radius-md);
   transition: border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
               box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -52,3 +53,11 @@ input.filter-search-input::placeholder {
   font-size: 0.9rem;
   opacity: 0.85;
 }
+
+@media (max-width: 650px) {
+  .filter-search-card {
+    width: 100%;
+    min-width: 0;
+  }
+}
+

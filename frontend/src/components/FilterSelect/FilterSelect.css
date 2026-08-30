@@ -7,6 +7,7 @@
   user-select: none;
   flex-shrink: 0;
   width: fit-content;
+  box-sizing: border-box;
   border-radius: var(--radius-md);
   position: relative;
   transition: border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
@@ -58,4 +59,19 @@ select.filter-select-input option {
   color: #fff;
   padding: 0.5rem;
 }
+
+@media (max-width: 650px) {
+  .filter-select-card {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  select.filter-select-input {
+    flex: 1;
+    text-align: right;
+    text-align-last: right;
+  }
+}
+
 

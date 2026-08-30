@@ -4,6 +4,7 @@ export * from './LoadingSpinner';
 export * from './PageHeader';
 export * from './LessonCard';
 export * from './FilterSelect';
+export * from './FilterBar';
 export * from './CodeBlock';
 export * from './FilterInput';
 export * from './Navbar';
