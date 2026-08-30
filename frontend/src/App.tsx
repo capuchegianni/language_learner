@@ -1,17 +1,19 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { Navbar } from './components/Navbar';
-import { ProtectedRoute } from './components/ProtectedRoute';
-import { Dashboard } from './pages/Dashboard';
-import { NewLesson } from './pages/NewLesson/index';
-import { LessonDetail } from './pages/LessonDetail/index';
-import { LessonHistory } from './pages/LessonHistory';
-import { WordBank } from './pages/WordBank';
-import { RuleBank } from './pages/RuleBank';
-import { Settings } from './pages/Settings';
-import { Login } from './pages/Login';
+import { Navbar } from './components';
+import {
+  Dashboard,
+  LessonDetail,
+  LessonHistory,
+  Login,
+  NewLesson,
+  RuleBank,
+  Settings,
+  WordBank
+} from "./pages";
 import { useAuth } from './contexts/AuthContext';
-import { TutorialOverlay } from './components/Tutorial/TutorialOverlay';
+import { TutorialOverlay } from './components/Tutorial';
+import { ProtectedRoute } from './components/ProtectedRoute';
 
 export const App: React.FC = () => {
   const { user } = useAuth();
