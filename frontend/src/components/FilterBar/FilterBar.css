@@ -11,17 +11,4 @@
     flex-direction: column;
     gap: 0.75rem;
   }
-
-  .filter-bar .filter-select-card {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    box-sizing: border-box;
-  }
-
-  .filter-bar select.filter-select-input {
-    flex: 1;
-    text-align: right;
-    text-align-last: right;
-  }
 }

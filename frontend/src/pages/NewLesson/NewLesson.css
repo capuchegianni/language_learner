@@ -41,3 +41,16 @@
   flex-wrap: wrap;
 }
 
+/* Responsive Media Queries */
+@media (max-width: 650px) {
+  .new-lesson-tab-buttons {
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .new-lesson-tab-buttons .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+

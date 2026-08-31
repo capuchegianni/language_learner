@@ -64,14 +64,11 @@ select.filter-select-input option {
   .filter-select-card {
     display: flex;
     width: 100%;
-    justify-content: space-between;
+    justify-content: flex-start;
   }
 
   select.filter-select-input {
-    flex: 1;
-    text-align: right;
-    text-align-last: right;
+    text-align: left;
+    text-align-last: left;
   }
 }
-
-
