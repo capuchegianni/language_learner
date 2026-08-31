@@ -1,0 +1,51 @@
+.app-code-block-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.app-code-block-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.app-code-block-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+}
+
+.app-code-block-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.85rem;
+  line-height: 1.4;
+}
+
+.app-code-block-pre {
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+  font-family: 'Fira Code', monospace, monospace;
+  font-size: 0.85rem;
+  color: #e2e8f0;
+  white-space: pre-wrap;
+  word-break: break-all;
+  overflow-x: auto;
+  line-height: 1.5;
+  margin: 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+.app-code-block-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  padding: 0.35rem 0.8rem;
+}

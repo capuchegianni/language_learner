@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { useTutorial } from './TutorialContext';
 import { TargetRect } from './types';
+import './TutorialOverlay.css';
 
 export const TutorialOverlay: React.FC = () => {
   const {
