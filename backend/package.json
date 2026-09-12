@@ -31,7 +31,7 @@
     "class-validator": "0.15.1",
     "dotenv": "17.4.2",
     "express-session": "^1.18.1",
-    "multer": "2.2.0",
+    "multer": "2.3.0",
     "openai": "6.49.0",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
