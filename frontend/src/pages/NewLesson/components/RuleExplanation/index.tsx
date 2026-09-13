@@ -17,11 +17,24 @@ export const RuleExplanation: React.FC<RuleExplanationProps> = ({ lessonContent,
         <Scroll size={18} color="var(--accent-purple)" />
         <span>Rule Explanation</span>
       </h3>
-      <p className="rule-explanation-desc">{lessonContent.rule.explanation}</p>
+      <div className="rule-explanation-body">
+        {lessonContent.rule.explanation
+          ?.split(/\n\s*\n|(?=(?:^|\n)\s*\d+\.\s+)/)
+          .map((part) => part.trim())
+          .filter(Boolean)
+          .map((section, idx) => (
+            <p key={idx} className="rule-explanation-paragraph">
+              {section}
+            </p>
+          ))}
+      </div>
       {lessonContent.rule.examples?.map((ex, idx) => (
         <div key={idx} className="rule-example-card">
           <div className="kr-text rule-example-target">{ex.targetLanguage}</div>
           <div className="rule-example-native">{ex.nativeLanguage}</div>
+          {ex.explanation && (
+            <div className="rule-example-expl">{ex.explanation}</div>
+          )}
         </div>
       ))}
       {lessonContent.rule.exceptions && (
