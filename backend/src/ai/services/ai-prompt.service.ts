@@ -16,10 +16,10 @@ export class AiPromptService {
   ): string {
     return `Lesson architecture:
 - ${wordsCount} new daily words (MUST be words the student does NOT yet know — strictly NOT from the "List of known words" below)
-- daily rule with explanations, usage (examples), exceptions if any
+- daily rule: Provide a comprehensive, in-depth pedagogical lesson for this rule in ${nativeLanguage}. Include precise grammatical function, step-by-step formation and usage rules (such as conjugation patterns, stem/ending modifications, word order, agreement, or phonetic changes relevant to ${targetLanguage}), register/formality nuances, 3 to 4 varied illustrative examples with breakdowns, and common pitfalls or exceptions.
 - exercise 1: apply the rule on ${wordsCount} words (based on some of the new daily words + other words in the bank)
-- exercise 2: translate 3 sentences from ${nativeLanguage} to ${targetLanguage} that use the new rule and the new vocabulary (no literal translations, use proper ${nativeLanguage}, don't give the answer)
-- exercise 3: translate a text from ${nativeLanguage} to ${targetLanguage} (from 30 to 50 words) that is using some of the previous rules + the new one at least once and the new vocabulary + words from the bank. The text must have a meaning and small story between the sentences and it's not mandatory to use all tenses (no literal translations, use proper ${nativeLanguage}, don't give the answer)
+- exercise 2: translate 3 sentences from ${nativeLanguage} to ${targetLanguage} that use the new rule and the new vocabulary (no literal translations, use natural ${nativeLanguage}, don't give the answer)
+- exercise 3: translate a text from ${nativeLanguage} to ${targetLanguage} (from 30 to 50 words) that is using some of the previous rules + the new one at least once and the new vocabulary + words from the bank. The text must have a meaning and coherent mini-story between the sentences and it's not mandatory to use all tenses (no literal translations, use natural ${nativeLanguage}, don't give the answer)
 
 List of known words (DO NOT use any of these as new words): \`${knownWordsList.join(', ')}\`
 
@@ -63,7 +63,7 @@ Output strictly valid JSON with no extra markdown code block delimiters or text,
     nativeLanguage: string,
     targetLanguage: string,
   ): string {
-    return `You are a ${targetLanguage} language instructor AI. Respond strictly with valid JSON without markdown codeblock wrapper or outside commentary.
+    return `You are an expert ${targetLanguage} language professor and tutor. Respond strictly with valid JSON without markdown codeblock wrapper or outside commentary.
 If the requested rule or topic in the USER PROMPT is completely unrelated to learning ${targetLanguage}, nonsense, or inappropriate, return exactly this JSON:
 { "error": "This topic is invalid or unrelated to learning ${targetLanguage}. Please enter a valid grammar rule, vocabulary topic, or conversational phrase." }
 
@@ -71,12 +71,25 @@ Otherwise, follow this exact JSON structure:
 {
   "rule": {
     "title": "${ruleTitle}",
-    "explanation": "Clear explanation of rule usage and formation in ${nativeLanguage}",
+    "explanation": "Thorough, structured pedagogical explanation written in ${nativeLanguage}. Do not write a shallow 1-2 sentence summary. Separate each of the following sections with double newlines (\\\\n\\\\n) so the text breathes and is easily readable:\\n\\n1. Core Meaning & Function: What communicative purpose, grammatical relation, or nuance this pattern expresses in ${targetLanguage}.\\n\\n2. Formation & Structural Formula: Clear step-by-step construction rules showing how it is built or attached to words (e.g. verb/noun/adjective conjugation patterns, prefixes/suffixes, auxiliary particles, word order, or phonological/euphonic changes specific to ${targetLanguage}).\\n\\n3. Context & Register: When and where this form is appropriate (e.g. level of politeness, formal vs. colloquial, spoken vs. written discourse).\\n\\n4. Distinctions & Contrast: How it compares or contrasts with similar structures in ${targetLanguage} or common translation traps from ${nativeLanguage}.",
     "examples": [
-      { "targetLanguage": "example in ${targetLanguage}", "nativeLanguage": "translation in ${nativeLanguage}", "explanation": "optional explanation in ${nativeLanguage}" },
-      { "targetLanguage": "example in ${targetLanguage}", "nativeLanguage": "translation in ${nativeLanguage}" }
+      {
+        "targetLanguage": "Full natural example sentence in ${targetLanguage}",
+        "nativeLanguage": "Accurate, natural translation in ${nativeLanguage}",
+        "explanation": "Clear structural breakdown in ${nativeLanguage} (identifying the root word, endings/particles/auxiliaries applied, and the specific grammatical context)"
+      },
+      {
+        "targetLanguage": "Second contrasting example in ${targetLanguage} (demonstrating a different grammatical condition, stem ending, or context)",
+        "nativeLanguage": "Accurate, natural translation in ${nativeLanguage}",
+        "explanation": "Breakdown highlighting the specific morphological or syntactic variation used here in ${nativeLanguage}"
+      },
+      {
+        "targetLanguage": "Third practical, authentic everyday example in ${targetLanguage}",
+        "nativeLanguage": "Accurate, natural translation in ${nativeLanguage}",
+        "explanation": "Breakdown of the expression and nuance in ${nativeLanguage}"
+      }
     ],
-    "exceptions": "Exceptions or nuances if applicable, explained in ${nativeLanguage}"
+    "exceptions": "Important irregular forms, structural constraints (e.g. clause types, tense/aspect restrictions, compatible parts of speech), or frequent learner errors in ${targetLanguage} explained clearly in ${nativeLanguage}. If there are genuinely no irregular forms, explain common usage mistakes or subtle nuances to be careful of."
   },
   "newWords": [
     { "targetLanguage": "word in ${targetLanguage}", "nativeLanguage": "meaning in ${nativeLanguage}", "pronunciation": "romanized pronunciation", "partOfSpeech": "verb/noun" }

@@ -1,6 +1,7 @@
 export interface RuleExample {
   targetLanguage: string;
   nativeLanguage: string;
+  explanation?: string;
 }
 
 export interface RuleFormData {
