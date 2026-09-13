@@ -17,6 +17,13 @@ import * as path from 'path';
 import { LessonsService } from './lessons.service';
 import { AuthenticatedGuard } from '../auth/authenticated.guard';
 import { AuthenticatedRequest } from '../types/request';
+import {
+  GenerateLessonDto,
+  LessonQueryDto,
+  ReplaceProposalDto,
+  RuleProposalQueryDto,
+  SubmitLessonDto,
+} from './dto/lesson.dto';
 
 const uploadStorage = diskStorage({
   destination: './uploads',
@@ -27,10 +34,10 @@ const uploadStorage = diskStorage({
   },
 });
 
-@Controller('api/lessons')
+@Controller('lessons')
 @UseGuards(AuthenticatedGuard)
 export class LessonsController {
-  constructor(private lessonsService: LessonsService) {}
+  constructor(private readonly lessonsService: LessonsService) {}
 
   @Get('stats')
   async getStats(@Req() req: AuthenticatedRequest) {
@@ -41,29 +48,29 @@ export class LessonsController {
   @Get('propose-rules')
   async getRuleProposals(
     @Req() req: AuthenticatedRequest,
-    @Query('refresh') refresh?: string,
+    @Query() query: RuleProposalQueryDto,
   ) {
     const userId = req.user.id;
-    const forceRefresh = refresh === 'true';
+    const forceRefresh = query.refresh === 'true';
     return this.lessonsService.getRuleProposals(userId, { forceRefresh });
   }
 
   @Post('propose-rules/replace')
   async replaceProposal(
     @Req() req: AuthenticatedRequest,
-    @Body('index') index: number,
+    @Body() dto: ReplaceProposalDto,
   ) {
     const userId = req.user.id;
-    return this.lessonsService.replaceProposal(userId, Number(index) || 0);
+    return this.lessonsService.replaceProposal(userId, dto.index ?? 0);
   }
 
   @Post('generate')
   async generateLesson(
     @Req() req: AuthenticatedRequest,
-    @Body() body: { ruleTitle: string; wordsCount?: number; isReview?: boolean },
+    @Body() dto: GenerateLessonDto,
   ) {
     const userId = req.user.id;
-    return this.lessonsService.generateLesson(userId, body);
+    return this.lessonsService.generateLesson(userId, dto);
   }
 
   @Post(':id/submit')
@@ -76,22 +83,21 @@ export class LessonsController {
   async submitLesson(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
-    @Body() body: { ex1?: string; ex2?: string; ex3?: string },
+    @Body() dto: SubmitLessonDto,
     @UploadedFiles() files?: Array<Express.Multer.File>,
   ) {
     const userId = req.user.id;
     const imagePaths = files && files.length > 0 ? files.map((f) => f.path) : undefined;
-    return this.lessonsService.submitLesson(userId, id, body, imagePaths);
+    return this.lessonsService.submitLesson(userId, id, dto, imagePaths);
   }
 
   @Get()
   async getLessons(
     @Req() req: AuthenticatedRequest,
-    @Query('status') status?: string,
-    @Query('q') q?: string,
+    @Query() query: LessonQueryDto,
   ) {
     const userId = req.user.id;
-    return this.lessonsService.getLessons(userId, { status, q });
+    return this.lessonsService.getLessons(userId, query);
   }
 
   @Get(':id')

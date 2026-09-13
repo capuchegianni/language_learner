@@ -2,17 +2,18 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query, Req, UseGuards 
 import { VocabularyService } from './vocabulary.service';
 import { AuthenticatedGuard } from '../auth/authenticated.guard';
 import { AuthenticatedRequest } from '../types/request';
+import { CreateWordDto, UpdateWordDto, WordQueryDto } from './dto/word.dto';
 
-@Controller('api/vocabulary')
+@Controller('vocabulary')
 @UseGuards(AuthenticatedGuard)
 export class VocabularyController {
-  constructor(private vocabularyService: VocabularyService) {}
+  constructor(private readonly vocabularyService: VocabularyService) {}
 
   @Get()
-  async getWords(@Req() req: AuthenticatedRequest, @Query('q') q?: string) {
+  async getWords(@Req() req: AuthenticatedRequest, @Query() query: WordQueryDto) {
     const userId = req.user.id;
-    if (q) {
-      return this.vocabularyService.searchWords(userId, q);
+    if (query.q) {
+      return this.vocabularyService.searchWords(userId, query.q);
     }
     return this.vocabularyService.getAllWords(userId);
   }
@@ -20,20 +21,20 @@ export class VocabularyController {
   @Post()
   async createWord(
     @Req() req: AuthenticatedRequest,
-    @Body() body: { targetLanguage: string; nativeLanguage: string; pronunciation?: string; partOfSpeech?: string; notes?: string },
+    @Body() dto: CreateWordDto,
   ) {
     const userId = req.user.id;
-    return this.vocabularyService.createWord(userId, body);
+    return this.vocabularyService.createWord(userId, dto);
   }
 
   @Put(':id')
   async updateWord(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
-    @Body() body: { targetLanguage?: string; nativeLanguage?: string; pronunciation?: string; partOfSpeech?: string; notes?: string },
+    @Body() dto: UpdateWordDto,
   ) {
     const userId = req.user.id;
-    return this.vocabularyService.updateWord(userId, id, body);
+    return this.vocabularyService.updateWord(userId, id, dto);
   }
 
   @Delete(':id')

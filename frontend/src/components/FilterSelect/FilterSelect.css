@@ -1,0 +1,74 @@
+.filter-select-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.9rem 1.25rem;
+  cursor: pointer;
+  user-select: none;
+  flex-shrink: 0;
+  width: fit-content;
+  box-sizing: border-box;
+  border-radius: var(--radius-md);
+  position: relative;
+  min-height: 52px;
+  transition: border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.filter-select-card:hover {
+  border-color: var(--border-color-glow);
+  box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.4), var(--shadow-glow);
+}
+
+.filter-select-card:focus-within {
+  border-color: var(--accent-primary);
+  box-shadow: 0 8px 28px -4px rgba(0, 0, 0, 0.5), 0 0 25px rgba(99, 102, 241, 0.4);
+}
+
+.filter-select-label {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+select.filter-select-input,
+select.filter-select-input:hover,
+select.filter-select-input:focus,
+select.filter-select-input:focus-visible,
+select.filter-select-input:active {
+  background: transparent !important;
+  background-image: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  color: var(--text-primary);
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 0 0.25rem 0 0;
+  min-height: 28px;
+  height: 100%;
+  flex: 1;
+}
+
+select.filter-select-input option {
+  background: #1e293b;
+  color: #fff;
+  padding: 0.5rem;
+}
+
+@media (max-width: 650px) {
+  .filter-select-card {
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  select.filter-select-input {
+    text-align: left;
+    text-align-last: left;
+  }
+}

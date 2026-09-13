@@ -1,20 +1,49 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 import { api } from '../../services/api';
 import { Lesson, LessonContent, GradingResult } from '../../types';
-import { ArrowLeft, Check, Copy } from 'lucide-react';
-import { RuleExplanation } from '../../components/lesson/RuleExplanation';
-import { WordsLearned } from '../../components/lesson/WordsLearned';
-import { AIFeedbackDisplay } from '../../components/lesson/AIFeedbackDisplay';
+import { RuleExplanation } from '../NewLesson/components/RuleExplanation';
+import { WordsLearned } from '../NewLesson/components/WordsLearned';
+import { AIFeedbackDisplay } from '../NewLesson/components/AIFeedbackDisplay';
+import { LoadingSpinner } from '../../components/LoadingSpinner';
+import { EmptyState } from '../../components/EmptyState';
+import { CodeBlock } from '../../components/CodeBlock';
+import { Pill } from '../../components/Pill';
+import './LessonDetail.css';
 
-export const LessonDetail: React.FC = () => {
+export interface LessonDetailProps {
+  lesson?: Lesson | null;
+  feedbackTitle?: string;
+  showBackBtn?: boolean;
+  showFinishBtn?: boolean;
+  onFinish?: () => void;
+}
+
+export const LessonDetail: React.FC<LessonDetailProps> = ({
+  lesson: initialLesson,
+  feedbackTitle = 'AI Grading Results',
+  showBackBtn = true,
+  showFinishBtn = false,
+  onFinish,
+}) => {
   const { id: lessonId } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [lesson, setLesson] = useState<Lesson | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [copiedPrompt, setCopiedPrompt] = useState(false);
+  const [lesson, setLesson] = useState<Lesson | null>(initialLesson || null);
+  const [loading, setLoading] = useState<boolean>(!initialLesson && Boolean(lessonId));
 
   useEffect(() => {
+    if (initialLesson) {
+      setLesson(initialLesson);
+      setLoading(false);
+      return;
+    }
+
+    if (!lessonId) {
+      setLoading(false);
+      return;
+    }
+
     const fetchLesson = async () => {
       try {
         setLoading(true);
@@ -27,69 +56,85 @@ export const LessonDetail: React.FC = () => {
       }
     };
     fetchLesson();
-  }, [lessonId]);
+  }, [lessonId, initialLesson]);
 
-  if (!lessonId) {
+  if (!initialLesson && !lessonId) {
     return null;
   }
 
   if (loading) {
     return (
-      <div className="glass-card" style={{ display: 'flex', justifyContent: 'center', padding: '3rem' }}>
-        <div className="spinner" />
+      <div className="lesson-detail-container">
+        <LoadingSpinner variant="card" />
       </div>
     );
   }
 
   if (!lesson) {
     return (
-      <div className="glass-card" style={{ textAlign: 'center', padding: '2rem' }}>
-        <p>Lesson not found.</p>
-        <button className="btn btn-secondary" onClick={() => navigate(-1)} style={{ marginTop: '1rem' }}>
-          Back to Dashboard
-        </button>
+      <div className="lesson-detail-container">
+        <EmptyState
+          title="Lesson Not Found"
+          message="The requested lesson could not be loaded or has been deleted."
+          action={
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => navigate(-1)}
+            >
+              Back to Dashboard
+            </button>
+          }
+        />
       </div>
     );
   }
 
-  const lessonContent: LessonContent | null = lesson.lessonData ? JSON.parse(lesson.lessonData) : null;
-  const aiFeedback: GradingResult | null = lesson.aiFeedback ? JSON.parse(lesson.aiFeedback) : null;
-  const userSubmission: { ex1?: string; ex2?: string; ex3?: string } | null = lesson.userSubmission ? JSON.parse(lesson.userSubmission) : null;
-
-  const handleCopyPrompt = () => {
-    if (lesson.rawPrompt) {
-      navigator.clipboard.writeText(lesson.rawPrompt);
-      setCopiedPrompt(true);
-      setTimeout(() => setCopiedPrompt(false), 2500);
-    }
-  };
+  const lessonContent: LessonContent | null = lesson.lessonData
+    ? JSON.parse(lesson.lessonData)
+    : null;
+  const aiFeedback: GradingResult | null = lesson.aiFeedback
+    ? JSON.parse(lesson.aiFeedback)
+    : null;
+  const userSubmission: { ex1?: string; ex2?: string; ex3?: string } | null =
+    lesson.userSubmission ? JSON.parse(lesson.userSubmission) : null;
 
   return (
-    <div className="lesson-detail-container" style={{ maxWidth: '900px', margin: '0 auto' }}>
-      <button className="btn btn-secondary back-btn" onClick={() => navigate(-1)} style={{ marginBottom: '1.5rem' }}>
-        <ArrowLeft size={18} />
-        <span>Back</span>
-      </button>
+    <div className="lesson-detail-container">
+      {showBackBtn && (
+        <button
+          type="button"
+          className="btn btn-secondary back-btn"
+          onClick={() => navigate(-1)}
+        >
+          <ArrowLeft size={18} />
+          <span>Back</span>
+        </button>
+      )}
 
-      <div className="glass-card lesson-detail-header" style={{ marginBottom: '1.5rem' }}>
+      <div className="glass-card lesson-detail-header-card">
         <div className="lesson-detail-title-group">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem', flexWrap: 'wrap' }}>
+          <div className="lesson-detail-title-row">
             <h1 className="kr-text lesson-detail-title">
               {lesson.rule?.title || lesson.title}
             </h1>
-            {lesson.isReview && <span className="pill pill-warning">Review</span>}
+            {lesson.isReview && <Pill variant="warning">Review</Pill>}
           </div>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+          <p className="lesson-detail-meta">
             Completed on {new Date(lesson.createdAt).toLocaleDateString()} • {lesson.wordsCount} Target Words
           </p>
         </div>
 
         {lesson.overallScore !== null && lesson.overallScore !== undefined && (
           <div className="lesson-detail-score-box">
-            <div className="lesson-detail-score-value">
+            <div
+              className={`lesson-detail-score-value ${lesson.overallScore >= 80 ? 'high' : 'low'}`}
+            >
               {lesson.overallScore}%
             </div>
-            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Overall Score</div>
+            <div className="lesson-detail-score-label">
+              Overall Score
+            </div>
           </div>
         )}
       </div>
@@ -104,22 +149,31 @@ export const LessonDetail: React.FC = () => {
           gradingResult={aiFeedback}
           userSubmission={userSubmission}
           lessonContent={lessonContent}
+          title={feedbackTitle}
         />
       )}
 
       {/* Raw Prompt */}
       {lesson.rawPrompt && (
-        <div className="glass-card">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-            <h3 style={{ fontSize: '1rem', fontWeight: 600 }}>Raw Generated Prompt</h3>
-            <button className="btn btn-secondary" style={{ padding: '0.3rem 0.75rem', fontSize: '0.8rem' }} onClick={handleCopyPrompt}>
-              {copiedPrompt ? <Check size={14} /> : <Copy size={14} />}
-              <span>{copiedPrompt ? 'Copied' : 'Copy'}</span>
-            </button>
-          </div>
-          <pre className="code-block">{lesson.rawPrompt}</pre>
+        <CodeBlock
+          title="Raw Generated Prompt"
+          code={lesson.rawPrompt}
+        />
+      )}
+
+      {showFinishBtn && (
+        <div className="lesson-detail-finish-container">
+          <button
+            type="button"
+            className="btn btn-primary lesson-detail-finish-btn"
+            onClick={onFinish || (() => navigate('/'))}
+          >
+            Finish Lesson &amp; Return to Dashboard
+          </button>
         </div>
       )}
     </div>
   );
 };
+
+export default LessonDetail;

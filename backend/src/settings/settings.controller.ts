@@ -2,11 +2,12 @@ import { Body, Controller, Get, Post, Query, Req, UseGuards } from '@nestjs/comm
 import { SettingsService } from './settings.service';
 import { AuthenticatedGuard } from '../auth/authenticated.guard';
 import { AuthenticatedRequest } from '../types/request';
+import { ExportDataQueryDto, ImportPayload, ResetDataDto } from './dto/settings.dto';
 
-@Controller('api/settings')
+@Controller('settings')
 @UseGuards(AuthenticatedGuard)
 export class SettingsController {
-  constructor(private settingsService: SettingsService) {}
+  constructor(private readonly settingsService: SettingsService) {}
 
   @Get()
   async getSettings(@Req() req: AuthenticatedRequest) {
@@ -17,17 +18,14 @@ export class SettingsController {
   @Get('export')
   async exportData(
     @Req() req: AuthenticatedRequest,
-    @Query('settings') settings?: string,
-    @Query('words') words?: string,
-    @Query('rules') rules?: string,
-    @Query('lessons') lessons?: string,
+    @Query() query: ExportDataQueryDto,
   ) {
     const userId = req.user.id;
     return this.settingsService.exportData(userId, {
-      settings: settings === 'true',
-      words: words === 'true',
-      rules: rules === 'true',
-      lessons: lessons === 'true',
+      settings: query.settings === 'true',
+      words: query.words === 'true',
+      rules: query.rules === 'true',
+      lessons: query.lessons === 'true',
     });
   }
 
@@ -38,7 +36,7 @@ export class SettingsController {
   }
 
   @Post('import')
-  async importData(@Req() req: AuthenticatedRequest, @Body() body: any) {
+  async importData(@Req() req: AuthenticatedRequest, @Body() body: ImportPayload) {
     const userId = req.user.id;
     return this.settingsService.importData(userId, body);
   }
@@ -46,10 +44,9 @@ export class SettingsController {
   @Post('reset')
   async resetData(
     @Req() req: AuthenticatedRequest,
-    @Body() body: { settings?: boolean; words?: boolean; rules?: boolean; lessons?: boolean },
+    @Body() body: ResetDataDto,
   ) {
     const userId = req.user.id;
     return this.settingsService.resetData(userId, body || {});
   }
 }
-

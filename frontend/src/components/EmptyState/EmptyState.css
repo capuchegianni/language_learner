@@ -1,0 +1,43 @@
+.app-empty-state {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  color: var(--text-secondary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.app-empty-state-icon {
+  margin-bottom: 1rem;
+  color: var(--text-muted);
+  opacity: 0.6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.app-empty-state:hover .app-empty-state-icon {
+  transform: scale(1.05);
+  opacity: 0.85;
+}
+
+.app-empty-state-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.app-empty-state-message {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+.app-empty-state-action {
+  margin-top: 1.5rem;
+}

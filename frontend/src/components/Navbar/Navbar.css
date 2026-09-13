@@ -1,0 +1,227 @@
+/* ========================================================= */
+/* Navigation Bar Styles                                     */
+/* ========================================================= */
+
+.navbar {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  background: var(--bg-glass);
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  padding: 0.85rem 1.5rem;
+  padding-left: max(1.5rem, env(safe-area-inset-left));
+  padding-right: max(1.5rem, env(safe-area-inset-right));
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+/* When mobile menu is open, make navbar blend into dark backdrop filter */
+.navbar.menu-open {
+  background: transparent;
+  border-bottom-color: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.navbar-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.logo-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-decoration: none;
+  user-select: none;
+}
+
+.logo-badge {
+  background: var(--gradient-main);
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  box-shadow: var(--shadow-glow);
+}
+
+.logo-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.logo-subtitle {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+/* Mobile Nav Toggle Button */
+.nav-mobile-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 1002;
+  font-family: inherit;
+  padding: 0;
+}
+
+.nav-mobile-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--accent-primary);
+}
+
+.nav-mobile-toggle:active {
+  transform: scale(0.95);
+}
+
+/* Nav Links Container (Desktop) */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.nav-links a {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-main);
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.nav-links a:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.nav-links a.active {
+  color: #fff;
+  background: var(--accent-primary);
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+}
+
+/* Mobile Nav Backdrop Overlay (Full-screen dark filter across the entire page) */
+.nav-backdrop {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 999;
+  animation: fadeIn 0.2s ease;
+  cursor: pointer;
+}
+
+/* Mobile & Tablet Dropdown Card Menu (Screen 1 Style) */
+@media (max-width: 1040px) {
+  .nav-mobile-toggle {
+    display: flex;
+    position: relative;
+    z-index: 1002;
+  }
+
+  .logo-brand {
+    position: relative;
+    z-index: 1002;
+  }
+
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: calc(100% + 0.65rem);
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.35rem;
+    background: rgba(15, 23, 42, 0.98);
+    backdrop-filter: blur(32px);
+    -webkit-backdrop-filter: blur(32px);
+    border: 1px solid var(--border-color-glow);
+    border-radius: var(--radius-lg);
+    padding: 0.75rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9),
+                0 0 35px rgba(99, 102, 241, 0.25);
+    z-index: 1002;
+    transform: none;
+    width: auto;
+    max-width: none;
+    height: auto;
+    overflow-y: visible;
+  }
+
+  .nav-links.open {
+    display: flex;
+    animation: navSlideDown 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .nav-links a {
+    padding: 0.75rem 1rem;
+    min-height: 46px;
+    font-size: 1rem;
+    border-radius: var(--radius-md);
+    gap: 0.75rem;
+  }
+
+  .nav-links a.active {
+    background: var(--accent-primary);
+    color: #fff;
+  }
+}
+
+@keyframes navSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

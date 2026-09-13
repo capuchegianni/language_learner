@@ -15,7 +15,7 @@ import { AuthModule } from './auth/auth.module';
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '../.env' }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'uploads'),
-      serveRoot: '/uploads',
+      serveRoot: '/api/uploads',
     }),
     PrismaModule,
     AuthModule,
