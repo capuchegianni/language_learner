@@ -48,7 +48,7 @@ export const NewLesson: React.FC = () => {
     handleReplaceProposal,
     handleGenerateLesson,
     handleImageChange,
-    clearImages,
+    removeImage,
     handleSubmitExercises,
     handleBackFromExercises,
   } = useNewLessonState(resumeLessonId);
@@ -120,7 +120,7 @@ export const NewLesson: React.FC = () => {
               imageFiles={imageFiles}
               imagePreviews={imagePreviews}
               handleImageChange={handleImageChange}
-              clearImages={clearImages}
+              onRemoveImage={removeImage}
               submitting={submitting}
               onSubmit={handleSubmitExercises}
               onBack={handleBackFromExercises}
