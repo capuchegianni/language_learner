@@ -1,5 +1,6 @@
 services:
   backend:
+    image: ghcr.io/capuchegianni/language_learner_backend:latest
     build:
       context: .
       dockerfile: ./Dockerfile.backend
@@ -20,21 +21,6 @@ services:
     volumes:
       - ./backend/data:/app/data
       - uploads_data:/app/uploads
-
-  frontend:
-    build:
-      context: .
-      dockerfile: ./Dockerfile.frontend
-    container_name: language_learner_frontend
-    restart: always
-    ports:
-      - "80:80"
-      - "5173:80"
-    env_file: .env
-    environment:
-      - VITE_BACKEND_URL=${VITE_BACKEND_URL}
-    depends_on:
-      - backend
 
   cloudflared:
     image: cloudflare/cloudflared:latest
