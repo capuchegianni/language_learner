@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - feature/auto-deploy-backend
     paths:
       - 'backend/**'
       - 'Dockerfile.backend'
