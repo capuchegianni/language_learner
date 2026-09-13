@@ -101,6 +101,9 @@ importers:
       '@types/node':
         specifier: 22.10.10
         version: 22.10.10
+      '@types/passport':
+        specifier: ^1.0.17
+        version: 1.0.17
       '@types/passport-google-oauth20':
         specifier: ^2.0.16
         version: 2.0.17
