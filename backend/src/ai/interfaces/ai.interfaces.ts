@@ -22,6 +22,7 @@ export interface LessonContent {
     instruction: string;
     targetWords: string[];
     sampleWords: string[];
+    type?: string;
   };
   exercise2: {
     instruction: string;
