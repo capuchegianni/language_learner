@@ -59,9 +59,6 @@ export class LessonQueriesService {
   async getDashboardStats(userId: string) {
     const totalWords = await this.prisma.word.count({ where: { userId } });
     const totalRules = await this.prisma.rule.count({ where: { userId } });
-    const totalLessons = await this.prisma.lesson.count({
-      where: { userId, status: 'GRADED' },
-    });
 
     const recentLessons = await this.prisma.lesson.findMany({
       where: { userId },
@@ -70,12 +67,25 @@ export class LessonQueriesService {
       include: { rule: true },
     });
 
-    const scores = recentLessons
-      .map((l) => l.overallScore)
-      .filter((score): score is number => typeof score === 'number');
-    const avgScore = scores.length
-      ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length)
-      : 0;
+    const gradedStats = await this.prisma.lesson.aggregate({
+      where: {
+        userId,
+        status: 'GRADED',
+      },
+      _count: {
+        _all: true,
+      },
+      _avg: {
+        overallScore: true,
+      },
+    });
+
+    const totalLessons = gradedStats._count._all;
+    const avgScore =
+      gradedStats._avg.overallScore !== null &&
+      gradedStats._avg.overallScore !== undefined
+        ? Math.round(gradedStats._avg.overallScore)
+        : 0;
 
     return {
       totalWords,
