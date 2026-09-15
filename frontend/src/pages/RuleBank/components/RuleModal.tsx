@@ -78,7 +78,7 @@ export const RuleModal: React.FC<RuleModalProps> = ({
           />
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '1rem' }}>
+        <div className="app-modal-footer">
           <button type="button" className="btn btn-secondary" onClick={onClose}>
             Cancel
           </button>

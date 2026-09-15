@@ -24,15 +24,12 @@ export const QuickLearningHub: React.FC = () => {
         }}
       >
         <div className="quick-hub-card-content">
-          <div
-            className="quick-hub-icon"
-            style={{ background: 'rgba(99, 102, 241, 0.2)', color: 'var(--accent-primary)' }}
-          >
+          <div className="quick-hub-icon quick-hub-icon-primary">
             <Sparkles size={24} />
           </div>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 600 }}>Generate Daily Lesson</h3>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+          <div className="quick-hub-text">
+            <h3 className="quick-hub-title">Generate Daily Lesson</h3>
+            <p className="quick-hub-desc">
               Get 3 AI rule proposals or start a spaced review session.
             </p>
           </div>
@@ -55,15 +52,12 @@ export const QuickLearningHub: React.FC = () => {
         }}
       >
         <div className="quick-hub-card-content">
-          <div
-            className="quick-hub-icon"
-            style={{ background: 'rgba(6, 182, 212, 0.2)', color: 'var(--accent-secondary)' }}
-          >
+          <div className="quick-hub-icon quick-hub-icon-secondary">
             <BookOpen size={24} />
           </div>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 600 }}>Manage Vocabulary Bank</h3>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+          <div className="quick-hub-text">
+            <h3 className="quick-hub-title">Manage Vocabulary Bank</h3>
+            <p className="quick-hub-desc">
               View, search, or add custom {targetLanguage} words &amp; meanings.
             </p>
           </div>
@@ -86,15 +80,12 @@ export const QuickLearningHub: React.FC = () => {
         }}
       >
         <div className="quick-hub-card-content">
-          <div
-            className="quick-hub-icon"
-            style={{ background: 'rgba(168, 85, 247, 0.2)', color: 'var(--accent-purple)' }}
-          >
+          <div className="quick-hub-icon quick-hub-icon-purple">
             <Scroll size={24} />
           </div>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 600 }}>Browse Grammar Rule Bank</h3>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+          <div className="quick-hub-text">
+            <h3 className="quick-hub-title">Browse Grammar Rule Bank</h3>
+            <p className="quick-hub-desc">
               Review all previously mastered rules and sentence patterns.
             </p>
           </div>

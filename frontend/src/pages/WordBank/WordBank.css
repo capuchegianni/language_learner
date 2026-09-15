@@ -102,6 +102,10 @@
   align-items: center;
 }
 
+.word-form-notes-label label {
+  margin: 0;
+}
+
 .word-form-notes-counter {
   font-size: 0.8rem;
 }

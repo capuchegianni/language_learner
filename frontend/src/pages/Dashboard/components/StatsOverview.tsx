@@ -36,7 +36,7 @@ export const StatsOverview: React.FC<StatsOverviewProps> = ({ stats, loading }) 
         aria-label="View Mastered Rules"
         title="Go to Rule Bank"
       >
-        <div className="stat-icon" style={{ color: 'var(--accent-purple)' }}>
+        <div className="stat-icon stat-icon-purple">
           <Scroll size={24} />
         </div>
         <div>
@@ -52,7 +52,7 @@ export const StatsOverview: React.FC<StatsOverviewProps> = ({ stats, loading }) 
         aria-label="View Completed Lessons"
         title="Go to History (Graded Lessons)"
       >
-        <div className="stat-icon" style={{ color: 'var(--accent-success)' }}>
+        <div className="stat-icon stat-icon-success">
           <CheckCircle2 size={24} />
         </div>
         <div>
@@ -62,7 +62,7 @@ export const StatsOverview: React.FC<StatsOverviewProps> = ({ stats, loading }) 
       </button>
 
       <div className="glass-card stat-card">
-        <div className="stat-icon" style={{ color: 'var(--accent-warning)' }}>
+        <div className="stat-icon stat-icon-warning">
           <Award size={24} />
         </div>
         <div>

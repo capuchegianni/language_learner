@@ -89,7 +89,7 @@ export const WordModal: React.FC<WordModalProps> = ({
 
         <div className="input-group">
           <div className="word-form-notes-label">
-            <label htmlFor="word-notes-input" style={{ margin: 0 }}>
+            <label htmlFor="word-notes-input">
               Notes / Context
             </label>
             <span
@@ -107,7 +107,7 @@ export const WordModal: React.FC<WordModalProps> = ({
           />
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '1rem' }}>
+        <div className="app-modal-footer">
           <button type="button" className="btn btn-secondary" onClick={onClose}>
             Cancel
           </button>

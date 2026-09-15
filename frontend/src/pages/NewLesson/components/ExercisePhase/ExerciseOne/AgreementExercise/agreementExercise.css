@@ -40,3 +40,10 @@
   color: #38bdf8;
   border: 1px solid rgba(56, 189, 248, 0.25);
 }
+
+.ex1-agreement-arrow {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--accent-secondary);
+}
+

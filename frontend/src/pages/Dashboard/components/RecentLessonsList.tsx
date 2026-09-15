@@ -82,15 +82,12 @@ export const RecentLessonsList: React.FC<RecentLessonsListProps> = ({
           }}
         >
           <div className="quick-hub-card-content">
-            <div
-              className="quick-hub-icon"
-              style={{ background: 'rgba(234, 179, 8, 0.2)', color: 'var(--accent-warning)' }}
-            >
+            <div className="quick-hub-icon quick-hub-icon-warning">
               <History size={24} />
             </div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <h3 style={{ fontSize: '1.1rem', fontWeight: 600 }}>View All Past Lessons</h3>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+            <div className="quick-hub-text">
+              <h3 className="quick-hub-title">View All Past Lessons</h3>
+              <p className="quick-hub-desc">
                 Browse full history, scores, submissions, and detailed feedback.
               </p>
             </div>

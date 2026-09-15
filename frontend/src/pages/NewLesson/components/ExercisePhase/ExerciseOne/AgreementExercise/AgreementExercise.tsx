@@ -42,8 +42,7 @@ export const AgreementExercise: React.FC<ExerciseOneComponentProps> = ({
               <div className="ex1-agreement-prompt-row">
                 <ArrowRight
                   size={16}
-                  color="var(--accent-secondary)"
-                  style={{ flexShrink: 0, marginTop: '2px' }}
+                  className="ex1-agreement-arrow"
                 />
                 <span className="ex1-agreement-base-word kr-text">{baseWord}</span>
                 {condition && (

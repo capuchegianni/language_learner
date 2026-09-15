@@ -23,7 +23,7 @@ export const SentenceTransformationExercise: React.FC<ExerciseOneComponentProps>
         {targetWords.map((sentence, idx) => (
           <div key={idx} className="ex1-sentence-trans-card">
             <div className="ex1-original-sentence-box">
-              <ArrowRight size={16} color="var(--accent-secondary)" style={{ flexShrink: 0, marginTop: '2px' }} />
+              <ArrowRight size={16} className="ex1-trans-arrow" />
               <div className="ex1-original-sentence-text kr-text">
                 {sentence}
               </div>

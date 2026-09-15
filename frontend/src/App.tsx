@@ -37,7 +37,7 @@ export const App: React.FC = () => {
       </main>
 
       {user && (
-        <footer style={{ borderTop: '1px solid var(--border-color)', padding: '1.5rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+        <footer className="app-footer">
           Created by Gianni H using Vite and React.
         </footer>
       )}

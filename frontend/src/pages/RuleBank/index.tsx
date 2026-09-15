@@ -29,7 +29,7 @@ export const RuleBank: React.FC = () => {
     <div className="rulebank-container">
       <PageHeader
         id="tutorial-rulebank-header"
-        icon={<Scroll style={{ color: 'var(--accent-purple)' }} />}
+        icon={<Scroll className="text-accent-purple" />}
         title="Mastered Grammar Rule Bank"
         subtitle={`A comprehensive index of all ${targetLanguage} grammar rules learned in lessons. Total: ${rules.length} rules.`}
         actions={

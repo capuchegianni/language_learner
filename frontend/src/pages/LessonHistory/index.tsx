@@ -28,7 +28,7 @@ export const LessonHistory: React.FC = () => {
     <div className="history-container">
       <PageHeader
         id="tutorial-history-header"
-        icon={<History style={{ color: 'var(--accent-primary)' }} />}
+        icon={<History className="text-accent-primary" />}
         title="Lesson History"
         subtitle={`All past generated, submitted, and graded ${targetLanguage} lessons. Total: ${lessons.length} lesson${lessons.length !== 1 ? 's' : ''}.`}
         actions={

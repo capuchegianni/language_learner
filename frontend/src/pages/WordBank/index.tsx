@@ -40,7 +40,7 @@ export const WordBank: React.FC = () => {
     <div className="wordbank-container">
       <PageHeader
         id="tutorial-wordbank-header"
-        icon={<BookOpen style={{ color: 'var(--accent-secondary)' }} />}
+        icon={<BookOpen className="text-accent-secondary" />}
         title={`${targetLanguage} Word Bank`}
         subtitle={`All learned vocabulary automatically tracked from lessons or added manually. Total: ${words.length} words.`}
         actions={

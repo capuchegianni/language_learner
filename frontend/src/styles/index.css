@@ -88,6 +88,39 @@ input, select, textarea {
   padding-bottom: max(2.5rem, calc(1.5rem + env(safe-area-inset-bottom)));
 }
 
+.app-footer {
+  border-top: 1px solid var(--border-color);
+  padding: 1.5rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+/* Text Accent Color Utilities */
+.text-accent-primary {
+  color: var(--accent-primary);
+}
+
+.text-accent-secondary {
+  color: var(--accent-secondary);
+}
+
+.text-accent-purple {
+  color: var(--accent-purple);
+}
+
+.text-accent-success {
+  color: var(--accent-success);
+}
+
+.text-accent-warning {
+  color: var(--accent-warning);
+}
+
+.text-accent-danger {
+  color: var(--accent-danger);
+}
+
 /* Glass Card */
 .glass-card {
   background: var(--bg-card);
