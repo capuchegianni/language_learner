@@ -207,7 +207,11 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
                     <Pill variant="warning">Review Mode</Pill>
                     <h4 className="kr-text review-rule-title">{reviewRule.title}</h4>
                   </div>
-                  <p className="review-rule-explanation">{reviewRule.explanation}</p>
+                  <p className="review-rule-explanation">
+                    {reviewRule.explanation.length > 100
+                      ? `${reviewRule.explanation.slice(0, 120)}...`
+                      : reviewRule.explanation}
+                  </p>
                 </div>
                 <div className="review-rule-badge">
                   {isReviewSelection ? <Check size={18} /> : <BookOpen size={18} />}

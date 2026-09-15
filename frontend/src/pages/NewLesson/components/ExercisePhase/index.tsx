@@ -2,6 +2,7 @@ import React from 'react';
 import { Image as ImageIcon, Upload, Send, PenTool, X } from 'lucide-react';
 import { LessonContent } from '../../../../types';
 import { LoadingSpinner } from '../../../../components/LoadingSpinner';
+import { ExerciseOneDispatcher } from './ExerciseOne/ExerciseOneDispatcher';
 import './ExercisePhase.css';
 
 export interface ExercisePhaseProps {
@@ -43,49 +44,28 @@ export const ExercisePhase: React.FC<ExercisePhaseProps> = ({
     <form onSubmit={onSubmit} className={`exercise-phase-form ${className}`.trim()}>
       <div className="glass-card exercise-phase-card">
         <h3 className="exercise-phase-header">
-          <PenTool size={18} color="var(--accent-primary)" />
+          <PenTool size={16} color="var(--accent-primary)" />
           <span>Interactive Exercise Worksheet</span>
         </h3>
 
-        {/* Exercise 1: Form Sentences using Rule & Words */}
+        {/* Exercise 1: Dynamic Archetype Rendering */}
         {lessonContent.exercise1 && (
           <div className="exercise-group">
             <h4 className="exercise-group-title">
               Part 1: Practice Rule Patterns
             </h4>
-            <p className="exercise-group-desc">
-              {lessonContent.exercise1.instruction}
-              {lessonContent.exercise1.targetWords &&
-                lessonContent.exercise1.targetWords.length > 0 && (
-                  <span>
-                    {' '}
-                    (Target words:{' '}
-                    <strong className="kr-text exercise-target-words-highlight">
-                      {lessonContent.exercise1.targetWords.join(', ')}
-                    </strong>
-                    )
-                  </span>
-                )}
-            </p>
-
-            <div className="exercise-rows-container">
-              {lessonContent.exercise1.targetWords?.map((word, idx) => (
-                <div key={idx} className="exercise-input-row">
-                  <span className="kr-text exercise-target-word">{word}:</span>
-                  <input
-                    type="text"
-                    placeholder={`Write a sentence using ${word}...`}
-                    value={ex1Answers[idx] || ''}
-                    onChange={(e) => {
-                      const updated = [...ex1Answers];
-                      updated[idx] = e.target.value;
-                      setEx1Answers(updated);
-                    }}
-                    className="exercise-text-input"
-                  />
-                </div>
-              ))}
-            </div>
+            <ExerciseOneDispatcher
+              instruction={lessonContent.exercise1.instruction}
+              targetWords={lessonContent.exercise1.targetWords || []}
+              type={lessonContent.exercise1.type}
+              subjectPronouns={lessonContent.exercise1.subjectPronouns}
+              answers={ex1Answers}
+              onAnswerChange={(idx, val) => {
+                const updated = [...ex1Answers];
+                updated[idx] = val;
+                setEx1Answers(updated);
+              }}
+            />
           </div>
         )}
 

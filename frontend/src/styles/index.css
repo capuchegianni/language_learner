@@ -315,6 +315,19 @@ textarea {
   -webkit-overflow-scrolling: touch;
 }
 
+@media (max-width: 412px) {
+  .main-content {
+    padding: 1.4rem 1rem;
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+    padding-bottom: max(2rem, calc(1rem + env(safe-area-inset-bottom)));
+  }
+
+  .glass-card {
+    padding: 1rem;
+  }
+}
+
 /* Accessibility: High-contrast mode support */
 @media (forced-colors: active) {
   .btn-primary,

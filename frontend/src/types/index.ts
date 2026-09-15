@@ -52,6 +52,8 @@ export interface LessonContent {
     instruction: string;
     targetWords: string[];
     sampleWords?: string[];
+    type?: string;
+    subjectPronouns?: string[];
   };
   exercise2: {
     instruction: string;

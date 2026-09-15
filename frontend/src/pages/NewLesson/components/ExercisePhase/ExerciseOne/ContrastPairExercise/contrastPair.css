@@ -1,0 +1,80 @@
+/* ========================================================= */
+/* ContrastPairExercise — Inline Dropdown Contrast Styles    */
+/* ========================================================= */
+
+.ex1-contrast-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.ex1-contrast-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Sentence with inline select */
+.ex1-contrast-sentence {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin: 0;
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+.ex1-contrast-select {
+  font-size: inherit;
+  font-family: inherit;
+  font-weight: 700;
+  color: var(--accent-primary);
+  background: rgba(99, 102, 241, 0.1);
+  border: none;
+  border-bottom: 2px solid var(--accent-primary);
+  border-radius: 4px 4px 0 0;
+  padding: 0.1rem 1.6rem 0.1rem 0.45rem;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236366f1' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.35rem center;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  vertical-align: baseline;
+}
+
+.ex1-contrast-select:hover {
+  background-color: rgba(99, 102, 241, 0.18);
+}
+
+.ex1-contrast-select:focus {
+  border-color: var(--accent-secondary);
+  background-color: rgba(99, 102, 241, 0.15);
+  box-shadow: 0 2px 0 0 var(--accent-secondary);
+}
+
+.ex1-contrast-select option {
+  background: var(--bg-card, #1e293b);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+@media (max-width: 650px) {
+  .ex1-contrast-sentence {
+    font-size: 0.88rem;
+    gap: 0.15rem;
+    line-height: 1.55;
+  }
+
+  .ex1-contrast-select {
+    font-size: 0.88rem;
+    padding: 0.08rem 1.4rem 0.08rem 0.35rem;
+    background-size: 10px 10px;
+    background-position: right 0.25rem center;
+  }
+}
