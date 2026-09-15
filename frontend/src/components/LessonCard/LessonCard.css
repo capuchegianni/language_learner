@@ -68,7 +68,7 @@
   flex-shrink: 0;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 650px) {
   .app-lesson-card {
     flex-direction: column;
     align-items: flex-start;

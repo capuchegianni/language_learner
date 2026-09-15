@@ -48,14 +48,14 @@
 }
 
 /* Responsive Media Queries */
-@media (max-width: 960px) {
+@media (max-width: 1040px) {
   .words-learned-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 650px) {
   .words-learned-grid {
     display: grid;
     grid-template-columns: 1fr;

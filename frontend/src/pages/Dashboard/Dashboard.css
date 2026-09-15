@@ -218,7 +218,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1040px) {
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.85rem;

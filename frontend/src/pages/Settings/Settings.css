@@ -604,7 +604,7 @@
 }
 
 /* Responsive Media Queries */
-@media (max-width: 768px) {
+@media (max-width: 650px) {
   .settings-language-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
