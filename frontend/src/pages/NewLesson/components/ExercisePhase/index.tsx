@@ -44,7 +44,7 @@ export const ExercisePhase: React.FC<ExercisePhaseProps> = ({
     <form onSubmit={onSubmit} className={`exercise-phase-form ${className}`.trim()}>
       <div className="glass-card exercise-phase-card">
         <h3 className="exercise-phase-header">
-          <PenTool size={18} color="var(--accent-primary)" />
+          <PenTool size={16} color="var(--accent-primary)" />
           <span>Interactive Exercise Worksheet</span>
         </h3>
 

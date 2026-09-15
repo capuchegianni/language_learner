@@ -13,10 +13,17 @@ export const RuleExplanation: React.FC<RuleExplanationProps> = ({ lessonContent,
 
   return (
     <div className={`glass-card rule-explanation-card ${className}`.trim()}>
-      <h3 className="rule-explanation-header">
-        <Scroll size={18} color="var(--accent-purple)" />
-        <span>Rule Explanation</span>
-      </h3>
+      <div className="rule-explanation-header-wrapper">
+        <div className="rule-explanation-badge-row">
+          <Scroll size={16} color="var(--accent-purple)" />
+          <span>Rule Explanation</span>
+        </div>
+        {lessonContent.rule.title && (
+          <h2 className="rule-explanation-title kr-text">
+            {lessonContent.rule.title}
+          </h2>
+        )}
+      </div>
       <div className="rule-explanation-body">
         {lessonContent.rule.explanation
           ?.split(/\n\s*\n|(?=(?:^|\n)\s*\d+\.\s+)/)

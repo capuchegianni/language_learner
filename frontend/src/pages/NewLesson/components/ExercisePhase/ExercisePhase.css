@@ -12,16 +12,25 @@
 }
 
 .exercise-phase-header {
-  font-size: 1.1rem;
+  font-size: 0.85rem;
   font-weight: 600;
-  margin-bottom: 1.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent-primary, #6366f1);
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  margin-bottom: 0.35rem;
 }
 
 .exercise-group {
-  margin-bottom: 2.5rem;
+  margin-bottom: 0;
+}
+
+.exercise-group + .exercise-group {
+  margin-top: 2.25rem;
+  padding-top: 2.25rem;
+  border-top: 1px solid var(--border-color);
 }
 
 .exercise-target-words-highlight {
@@ -83,8 +92,8 @@
 
 .vision-upload-section {
   border-top: 1px solid var(--border-color);
-  padding-top: 1.25rem;
-  margin-top: 1.5rem;
+  padding-top: 2.25rem;
+  margin-top: 2.25rem;
 }
 
 .vision-upload-label {
