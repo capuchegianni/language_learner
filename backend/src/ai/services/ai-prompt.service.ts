@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { LessonContent } from '../interfaces/ai.interfaces';
-import { formatExercise1CatalogForPrompt } from '../constants/exercise-one.constant';
+import { formatExerciseOneMatrix } from '../constants/exercise-one-matrix.constant';
 
 @Injectable()
 export class AiPromptService {
@@ -15,18 +15,14 @@ export class AiPromptService {
     nativeLanguage: string,
     targetLanguage: string,
   ): string {
-    return `Lesson architecture:
-- ${wordsCount} new daily words (MUST be words the student does NOT yet know — strictly NOT from the "List of known words" below)
-- daily rule: Provide a comprehensive, in-depth pedagogical lesson for this rule in ${nativeLanguage}. Include precise grammatical function, step-by-step formation and usage rules (such as conjugation patterns, stem/ending modifications, word order, agreement, or phonetic changes relevant to ${targetLanguage}), register/formality nuances, 3 to 4 varied illustrative examples with breakdowns, and common pitfalls or exceptions.
-- exercise 1: Select the most pedagogically appropriate exercise archetype from the Exercise 1 Catalog based on "${ruleTitle}" and ${targetLanguage} characteristics (e.g. full subject conjugation for person-varying verb tenses, stem/affix inflection for agglutinative or non-person patterns, particle attachment, agreement, sentence transformation, etc.).
-- exercise 2: translate 3 sentences from ${nativeLanguage} to ${targetLanguage} that use the new rule and the new vocabulary (no literal translations, use natural ${nativeLanguage}, don't give the answer)
-- exercise 3: translate a text from ${nativeLanguage} to ${targetLanguage} (from 30 to 50 words) that is using some of the previous rules + the new one at least once and the new vocabulary + words from the bank. The text must have a meaning and coherent mini-story between the sentences and it's not mandatory to use all tenses (no literal translations, use natural ${nativeLanguage}, don't give the answer)
+    return `Target Rule: "${ruleTitle}"
+New words to introduce: ${wordsCount} (strictly NOT from the known words list below)
+Native Language: ${nativeLanguage}
+Target Language: ${targetLanguage}
 
-List of known words (DO NOT use any of these as new words): \`${knownWordsList.join(', ')}\`
+List of known words (DO NOT reuse): \`${knownWordsList.join(', ')}\`
 
-List of known rules: \`${knownRulesList.join(', ')}\`
-
-Today's rule -> "${ruleTitle}"`;
+List of known rules already learned: \`${knownRulesList.join(', ')}\``;
   }
 
   /**
@@ -64,23 +60,25 @@ Output strictly valid JSON with no extra markdown code block delimiters or text,
     nativeLanguage: string,
     targetLanguage: string,
   ): string {
-    const exercise1CatalogJson = formatExercise1CatalogForPrompt();
+    const exercise1MatrixText = formatExerciseOneMatrix(
+      targetLanguage,
+      nativeLanguage,
+    );
     return `You are an expert ${targetLanguage} language professor and tutor. Respond strictly with valid JSON without markdown codeblock wrapper or outside commentary.
 If the requested rule or topic in the USER PROMPT is completely unrelated to learning ${targetLanguage}, nonsense, or inappropriate, return exactly this JSON:
 { "error": "This topic is invalid or unrelated to learning ${targetLanguage}. Please enter a valid grammar rule, vocabulary topic, or conversational phrase." }
 
 Otherwise, generate a comprehensive lesson.
 
-### EXERCISE 1 SELECTION CATALOG:
-Review the following list of available Exercise 1 archetypes. You must select the ONE template that yields the highest pedagogical value for "${ruleTitle}" in ${targetLanguage}:
-${exercise1CatalogJson}
+### EXERCISE 1 PEDAGOGICAL DECISION MATRIX:
+Review the following archetypes grouped by pedagogical category. You must select the ONE archetype that yields the highest communicative and pedagogical value for "${ruleTitle}" in ${targetLanguage}:
+${exercise1MatrixText}
 
 Exercise 1 Selection Principles:
-1. Examine "${ruleTitle}" and ${targetLanguage}, and select the ONE archetype from the Exercise 1 Catalog whose "applicability" best matches this rule.
-2. Set "type" to the selected archetype id.
-3. Formulate the "instruction" STRICTLY in the student's native language (${nativeLanguage}). Note: While the examples in the Exercise 1 Catalog above are written in English for demonstration purposes, your output "instruction" for exercise1 MUST be written completely and naturally in ${nativeLanguage}, clearly explaining the exact format the student should write.
-4. Populate "targetWords" with the appropriate items matching the chosen archetype's "itemCount" and "targetWordsFormat", drawn from the new daily words and/or known word bank.
-5. In "sampleWords", mirror the "targetWords" array.
+1. Matrix Evaluation: Evaluate "${ruleTitle}" and ${targetLanguage} against the "When to use" and "Do NOT use when" criteria of each category in the Matrix above. Select the ONE archetype whose pedagogical objective matches this lesson's exact grammatical or communicative nature.
+2. Lexical & Pedagogical Integrity: The exercise must adapt to the lesson, never the reverse. NEVER distort, truncate, or hallucinate words (e.g. converting non-verbs into verbs or stripping reflexive markers) to force-fit an archetype.
+3. Instruction Language: Formulate the "instruction" for exercise 1 STRICTLY in natural, fluent ${nativeLanguage}, clearly explaining the exact format the student should write.
+4. Target Words: Populate "targetWords" matching the chosen archetype's count and format, drawn from the new daily words and/or known word bank. Mirror them in "sampleWords".
 
 Follow this exact JSON structure:
 {
@@ -115,7 +113,7 @@ Follow this exact JSON structure:
     "instruction": "Pedagogical prompt in ${nativeLanguage} tailored to the chosen exercise type and rule",
     "targetWords": ["item1", "item2", "item3"],
     "sampleWords": ["item1", "item2", "item3"],
-    "subjectPronouns": ["pronoun1", "pronoun2", "..."] // REQUIRED when type is "subject_conjugation"
+    "subjectPronouns": ["pronoun1", "pronoun2", "..."] // ONLY include when type is "subject_conjugation", omit otherwise
   },
   "exercise2": {
     "instruction": "Translate 3 sentences from ${nativeLanguage} to ${targetLanguage} (do NOT give answers)",
