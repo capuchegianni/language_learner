@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { createPortal } from 'react-dom';
 import { NavLink, useLocation } from 'react-router-dom';
 import {
   Sparkles,
@@ -23,6 +22,18 @@ export const Navbar: React.FC = () => {
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [location.pathname]);
+
+  // Prevent background scrolling when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileMenuOpen]);
 
   // Close on Escape key press
   useEffect(() => {
@@ -65,104 +76,109 @@ export const Navbar: React.FC = () => {
     setMobileMenuOpen(false);
   };
 
+  const closeMenu = () => setMobileMenuOpen(false);
+
   return (
-    <>
-      <nav className={`navbar ${mobileMenuOpen ? 'menu-open' : ''}`}>
-        <div className="navbar-container">
+    <nav className={`navbar ${mobileMenuOpen ? 'menu-open' : ''}`}>
+      {/* Mobile Backdrop Overlay - Placed inside navbar to guarantee correct stacking layer below navbar items */}
+      {mobileMenuOpen && (
+        <div
+          className="nav-backdrop"
+          onClick={handleBackdropDismiss}
+          onTouchEnd={handleBackdropDismiss}
+          aria-hidden="true"
+        />
+      )}
+
+      <div className="navbar-container">
+        <NavLink
+          to="/"
+          className="logo-brand"
+          onClick={closeMenu}
+        >
+          <div className="logo-badge">🌍</div>
+          <div>
+            <div className="logo-title">Language Learner</div>
+            <div className="logo-subtitle">
+              AI Language Tutor &amp; Progress Storage
+            </div>
+          </div>
+        </NavLink>
+
+        {/* Mobile Hamburger Toggle Button */}
+        <button
+          ref={toggleBtnRef}
+          type="button"
+          className="nav-mobile-toggle"
+          onClick={() => setMobileMenuOpen((prev) => !prev)}
+          aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+          aria-expanded={mobileMenuOpen}
+        >
+          {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+
+        {/* Nav Links Container */}
+        <div
+          ref={menuRef}
+          className={`nav-links ${mobileMenuOpen ? 'open' : ''}`}
+        >
           <NavLink
             to="/"
-            className="logo-brand"
-            style={{ cursor: 'pointer', textDecoration: 'none', color: 'inherit' }}
-            onClick={() => setMobileMenuOpen(false)}
+            end
+            className={({ isActive }) => (isActive ? 'active' : '')}
+            onClick={closeMenu}
           >
-            <div className="logo-badge">🌍</div>
-            <div>
-              <div className="logo-title">Language Learner</div>
-              <div className="logo-subtitle">
-                AI Language Tutor &amp; Progress Storage
-              </div>
-            </div>
+            <LayoutDashboard size={18} />
+            <span>Dashboard</span>
           </NavLink>
 
-          {/* Mobile Hamburger Toggle Button */}
-          <button
-            ref={toggleBtnRef}
-            type="button"
-            className="nav-mobile-toggle"
-            onClick={() => setMobileMenuOpen((prev) => !prev)}
-            aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
-            aria-expanded={mobileMenuOpen}
+          <NavLink
+            to="/lessons/new"
+            className={({ isActive }) => (isActive ? 'active' : '')}
+            onClick={closeMenu}
           >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+            <Sparkles size={18} />
+            <span>New Lesson</span>
+          </NavLink>
 
-          {/* Nav Links Container */}
-          <div
-            ref={menuRef}
-            className={`nav-links ${mobileMenuOpen ? 'open' : ''}`}
+          <NavLink
+            to="/history"
+            className={({ isActive }) => (isActive ? 'active' : '')}
+            onClick={closeMenu}
           >
-            <NavLink to="/" end className={({ isActive }) => (isActive ? 'active' : '')}>
-              <LayoutDashboard size={18} />
-              <span>Dashboard</span>
-            </NavLink>
+            <History size={18} />
+            <span>History</span>
+          </NavLink>
 
-            <NavLink
-              to="/lessons/new"
-              className={({ isActive }) => (isActive ? 'active' : '')}
-            >
-              <Sparkles size={18} />
-              <span>New Lesson</span>
-            </NavLink>
+          <NavLink
+            to="/words"
+            className={({ isActive }) => (isActive ? 'active' : '')}
+            onClick={closeMenu}
+          >
+            <BookOpen size={18} />
+            <span>Word Bank</span>
+          </NavLink>
 
-            <NavLink
-              to="/history"
-              className={({ isActive }) => (isActive ? 'active' : '')}
-            >
-              <History size={18} />
-              <span>History</span>
-            </NavLink>
+          <NavLink
+            to="/rules"
+            className={({ isActive }) => (isActive ? 'active' : '')}
+            onClick={closeMenu}
+          >
+            <Scroll size={18} />
+            <span>Rule Bank</span>
+          </NavLink>
 
-            <NavLink
-              to="/words"
-              className={({ isActive }) => (isActive ? 'active' : '')}
-            >
-              <BookOpen size={18} />
-              <span>Word Bank</span>
-            </NavLink>
-
-            <NavLink
-              to="/rules"
-              className={({ isActive }) => (isActive ? 'active' : '')}
-            >
-              <Scroll size={18} />
-              <span>Rule Bank</span>
-            </NavLink>
-
-            <NavLink
-              to="/settings"
-              className={({ isActive }) => (isActive ? 'active' : '')}
-            >
-              <SettingsIcon size={18} />
-              <span>Settings</span>
-            </NavLink>
-          </div>
+          <NavLink
+            to="/settings"
+            className={({ isActive }) => (isActive ? 'active' : '')}
+            onClick={closeMenu}
+          >
+            <SettingsIcon size={18} />
+            <span>Settings</span>
+          </NavLink>
         </div>
-      </nav>
-
-      {/* Mobile Backdrop Overlay - Portaled to document.body to apply full dark filter over whole page */}
-      {mobileMenuOpen &&
-        typeof document !== 'undefined' &&
-        createPortal(
-          <div
-            className="nav-backdrop"
-            onClick={handleBackdropDismiss}
-            onTouchEnd={handleBackdropDismiss}
-            onPointerDown={handleBackdropDismiss}
-            aria-hidden="true"
-          />,
-          document.body
-        )}
-    </>
+      </div>
+    </nav>
   );
 };
 

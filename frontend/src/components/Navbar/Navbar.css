@@ -31,6 +31,7 @@
   align-items: center;
   justify-content: space-between;
   position: relative;
+  z-index: 2;
 }
 
 .logo-brand {
@@ -41,6 +42,9 @@
   color: var(--text-primary);
   text-decoration: none;
   user-select: none;
+  cursor: pointer;
+  position: relative;
+  z-index: 3;
 }
 
 .logo-badge {
@@ -84,7 +88,7 @@
   min-height: 44px;
   cursor: pointer;
   transition: all 0.2s ease;
-  z-index: 1002;
+  z-index: 3;
   font-family: inherit;
   padding: 0;
 }
@@ -144,7 +148,7 @@
   background: rgba(0, 0, 0, 0.75);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  z-index: 999;
+  z-index: 1;
   animation: fadeIn 0.2s ease;
   cursor: pointer;
 }
@@ -154,12 +158,12 @@
   .nav-mobile-toggle {
     display: flex;
     position: relative;
-    z-index: 1002;
+    z-index: 3;
   }
 
   .logo-brand {
     position: relative;
-    z-index: 1002;
+    z-index: 3;
   }
 
   .nav-links {
@@ -179,7 +183,7 @@
     padding: 0.75rem;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9),
                 0 0 35px rgba(99, 102, 241, 0.25);
-    z-index: 1002;
+    z-index: 3;
     transform: none;
     width: auto;
     max-width: none;
