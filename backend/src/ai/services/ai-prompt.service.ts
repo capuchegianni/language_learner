@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { LessonContent } from '../interfaces/ai.interfaces';
-import { formatExercise1CatalogForPrompt } from '../constants/exercise1-templates.constant';
+import { formatExercise1CatalogForPrompt } from '../constants/exercise-one.constant';
 
 @Injectable()
 export class AiPromptService {
@@ -86,7 +86,7 @@ Follow this exact JSON structure:
 {
   "rule": {
     "title": "${ruleTitle}",
-    "explanation": "Thorough, structured pedagogical explanation written in ${nativeLanguage}. Do not write a shallow 1-2 sentence summary. Separate each of the following sections with double newlines (\\\\n\\\\n) so the text breathes and is easily readable:\\n\\n1. Core Meaning & Function: What communicative purpose, grammatical relation, or nuance this pattern expresses in ${targetLanguage}.\\n\\n2. Formation & Structural Formula: Clear step-by-step construction rules showing how it is built or attached to words (e.g. verb/noun/adjective conjugation patterns, prefixes/suffixes, auxiliary particles, word order, or phonological/euphonic changes specific to ${targetLanguage}).\\n\\n3. Context & Register: When and where this form is appropriate (e.g. level of politeness, formal vs. colloquial, spoken vs. written discourse).\\n\\n4. Distinctions & Contrast: How it compares or contrasts with similar structures in ${targetLanguage} or common translation traps from ${nativeLanguage}.",
+    "explanation": "Thorough, structured pedagogical explanation written in ${nativeLanguage}. Do not write a shallow 1-2 sentence summary. Separate each of the following sections with double newlines (\\\\n\\\\n) so the text breathes and is easily readable:\\n\\n1. Core Meaning & Function: What communicative purpose, grammatical relation, or nuance this pattern expresses in ${targetLanguage}.\\n\\n2. Formation & Structural Formula: Clear step-by-step construction rules showing how it is built or attached to words (e.g. verb/noun/adjective conjugation patterns, prefixes/suffixes, auxiliary particles, word order, or phonological/euphonic changes specific to ${targetLanguage}).\\n\\n3. Context & Register: When and where this form is appropriate (e.g. level of politeness, formal vs. colloquial, spoken vs. written discourse).",
     "examples": [
       {
         "targetLanguage": "Full natural example sentence in ${targetLanguage}",
@@ -114,7 +114,8 @@ Follow this exact JSON structure:
     "type": "chosen_archetype_id",
     "instruction": "Pedagogical prompt in ${nativeLanguage} tailored to the chosen exercise type and rule",
     "targetWords": ["item1", "item2", "item3"],
-    "sampleWords": ["item1", "item2", "item3"]
+    "sampleWords": ["item1", "item2", "item3"],
+    "subjectPronouns": ["pronoun1", "pronoun2", "..."] // REQUIRED when type is "subject_conjugation"
   },
   "exercise2": {
     "instruction": "Translate 3 sentences from ${nativeLanguage} to ${targetLanguage} (do NOT give answers)",

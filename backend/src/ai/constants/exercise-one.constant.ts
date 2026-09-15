@@ -9,6 +9,7 @@ export interface Exercise1Template {
   example: {
     instruction: string;
     targetWords: string[];
+    subjectPronouns?: string[];
   };
 }
 
@@ -22,13 +23,14 @@ export const EXERCISE1_TEMPLATES: Exercise1Template[] = [
     instructionTemplate:
       "Conjugate each of the following 3 verbs in {targetLanguage} for all subject pronouns (e.g. for French: je, tu, il/elle/on, nous, vous, ils/elles; for Spanish: yo, tú, él/ella, nosotros, vosotros, ellos) according to the '{rule_title}' rule:",
     targetWordsFormat:
-      'Array of 3 infinitive verbs selected from the new daily words and/or word bank',
+      'Array of 3 infinitive verbs in {targetLanguage} selected from the new daily words and/or word bank',
     expectedStudentResponse:
-      "For each verb, the student writes out the conjugation for all subjects separated by commas (e.g. 'je parle, tu parles, il parle, nous parlons, vous parlez, ils parlent')",
+      "For each verb, the student writes out the conjugation for all subjects in {targetLanguage} separated by commas (e.g. 'je parle, tu parles, il parle, nous parlons, vous parlez, ils parlent')",
     example: {
       instruction:
-        'Conjugate each of the following 3 verbs in the present tense for all subject pronouns (je, tu, il/elle/on, nous, vous, ils/elles):',
+        'Conjugate each of the following 3 verbs in the present tense for all subject pronouns:',
       targetWords: ['parler', 'manger', 'regarder'],
+      subjectPronouns: ['je', 'tu', 'il/elle/on', 'nous', 'vous', 'ils/elles'],
     },
   },
   {
@@ -40,9 +42,9 @@ export const EXERCISE1_TEMPLATES: Exercise1Template[] = [
     instructionTemplate:
       "Apply the '{rule_title}' pattern to each of the following 5 base words in {targetLanguage}, respecting stem vowel harmony, batchim (final consonant) rules, and irregular contractions:",
     targetWordsFormat:
-      'Array of 5 base verbs/adjectives selected from the new daily words and/or word bank',
+      'Array of 5 base verbs/adjectives in {targetLanguage} selected from the new daily words and/or word bank',
     expectedStudentResponse:
-      "For each base word, the student writes the transformed word or minimal verbal phrase (e.g. '가다 -> 가요', '먹다 -> 먹어요')",
+      "For each base word in {targetLanguage}, the student writes the transformed word or minimal verbal phrase in {targetLanguage} (e.g. '가다 -> 가요', '먹다 -> 먹어요')",
     example: {
       instruction:
         "Apply the '{rule_title}' rule to each of the following 5 base words, reflecting proper stem changes and vowel harmony:",
@@ -53,14 +55,14 @@ export const EXERCISE1_TEMPLATES: Exercise1Template[] = [
     id: 'particle_case_attachment',
     name: 'Particle, Preposition & Case Marker Attachment',
     applicability:
-      'Best suited for rules introducing grammatical particles, postpositions, prepositions, or noun case declensions (e.g. Korean particles -은/는, -이/가, -을/를, -에/에서, -(으)로; Japanese particles は, が, を, に, で; German dative/accusative prepositions; Russian case endings).',
+      'Best suited for rules introducing grammatical particles, postpositions, prepositions, or noun case declensions (e.g. Korean particles; Japanese particles; German dative/accusative prepositions; Russian case endings).',
     itemCount: 5,
     instructionTemplate:
       "Attach the appropriate particle, preposition, or case ending of '{rule_title}' to each of the following 5 words, paying attention to phonetic harmony (consonant vs. vowel ending) or case agreement:",
     targetWordsFormat:
-      'Array of 5 nouns or pronouns selected from the new daily words and/or word bank',
+      'Array of 5 nouns or pronouns in {targetLanguage} selected from the new daily words and/or word bank',
     expectedStudentResponse:
-      "For each word, the student writes the word with the correct particle attached or the preposed preposition + inflected noun (e.g. '사과 -> 사과를', '책 -> 책을')",
+      "For each word in {targetLanguage}, the student writes the word with the correct particle attached or the preposed preposition + inflected noun in {targetLanguage} (e.g. '사과 -> 사과를', '책 -> 책을')",
     example: {
       instruction:
         "Attach the appropriate '{rule_title}' particle to each of the following 5 nouns according to final consonant rules:",
@@ -72,21 +74,21 @@ export const EXERCISE1_TEMPLATES: Exercise1Template[] = [
     name: 'Gender & Number Agreement Inflection',
     applicability:
       'Best suited for rules covering grammatical gender (masculine/feminine/neuter) and number (singular/plural) agreement for adjectives, nouns, participles, or articles (e.g. French, Spanish, Italian, German, Russian, etc.).',
-    itemCount: 4,
+    itemCount: 5,
     instructionTemplate:
-      "Inflect each of the following 4 base words to agree with the indicated gender, number, and case conditions according to the '{rule_title}' rule:",
+      "Inflect each of the following 5 base words to agree with the indicated gender, number, and case conditions according to the '{rule_title}' rule:",
     targetWordsFormat:
-      "Array of 4 prompts pairing a base word with target agreement conditions (e.g. ['grand (fem. pl.)', 'nouveau (fem. sg.)', 'heureux (fem. sg.)', 'beau (masc. pl.)'])",
+      "Array of 5 prompts pairing a base word in {nativeLanguage} with target agreement conditions described in {nativeLanguage} (e.g. ['tall (feminine plural)', 'new (feminine singular)', 'happy (feminine singular)', 'beautiful (masculine plural)'])",
     expectedStudentResponse:
-      "For each prompt, the student writes the correctly inflected form (e.g. 'grand (fem. pl.) -> grandes')",
+      "For each prompt, the student writes the correctly inflected form in {targetLanguage} (e.g. 'tall (feminine plural) -> grandes')",
     example: {
       instruction:
         'Agree each of the following adjectives in gender and number according to the specified condition:',
       targetWords: [
-        'grand (féminin pluriel)',
-        'nouveau (féminin singulier)',
-        'heureux (féminin singulier)',
-        'beau (masculin pluriel devant consonne)',
+        'tall (feminine plural)',
+        'new (feminine singular)',
+        'happy (feminine singular)',
+        'beautiful (masculine plural)',
       ],
     },
   },
@@ -94,14 +96,14 @@ export const EXERCISE1_TEMPLATES: Exercise1Template[] = [
     id: 'sentence_transformation',
     name: 'Sentence Structure & Polarity Transformation',
     applicability:
-      "Best suited for rules modifying sentence polarity, modality, voice, or register — such as negation (French 'ne... pas', German 'nicht/kein', English 'do not', Korean 안/-지 않다), question inversion, honorific speech level shifts, or passive/causative conversions.",
+      "Best suited for rules modifying sentence polarity, modality, voice, or register — such as negation, question inversion, honorific speech level shifts, or passive/causative conversions.",
     itemCount: 3,
     instructionTemplate:
       "Transform each of the following 3 sentences in {targetLanguage} using the '{rule_title}' pattern (e.g. turn affirmative into negative, or casual into formal):",
     targetWordsFormat:
-      'Array of 3 simple sentences using the new daily words or word bank',
+      'Array of 3 simple sentences in {targetLanguage} using the new daily words or word bank',
     expectedStudentResponse:
-      'For each sentence, the student writes the transformed sentence applying the target structure accurately',
+      'For each sentence in {targetLanguage}, the student writes the transformed sentence in {targetLanguage} applying the target structure accurately',
     example: {
       instruction:
         "Transform each of the following 3 sentences into the negative form using 'ne ... pas', applying elision rules where necessary:",
@@ -121,9 +123,9 @@ export const EXERCISE1_TEMPLATES: Exercise1Template[] = [
     instructionTemplate:
       "Combine each of the following 3 pairs of clauses into a single coherent sentence in {targetLanguage} using the connector '{rule_title}', adjusting word order or verb forms where required:",
     targetWordsFormat:
-      "Array of 3 pairs of short clauses separated by ' / ' (e.g. ['Clause A / Clause B'])",
+      "Array of 3 pairs of short clauses in {targetLanguage} separated by ' / ' (e.g. ['Clause A / Clause B'])",
     expectedStudentResponse:
-      'For each pair, the student writes the merged compound or complex sentence with the connector',
+      'For each pair, the student writes the merged compound or complex sentence in {targetLanguage} with the connector',
     example: {
       instruction:
         "Connect each pair of clauses into a single coherent sentence using '{rule_title}', applying appropriate word order:",
@@ -143,17 +145,17 @@ export const EXERCISE1_TEMPLATES: Exercise1Template[] = [
     instructionTemplate:
       "Complete each of the following 4 sentence frames in {targetLanguage} by conjugating or inserting the specified target word according to the '{rule_title}' rule:",
     targetWordsFormat:
-      "Array of 4 sentence frames with a blank ('___') and a prompt verb/word in parentheses (e.g. ['Je ___ au cinéma ce soir. (vouloir)'])",
+      "Array of 4 sentence frames where the sentence itself is in {targetLanguage} with a blank ('___'), and the hint word in parentheses is the {nativeLanguage} translation of the word to insert (e.g. ['Je ___ au cinéma ce soir. (to go)', 'Nous ___ nos devoirs. (to do)'])",
     expectedStudentResponse:
-      'For each frame, the student writes either the completed sentence or the correctly inflected target word in context',
+      'For each frame, the student writes the correctly inflected target word in {targetLanguage} inserted into the blank',
     example: {
       instruction:
         "Complete each sentence by conjugating the verb in parentheses according to the rule '{rule_title}':",
       targetWords: [
-        'Je ___ au cinéma ce soir. (vouloir)',
-        'Nous ___ nos devoirs avant le dîner. (devoir)',
-        'Tu ___ venir à la fête demain. (pouvoir)',
-        'Ils ___ parler français couramment. (savoir)',
+        'Je ___ au cinéma ce soir. (to go)',
+        'Nous ___ nos devoirs avant le dîner. (to do)',
+        'Tu ___ venir à la fête demain. (to be able to)',
+        'Ils ___ parler français couramment. (to know how to)',
       ],
     },
   },
@@ -161,22 +163,22 @@ export const EXERCISE1_TEMPLATES: Exercise1Template[] = [
     id: 'contrast_pair_usage',
     name: 'Contrasting Forms & Minimal Pairs Drill',
     applicability:
-      "Best suited for rules that introduce or distinguish between two commonly confused forms, aspect pairs, or complementary structures (e.g. Spanish 'ser' vs. 'estar', 'por' vs. 'para'; French 'c'est' vs. 'il est', 'passé composé' vs. 'imparfait'; Korean subject marker '이/가' vs. topic marker '은/는'; Japanese 'は' vs. '가').",
+      "Best suited for rules that introduce or distinguish between two commonly confused forms, aspect pairs, or complementary structures (e.g. Spanish 'ser' vs. 'estar', 'por' vs. 'para'; French 'c'est' vs. 'est', 'passé composé' vs. 'imparfait'; Korean subject marker '이/가' vs. topic marker '은/는'; Japanese 'は' vs. '가').",
     itemCount: 4,
     instructionTemplate:
       "Select and correctly apply the appropriate form from the '{rule_title}' contrast pair for each of the following 4 sentences:",
     targetWordsFormat:
-      'Array of 4 prompts showing a sentence context with a blank and the choice pair in parentheses',
+      'Array of 4 sentence frames in {targetLanguage} with a blank and the two contrast forms in parentheses (both forms are in {targetLanguage})',
     expectedStudentResponse:
-      'For each sentence, the student selects the correct form and writes the complete answer',
+      'For each sentence in {targetLanguage}, the student selects the correct form and writes the complete sentence in {targetLanguage}',
     example: {
       instruction:
         "Complete each sentence by choosing the correct form from the '{rule_title}' contrast pair:",
       targetWords: [
-        "Paris ___ une très belle ville. (c'est / il est)",
-        "___ médecin dans cet hôpital. (c'est / il est)",
-        "___ important d'étudier tous les jours. (c'est / il est)",
-        'Regarde ce tableau, ___ magnifique ! (c\'est / il est)',
+        "Paris ___ une très belle ville. (c'est / est)",
+        "___ médecin dans cet hôpital. (c'est / est)",
+        "___ important d'étudier tous les jours. (c'est / est)",
+        'Regarde ce tableau, ___ magnifique ! (c\'est / est)',
       ],
     },
   },
@@ -185,17 +187,17 @@ export const EXERCISE1_TEMPLATES: Exercise1Template[] = [
     name: 'Target Word Sentence Construction',
     applicability:
       'Best suited for open-ended grammatical patterns, conversational formulas, discourse markers, interjections, or general grammar rules where composing a distinct, natural sentence for each target word provides the most valuable practice.',
-    itemCount: 5,
+    itemCount: 3,
     instructionTemplate:
-      "Write an original, grammatically natural sentence in {targetLanguage} for each of the following 5 words, actively incorporating the '{rule_title}' rule:",
+      "Write an original, grammatically natural sentence in {targetLanguage} for each of the following 3 words, actively incorporating the '{rule_title}' rule:",
     targetWordsFormat:
-      'Array of 5 target vocabulary words selected from the new daily words and word bank',
+      'Array of 3 target vocabulary words in {targetLanguage} selected from the new daily words and word bank',
     expectedStudentResponse:
-      'For each word, the student writes a complete, meaningful sentence demonstrating the word and rule in context',
+      'For each word in {targetLanguage}, the student writes a complete, meaningful sentence in {targetLanguage} demonstrating the word and rule in context',
     example: {
       instruction:
-        "Write an authentic and complete sentence for each of the following 5 words using the rule '{rule_title}':",
-      targetWords: ['livre', 'étudier', 'matin', 'café', 'voyager'],
+        "Write an authentic and complete sentence for each of the following 3 words using the rule '{rule_title}':",
+      targetWords: ['livre', 'étudier', 'matin'],
     },
   },
 ];
