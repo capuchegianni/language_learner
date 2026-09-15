@@ -68,7 +68,6 @@ export const LessonCard: React.FC<LessonCardProps> = ({
         <div className="app-lesson-card-title-row">
           <span className="kr-text app-lesson-card-title">{title}</span>
           <div className="app-lesson-card-pills">
-            {lesson.isReview && <Pill variant="warning">Review</Pill>}
             {showStatusPill && (
               <Pill variant={getStatusPillVariant()}>
                 {lesson.status}
