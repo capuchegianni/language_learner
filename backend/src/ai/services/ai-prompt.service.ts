@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { LessonContent } from '../interfaces/ai.interfaces';
+import { formatExerciseOneMatrix } from '../constants/exercise-one-matrix.constant';
 
 @Injectable()
 export class AiPromptService {
@@ -14,18 +15,14 @@ export class AiPromptService {
     nativeLanguage: string,
     targetLanguage: string,
   ): string {
-    return `Lesson architecture:
-- ${wordsCount} new daily words (MUST be words the student does NOT yet know — strictly NOT from the "List of known words" below)
-- daily rule with explanations, usage (examples), exceptions if any
-- exercise 1: apply the rule on ${wordsCount} words (based on some of the new daily words + other words in the bank)
-- exercise 2: translate 3 sentences from ${nativeLanguage} to ${targetLanguage} that use the new rule and the new vocabulary (no literal translations, use proper ${nativeLanguage}, don't give the answer)
-- exercise 3: translate a text from ${nativeLanguage} to ${targetLanguage} (from 30 to 50 words) that is using some of the previous rules + the new one at least once and the new vocabulary + words from the bank. The text must have a meaning and small story between the sentences and it's not mandatory to use all tenses (no literal translations, use proper ${nativeLanguage}, don't give the answer)
+    return `Target Rule: "${ruleTitle}"
+New words to introduce: ${wordsCount} (strictly NOT from the known words list below)
+Native Language: ${nativeLanguage}
+Target Language: ${targetLanguage}
 
-List of known words (DO NOT use any of these as new words): \`${knownWordsList.join(', ')}\`
+List of known words (DO NOT reuse): \`${knownWordsList.join(', ')}\`
 
-List of known rules: \`${knownRulesList.join(', ')}\`
-
-Today's rule -> "${ruleTitle}"`;
+List of known rules already learned: \`${knownRulesList.join(', ')}\``;
   }
 
   /**
@@ -63,29 +60,60 @@ Output strictly valid JSON with no extra markdown code block delimiters or text,
     nativeLanguage: string,
     targetLanguage: string,
   ): string {
-    return `You are a ${targetLanguage} language instructor AI. Respond strictly with valid JSON without markdown codeblock wrapper or outside commentary.
+    const exercise1MatrixText = formatExerciseOneMatrix(
+      targetLanguage,
+      nativeLanguage,
+    );
+    return `You are an expert ${targetLanguage} language professor and tutor. Respond strictly with valid JSON without markdown codeblock wrapper or outside commentary.
 If the requested rule or topic in the USER PROMPT is completely unrelated to learning ${targetLanguage}, nonsense, or inappropriate, return exactly this JSON:
 { "error": "This topic is invalid or unrelated to learning ${targetLanguage}. Please enter a valid grammar rule, vocabulary topic, or conversational phrase." }
 
-Otherwise, follow this exact JSON structure:
+Otherwise, generate a comprehensive lesson.
+
+### EXERCISE 1 PEDAGOGICAL DECISION MATRIX:
+Review the following archetypes grouped by pedagogical category. You must select the ONE archetype that yields the highest communicative and pedagogical value for "${ruleTitle}" in ${targetLanguage}:
+${exercise1MatrixText}
+
+Exercise 1 Selection Principles:
+1. Matrix Evaluation: Evaluate "${ruleTitle}" and ${targetLanguage} against the "When to use" and "Do NOT use when" criteria of each category in the Matrix above. Select the ONE archetype whose pedagogical objective matches this lesson's exact grammatical or communicative nature.
+2. Lexical & Pedagogical Integrity: The exercise must adapt to the lesson, never the reverse. NEVER distort, truncate, or hallucinate words (e.g. converting non-verbs into verbs or stripping reflexive markers) to force-fit an archetype.
+3. Instruction Language: Formulate the "instruction" for exercise 1 STRICTLY in natural, fluent ${nativeLanguage}, clearly explaining the exact format the student should write.
+4. Target Words: Populate "targetWords" matching the chosen archetype's count and format, drawn from the new daily words and/or known word bank. Mirror them in "sampleWords".
+
+Follow this exact JSON structure:
 {
   "rule": {
     "title": "${ruleTitle}",
-    "explanation": "Clear explanation of rule usage and formation in ${nativeLanguage}",
+    "explanation": "Thorough, structured pedagogical explanation written in ${nativeLanguage}. Do not write a shallow 1-2 sentence summary. Separate each of the following sections with double newlines (\\\\n\\\\n) so the text breathes and is easily readable:\\n\\n1. Core Meaning & Function: What communicative purpose, grammatical relation, or nuance this pattern expresses in ${targetLanguage}.\\n\\n2. Formation & Structural Formula: Clear step-by-step construction rules showing how it is built or attached to words (e.g. verb/noun/adjective conjugation patterns, prefixes/suffixes, auxiliary particles, word order, or phonological/euphonic changes specific to ${targetLanguage}).\\n\\n3. Context & Register: When and where this form is appropriate (e.g. level of politeness, formal vs. colloquial, spoken vs. written discourse).",
     "examples": [
-      { "targetLanguage": "example in ${targetLanguage}", "nativeLanguage": "translation in ${nativeLanguage}", "explanation": "optional explanation in ${nativeLanguage}" },
-      { "targetLanguage": "example in ${targetLanguage}", "nativeLanguage": "translation in ${nativeLanguage}" }
+      {
+        "targetLanguage": "Full natural example sentence in ${targetLanguage}",
+        "nativeLanguage": "Accurate, natural translation in ${nativeLanguage}",
+        "explanation": "Clear structural breakdown in ${nativeLanguage} (identifying the root word, endings/particles/auxiliaries applied, and the specific grammatical context)"
+      },
+      {
+        "targetLanguage": "Second contrasting example in ${targetLanguage} (demonstrating a different grammatical condition, stem ending, or context)",
+        "nativeLanguage": "Accurate, natural translation in ${nativeLanguage}",
+        "explanation": "Breakdown highlighting the specific morphological or syntactic variation used here in ${nativeLanguage}"
+      },
+      {
+        "targetLanguage": "Third practical, authentic everyday example in ${targetLanguage}",
+        "nativeLanguage": "Accurate, natural translation in ${nativeLanguage}",
+        "explanation": "Breakdown of the expression and nuance in ${nativeLanguage}"
+      }
     ],
-    "exceptions": "Exceptions or nuances if applicable, explained in ${nativeLanguage}"
+    "exceptions": "Important irregular forms, structural constraints (e.g. clause types, tense/aspect restrictions, compatible parts of speech), or frequent learner errors in ${targetLanguage} explained clearly in ${nativeLanguage}. If there are genuinely no irregular forms, explain common usage mistakes or subtle nuances to be careful of."
   },
   "newWords": [
     { "targetLanguage": "word in ${targetLanguage}", "nativeLanguage": "meaning in ${nativeLanguage}", "pronunciation": "romanized pronunciation", "partOfSpeech": "verb/noun" }
     // IMPORTANT: exactly ${wordsCount} items — every word here MUST be brand new and must NOT appear in the "List of known words" from the user prompt
   ],
   "exercise1": {
-    "instruction": "Apply the rule on 5 words (new daily words + bank words)",
-    "targetWords": ["word1", "word2", "word3", "word4", "word5"],
-    "sampleWords": ["word1", "word2", "word3", "word4", "word5"]
+    "type": "chosen_archetype_id",
+    "instruction": "Pedagogical prompt in ${nativeLanguage} tailored to the chosen exercise type and rule",
+    "targetWords": ["item1", "item2", "item3"],
+    "sampleWords": ["item1", "item2", "item3"],
+    "subjectPronouns": ["pronoun1", "pronoun2", "..."] // ONLY include when type is "subject_conjugation", omit otherwise
   },
   "exercise2": {
     "instruction": "Translate 3 sentences from ${nativeLanguage} to ${targetLanguage} (do NOT give answers)",
@@ -112,42 +140,72 @@ Otherwise, follow this exact JSON structure:
     nativeLanguage: string,
     targetLanguage: string,
   ): string {
+    const ex1TargetItemsFormatted = lessonData.exercise1.targetWords
+      .map((item, idx) => `  ${idx + 1}. ${item}`)
+      .join('\n');
+    const ex1TypeInfo = lessonData.exercise1.type
+      ? `Exercise 1 Archetype: ${lessonData.exercise1.type}\n`
+      : '';
+
     return `You are an expert ${targetLanguage} teacher grading a student's exercise submission. The student's native language is ${nativeLanguage}.
-Lesson Details:
+
+Lesson Reference:
 Rule: ${lessonData.rule.title} (${lessonData.rule.explanation})
-Target Words: ${lessonData.newWords.map((w) => `${w.targetLanguage} (${w.nativeLanguage})`).join(', ')}
+Vocabulary: ${lessonData.newWords.map((w) => `${w.targetLanguage} (${w.nativeLanguage})`).join(', ')}
 
-Exercise 1 Prompt: ${lessonData.exercise1.instruction} (Target words: ${lessonData.exercise1.targetWords.join(', ')})
-Exercise 2 Prompt: ${lessonData.exercise2.sentencesToTranslate.join(' | ')}
-Exercise 3 Prompt: ${lessonData.exercise3.textToTranslate}
+Exercise Prompts:
+${ex1TypeInfo}Exercise 1 Instruction: ${lessonData.exercise1.instruction}
+Exercise 1 Target Items:
+${ex1TargetItemsFormatted}
 
-Student Text Submission:
-Exercise 1 Answer: ${userAnswersText.ex1 || 'N/A'}
-Exercise 2 Answer: ${userAnswersText.ex2 || 'N/A'}
-Exercise 3 Answer: ${userAnswersText.ex3 || 'N/A'}
+Exercise 2 Instruction: ${lessonData.exercise2.instruction}
+Exercise 2 Sentences to Translate:
+${lessonData.exercise2.sentencesToTranslate.map((s, idx) => `  ${idx + 1}. ${s}`).join('\n')}
+
+Exercise 3 Instruction: ${lessonData.exercise3.instruction}
+Exercise 3 Text to Translate: ${lessonData.exercise3.textToTranslate}
+
+Student Submission:
+[Exercise 1 Submission]
+${userAnswersText.ex1 || 'N/A'}
+
+[Exercise 2 Submission]
+${userAnswersText.ex2 || 'N/A'}
+
+[Exercise 3 Submission]
+${userAnswersText.ex3 || 'N/A'}
 
 ${hasImages ? 'NOTE: Images of handwritten answers are attached. Perform OCR on the handwriting first.' : ''}
 
-Grade the student's work accurately with constructive feedback and corrections. Provide all feedback in ${nativeLanguage}.
+Grading Guidelines:
+- Grade the student's work accurately, providing constructive feedback and corrections. All feedback, explanations, and notes MUST be written in ${nativeLanguage}.
+- Exercise 1 Evaluation:
+  * Grade answers strictly against the Exercise 1 Instruction and Archetype (${lessonData.exercise1.type || 'pattern practice'}).
+  * If the exercise is a conjugation drill (e.g. subject_conjugation), verify that all subject persons were conjugated and check stems, endings, and orthography.
+  * If the exercise is stem inflection or particle/case attachment, check stem changes, vowel harmony, batchim/consonant rules, and elisions.
+  * If the exercise is sentence transformation or clause combination, verify that the grammatical transformation/connector was correctly applied without altering meaning.
+  * If the exercise is agreement or cloze insertion, check gender/number agreement and contextual accuracy.
+  * For any mistake, provide a clear, itemized correction in "exercise1.corrections" indicating the item, what was incorrect, the expected answer, and a concise explanation in ${nativeLanguage}. If an item is correct, do not include an unnecessary correction.
+
 Return STRICT JSON format (no markdown formatting, no extra text):
 {
   "overallScore": 85,
-  "generalFeedback": "Encouraging overall feedback summary in ${nativeLanguage}",
+  "generalFeedback": "Overall feedback summary in ${nativeLanguage}, it must be constructive and pinpoint current weaknesses and strengths if any.",
   "handwrittenOcrText": "Transcribed text if image was provided, else null",
   "exercise1": {
     "score": 90,
-    "corrections": ["Correction line 1", "Correction line 2"],
-    "feedback": "Feedback for Ex 1"
+    "corrections": ["<Item>: correction and explanation in ${nativeLanguage}"],
+    "feedback": "Feedback for Ex 1 in ${nativeLanguage}"
   },
   "exercise2": {
     "score": 80,
-    "corrections": ["Sentence 1: ...", "Sentence 2: ..."],
-    "feedback": "Feedback for Ex 2"
+    "corrections": ["Sentence 1 in ${nativeLanguage}: ...", "Sentence 2 in ${nativeLanguage}: ..."],
+    "feedback": "Feedback for Ex 2 in ${nativeLanguage}"
   },
   "exercise3": {
     "score": 85,
-    "corrections": ["Text correction details..."],
-    "feedback": "Feedback for Ex 3"
+    "corrections": ["Text correction details in ${nativeLanguage} ..."],
+    "feedback": "Feedback for Ex 3 in ${nativeLanguage}"
   }
 }`;
   }

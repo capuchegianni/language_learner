@@ -243,7 +243,7 @@
 }
 
 /* Responsive Media Queries */
-@media (max-width: 480px) {
+@media (max-width: 650px) {
   .login-card {
     padding: 2rem 1.25rem;
   }

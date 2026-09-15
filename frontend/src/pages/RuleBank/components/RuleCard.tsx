@@ -64,7 +64,17 @@ export const RuleCard: React.FC<RuleCardProps> = ({ rule, onEdit, onDelete }) =>
         </div>
       </div>
 
-      <p className="rule-explanation-text">{rule.explanation}</p>
+      <div className="rule-explanation-body">
+        {rule.explanation
+          ?.split(/\n\s*\n|(?=(?:^|\n)\s*\d+\.\s+)/)
+          .map((part) => part.trim())
+          .filter(Boolean)
+          .map((section, idx) => (
+            <p key={idx} className="rule-explanation-paragraph">
+              {section}
+            </p>
+          ))}
+      </div>
 
       {parsedExamples.length > 0 && (
         <div className="rule-examples-container">
@@ -78,6 +88,11 @@ export const RuleCard: React.FC<RuleCardProps> = ({ rule, onEdit, onDelete }) =>
                 {ex.nativeLanguage && (
                   <span className="rule-example-native">
                     ({ex.nativeLanguage})
+                  </span>
+                )}
+                {ex.explanation && (
+                  <span className="rule-example-expl">
+                    • {ex.explanation}
                   </span>
                 )}
               </div>

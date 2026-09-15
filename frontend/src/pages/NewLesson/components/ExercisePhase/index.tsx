@@ -1,7 +1,8 @@
 import React from 'react';
-import { Image as ImageIcon, Upload, Send, PenTool } from 'lucide-react';
+import { Image as ImageIcon, Upload, Send, PenTool, X } from 'lucide-react';
 import { LessonContent } from '../../../../types';
 import { LoadingSpinner } from '../../../../components/LoadingSpinner';
+import { ExerciseOneDispatcher } from './ExerciseOne/ExerciseOneDispatcher';
 import './ExercisePhase.css';
 
 export interface ExercisePhaseProps {
@@ -15,7 +16,7 @@ export interface ExercisePhaseProps {
   imageFiles: File[];
   imagePreviews: string[];
   handleImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  clearImages: () => void;
+  onRemoveImage: (index: number) => void;
   submitting: boolean;
   onSubmit: (e: React.SubmitEvent) => void;
   onBack: () => void;
@@ -33,7 +34,7 @@ export const ExercisePhase: React.FC<ExercisePhaseProps> = ({
   imageFiles,
   imagePreviews,
   handleImageChange,
-  clearImages,
+  onRemoveImage,
   submitting,
   onSubmit,
   onBack,
@@ -43,49 +44,28 @@ export const ExercisePhase: React.FC<ExercisePhaseProps> = ({
     <form onSubmit={onSubmit} className={`exercise-phase-form ${className}`.trim()}>
       <div className="glass-card exercise-phase-card">
         <h3 className="exercise-phase-header">
-          <PenTool size={18} color="var(--accent-primary)" />
+          <PenTool size={16} color="var(--accent-primary)" />
           <span>Interactive Exercise Worksheet</span>
         </h3>
 
-        {/* Exercise 1: Form Sentences using Rule & Words */}
+        {/* Exercise 1: Dynamic Archetype Rendering */}
         {lessonContent.exercise1 && (
           <div className="exercise-group">
             <h4 className="exercise-group-title">
               Part 1: Practice Rule Patterns
             </h4>
-            <p className="exercise-group-desc">
-              {lessonContent.exercise1.instruction}
-              {lessonContent.exercise1.targetWords &&
-                lessonContent.exercise1.targetWords.length > 0 && (
-                  <span>
-                    {' '}
-                    (Target words:{' '}
-                    <strong className="kr-text exercise-target-words-highlight">
-                      {lessonContent.exercise1.targetWords.join(', ')}
-                    </strong>
-                    )
-                  </span>
-                )}
-            </p>
-
-            <div className="exercise-rows-container">
-              {lessonContent.exercise1.targetWords?.map((word, idx) => (
-                <div key={idx} className="exercise-input-row">
-                  <span className="kr-text exercise-target-word">{word}:</span>
-                  <input
-                    type="text"
-                    placeholder={`Write a sentence using ${word}...`}
-                    value={ex1Answers[idx] || ''}
-                    onChange={(e) => {
-                      const updated = [...ex1Answers];
-                      updated[idx] = e.target.value;
-                      setEx1Answers(updated);
-                    }}
-                    className="exercise-text-input"
-                  />
-                </div>
-              ))}
-            </div>
+            <ExerciseOneDispatcher
+              instruction={lessonContent.exercise1.instruction}
+              targetWords={lessonContent.exercise1.targetWords || []}
+              type={lessonContent.exercise1.type}
+              subjectPronouns={lessonContent.exercise1.subjectPronouns}
+              answers={ex1Answers}
+              onAnswerChange={(idx, val) => {
+                const updated = [...ex1Answers];
+                updated[idx] = val;
+                setEx1Answers(updated);
+              }}
+            />
           </div>
         )}
 
@@ -155,49 +135,54 @@ export const ExercisePhase: React.FC<ExercisePhaseProps> = ({
             Wrote your answers in a physical notebook? Snap up to 3 photos and upload them! Vision AI will read your handwriting and evaluate it.
           </p>
 
+          {/* Uploaded images displayed between description and upload button */}
+          {imagePreviews.length > 0 && (
+            <div className="vision-previews-container" aria-label="Uploaded exercise photos">
+              {imagePreviews.map((preview, idx) => (
+                <div
+                  key={idx}
+                  className="vision-preview-card"
+                  onClick={() => onRemoveImage(idx)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      onRemoveImage(idx);
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
+                  title="Click to remove photo"
+                  aria-label={`Remove photo ${idx + 1}`}
+                >
+                  <img
+                    src={preview}
+                    alt={`Handwritten preview ${idx + 1}`}
+                    className="vision-preview-img"
+                  />
+                  <div className="vision-preview-overlay">
+                    <div className="vision-preview-remove-icon">
+                      <X size={20} strokeWidth={2.5} />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
           <div className="vision-upload-controls">
-            <label className="btn btn-secondary vision-file-btn">
+            <label className={`btn btn-secondary vision-file-btn ${imageFiles.length >= 3 ? 'disabled' : ''}`}>
               <Upload size={18} />
-              <span>Choose Photo(s)</span>
+              <span>{imageFiles.length >= 3 ? '3 Photos Uploaded (Max)' : 'Choose Photo(s)'}</span>
               <input
                 type="file"
                 accept="image/*"
                 multiple
+                disabled={imageFiles.length >= 3}
                 onChange={handleImageChange}
                 className="vision-hidden-input"
               />
             </label>
-
-            {imageFiles.length > 0 && (
-              <div className="vision-selected-files-list">
-                {imageFiles.map((f, i) => (
-                  <span key={i} className="vision-file-badge">
-                    Selected: {f.name}
-                  </span>
-                ))}
-                <button
-                  type="button"
-                  className="btn btn-danger vision-clear-btn"
-                  onClick={clearImages}
-                >
-                  Clear Images
-                </button>
-              </div>
-            )}
           </div>
-
-          {imagePreviews.length > 0 && (
-            <div className="vision-previews-container">
-              {imagePreviews.map((preview, idx) => (
-                <img
-                  key={idx}
-                  src={preview}
-                  alt={`Handwritten preview ${idx + 1}`}
-                  className="vision-preview-img"
-                />
-              ))}
-            </div>
-          )}
         </div>
       </div>
 

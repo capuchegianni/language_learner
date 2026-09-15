@@ -1,0 +1,194 @@
+/* ========================================================= */
+/* SubjectConjugationExercise — Conjugation Table Styles     */
+/* ========================================================= */
+
+/* Conjugation Table Matrix Layout */
+.ex1-table-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.ex1-table-scroll-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background: rgba(15, 23, 42, 0.4);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.ex1-conj-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  table-layout: auto;
+}
+
+.ex1-conj-table thead {
+  background: rgba(15, 23, 42, 0.75);
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* Column Titles: SUBJECT and Verb names aligned, same size, same padding */
+.ex1-table-pronoun-th,
+.ex1-table-verb-th {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.4;
+  vertical-align: middle;
+  padding: 0.85rem 1rem;
+  border-right: 1px solid var(--border-color);
+  box-sizing: border-box;
+}
+
+.ex1-table-pronoun-th {
+  width: 1%;
+  white-space: nowrap;
+  color: var(--accent-primary);
+  background: rgba(15, 23, 42, 0.4);
+  letter-spacing: 0.04em;
+}
+
+.ex1-table-verb-th {
+  min-width: 180px;
+  color: var(--accent-secondary);
+  text-align: left;
+}
+
+.ex1-table-verb-th:last-child {
+  border-right: none;
+}
+
+/* Left cell (Pronoun): fits max value size */
+.ex1-table-pronoun-cell {
+  width: 1%;
+  white-space: nowrap;
+  padding: 0.85rem 1rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  background: rgba(15, 23, 42, 0.35);
+  border-right: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  vertical-align: middle;
+}
+
+.ex1-table-pronoun-tag {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Data cells as inputs: min-width 180px, padding 0 so input is the cell */
+.ex1-table-cell-wrapper {
+  padding: 0 !important;
+  margin: 0 !important;
+  min-width: 180px;
+  height: 100%;
+  border-right: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  vertical-align: stretch;
+  background: transparent;
+}
+
+.ex1-table-cell-wrapper:last-child {
+  border-right: none;
+}
+
+.ex1-conj-table tbody tr {
+  border-bottom: 1px solid var(--border-color);
+  transition: background 0.15s ease;
+}
+
+.ex1-conj-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.015);
+}
+
+.ex1-conj-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.ex1-conj-table tbody tr:last-child .ex1-table-pronoun-cell,
+.ex1-conj-table tbody tr:last-child .ex1-table-cell-wrapper {
+  border-bottom: none;
+}
+
+/* Direct cell input: completely strips index.css input styles and fills the cell 100% */
+table.ex1-conj-table td.ex1-table-cell-wrapper input[type="text"].ex1-table-direct-input,
+table.ex1-conj-table input[type="text"].ex1-table-direct-input,
+td.ex1-table-cell-wrapper input.ex1-table-direct-input,
+.ex1-table-direct-input {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 52px !important;
+  margin: 0 !important;
+  padding: 0.85rem 1rem !important;
+  font-size: 0.95rem !important;
+  font-family: inherit !important;
+  color: #fff !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+  box-sizing: border-box !important;
+  transition: background 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+table.ex1-conj-table td.ex1-table-cell-wrapper input[type="text"].ex1-table-direct-input:hover,
+table.ex1-conj-table input[type="text"].ex1-table-direct-input:hover,
+td.ex1-table-cell-wrapper input.ex1-table-direct-input:hover,
+.ex1-table-direct-input:hover {
+  background: rgba(255, 255, 255, 0.02) !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+table.ex1-conj-table td.ex1-table-cell-wrapper input[type="text"].ex1-table-direct-input:focus,
+table.ex1-conj-table input[type="text"].ex1-table-direct-input:focus,
+td.ex1-table-cell-wrapper input.ex1-table-direct-input:focus,
+.ex1-table-direct-input:focus {
+  outline: none !important;
+  border: none !important;
+  background: rgba(99, 102, 241, 0.08) !important;
+  box-shadow: inset 0 0 0 2px var(--accent-primary) !important;
+}
+
+/* Conjugation Card Layout (Fallback when no pronouns specified) */
+.ex1-conjugation-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.ex1-conjugation-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ex1-verb-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--accent-secondary);
+}
+
+.ex1-conjugation-input {
+  width: 100%;
+  padding: 0.75rem 0.95rem;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+}
+
+@media (max-width: 650px) {
+  .ex1-table-scroll-hint {
+    display: none;
+  }
+}

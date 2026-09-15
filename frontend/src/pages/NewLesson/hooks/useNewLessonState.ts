@@ -39,6 +39,7 @@ export interface UseNewLessonStateReturn {
   handleReplaceProposal: (indexToReplace: number, e: React.MouseEvent) => Promise<void>;
   handleGenerateLesson: () => Promise<void>;
   handleImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  removeImage: (index: number) => void;
   clearImages: () => void;
   handleSubmitExercises: (e: React.SubmitEvent) => Promise<void>;
   handleBackFromExercises: () => void;
@@ -220,26 +221,42 @@ export function useNewLessonState(resumeLessonId?: string): UseNewLessonStateRet
 
   const handleImageChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (e.target.files) {
+      if (e.target.files && e.target.files.length > 0) {
         const files = Array.from(e.target.files);
         const newFiles = [...imageFiles, ...files].slice(0, 3);
 
         const totalSize = newFiles.reduce((acc, file) => acc + file.size, 0);
         if (totalSize > 5 * 1024 * 1024) {
           alert('Total image size cannot exceed 5MB.');
+          e.target.value = '';
           return;
         }
 
+        imagePreviews.forEach((url) => URL.revokeObjectURL(url));
         setImageFiles(newFiles);
         setImagePreviews(newFiles.map((file) => URL.createObjectURL(file)));
+        e.target.value = '';
       }
     },
-    [imageFiles],
+    [imageFiles, imagePreviews],
   );
 
+  const removeImage = useCallback((indexToRemove: number) => {
+    setImageFiles((prevFiles) => prevFiles.filter((_, i) => i !== indexToRemove));
+    setImagePreviews((prevPreviews) => {
+      if (prevPreviews[indexToRemove]) {
+        URL.revokeObjectURL(prevPreviews[indexToRemove]);
+      }
+      return prevPreviews.filter((_, i) => i !== indexToRemove);
+    });
+  }, []);
+
   const clearImages = useCallback(() => {
+    setImagePreviews((prevPreviews) => {
+      prevPreviews.forEach((url) => URL.revokeObjectURL(url));
+      return [];
+    });
     setImageFiles([]);
-    setImagePreviews([]);
   }, []);
 
   const handleSubmitExercises = useCallback(
@@ -337,6 +354,7 @@ export function useNewLessonState(resumeLessonId?: string): UseNewLessonStateRet
     handleReplaceProposal,
     handleGenerateLesson,
     handleImageChange,
+    removeImage,
     clearImages,
     handleSubmitExercises,
     handleBackFromExercises,

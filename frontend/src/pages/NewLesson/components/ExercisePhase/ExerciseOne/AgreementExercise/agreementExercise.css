@@ -1,0 +1,42 @@
+/* ========================================================= */
+/* AgreementExercise — Gender & Number Agreement Styles      */
+/* ========================================================= */
+
+/* Agreement Drill Layout (Clean / Unboxed) */
+.ex1-agreement-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.ex1-agreement-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ex1-agreement-prompt-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.ex1-agreement-base-word {
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.ex1-agreement-condition {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.25);
+}
