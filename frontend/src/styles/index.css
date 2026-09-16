@@ -1,104 +1,593 @@
-:root {
-  --font-main: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-kr: 'Noto Sans KR', sans-serif;
+/* ==========================================================================
+   THE BROADSHEET DESIGN SYSTEM — Language Learner Editorial Edition
+   ========================================================================== */
 
-  /* Color System */
-  --bg-dark: #0f172a;
-  --bg-card: rgba(30, 41, 59, 0.7);
-  --bg-card-hover: rgba(30, 41, 59, 0.9);
-  --bg-glass: rgba(15, 23, 42, 0.85);
-  --border-color: rgba(255, 255, 255, 0.1);
-  --border-color-glow: rgba(99, 102, 241, 0.4);
+:root,
+[data-theme="morning"] {
+  /* Typography Families */
+  --font-masthead: 'Newsreader', Georgia, 'Noto Serif KR', 'Noto Serif JP', 'Noto Serif SC', 'Noto Serif Devanagari', 'Noto Naskh Arabic', serif;
+  --font-body: 'Source Serif 4', 'Times New Roman', 'Noto Serif KR', 'Noto Serif JP', 'Noto Serif SC', 'Noto Serif Devanagari', 'Noto Naskh Arabic', serif;
+  --font-main: var(--font-body);
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+  --font-target: 'Noto Serif KR', 'Noto Serif JP', 'Noto Serif SC', 'Noto Serif Devanagari', 'Noto Naskh Arabic', 'Nanum Myeongjo', serif;
 
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
+  /* Morning Edition Color Palette (Subtle Bleached Print & Crisp Carbon Ink) */
+  --bg-dark: #faf8f5;
+  --bg-card: #ffffff;
+  --bg-card-hover: #ffffff;
+  --bg-card-alt: #f4f0e8;
+  --bg-glass: #faf8f5;
 
-  --accent-primary: #6366f1;
-  --accent-primary-hover: #4f46e5;
-  --accent-secondary: #06b6d4;
-  --accent-purple: #a855f7;
-  --accent-success: #10b981;
-  --accent-warning: #f59e0b;
-  --accent-danger: #ef4444;
+  --border-color: #141312;
+  --border-color-light: #e4dfd5;
+  --border-color-glow: #141312;
+  --border-width-heavy: 3px;
 
-  --gradient-main: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #06b6d4 100%);
-  --gradient-glow: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(168, 85, 247, 0.15) 100%);
-  --shadow-lg: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 0 25px rgba(99, 102, 241, 0.25);
-  --radius-lg: 16px;
-  --radius-md: 12px;
-  --radius-sm: 8px;
+  --text-primary: #111111;
+  --text-secondary: #33312c;
+  --text-muted: #625d53;
+
+  --accent-primary: #111111;
+  --accent-primary-hover: #000000;
+  --accent-secondary: #264b6e;
+  --accent-purple: #5c3558;
+  --accent-success: #1b5e20;
+  --accent-warning: #925400;
+  --accent-danger: #8b1c1c;
+
+  /* Stamp Colors */
+  --stamp-red: #8b1c1c;
+  --stamp-red-bg: rgba(139, 28, 28, 0.08);
+  --stamp-green: #1b5e20;
+  --stamp-green-bg: rgba(27, 94, 32, 0.08);
+  --stamp-amber: #925400;
+  --stamp-amber-bg: rgba(146, 84, 0, 0.08);
+  --stamp-blue: #1e456d;
+  --stamp-blue-bg: rgba(30, 69, 109, 0.08);
+  --stamp-ink: #111111;
+  --stamp-ink-bg: rgba(17, 17, 17, 0.05);
+
+  --gradient-main: #111111;
+  --gradient-glow: rgba(17, 17, 17, 0.04);
+
+  --shadow-lg: 3px 4px 0px rgba(17, 17, 17, 0.12);
+  --shadow-press: 2px 2px 0px var(--border-color);
+  --shadow-glow: none;
+
+  /* Strict Print Sharp Corners */
+  --radius-lg: 0px;
+  --radius-md: 0px;
+  --radius-sm: 0px;
+
+  --paper-texture-opacity: 0.015;
 }
+
+[data-theme="evening"] {
+  /* Evening Edition Color Palette (Carbon Slate & High-Legibility Bone Ink) */
+  --bg-dark: #121215;
+  --bg-card: #1c1c23;
+  --bg-card-hover: #24242e;
+  --bg-card-alt: #292936;
+  --bg-glass: #121215;
+
+  --border-color: #5c5966;
+  --border-color-light: #3e3c4a;
+  --border-color-glow: #ffffff;
+  --border-width-heavy: 3px;
+
+  --text-primary: #ffffff;
+  --text-secondary: #ede9e0;
+  --text-muted: #cbc6ba;
+
+  --accent-primary: #ffffff;
+  --accent-primary-hover: #f0f0f5;
+  --accent-secondary: #7bb5e6;
+  --accent-purple: #d199e3;
+  --accent-success: #54c259;
+  --accent-warning: #f7b038;
+  --accent-danger: #e86363;
+
+  /* Stamp Colors */
+  --stamp-red: #e86363;
+  --stamp-red-bg: rgba(232, 99, 99, 0.14);
+  --stamp-green: #54c259;
+  --stamp-green-bg: rgba(84, 194, 89, 0.14);
+  --stamp-amber: #f7b038;
+  --stamp-amber-bg: rgba(247, 176, 56, 0.14);
+  --stamp-blue: #7bb5e6;
+  --stamp-blue-bg: rgba(123, 181, 230, 0.14);
+  --stamp-ink: #ffffff;
+  --stamp-ink-bg: rgba(255, 255, 255, 0.08);
+
+  --gradient-main: #ffffff;
+  --gradient-glow: rgba(255, 255, 255, 0.05);
+
+  --shadow-lg: 3px 4px 0px rgba(0, 0, 0, 0.6);
+  --shadow-press: 2px 2px 0px var(--border-color);
+  --shadow-glow: none;
+
+  --radius-lg: 0px;
+  --radius-md: 0px;
+  --radius-sm: 0px;
+
+  --paper-texture-opacity: 0.012;
+}
+
+/* ==========================================================================
+   Base Elements & Reset
+   ========================================================================== */
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
   -webkit-tap-highlight-color: transparent;
+  border-radius: 0;
 }
 
-html, body {
-  width: 100%;
-  overflow-x: hidden;
+/* Custom Scrollbars on Desktop */
+@media (min-width: 1040px) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-color) var(--bg-card-alt);
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--bg-card-alt);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--text-primary);
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
 }
 
+/* Completely Hide Scrollbars on Medium and Small Screens (<= 1040px) */
+@media (max-width: 1040px) {
+  html,
+  body,
+  * {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+
+  ::-webkit-scrollbar,
+  *::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    background: transparent !important;
+  }
+}
+
+html,
 body {
-  font-family: var(--font-main);
-  background-color: var(--bg-dark);
-  color: var(--text-primary);
+  width: 100%;
   min-height: 100vh;
   min-height: 100dvh;
-  line-height: 1.5;
-  background-image:
-    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.12) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.12) 0px, transparent 50%);
-  background-attachment: fixed;
-  -webkit-overflow-scrolling: touch;
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Subtle Newsprint Paper Fiber Texture */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: var(--paper-texture-opacity);
+  background-image: radial-gradient(#000 1px, transparent 1px);
+  background-size: 4px 4px;
 }
 
 /* Prevent auto-zooming on iOS devices by setting min 16px font */
-input, select, textarea {
+input,
+select,
+textarea {
   font-size: 16px;
 }
 
-/* Korean font class */
-.kr-text {
-  font-family: var(--font-kr);
+/* Headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-masthead);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
 }
 
-/* App Container Layout */
+/* Target Language & Non-Latin Serif Classes */
+.target-text,
+[lang="ko"],
+[lang="ja"],
+[lang="zh"],
+[lang="hi"],
+[lang="ar"] {
+  font-family: var(--font-target);
+}
+
+.mono-text,
+code,
+pre,
+.classified-mono {
+  font-family: var(--font-mono);
+}
+
+/* ==========================================================================
+   Broadsheet Layout Containers & Newspaper Rules
+   ========================================================================== */
+
 .app-layout {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   min-height: 100dvh;
   width: 100%;
-  overflow-x: hidden;
 }
 
 .main-content {
   flex: 1;
-  max-width: 1240px;
+  max-width: 1280px;
   width: 100%;
   margin: 0 auto;
-  padding: 2rem 1.5rem;
+  padding: 1.5rem 1.5rem 3rem 1.5rem;
   padding-left: max(1.5rem, env(safe-area-inset-left));
   padding-right: max(1.5rem, env(safe-area-inset-right));
   padding-bottom: max(2.5rem, calc(1.5rem + env(safe-area-inset-bottom)));
 }
 
 .app-footer {
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid var(--border-color-light);
   padding: 1.5rem;
   text-align: center;
   color: var(--text-muted);
-  font-size: 0.85rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
-/* Text Accent Color Utilities */
+/* Broadsheet Section Double Rule */
+.double-rule {
+  border-top: 3px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  padding: 0.35rem 0;
+  margin: 1.25rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-transform: uppercase;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  color: var(--text-secondary);
+}
+
+.single-rule {
+  border-bottom: 1px solid var(--border-color);
+  margin: 1rem 0;
+}
+
+.thick-rule {
+  border-bottom: 3px solid var(--border-color);
+  margin: 1rem 0;
+}
+
+.dashed-rule {
+  border-bottom: 1px dashed var(--border-color-light);
+  margin: 0.75rem 0;
+}
+
+/* Card Equivalent: The Broadsheet Box */
+.card {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1.5px solid var(--border-color);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-press);
+  position: relative;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.card:hover {
+  background: var(--bg-card-hover);
+}
+
+/* Heavy Framed Article Box */
+.box-framed {
+  border: 2px solid var(--border-color);
+  outline: 1px solid var(--border-color);
+  outline-offset: 3px;
+  background: var(--bg-card);
+  padding: 1.5rem;
+}
+
+/* Column Divider utilities */
+.column-border-r {
+  border-right: 1px solid var(--border-color-light);
+}
+
+.column-border-l {
+  border-left: 1px solid var(--border-color-light);
+}
+
+/* ==========================================================================
+   Buttons (Physical Press Inked Plates)
+   ========================================================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.15rem;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  border: 1.5px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-press);
+  transition: all 0.12s ease;
+  min-height: 40px;
+  user-select: none;
+}
+
+.btn:hover:not(:disabled) {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px var(--border-color);
+}
+
+.btn:active:not(:disabled) {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0px var(--border-color);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+  border-color: var(--border-color-light);
+  transform: none !important;
+}
+
+/* Button Variants */
+.btn-primary {
+  background: var(--text-primary);
+  color: var(--bg-dark);
+  border-color: var(--text-primary);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--accent-primary-hover);
+  color: var(--bg-dark);
+}
+
+.btn-secondary {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--bg-card-alt);
+}
+
+.btn-danger {
+  background: var(--stamp-red-bg);
+  border-color: var(--stamp-red);
+  color: var(--stamp-red);
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: var(--stamp-red);
+  color: #ffffff;
+}
+
+/* Accessibility Focus States */
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   Form Inputs & Selects (Typewriter & Form Ledger Styling)
+   ========================================================================== */
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.input-group label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="search"],
+input[type="number"],
+select,
+textarea {
+  background-color: var(--bg-card);
+  border: 1.5px solid var(--border-color);
+  padding: 0.6rem 0.8rem;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.06);
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+  min-height: 42px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+input[type="search"]:focus,
+input[type="number"]:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid var(--text-primary);
+  outline-offset: -1px;
+  background-color: var(--bg-card-hover);
+}
+
+select {
+  cursor: pointer;
+  padding-right: 2.2rem;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23111111' stroke-width='3' stroke-linecap='square' stroke-linejoin='miter'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat !important;
+  background-position: right 0.75rem center !important;
+  background-size: 0.85rem !important;
+}
+
+[data-theme="evening"] select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='3' stroke-linecap='square' stroke-linejoin='miter'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat !important;
+  background-position: right 0.75rem center !important;
+  background-size: 0.85rem !important;
+}
+
+textarea {
+  min-height: 100px;
+  resize: vertical;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* ==========================================================================
+   Editorial Rubber Stamps & Status Badges
+   ========================================================================== */
+
+.editorial-stamp-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0.65rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  border: 2px solid currentColor;
+  position: relative;
+  line-height: 1.2;
+}
+
+.stamp-tilt {
+  transform: rotate(-3deg);
+  display: inline-block;
+}
+
+.stamp-red {
+  color: var(--stamp-red);
+  background-color: var(--stamp-red-bg);
+  border-style: solid;
+}
+
+.stamp-green {
+  color: var(--stamp-green);
+  background-color: var(--stamp-green-bg);
+  border-style: solid;
+}
+
+.stamp-amber {
+  color: var(--stamp-amber);
+  background-color: var(--stamp-amber-bg);
+  border-style: solid;
+}
+
+.stamp-blue {
+  color: var(--stamp-blue);
+  background-color: var(--stamp-blue-bg);
+  border-style: solid;
+}
+
+.stamp-ink {
+  color: var(--text-primary);
+  background-color: var(--stamp-ink-bg);
+  border-style: solid;
+}
+
+/* Distressed Rubber Stamp Border Effect */
+.stamp-distressed {
+  border-width: 2.5px;
+  border-style: double;
+  mask-image: linear-gradient(rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.85));
+}
+
+/* ==========================================================================
+   Drop Cap & Newspaper Editorial Utilities
+   ========================================================================== */
+
+.editorial-lead {
+  font-size: 1.15rem;
+  line-height: 1.65;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.drop-cap::first-letter {
+  font-family: var(--font-masthead);
+  font-size: 3.5rem;
+  font-weight: 800;
+  float: left;
+  line-height: 0.8;
+  margin-right: 0.5rem;
+  padding: 0.1rem 0.2rem 0 0;
+  color: var(--text-primary);
+}
+
+/* Text Accent Utilities */
 .text-accent-primary {
-  color: var(--accent-primary);
+  color: var(--text-primary);
 }
 
 .text-accent-secondary {
@@ -121,224 +610,12 @@ input, select, textarea {
   color: var(--accent-danger);
 }
 
-/* Glass Card */
-.glass-card {
-  background: var(--bg-card);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  padding: 1.5rem;
-  box-shadow: var(--shadow-lg);
-  position: relative;
-}
-
-/* Buttons */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.6rem 1.2rem;
-  border-radius: var(--radius-sm);
-  font-weight: 500;
-  font-size: 0.9rem;
-  cursor: pointer;
-  border: none;
-  font-family: inherit;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  user-select: none;
-  min-height: 44px;
-}
-
-.btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none !important;
-}
-
-.btn-primary {
-  background: var(--gradient-main);
-  color: #fff;
-  box-shadow: 0 4px 14px 0 rgba(99, 102, 241, 0.39);
-}
-
-.btn-primary:hover:not(:disabled) {
-  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
-  transform: translateY(-1px);
-}
-
-.btn-primary:active:not(:disabled) {
-  transform: translateY(0);
-}
-
-.btn-secondary {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--border-color);
-  color: var(--text-primary);
-}
-
-.btn-secondary:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
-  transform: translateY(-1px);
-}
-
-.btn-secondary:active:not(:disabled) {
-  transform: translateY(0);
-}
-
-.btn-danger {
-  background: rgba(239, 68, 68, 0.15);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  color: #fca5a5;
-}
-
-.btn-danger:hover:not(:disabled) {
-  background: rgba(239, 68, 68, 0.25);
-  border-color: var(--accent-danger);
-  color: #fff;
-}
-
-/* Accessibility Focus States */
-button:focus-visible,
-a:focus-visible {
-  outline: 2px solid var(--accent-primary);
-  outline-offset: 2px;
-}
-
-input:focus,
-input:focus-visible,
-select:focus,
-select:focus-visible,
-textarea:focus,
-textarea:focus-visible {
-  outline: none;
-}
-
-/* Form Inputs */
-.input-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-
-.input-group label {
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--text-secondary);
-}
-
-input[type="text"],
-input[type="password"],
-input[type="email"],
-input[type="search"],
-input[type="number"],
-select,
-textarea {
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-sm);
-  padding: 0.65rem 0.85rem;
-  color: #fff;
-  font-family: inherit;
-  font-size: 0.95rem;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.15);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-  min-height: 44px;
-}
-
-input[type="text"]:hover,
-input[type="password"]:hover,
-input[type="email"]:hover,
-input[type="search"]:hover,
-input[type="number"]:hover,
-select:hover,
-textarea:hover {
-  border-color: rgba(99, 102, 241, 0.35);
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 12px rgba(99, 102, 241, 0.15);
-}
-
-select {
-  cursor: pointer;
-  padding-right: 2.5rem;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 0.85rem center;
-  background-size: 1rem;
-}
-
-input[type="text"]:focus,
-input[type="password"]:focus,
-input[type="email"]:focus,
-input[type="search"]:focus,
-input[type="number"]:focus,
-select:focus,
-textarea:focus {
-  outline: none;
-  border-color: var(--accent-primary);
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.25), 0 0 20px rgba(99, 102, 241, 0.35);
-}
-
-/* Autofill & Autocomplete Dark Theme Styling */
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-input:-webkit-autofill:active,
-textarea:-webkit-autofill,
-textarea:-webkit-autofill:hover,
-textarea:-webkit-autofill:focus,
-textarea:-webkit-autofill:active,
-select:-webkit-autofill,
-select:-webkit-autofill:hover,
-select:-webkit-autofill:focus,
-select:-webkit-autofill:active {
-  -webkit-text-fill-color: #fff !important;
-  caret-color: #fff !important;
-  -webkit-box-shadow: none !important;
-  box-shadow: none !important;
-  transition: background-color 50000s ease-in-out 0s !important;
-}
-
-input:autofill,
-textarea:autofill,
-select:autofill {
-  -webkit-text-fill-color: #fff !important;
-  caret-color: #fff !important;
-  box-shadow: none !important;
-  transition: background-color 50000s ease-in-out 0s !important;
-}
-
-textarea {
-  min-height: 100px;
-  resize: vertical;
-}
-
-/* Loading Spinner Animation */
-.spinner {
-  width: 24px;
-  height: 24px;
-  border: 3px solid rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
-  border-top-color: #fff;
-  animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 /* Code Snippet / Raw Prompt Block */
 .code-block {
-  background: rgba(15, 23, 42, 0.8);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-sm);
+  background-color: var(--bg-card-alt);
+  border: 1.5px solid var(--border-color);
   padding: 1rem;
-  font-family: monospace;
+  font-family: var(--font-mono);
   font-size: 0.85rem;
   color: var(--text-primary);
   white-space: pre-wrap;
@@ -348,15 +625,12 @@ textarea {
   -webkit-overflow-scrolling: touch;
 }
 
-@media (max-width: 412px) {
+@media (max-width: 650px) {
   .main-content {
-    padding: 1.4rem 1rem;
-    padding-left: max(1rem, env(safe-area-inset-left));
-    padding-right: max(1rem, env(safe-area-inset-right));
-    padding-bottom: max(2rem, calc(1rem + env(safe-area-inset-bottom)));
+    padding: 1.25rem 1rem 2.5rem 1rem;
   }
 
-  .glass-card {
+  .card {
     padding: 1rem;
   }
 }
@@ -366,8 +640,8 @@ textarea {
   .btn-primary,
   .btn-secondary,
   .btn-danger,
-  .glass-card {
-    border: 1px solid ButtonText !important;
+  .card {
+    border: 1.5px solid ButtonText !important;
   }
 }
 
