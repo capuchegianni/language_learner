@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Trash2 } from 'lucide-react';
+import { IconTrashShears } from '../icons';
 import { Lesson } from '../../types';
 import { Pill, PillVariant } from '../Pill';
 import { IconButton } from '../IconButton';
@@ -50,9 +50,11 @@ export const LessonCard: React.FC<LessonCardProps> = ({
     }
   };
 
+  const formattedDate = new Date(lesson.createdAt).toLocaleDateString();
+
   return (
     <div
-      className={`glass-card app-lesson-card ${className}`}
+      className={`card lesson-card ${className}`.trim()}
       onClick={handleClick}
       role="button"
       tabIndex={0}
@@ -64,46 +66,59 @@ export const LessonCard: React.FC<LessonCardProps> = ({
       }}
       aria-label={`Lesson: ${title}`}
     >
-      <div className="app-lesson-card-info">
-        <div className="app-lesson-card-title-row">
-          <span className="kr-text app-lesson-card-title">{title}</span>
-          <div className="app-lesson-card-pills">
+      <div className="lesson-card-info">
+        <div className="lesson-card-title-row">
+          <span className="target-text lesson-card-title">{title}</span>
+          <div className="lesson-card-pills">
             {showStatusPill && (
-              <Pill variant={getStatusPillVariant()}>
+              <Pill variant={getStatusPillVariant()} isStamp>
                 {lesson.status}
               </Pill>
             )}
           </div>
         </div>
-        <div className="app-lesson-card-meta">
-          <span>{new Date(lesson.createdAt).toLocaleDateString()}</span>
+
+        <div className="lesson-card-meta">
+          <span>{formattedDate}</span>
           <span>•</span>
-          <span>{lesson.wordsCount} Words</span>
+          <span>
+            {lesson.wordsCount} {lesson.wordsCount === 1 ? 'Word' : 'Words'}
+          </span>
         </div>
       </div>
 
-      <div className="app-lesson-card-actions">
-        {lesson.overallScore !== null && lesson.overallScore !== undefined ? (
-          <Pill variant={lesson.overallScore >= 80 ? 'success' : 'primary'}>
+      <div className="lesson-card-actions">
+        {lesson.overallScore !== null && lesson.overallScore !== undefined && lesson.status === 'GRADED' ? (
+          <Pill
+            variant={lesson.overallScore >= 80 ? 'success' : 'primary'}
+            isStamp
+            heavyBorder
+          >
             {lesson.overallScore}% Score
           </Pill>
         ) : !showStatusPill ? (
-          <Pill variant="warning">Pending</Pill>
+          <Pill variant="warning" isStamp>
+            Pending
+          </Pill>
         ) : null}
 
         {onDelete && (
           <IconButton
             variant="delete"
+            size={34}
+            iconSize={15}
             onClick={(e) => {
               e.stopPropagation();
               onDelete(e, lesson.id);
             }}
             title="Delete lesson"
             aria-label={`Delete lesson: ${title}`}
-            icon={<Trash2 />}
+            icon={<IconTrashShears size={15} />}
           />
         )}
       </div>
     </div>
   );
 };
+
+export default LessonCard;
