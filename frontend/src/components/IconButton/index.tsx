@@ -25,8 +25,8 @@ export interface IconButtonProps
 
 export const IconButton: React.FC<IconButtonProps> = ({
   icon,
-  size = 34,
-  iconSize = 14,
+  size = 36,
+  iconSize = 16,
   variant = 'default',
   active = false,
   className = '',
@@ -54,9 +54,10 @@ export const IconButton: React.FC<IconButtonProps> = ({
     if (!targetIcon) return null;
 
     if (React.isValidElement(targetIcon)) {
-      const childProps = targetIcon.props as { size?: number };
-      return React.cloneElement(targetIcon as React.ReactElement<{ size?: number }>, {
+      const childProps = targetIcon.props as { size?: number; strokeWidth?: number };
+      return React.cloneElement(targetIcon as React.ReactElement<{ size?: number; strokeWidth?: number }>, {
         size: childProps.size ?? iconSize,
+        strokeWidth: childProps.strokeWidth ?? 2.2,
       });
     }
 

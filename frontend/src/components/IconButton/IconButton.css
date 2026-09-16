@@ -1,75 +1,119 @@
+/* ==========================================================================
+   Metal Press Action Buttons (IconButton)
+   ========================================================================== */
+
 .icon-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
-  border-radius: var(--radius-sm);
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--border-color);
-  color: var(--text-secondary);
+  border: 1.5px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-primary);
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  font-family: inherit;
-  flex-shrink: 0;
+  padding: 0;
+  box-shadow: 1px 1px 0px var(--border-color);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
   user-select: none;
+  flex-shrink: 0;
 }
 
 .icon-btn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.2);
-  color: var(--text-primary);
-  transform: translateY(-1px);
+  transform: translate(-1px, -1px);
+  box-shadow: 2px 2px 0px var(--border-color);
+  background: var(--bg-card-alt);
 }
 
-.icon-btn:active:not(:disabled) {
-  transform: translateY(0) scale(0.95);
+.icon-btn:active:not(:disabled),
+.icon-btn.active {
+  transform: translate(1px, 1px);
+  box-shadow: 0px 0px 0px var(--border-color);
+  background: var(--text-primary);
+  color: var(--bg-dark);
 }
 
 .icon-btn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
-  transform: none;
+  box-shadow: none;
+  transform: none !important;
 }
 
+/* Edit Variant: Antique Brass / Amber Ink */
 .icon-btn-edit {
-  color: #fbbf24;
+  color: var(--text-secondary);
 }
 
 .icon-btn-edit:hover:not(:disabled) {
-  background: rgba(245, 158, 11, 0.18);
-  border-color: rgba(245, 158, 11, 0.45);
-  color: #fef08a;
+  border-color: var(--stamp-amber);
+  color: var(--stamp-amber);
+  background: var(--stamp-amber-bg);
 }
 
+/* Delete Variant: Red Ink Editorial Stamp */
 .icon-btn-delete {
-  color: #f87171;
+  color: var(--text-secondary);
 }
 
 .icon-btn-delete:hover:not(:disabled) {
-  background: rgba(239, 68, 68, 0.18);
-  border-color: rgba(239, 68, 68, 0.45);
-  color: #fca5a5;
+  border-color: var(--stamp-red);
+  color: var(--stamp-red);
+  background: var(--stamp-red-bg);
 }
 
+/* Audio Variant: Celestial / Navy Sound Horn */
 .icon-btn-audio {
-  color: #38bdf8;
+  color: var(--text-secondary);
 }
 
 .icon-btn-audio:hover:not(:disabled),
 .icon-btn-audio.active {
-  background: rgba(6, 182, 212, 0.2);
-  border-color: rgba(6, 182, 212, 0.5);
-  color: #7dd3fc;
+  border-color: var(--stamp-blue);
+  color: var(--stamp-blue);
+  background: var(--stamp-blue-bg);
 }
 
+/* Note Variant: Vintage Plum / Purple */
 .icon-btn-note {
-  color: #94a3b8;
+  color: var(--text-secondary);
 }
 
-.icon-btn-note:hover:not(:disabled),
-.icon-btn-note.active {
-  background: rgba(148, 163, 184, 0.2);
-  border-color: rgba(148, 163, 184, 0.4);
+.icon-btn-note:hover:not(:disabled) {
+  border-color: var(--accent-purple);
+  color: var(--accent-purple);
+  background: rgba(92, 53, 88, 0.1);
+}
+
+/* Primary Solid Inked Plate */
+.icon-btn-primary {
+  background: var(--text-primary);
+  color: var(--bg-dark);
+  border-color: var(--text-primary);
+}
+
+.icon-btn-primary:hover:not(:disabled) {
+  background: var(--accent-primary-hover);
+  color: var(--bg-dark);
+}
+
+/* Secondary Inked Plate */
+.icon-btn-secondary {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.icon-btn-secondary:hover:not(:disabled) {
+  background: var(--bg-card-alt);
+}
+
+/* Danger Variant */
+.icon-btn-danger {
+  border-color: var(--stamp-red);
+  color: var(--stamp-red);
+  background: var(--stamp-red-bg);
+}
+
+.icon-btn-danger:hover:not(:disabled) {
+  background: var(--stamp-red);
   color: #fff;
 }
