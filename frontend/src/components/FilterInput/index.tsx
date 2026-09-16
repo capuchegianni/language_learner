@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Search } from 'lucide-react';
+import { IconMagnifierSearch } from '../icons';
 import './FilterInput.css';
 
 export interface FilterInputProps {
@@ -40,11 +40,11 @@ export const FilterInput: React.FC<FilterInputProps> = ({
   return (
     <label
       htmlFor={id}
-      className={`glass-card filter-search-card ${className}`.trim()}
+      className={`card filter-search-card ${className}`.trim()}
       style={{ ...containerStyle, ...style }}
       onClick={handleClick}
     >
-      <Search size={20} className="filter-search-icon" aria-hidden="true" />
+      <IconMagnifierSearch size={18} className="filter-search-icon" aria-hidden="true" />
       <input
         id={id}
         ref={inputRef}

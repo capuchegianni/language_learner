@@ -49,7 +49,7 @@ export const FilterSelect: React.FC<FilterSelectProps> = ({
   return (
     <label
       htmlFor={id}
-      className={`glass-card filter-select-card ${className}`.trim()}
+      className={`card filter-select-card ${className}`.trim()}
       style={style}
       onClick={handleCardClick}
     >
