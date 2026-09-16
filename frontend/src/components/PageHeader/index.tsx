@@ -19,16 +19,18 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
   className = '',
 }) => {
   return (
-    <div id={id} className={`app-page-header ${className}`}>
+    <header id={id} className={`app-page-header ${className}`.trim()}>
       <div className="app-page-header-content">
         <h1 className="app-page-title">
-          {icon}
+          {icon && <span className="app-page-title-icon">{icon}</span>}
           <span>{title}</span>
         </h1>
         {subtitle && <p className="app-page-subtitle">{subtitle}</p>}
       </div>
 
       {actions && <div className="app-page-actions">{actions}</div>}
-    </div>
+    </header>
   );
 };
+
+export default PageHeader;
