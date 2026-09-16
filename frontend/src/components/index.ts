@@ -11,3 +11,5 @@ export * from './Navbar';
 export * from './ProtectedRoute';
 export * from './Pill';
 export * from './IconButton';
+export * from './icons';
+

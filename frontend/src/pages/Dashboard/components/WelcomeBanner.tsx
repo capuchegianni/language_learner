@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Sparkles } from 'lucide-react';
+import { IconNewDispatch } from '../../../components/icons';
 import { useLanguages } from '../../../contexts/LanguageContext';
 
 export const WelcomeBanner: React.FC = () => {
@@ -9,7 +9,7 @@ export const WelcomeBanner: React.FC = () => {
 
   return (
     <div
-      className="glass-card welcome-banner"
+      className="card welcome-banner"
       id="tutorial-welcome-banner"
     >
       <div className="welcome-banner-content">
@@ -27,7 +27,7 @@ export const WelcomeBanner: React.FC = () => {
           id="tutorial-start-lesson-btn"
           onClick={() => navigate('/lessons/new')}
         >
-          <Sparkles size={20} />
+          <IconNewDispatch size={20} />
           <span>Start Daily Lesson</span>
         </button>
       </div>
