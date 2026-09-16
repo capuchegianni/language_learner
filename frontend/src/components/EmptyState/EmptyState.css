@@ -1,43 +1,51 @@
-.app-empty-state {
+/* ==========================================================================
+   Archive Notice Empty State (EmptyState)
+   ========================================================================== */
+
+.empty-state {
+  background: var(--bg-card);
+  border: 2px solid var(--border-color);
+  outline: 1px dashed var(--border-color-light);
+  outline-offset: 4px;
+  padding: 3rem 2rem;
   text-align: center;
-  padding: 3rem 1.5rem;
-  color: var(--text-secondary);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  box-shadow: 2px 3px 0px var(--border-color);
+  box-sizing: border-box;
+  width: 100%;
 }
 
-.app-empty-state-icon {
-  margin-bottom: 1rem;
-  color: var(--text-muted);
-  opacity: 0.6;
+.empty-state-icon {
+  color: var(--text-primary);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  margin-bottom: 0.25rem;
 }
 
-.app-empty-state:hover .app-empty-state-icon {
-  transform: scale(1.05);
-  opacity: 0.85;
-}
-
-.app-empty-state-title {
-  font-size: 1.15rem;
-  font-weight: 600;
+.empty-state-title {
+  font-family: var(--font-masthead);
+  font-size: 1.5rem;
+  font-weight: 700;
   color: var(--text-primary);
-  margin-bottom: 0.5rem;
+  line-height: 1.2;
 }
 
-.app-empty-state-message {
-  font-size: 0.92rem;
+.empty-state-message {
+  font-family: var(--font-body);
+  font-size: 1rem;
   color: var(--text-secondary);
   max-width: 480px;
+  line-height: 1.55;
+  font-style: italic;
   margin: 0 auto;
-  line-height: 1.5;
 }
 
-.app-empty-state-action {
-  margin-top: 1.5rem;
+.empty-state-action {
+  margin-top: 0.5rem;
 }
