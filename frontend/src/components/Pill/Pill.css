@@ -1,34 +1,61 @@
-/* ========================================================= */
-/* Pill Component Styles                                     */
-/* ========================================================= */
-
 .pill {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.8rem;
-  font-weight: 600;
+  padding: 0.2rem 0.55rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  border: 1.5px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  user-select: none;
   white-space: nowrap;
 }
 
 .pill-primary {
-  background: rgba(99, 102, 241, 0.2);
-  color: #a5b4fc;
-  border: 1px solid rgba(99, 102, 241, 0.4);
+  border-color: var(--border-color);
+  background: var(--bg-card-alt);
+  color: var(--text-primary);
 }
 
 .pill-success {
-  background: rgba(16, 185, 129, 0.2);
-  color: #6ee7b7;
-  border: 1px solid rgba(16, 185, 129, 0.4);
+  border-color: var(--stamp-green);
+  color: var(--stamp-green);
+  background: var(--stamp-green-bg);
 }
 
 .pill-warning {
-  background: rgba(245, 158, 11, 0.2);
-  color: #fcd34d;
-  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-color: var(--stamp-amber);
+  color: var(--stamp-amber);
+  background: var(--stamp-amber-bg);
+}
+
+.pill-danger {
+  border-color: var(--stamp-red);
+  color: var(--stamp-red);
+  background: var(--stamp-red-bg);
+}
+
+/* Rubber Stamp Variant */
+.pill-stamp {
+  border-width: 2px;
+  border-style: solid;
+  letter-spacing: 0.14em;
+  font-weight: 800;
+  padding: 0.25rem 0.65rem;
+  transform: rotate(-2deg);
+  display: inline-block;
+}
+
+.pill-stamp-tilt-right {
+  transform: rotate(2deg);
+}
+
+.pill-stamp-heavy {
+  border-width: 3px;
+  box-shadow: inset 0 0 0 1px currentColor;
 }
