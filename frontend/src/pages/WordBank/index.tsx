@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, Plus } from 'lucide-react';
+import { IconLexicon, IconFleuronPlus } from '../../components/icons';
 import { useLanguages } from '../../contexts/LanguageContext';
 import { useWordBank } from './hooks/useWordBank';
 import { WordCard } from './components/WordCard';
@@ -40,7 +40,7 @@ export const WordBank: React.FC = () => {
     <div className="wordbank-container">
       <PageHeader
         id="tutorial-wordbank-header"
-        icon={<BookOpen className="text-accent-secondary" />}
+        icon={<IconLexicon size={40} />}
         title={`${targetLanguage} Word Bank`}
         subtitle={`All learned vocabulary automatically tracked from lessons or added manually. Total: ${words.length} words.`}
         actions={
@@ -50,7 +50,7 @@ export const WordBank: React.FC = () => {
             id="tutorial-wordbank-add-btn"
             onClick={openAddModal}
           >
-            <Plus size={18} />
+            <IconFleuronPlus size={18} />
             <span>Add Custom Word</span>
           </button>
         }

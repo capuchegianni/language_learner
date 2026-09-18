@@ -39,7 +39,7 @@ export const WordModal: React.FC<WordModalProps> = ({
             id="word-target-input"
             autoFocus
             type="text"
-            className="kr-text"
+            className="target-text"
             value={formData.targetLanguage}
             onChange={(e) => onFieldChange('targetLanguage', e.target.value)}
             required
@@ -107,7 +107,7 @@ export const WordModal: React.FC<WordModalProps> = ({
           />
         </div>
 
-        <div className="app-modal-footer">
+        <div className="modal-footer">
           <button type="button" className="btn btn-secondary" onClick={onClose}>
             Cancel
           </button>

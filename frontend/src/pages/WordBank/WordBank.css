@@ -40,7 +40,7 @@
 .word-target-text {
   font-size: 1.35rem;
   font-weight: 700;
-  color: var(--accent-secondary);
+  color: var(--text-primary);
 }
 
 .word-card-native {
@@ -58,16 +58,17 @@
 
 .word-notes-box {
   margin-top: 0.6rem;
-  padding: 0.5rem 0.75rem;
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-sm);
-  font-size: 0.82rem;
+  padding: 0.75rem 1rem;
+  background: var(--bg-card-alt);
+  border: 1.5px solid var(--border-color);
+  box-shadow: 1.5px 1.5px 0px var(--border-color);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
   color: var(--text-secondary);
-  line-height: 1.4;
+  line-height: 1.45;
   word-break: break-word;
   white-space: pre-wrap;
-  animation: noteSlideDown 0.2s ease-out;
+  box-sizing: border-box;
 }
 
 .word-card-footer {
@@ -76,7 +77,7 @@
   justify-content: space-between;
   align-items: center;
   padding-top: 0.75rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px dashed var(--border-color-light);
 }
 
 .word-card-category {
