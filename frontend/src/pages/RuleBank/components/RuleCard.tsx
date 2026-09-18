@@ -1,6 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Clock, Edit, Trash2 } from 'lucide-react';
+import {
+  IconChronicle,
+  IconDraftingEdit,
+  IconTrashShears,
+  IconHazardAlert,
+} from '../../../components/icons';
 import { Rule } from '../../../types';
 import { RuleExample } from '../types';
 import { IconButton } from '../../../components';
@@ -25,10 +30,10 @@ export const RuleCard: React.FC<RuleCardProps> = ({ rule, onEdit, onDelete }) =>
   }
 
   return (
-    <div className="glass-card rule-card">
+    <div className="card rule-card">
       <div className="rule-card-header">
         <div className="rule-card-title-group">
-          <h3 className="kr-text rule-card-title">{rule.title}</h3>
+          <h3 className="target-text rule-card-title">{rule.title}</h3>
         </div>
         <div className="rule-card-actions">
           {rule._count && rule._count.lessons > 0 && (
@@ -40,7 +45,7 @@ export const RuleCard: React.FC<RuleCardProps> = ({ rule, onEdit, onDelete }) =>
               }
               title={`View ${rule._count.lessons} linked lesson(s)`}
             >
-              <Clock size={14} />
+              <IconChronicle size={14} />
               <span>
                 {rule._count.lessons} Lesson
                 {rule._count.lessons !== 1 ? 's' : ''}
@@ -52,14 +57,14 @@ export const RuleCard: React.FC<RuleCardProps> = ({ rule, onEdit, onDelete }) =>
             onClick={() => onEdit(rule)}
             title="Edit grammar rule"
             aria-label={`Edit rule: ${rule.title}`}
-            icon={<Edit />}
+            icon={<IconDraftingEdit />}
           />
           <IconButton
             variant="delete"
             onClick={() => onDelete(rule.id)}
             title="Delete grammar rule"
             aria-label={`Delete rule: ${rule.title}`}
-            icon={<Trash2 />}
+            icon={<IconTrashShears />}
           />
         </div>
       </div>
@@ -78,22 +83,22 @@ export const RuleCard: React.FC<RuleCardProps> = ({ rule, onEdit, onDelete }) =>
 
       {parsedExamples.length > 0 && (
         <div className="rule-examples-container">
-          <div className="rule-examples-label">Examples:</div>
+          <h4 className="rule-examples-label">Examples:</h4>
           <div className="rule-examples-list">
             {parsedExamples.map((ex, idx) => (
               <div key={idx} className="rule-example-box">
-                <span className="kr-text rule-example-target">
+                <div className="target-text rule-example-target">
                   {ex.targetLanguage}
-                </span>
+                </div>
                 {ex.nativeLanguage && (
-                  <span className="rule-example-native">
-                    ({ex.nativeLanguage})
-                  </span>
+                  <div className="rule-example-native">
+                    {ex.nativeLanguage}
+                  </div>
                 )}
                 {ex.explanation && (
-                  <span className="rule-example-expl">
-                    • {ex.explanation}
-                  </span>
+                  <div className="rule-example-expl">
+                    {ex.explanation}
+                  </div>
                 )}
               </div>
             ))}
@@ -103,9 +108,14 @@ export const RuleCard: React.FC<RuleCardProps> = ({ rule, onEdit, onDelete }) =>
 
       {rule.exceptions && (
         <div className="rule-exceptions-box">
-          <strong>Exceptions:</strong> {rule.exceptions}
+          <div className="rule-exceptions-header">
+            <IconHazardAlert size={16} />
+            <span>Note / Exceptions</span>
+          </div>
+          <p className="rule-exceptions-text">{rule.exceptions}</p>
         </div>
       )}
     </div>
   );
 };
+

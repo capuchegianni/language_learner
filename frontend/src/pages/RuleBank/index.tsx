@@ -1,5 +1,5 @@
 import React from 'react';
-import { Scroll, Plus } from 'lucide-react';
+import { IconGrammarGazette, IconFleuronPlus } from '../../components/icons';
 import { useLanguages } from '../../contexts/LanguageContext';
 import { useRuleBank } from './hooks/useRuleBank';
 import { RuleCard } from './components/RuleCard';
@@ -29,7 +29,7 @@ export const RuleBank: React.FC = () => {
     <div className="rulebank-container">
       <PageHeader
         id="tutorial-rulebank-header"
-        icon={<Scroll className="text-accent-purple" />}
+        icon={<IconGrammarGazette size={40} />}
         title="Mastered Grammar Rule Bank"
         subtitle={`A comprehensive index of all ${targetLanguage} grammar rules learned in lessons. Total: ${rules.length} rules.`}
         actions={
@@ -39,7 +39,7 @@ export const RuleBank: React.FC = () => {
             id="tutorial-rulebank-add-btn"
             onClick={openAddModal}
           >
-            <Plus size={18} />
+            <IconFleuronPlus size={18} />
             <span>Add Custom Rule</span>
           </button>
         }
