@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { History, Sparkles, Clock } from 'lucide-react';
+import { IconChronicle, IconNewDispatch } from '../../components/icons';
 import { useLanguages } from '../../contexts/LanguageContext';
 import { useLessonHistory } from './hooks/useLessonHistory';
 import { HistoryFilterBar } from './components/HistoryFilterBar';
@@ -28,7 +28,7 @@ export const LessonHistory: React.FC = () => {
     <div className="history-container">
       <PageHeader
         id="tutorial-history-header"
-        icon={<History className="text-accent-primary" />}
+        icon={<IconChronicle size={40} />}
         title="Lesson History"
         subtitle={`All past generated, submitted, and graded ${targetLanguage} lessons. Total: ${lessons.length} lesson${lessons.length !== 1 ? 's' : ''}.`}
         actions={
@@ -37,7 +37,7 @@ export const LessonHistory: React.FC = () => {
             className="btn btn-primary"
             onClick={() => navigate('/lessons/new')}
           >
-            <Sparkles size={18} />
+            <IconNewDispatch size={18} />
             <span>New Lesson</span>
           </button>
         }
@@ -55,7 +55,7 @@ export const LessonHistory: React.FC = () => {
           <LoadingSpinner variant="card" />
         ) : displayedLessons.length === 0 ? (
           <EmptyState
-            icon={<Clock size={40} />}
+            icon={<IconChronicle size={40} />}
             message={
               search || filterStatus
                 ? 'No lessons match your search and filter criteria.'
