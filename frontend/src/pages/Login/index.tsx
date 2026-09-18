@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Navigate, useSearchParams } from 'react-router-dom';
-import { AlertCircle, AlertTriangle, X } from 'lucide-react';
+import { IconHazardAlert, IconCloseDismiss, IconGlobe } from '../../components/icons';
 import { useAuth } from '../../contexts/AuthContext';
 import { API_BASE } from '../../services/api';
 import { LoadingSpinner } from '../../components/LoadingSpinner';
@@ -62,12 +62,11 @@ export const Login: React.FC = () => {
 
   return (
     <div className="login-page">
-      <div className="login-ambient-glow login-ambient-glow-1" />
-      <div className="login-ambient-glow login-ambient-glow-2" />
-
-      <div className="login-card">
+      <div className="card login-card">
         <div className="login-logo">
-          <div className="login-logo-badge">🌍</div>
+          <div className="login-logo-badge">
+            <IconGlobe size={30} />
+          </div>
           <h1 className="login-title">Language Learner</h1>
           <p className="login-subtitle">AI-Powered Language Tutor</p>
         </div>
@@ -80,11 +79,7 @@ export const Login: React.FC = () => {
             role="alert"
           >
             <div className="login-alert-icon">
-              {errorDetails.type === 'warning' ? (
-                <AlertTriangle size={18} />
-              ) : (
-                <AlertCircle size={18} />
-              )}
+              <IconHazardAlert size={18} />
             </div>
             <div className="login-alert-content">
               <div className="login-alert-title">{errorDetails.title}</div>
@@ -96,7 +91,7 @@ export const Login: React.FC = () => {
               aria-label="Dismiss error"
               type="button"
             >
-              <X size={16} />
+              <IconCloseDismiss size={16} />
             </button>
           </div>
         )}
