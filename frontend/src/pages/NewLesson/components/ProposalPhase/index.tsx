@@ -1,6 +1,11 @@
 import React, { useState, useRef } from 'react';
 import { ProposedRule } from '../../../../types';
-import { RefreshCw, BookOpen, Sparkles, Check } from 'lucide-react';
+import {
+  IconRefreshCrank,
+  IconLexicon,
+  IconNewDispatch,
+  IconApprovalCheck,
+} from '../../../../components/icons';
 import { useLanguages } from '../../../../contexts/LanguageContext';
 import { Pill } from '../../../../components/Pill';
 import { FilterSelect } from '../../../../components/FilterSelect';
@@ -67,7 +72,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
 
   return (
     <div id="tutorial-lesson-container" className={`proposal-phase-container ${className}`.trim()}>
-      <div className="glass-card proposal-header-card">
+      <div className="card proposal-header-card">
         <h2 className="proposal-header-title">
           Select Today's {targetLanguage} Rule
         </h2>
@@ -110,7 +115,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
                 return (
                   <div
                     key={idx}
-                    className={`glass-card proposal-card ${isSelected ? 'selected' : ''} ${isReplacing ? 'replacing' : ''}`}
+                    className={`card proposal-card ${isSelected ? 'selected' : ''} ${isReplacing ? 'replacing' : ''}`}
                     onClick={() => {
                       if (!isReplacing) onSelectRule(prop.title, false);
                     }}
@@ -129,18 +134,18 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
                               <Pill variant="warning">{prop.difficulty}</Pill>
                             </div>
                             <IconButton
-                              icon={<RefreshCw />}
+                              icon={<IconRefreshCrank />}
                               title="Replace this proposal"
                               aria-label={`Replace proposal: ${prop.title}`}
                               onClick={(e) => onReplaceProposal(idx, e)}
                               disabled={replacingIndex !== null}
                             />
                           </div>
-                          <h4 className="kr-text proposal-card-title">{prop.title}</h4>
+                          <h4 className="target-text proposal-card-title">{prop.title}</h4>
                           <p className="proposal-card-desc">{prop.briefExplanation}</p>
                         </div>
                         <div className="proposal-select-indicator">
-                          {isSelected ? <Check size={16} /> : <div className="proposal-unselected-circle" />}
+                          {isSelected ? <IconApprovalCheck size={16} /> : <div className="proposal-unselected-circle" />}
                           <span>{isSelected ? 'Selected Rule' : 'Select Rule'}</span>
                         </div>
                       </>
@@ -158,7 +163,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
             </h3>
             <label
               htmlFor="custom-lesson-rule-input"
-              className={`glass-card custom-rule-card ${isCustomSelected ? 'selected' : ''}`}
+              className={`card custom-rule-card ${isCustomSelected ? 'selected' : ''}`}
               onClick={handleCustomCardClick}
             >
               <div className="custom-rule-input-wrapper">
@@ -186,7 +191,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
                   }
                 }}
               >
-                {isCustomSelected ? <Check size={18} /> : <div className="proposal-unselected-circle large" />}
+                {isCustomSelected ? <IconApprovalCheck size={18} /> : <div className="proposal-unselected-circle large" />}
                 <span>{isCustomSelected ? 'Selected' : 'Select'}</span>
               </div>
             </label>
@@ -199,13 +204,13 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
                 Spaced Repetition Review
               </h3>
               <div
-                className={`glass-card review-rule-card ${isReviewSelection ? 'selected' : ''}`}
+                className={`card review-rule-card ${isReviewSelection ? 'selected' : ''}`}
                 onClick={() => onSelectRule(reviewRule.title, true)}
               >
                 <div className="review-rule-content">
                   <div className="review-rule-header">
                     <Pill variant="warning">Review Mode</Pill>
-                    <h4 className="kr-text review-rule-title">{reviewRule.title}</h4>
+                    <h4 className="target-text review-rule-title">{reviewRule.title}</h4>
                   </div>
                   <p className="review-rule-explanation">
                     {reviewRule.explanation.length > 100
@@ -214,7 +219,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
                   </p>
                 </div>
                 <div className="review-rule-badge">
-                  {isReviewSelection ? <Check size={18} /> : <BookOpen size={18} />}
+                  {isReviewSelection ? <IconApprovalCheck size={18} /> : <IconLexicon size={18} />}
                   <span>{isReviewSelection ? 'Selected Review' : 'Select Review'}</span>
                 </div>
               </div>
@@ -231,7 +236,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
           onClick={() => fetchProposals(true)}
           disabled={loadingProposals || generatingLesson}
         >
-          <RefreshCw size={18} />
+          <IconRefreshCrank size={18} />
           <span>Refresh Proposals</span>
         </button>
         <button
@@ -249,7 +254,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
             />
           ) : (
             <>
-              <Sparkles size={20} />
+              <IconNewDispatch size={20} />
               <span>Generate Lesson &amp; Exercises</span>
             </>
           )}

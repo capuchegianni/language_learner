@@ -23,7 +23,8 @@
 }
 
 .ex1-cloze-sentence {
-  font-size: 0.98rem;
+  font-family: var(--font-target);
+  font-size: 1.05rem;
   font-weight: 600;
   color: var(--text-primary);
   line-height: 1.4;
@@ -33,11 +34,13 @@
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  font-size: 0.8rem;
-  font-weight: 600;
-  padding: 0.25rem 0.6rem;
-  border-radius: 9999px;
-  background: rgba(168, 85, 247, 0.15);
-  color: #c084fc;
-  border: 1px solid rgba(168, 85, 247, 0.3);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  background: var(--bg-card-alt);
+  color: var(--text-primary);
+  border: 1.5px solid var(--border-color);
+  user-select: none;
 }
+

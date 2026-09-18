@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Layers } from 'lucide-react';
+import { IconLinotypeLayers } from '../../../../../../components/icons';
 import { ExerciseOneComponentProps } from '../types';
 import './subjectConjugation.css';
 
@@ -158,7 +158,7 @@ export const SubjectConjugationExercise: React.FC<ExerciseOneComponentProps> = (
       <div className="ex1-container">
         <div className="ex1-header-block">
           <span className="ex1-type-badge">
-            <Layers size={13} />
+            <IconLinotypeLayers size={13} />
             Conjugation Paradigm Drill
           </span>
           <p className="ex1-instruction">{instruction}</p>
@@ -167,7 +167,7 @@ export const SubjectConjugationExercise: React.FC<ExerciseOneComponentProps> = (
         <div className="ex1-conjugation-list">
           {targetWords.map((verb, idx) => (
             <div key={idx} className="ex1-conjugation-card">
-              <span className="ex1-verb-title kr-text">
+              <span className="ex1-verb-title target-text">
                 {idx + 1}. {verb}
               </span>
               <input
@@ -189,7 +189,7 @@ export const SubjectConjugationExercise: React.FC<ExerciseOneComponentProps> = (
     <div className="ex1-container">
       <div className="ex1-header-block">
         <span className="ex1-type-badge">
-          <Layers size={13} />
+          <IconLinotypeLayers size={13} />
           Conjugation Paradigm Drill
         </span>
         <p className="ex1-instruction">{instruction}</p>
@@ -202,7 +202,7 @@ export const SubjectConjugationExercise: React.FC<ExerciseOneComponentProps> = (
               <tr>
                 <th className="ex1-table-pronoun-th">subject</th>
                 {targetWords.map((verb, vIdx) => (
-                  <th key={vIdx} className="ex1-table-verb-th kr-text">
+                  <th key={vIdx} className="ex1-table-verb-th target-text">
                     {verb}
                   </th>
                 ))}

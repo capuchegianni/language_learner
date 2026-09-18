@@ -1,5 +1,5 @@
 import React from 'react';
-import { Scroll } from 'lucide-react';
+import { IconGrammarGazette, IconHazardAlert } from '../../../../components/icons';
 import { LessonContent } from '../../../../types';
 import './RuleExplanation.css';
 
@@ -11,19 +11,22 @@ export interface RuleExplanationProps {
 export const RuleExplanation: React.FC<RuleExplanationProps> = ({ lessonContent, className = '' }) => {
   if (!lessonContent.rule) return null;
 
+  const hasExamples = Boolean(lessonContent.rule.examples && lessonContent.rule.examples.length > 0);
+
   return (
-    <div className={`glass-card rule-explanation-card ${className}`.trim()}>
+    <div className={`card rule-explanation-card ${className}`.trim()}>
       <div className="rule-explanation-header-wrapper">
         <div className="rule-explanation-badge-row">
-          <Scroll size={16} color="var(--accent-purple)" />
+          <IconGrammarGazette size={16} />
           <span>Rule Explanation</span>
         </div>
         {lessonContent.rule.title && (
-          <h2 className="rule-explanation-title kr-text">
+          <h2 className="rule-explanation-title target-text">
             {lessonContent.rule.title}
           </h2>
         )}
       </div>
+
       <div className="rule-explanation-body">
         {lessonContent.rule.explanation
           ?.split(/\n\s*\n|(?=(?:^|\n)\s*\d+\.\s+)/)
@@ -35,18 +38,31 @@ export const RuleExplanation: React.FC<RuleExplanationProps> = ({ lessonContent,
             </p>
           ))}
       </div>
-      {lessonContent.rule.examples?.map((ex, idx) => (
-        <div key={idx} className="rule-example-card">
-          <div className="kr-text rule-example-target">{ex.targetLanguage}</div>
-          <div className="rule-example-native">{ex.nativeLanguage}</div>
-          {ex.explanation && (
-            <div className="rule-example-expl">{ex.explanation}</div>
-          )}
+
+      {hasExamples && (
+        <div className="rule-examples-section">
+          <h4 className="rule-section-label">Examples:</h4>
+          <div className="rule-examples-list">
+            {lessonContent.rule.examples?.map((ex, idx) => (
+              <div key={idx} className="rule-example-card">
+                <div className="target-text rule-example-target">{ex.targetLanguage}</div>
+                <div className="rule-example-native">{ex.nativeLanguage}</div>
+                {ex.explanation && (
+                  <div className="rule-example-expl">{ex.explanation}</div>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
-      ))}
+      )}
+
       {lessonContent.rule.exceptions && (
         <div className="rule-exceptions-callout">
-          <strong>Note / Exceptions:</strong> {lessonContent.rule.exceptions}
+          <div className="rule-exceptions-header">
+            <IconHazardAlert size={16} />
+            <span>Note / Exceptions</span>
+          </div>
+          <p className="rule-exceptions-text">{lessonContent.rule.exceptions}</p>
         </div>
       )}
     </div>
@@ -54,3 +70,4 @@ export const RuleExplanation: React.FC<RuleExplanationProps> = ({ lessonContent,
 };
 
 export default RuleExplanation;
+

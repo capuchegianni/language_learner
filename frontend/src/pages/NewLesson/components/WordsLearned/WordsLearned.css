@@ -4,15 +4,22 @@
 
 .words-learned-card {
   margin: 0;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-color);
+  box-shadow: 2px 3px 0px var(--border-color);
+  padding: 1.25rem 1.4rem;
+  box-sizing: border-box;
 }
 
 .words-learned-header {
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-family: var(--font-masthead);
+  font-size: 1.15rem;
+  font-weight: 700;
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.55rem;
+  color: var(--text-primary);
 }
 
 .words-learned-grid {
@@ -24,25 +31,29 @@
 .word-learned-item {
   flex: 1 1 0;
   min-width: 0;
-  background: rgba(15, 23, 42, 0.6);
-  padding: 0.75rem 1rem;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border-color);
+  background: var(--bg-card-alt);
+  padding: 0.85rem 1rem;
+  border: 1.5px solid var(--border-color);
+  box-shadow: 1.5px 1.5px 0px var(--border-color);
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.35rem;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 .word-learned-target {
-  font-size: 1.15rem;
+  font-family: var(--font-target);
+  font-size: 1.2rem;
   font-weight: 700;
-  color: var(--accent-secondary);
+  color: var(--text-primary);
+  line-height: 1.25;
 }
 
 .word-learned-native {
-  font-size: 0.85rem;
-  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  color: var(--text-secondary);
   line-height: 1.35;
   word-break: break-word;
 }
@@ -51,7 +62,8 @@
 @media (max-width: 1040px) {
   .words-learned-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.75rem;
   }
 }
 
@@ -59,5 +71,7 @@
   .words-learned-grid {
     display: grid;
     grid-template-columns: 1fr;
+    gap: 0.65rem;
   }
 }
+

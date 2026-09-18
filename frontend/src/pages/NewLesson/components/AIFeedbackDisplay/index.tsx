@@ -1,5 +1,5 @@
 import React from 'react';
-import { Award } from 'lucide-react';
+import { IconAwardLaurel } from '../../../../components/icons';
 import { GradingResult, LessonContent } from '../../../../types';
 import { Pill } from '../../../../components/Pill';
 import './AIFeedbackDisplay.css';
@@ -22,8 +22,8 @@ export const AIFeedbackDisplay: React.FC<AIFeedbackDisplayProps> = ({
   return (
     <div className={`feedback-display-container ${className}`.trim()}>
       {/* Overall Score Banner */}
-      <div className="glass-card feedback-score-banner">
-        <Award size={48} className="feedback-score-icon" />
+      <div className="card feedback-score-banner">
+        <IconAwardLaurel size={48} className="feedback-score-icon" />
         <h2 className="feedback-score-title">{title}</h2>
         <div
           className={`feedback-score-value ${gradingResult.overallScore >= 80 ? 'high' : 'low'}`}
@@ -35,16 +35,16 @@ export const AIFeedbackDisplay: React.FC<AIFeedbackDisplayProps> = ({
 
       {/* OCR Box if image uploaded */}
       {gradingResult.handwrittenOcrText && (
-        <div className="glass-card feedback-ocr-card">
+        <div className="card feedback-ocr-card">
           <h3 className="feedback-ocr-header">
             Vision AI OCR Handwritten Transcription:
           </h3>
-          <p className="kr-text feedback-ocr-text">{gradingResult.handwrittenOcrText}</p>
+          <p className="target-text feedback-ocr-text">{gradingResult.handwrittenOcrText}</p>
         </div>
       )}
 
       {/* Exercise 1 Breakdown */}
-      <div className="glass-card feedback-exercise-card">
+      <div className="card feedback-exercise-card">
         <div className="feedback-exercise-header">
           <h3 className="feedback-exercise-title">
             Exercise 1: Rule Application
@@ -63,7 +63,7 @@ export const AIFeedbackDisplay: React.FC<AIFeedbackDisplayProps> = ({
                 lessonContent.exercise1.targetWords.length > 0 && (
                   <span className="feedback-task-target">
                     (Target:{' '}
-                    <strong className="kr-text feedback-task-target-words">
+                    <strong className="target-text feedback-task-target-words">
                       {lessonContent.exercise1.targetWords.join(', ')}
                     </strong>
                     )
@@ -76,7 +76,7 @@ export const AIFeedbackDisplay: React.FC<AIFeedbackDisplayProps> = ({
         {userSubmission?.ex1 && (
           <div className="feedback-submission-box">
             <div className="feedback-submission-label">Your Answer:</div>
-            <p className="kr-text feedback-submission-text">{userSubmission.ex1}</p>
+            <p className="target-text feedback-submission-text">{userSubmission.ex1}</p>
           </div>
         )}
 
@@ -95,7 +95,7 @@ export const AIFeedbackDisplay: React.FC<AIFeedbackDisplayProps> = ({
       </div>
 
       {/* Exercise 2 Breakdown */}
-      <div className="glass-card feedback-exercise-card">
+      <div className="card feedback-exercise-card">
         <div className="feedback-exercise-header">
           <h3 className="feedback-exercise-title">
             Exercise 2: Sentence Translations
@@ -121,7 +121,7 @@ export const AIFeedbackDisplay: React.FC<AIFeedbackDisplayProps> = ({
         {userSubmission?.ex2 && (
           <div className="feedback-submission-box">
             <div className="feedback-submission-label">Your Translation:</div>
-            <p className="kr-text feedback-submission-text">{userSubmission.ex2}</p>
+            <p className="target-text feedback-submission-text">{userSubmission.ex2}</p>
           </div>
         )}
 
@@ -140,7 +140,7 @@ export const AIFeedbackDisplay: React.FC<AIFeedbackDisplayProps> = ({
       </div>
 
       {/* Exercise 3 Breakdown */}
-      <div className="glass-card feedback-exercise-card">
+      <div className="card feedback-exercise-card">
         <div className="feedback-exercise-header">
           <h3 className="feedback-exercise-title">
             Exercise 3: Free Paragraph Creation
@@ -160,7 +160,7 @@ export const AIFeedbackDisplay: React.FC<AIFeedbackDisplayProps> = ({
         {userSubmission?.ex3 && (
           <div className="feedback-submission-box">
             <div className="feedback-submission-label">Your Submission:</div>
-            <p className="kr-text feedback-submission-text">{userSubmission.ex3}</p>
+            <p className="target-text feedback-submission-text">{userSubmission.ex3}</p>
           </div>
         )}
 

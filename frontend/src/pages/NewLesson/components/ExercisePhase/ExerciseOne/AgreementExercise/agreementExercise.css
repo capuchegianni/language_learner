@@ -23,27 +23,32 @@
 }
 
 .ex1-agreement-base-word {
-  font-size: 0.98rem;
-  font-weight: 600;
+  font-family: var(--font-target);
+  font-size: 1.05rem;
+  font-weight: 700;
   color: var(--text-primary);
-  line-height: 1.4;
+  line-height: 1.35;
 }
 
 .ex1-agreement-condition {
   display: inline-flex;
   align-items: center;
+  font-family: var(--font-mono);
   font-size: 0.78rem;
-  font-weight: 600;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
   padding: 0.2rem 0.55rem;
-  border-radius: 4px;
-  background: rgba(56, 189, 248, 0.12);
-  color: #38bdf8;
-  border: 1px solid rgba(56, 189, 248, 0.25);
+  background: var(--bg-card-alt);
+  color: var(--text-primary);
+  border: 1.5px solid var(--border-color);
+  user-select: none;
 }
 
 .ex1-agreement-arrow {
   flex-shrink: 0;
   margin-top: 2px;
-  color: var(--accent-secondary);
+  color: var(--text-secondary);
 }
+
 

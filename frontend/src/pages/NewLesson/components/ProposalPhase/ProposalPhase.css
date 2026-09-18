@@ -11,25 +11,32 @@
   padding: 1.75rem;
   margin-bottom: 1.5rem;
   text-align: center;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-color);
+  box-shadow: 2px 3px 0px var(--border-color);
+  box-sizing: border-box;
 }
 
 .proposal-header-title {
+  font-family: var(--font-masthead);
   font-size: 1.5rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
-  color: #fff;
+  color: var(--text-primary);
+  line-height: 1.25;
 }
 
 .proposal-header-subtitle {
+  font-family: var(--font-body);
   color: var(--text-secondary);
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   max-width: 650px;
   margin: 0 auto;
   line-height: 1.5;
 }
 
 .proposal-word-count-filter {
-  margin-top: 1rem;
+  margin-top: 1.25rem;
 }
 
 .proposal-loading-card {
@@ -43,9 +50,11 @@
   justify-content: center;
   gap: 0.75rem;
   height: 100%;
+  min-height: 140px;
 }
 
 .proposal-replacing-text {
+  font-family: var(--font-body);
   color: var(--text-secondary);
   font-size: 0.9rem;
 }
@@ -64,9 +73,10 @@
 }
 
 .proposal-section-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--text-secondary);
+  font-family: var(--font-masthead);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-primary);
   margin: 0;
 }
 
@@ -76,37 +86,50 @@
   gap: 1.25rem;
 }
 
+/* Proposal Cards */
 .proposal-card {
-  padding: 1.5rem;
+  padding: 1.25rem 1.4rem;
   cursor: pointer;
-  border: 1px solid var(--border-color);
+  border: 1.5px solid var(--border-color);
+  box-shadow: 2px 3px 0px var(--border-color);
   background: var(--bg-card);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, border-color 0.15s ease;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   min-height: 180px;
+  box-sizing: border-box;
 }
 
-.proposal-card:hover,
-.custom-rule-card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(99, 102, 241, 0.4);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 0 20px rgba(99, 102, 241, 0.2);
+.proposal-card:hover {
+  background: var(--bg-card-hover);
+  transform: translateY(-2px);
+  box-shadow: 4px 5px 0px var(--border-color);
 }
 
-.proposal-card.selected,
-.custom-rule-card.selected {
-  border-color: var(--accent-primary);
-  background: rgba(99, 102, 241, 0.12);
-  box-shadow: 0 0 25px rgba(99, 102, 241, 0.35);
+.proposal-card:active {
+  transform: translateY(0);
 }
 
-.proposal-card.selected:hover,
-.custom-rule-card.selected:hover {
-  transform: translateY(-3px);
-  border-color: var(--accent-primary);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 0 25px rgba(99, 102, 241, 0.4);
+.proposal-card:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
+}
+
+.proposal-card.selected {
+  background: var(--bg-card-alt);
+  border: 1.5px solid var(--border-color);
+  box-shadow: 2px 3px 0px var(--border-color);
+}
+
+.proposal-card.selected:hover {
+  background: var(--bg-card-alt);
+  transform: translateY(-2px);
+  box-shadow: 4px 5px 0px var(--border-color);
+}
+
+.proposal-card.selected:active {
+  transform: translateY(0);
 }
 
 .proposal-card-header {
@@ -125,20 +148,23 @@
 }
 
 .proposal-card-title {
-  font-size: 1.2rem;
+  font-family: var(--font-masthead);
+  font-size: 1.25rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
-  color: #fff;
+  color: var(--text-primary);
+  line-height: 1.3;
 }
 
 .proposal-card.selected .proposal-card-title {
-  color: var(--accent-secondary);
+  color: var(--text-primary);
 }
 
 .proposal-card-desc {
+  font-family: var(--font-body);
   font-size: 0.88rem;
   color: var(--text-secondary);
-  line-height: 1.4;
+  line-height: 1.45;
 }
 
 .proposal-select-indicator {
@@ -146,37 +172,66 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  font-family: var(--font-masthead);
   font-weight: 600;
   font-size: 0.85rem;
   color: var(--text-muted);
 }
 
 .proposal-card.selected .proposal-select-indicator {
-  color: var(--accent-primary);
+  color: var(--text-primary);
+  font-weight: 700;
 }
 
 .proposal-unselected-circle {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  border: 2px solid var(--border-color);
+  border: 1.5px solid var(--border-color);
+  box-sizing: border-box;
 }
 
+/* Custom Rule Card */
 .custom-rule-card {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1.25rem;
   padding: 0.9rem 1.25rem;
-  border: 1px solid var(--border-color);
+  border: 1.5px solid var(--border-color);
+  box-shadow: 2px 3px 0px var(--border-color);
   background: var(--bg-card);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, border-color 0.15s ease;
   cursor: text;
+  box-sizing: border-box;
 }
 
-.custom-rule-card:focus-within {
-  border-color: var(--accent-primary);
-  box-shadow: 0 0 25px rgba(99, 102, 241, 0.35);
+.custom-rule-card:hover {
+  background: var(--bg-card-hover);
+  transform: translateY(-2px);
+  box-shadow: 4px 5px 0px var(--border-color);
+}
+
+.custom-rule-card:active {
+  transform: translateY(0);
+}
+
+.custom-rule-card:focus-within,
+.custom-rule-card.selected {
+  background: var(--bg-card-hover);
+  border-color: var(--border-color);
+  box-shadow: 2px 3px 0px var(--border-color);
+}
+
+.custom-rule-card:focus-within:hover,
+.custom-rule-card.selected:hover {
+  transform: translateY(-2px);
+  box-shadow: 4px 5px 0px var(--border-color);
+}
+
+.custom-rule-card:focus-within:active,
+.custom-rule-card.selected:active {
+  transform: translateY(0);
 }
 
 .custom-rule-input-wrapper {
@@ -199,14 +254,14 @@ input.custom-rule-input:active {
   outline: none !important;
   padding: 0 !important;
   min-height: 28px;
-  color: #fff;
+  color: var(--text-primary) !important;
   font-size: 1.05rem;
-  font-family: inherit;
+  font-family: var(--font-body);
   cursor: text;
 }
 
 input.custom-rule-input::placeholder {
-  color: var(--text-secondary);
+  color: var(--text-muted);
   font-size: 1.05rem;
   opacity: 0.85;
 }
@@ -215,6 +270,7 @@ input.custom-rule-input::placeholder {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  font-family: var(--font-masthead);
   font-weight: 600;
   font-size: 0.9rem;
   flex-shrink: 0;
@@ -224,43 +280,62 @@ input.custom-rule-input::placeholder {
 }
 
 .custom-rule-card.selected .custom-rule-badge {
-  color: var(--accent-primary);
+  color: var(--text-primary);
+  font-weight: 700;
 }
 
 .proposal-unselected-circle.large {
   width: 18px;
   height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-color);
+  box-sizing: border-box;
 }
 
 /* Review Rule Card */
 .review-rule-card {
-  padding: 1.25rem 1.5rem;
+  padding: 1.2rem 1.4rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
   cursor: pointer;
-  border: 1px solid var(--border-color);
+  border: 1.5px solid var(--border-color);
+  box-shadow: 2px 3px 0px var(--border-color);
   background: var(--bg-card);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  box-sizing: border-box;
 }
 
 .review-rule-card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(245, 158, 11, 0.4);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 0 20px rgba(245, 158, 11, 0.2);
+  background: var(--bg-card-hover);
+  transform: translateY(-2px);
+  box-shadow: 4px 5px 0px var(--border-color);
+}
+
+.review-rule-card:active {
+  transform: translateY(0);
+}
+
+.review-rule-card:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
 }
 
 .review-rule-card.selected {
-  border-color: var(--accent-warning);
-  background: rgba(245, 158, 11, 0.12);
-  box-shadow: 0 0 25px rgba(245, 158, 11, 0.35);
+  background: var(--bg-card-alt);
+  border-color: var(--border-color);
+  box-shadow: 2px 3px 0px var(--border-color);
 }
 
 .review-rule-card.selected:hover {
-  transform: translateY(-3px);
-  border-color: var(--accent-warning);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 0 25px rgba(245, 158, 11, 0.4);
+  background: var(--bg-card-alt);
+  transform: translateY(-2px);
+  box-shadow: 4px 5px 0px var(--border-color);
+}
+
+.review-rule-card.selected:active {
+  transform: translateY(0);
 }
 
 .review-rule-content {
@@ -277,21 +352,26 @@ input.custom-rule-input::placeholder {
 }
 
 .review-rule-title {
-  font-size: 1.1rem;
+  font-family: var(--font-masthead);
+  font-size: 1.15rem;
   font-weight: 700;
   margin: 0;
+  color: var(--text-primary);
 }
 
 .review-rule-explanation {
-  font-size: 0.85rem;
+  font-family: var(--font-body);
+  font-size: 0.88rem;
   color: var(--text-secondary);
   margin: 0;
+  line-height: 1.45;
 }
 
 .review-rule-badge {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  font-family: var(--font-masthead);
   font-weight: 600;
   font-size: 0.9rem;
   flex-shrink: 0;
@@ -300,7 +380,8 @@ input.custom-rule-input::placeholder {
 }
 
 .review-rule-card.selected .review-rule-badge {
-  color: var(--accent-warning);
+  color: var(--text-primary);
+  font-weight: 700;
 }
 
 /* Proposal Action Buttons */
@@ -342,24 +423,31 @@ input.custom-rule-input::placeholder {
   .proposal-word-count-filter.filter-select-card {
     display: flex;
     flex-direction: column;
-    align-items: stretch;
+    align-items: center;
+    justify-content: center;
     width: 100%;
-    gap: 0rem;
+    gap: 0.35rem;
+    margin: 1rem auto 0 auto;
     padding: 0.75rem 1rem;
     text-align: center;
+    box-sizing: border-box;
   }
 
   .proposal-word-count-filter .filter-select-label {
-    font-size: 0.9rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    font-size: 0.86rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
     text-align: center;
   }
 
   .proposal-word-count-filter select.filter-select-input {
-    font-size: 1rem;
-    font-weight: 600;
+    font-size: 0.95rem;
+    font-weight: 700;
     width: 100%;
     text-align: center;
     text-align-last: center;

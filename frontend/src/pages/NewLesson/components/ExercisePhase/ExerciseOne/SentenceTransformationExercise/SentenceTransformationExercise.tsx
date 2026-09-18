@@ -1,5 +1,5 @@
 import React from 'react';
-import { RefreshCw, ArrowRight } from 'lucide-react';
+import { IconRefreshCrank, IconManiculeRight } from '../../../../../../components/icons';
 import { ExerciseOneComponentProps } from '../types';
 import './sentenceTransformation.css';
 
@@ -13,7 +13,7 @@ export const SentenceTransformationExercise: React.FC<ExerciseOneComponentProps>
     <div className="ex1-container">
       <div className="ex1-header-block">
         <span className="ex1-type-badge">
-          <RefreshCw size={13} />
+          <IconRefreshCrank size={13} />
           Sentence Structure Transformation
         </span>
         <p className="ex1-instruction">{instruction}</p>
@@ -23,8 +23,8 @@ export const SentenceTransformationExercise: React.FC<ExerciseOneComponentProps>
         {targetWords.map((sentence, idx) => (
           <div key={idx} className="ex1-sentence-trans-card">
             <div className="ex1-original-sentence-box">
-              <ArrowRight size={16} className="ex1-trans-arrow" />
-              <div className="ex1-original-sentence-text kr-text">
+              <IconManiculeRight size={16} className="ex1-trans-arrow" />
+              <div className="ex1-original-sentence-text target-text">
                 {sentence}
               </div>
             </div>

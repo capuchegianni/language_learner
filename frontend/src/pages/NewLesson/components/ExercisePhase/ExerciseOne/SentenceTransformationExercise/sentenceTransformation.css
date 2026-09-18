@@ -22,15 +22,17 @@
 }
 
 .ex1-original-sentence-text {
-  font-size: 0.98rem;
-  font-weight: 600;
+  font-family: var(--font-target);
+  font-size: 1.05rem;
+  font-weight: 700;
   color: var(--text-primary);
-  line-height: 1.4;
+  line-height: 1.35;
 }
 
 .ex1-trans-arrow {
   flex-shrink: 0;
   margin-top: 2px;
-  color: var(--accent-secondary);
+  color: var(--text-secondary);
 }
+
 

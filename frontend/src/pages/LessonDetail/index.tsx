@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { IconManiculeLeft } from '../../components/icons';
 import { api } from '../../services/api';
 import { Lesson, LessonContent, GradingResult } from '../../types';
 import { RuleExplanation } from '../NewLesson/components/RuleExplanation';
@@ -107,15 +107,15 @@ export const LessonDetail: React.FC<LessonDetailProps> = ({
           className="btn btn-secondary back-btn"
           onClick={() => navigate(-1)}
         >
-          <ArrowLeft size={18} />
+          <IconManiculeLeft size={18} />
           <span>Back</span>
         </button>
       )}
 
-      <div className="glass-card lesson-detail-header-card">
+      <div className="card lesson-detail-header-card">
         <div className="lesson-detail-title-group">
           <div className="lesson-detail-title-row">
-            <h1 className="kr-text lesson-detail-title">
+            <h1 className="target-text lesson-detail-title">
               {lesson.rule?.title || lesson.title}
             </h1>
             {lesson.isReview && <Pill variant="warning">Review</Pill>}

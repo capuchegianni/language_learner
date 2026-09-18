@@ -1,5 +1,5 @@
 import React from 'react';
-import { HelpCircle } from 'lucide-react';
+import { IconQueryNotice } from '../../../../../../components/icons';
 import { ExerciseOneComponentProps } from '../types';
 import './clozePattern.css';
 
@@ -20,7 +20,7 @@ export const ClozePatternExercise: React.FC<ExerciseOneComponentProps> = ({
   <div className="ex1-container">
     <div className="ex1-header-block">
       <span className="ex1-type-badge">
-        <HelpCircle size={13} />
+        <IconQueryNotice size={13} />
         Contextual Frame / Cloze Drill
       </span>
       <p className="ex1-instruction">{instruction}</p>
@@ -33,7 +33,7 @@ export const ClozePatternExercise: React.FC<ExerciseOneComponentProps> = ({
         return (
           <div key={idx} className="ex1-cloze-card">
             <div className="ex1-cloze-prompt-box">
-              <span className="ex1-cloze-sentence kr-text">
+              <span className="ex1-cloze-sentence target-text">
                 {idx + 1}. {sentenceFrame}
               </span>
               {hint && (

@@ -1,5 +1,10 @@
 import React from 'react';
-import { ArrowRight, Sparkles, Pin, Bookmark } from 'lucide-react';
+import {
+  IconManiculeRight,
+  IconNewDispatch,
+  IconPressPin,
+  IconBookmarkRibbon,
+} from '../../../../../../components/icons';
 import { ExerciseOneComponentProps } from '../types';
 import './wordInflection.css';
 
@@ -14,10 +19,10 @@ export const WordInflectionExercise: React.FC<ExerciseOneComponentProps> = ({
   const isCreativeSentence = type === 'creative_sentence_production';
 
   const badgeConfig = isParticle
-    ? { icon: <Pin size={13} />, label: 'Particle & Case Attachment' }
+    ? { icon: <IconPressPin size={13} />, label: 'Particle & Case Attachment' }
     : isCreativeSentence
-      ? { icon: <Sparkles size={13} />, label: 'Sentence Construction Drill' }
-      : { icon: <Bookmark size={13} />, label: 'Stem & Ending Inflection' };
+      ? { icon: <IconNewDispatch size={13} />, label: 'Sentence Construction Drill' }
+      : { icon: <IconBookmarkRibbon size={13} />, label: 'Stem & Ending Inflection' };
 
   const getPlaceholder = (word: string) => {
     if (isParticle) return `Attach particle to "${word}"...`;
@@ -39,8 +44,8 @@ export const WordInflectionExercise: React.FC<ExerciseOneComponentProps> = ({
         {targetWords.map((word, idx) => (
           <div key={idx} className="ex1-inflection-row">
             <div className="ex1-inflection-prompt">
-              <span className="ex1-inflection-word kr-text">{word}</span>
-              <ArrowRight size={14} className="ex1-inflection-arrow" />
+              <span className="ex1-inflection-word target-text">{word}</span>
+              <IconManiculeRight size={14} className="ex1-inflection-arrow" />
             </div>
             <input
               type="text"
