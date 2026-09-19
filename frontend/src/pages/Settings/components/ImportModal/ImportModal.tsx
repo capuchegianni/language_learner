@@ -1,7 +1,8 @@
 import React from 'react';
-import { Upload } from 'lucide-react';
-import { Modal } from '../../../components/Modal';
-import { LoadingSpinner } from '../../../components/LoadingSpinner';
+import './ImportModal.css';
+import { IconUploadPress } from '../../../../components/icons';
+import { Modal } from '../../../../components/Modal';
+import { LoadingSpinner } from '../../../../components/LoadingSpinner';
 
 export interface ImportModalProps {
   isOpen: boolean;
@@ -84,7 +85,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
             />
           ) : (
             <>
-              <Upload size={18} />
+              <IconUploadPress size={18} />
               <span>Select &amp; Import JSON</span>
             </>
           )}

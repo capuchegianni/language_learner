@@ -1,6 +1,7 @@
 import React from 'react';
-import { Cpu } from 'lucide-react';
-import { ProviderPreset, PROVIDER_PRESETS } from '../types';
+import './ProviderPresetsSection.css';
+import { IconLinotypeMatrix } from '../../../../components/icons';
+import { ProviderPreset, PROVIDER_PRESETS } from '../../types';
 
 export interface ProviderPresetsSectionProps {
   selectedPreset: ProviderPreset;
@@ -12,9 +13,9 @@ export const ProviderPresetsSection: React.FC<ProviderPresetsSectionProps> = ({
   onSelectPreset,
 }) => {
   return (
-    <div className="glass-card" id="tutorial-provider-presets">
+    <div className="card" id="tutorial-provider-presets">
       <h3 className="settings-section-title presets-title">
-        <Cpu size={20} />
+        <IconLinotypeMatrix size={20} />
         <span>Provider Presets</span>
       </h3>
       <p className="settings-section-desc">

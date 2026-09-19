@@ -3,17 +3,17 @@ import { Settings as SettingsIcon, CheckCircle2 } from 'lucide-react';
 import { useSettingsState } from './hooks/useSettingsState';
 import { PageHeader } from '../../components/PageHeader';
 import { LoadingSpinner } from '../../components/LoadingSpinner';
-import { AccountSection } from './components/AccountSection';
-import { LanguageSection } from './components/LanguageSection';
-import { ProviderPresetsSection } from './components/ProviderPresetsSection';
-import { AiConfigSection } from './components/AiConfigSection';
-import { ImportExportSection } from './components/ImportExportSection';
-import { DangerZoneSection } from './components/DangerZoneSection';
-import { ImportModal } from './components/ImportModal';
-import { ExportModal } from './components/ExportModal';
-import { ResetDataModal } from './components/ResetDataModal';
-import { DeleteAccountModal } from './components/DeleteAccountModal';
-import { UnsavedChangesBanner } from './components/UnsavedChangesBanner';
+import { AccountSection } from './components/AccountSection/AccountSection';
+import { LanguageSection } from './components/LanguageSection/LanguageSection';
+import { ProviderPresetsSection } from './components/ProviderPresetsSection/ProviderPresetsSection';
+import { AiConfigSection } from './components/AiConfigSection/AiConfigSection';
+import { ImportExportSection } from './components/ImportExportSection/ImportExportSection';
+import { DangerZoneSection } from './components/DangerZoneSection/DangerZoneSection';
+import { ImportModal } from './components/ImportModal/ImportModal';
+import { ExportModal } from './components/ExportModal/ExportModal';
+import { ResetDataModal } from './components/ResetDataModal/ResetDataModal';
+import { DeleteAccountModal } from './components/DeleteAccountModal/DeleteAccountModal';
+import { UnsavedChangesBanner } from './components/UnsavedChangesBanner/UnsavedChangesBanner';
 import './Settings.css';
 
 export const Settings: React.FC = () => {
@@ -90,7 +90,7 @@ export const Settings: React.FC = () => {
 
       {/* Save Success Alert */}
       {savedSuccess && (
-        <div className="glass-card settings-success-alert">
+        <div className="card settings-success-alert">
           <CheckCircle2 size={20} />
           <span>Settings saved successfully!</span>
         </div>
@@ -98,7 +98,7 @@ export const Settings: React.FC = () => {
 
       {/* Reset Success Alert */}
       {resetSuccess && (
-        <div className="glass-card settings-success-alert">
+        <div className="card settings-success-alert">
           <CheckCircle2 size={20} />
           <span>{resetMessage || 'Data has been reset successfully!'}</span>
         </div>

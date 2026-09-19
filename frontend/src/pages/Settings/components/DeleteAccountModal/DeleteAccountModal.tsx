@@ -1,8 +1,9 @@
 import React from 'react';
-import { AlertTriangle, Trash2 } from 'lucide-react';
-import { Modal } from '../../../components/Modal';
-import { LoadingSpinner } from '../../../components/LoadingSpinner';
-import { useAuth } from '../../../contexts/AuthContext';
+import './DeleteAccountModal.css';
+import { IconHazardAlert, IconTrashShears } from '../../../../components/icons';
+import { Modal } from '../../../../components/Modal';
+import { LoadingSpinner } from '../../../../components/LoadingSpinner';
+import { useAuth } from '../../../../contexts/AuthContext';
 
 export interface DeleteAccountModalProps {
   isOpen: boolean;
@@ -26,7 +27,7 @@ export const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title="Delete Account"
-      icon={<AlertTriangle size={22} color="var(--accent-danger)" />}
+      icon={<IconHazardAlert size={22} color="var(--accent-danger)" />}
       danger={true}
       maxWidth="500px"
     >
@@ -34,7 +35,8 @@ export const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({
         Are you sure you want to permanently delete your account (<strong>{user?.email}</strong>)?
       </p>
       <div className="settings-modal-warning-box">
-        ⚠️ <strong>Warning:</strong> All your progress, vocabulary words, grammar rules, completed lessons, exercise scores, and settings will be permanently wiped. You will be logged out immediately and cannot recover this data.
+        <IconHazardAlert size={16} />
+        <span><strong>Warning:</strong> All your progress, vocabulary words, grammar rules, completed lessons, exercise scores, and settings will be permanently wiped. You will be logged out immediately and cannot recover this data.</span>
       </div>
 
       {deleteAccountError && (
@@ -60,12 +62,12 @@ export const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({
           {deletingAccount ? (
             <LoadingSpinner
               variant="button"
-              size={16}
+              size={18}
               message="Deleting Account..."
             />
           ) : (
             <>
-              <Trash2 size={16} />
+              <IconTrashShears size={16} />
               <span>Permanently Delete Account</span>
             </>
           )}

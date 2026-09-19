@@ -1,6 +1,7 @@
 import React from 'react';
-import { Key, ExternalLink } from 'lucide-react';
-import { ProviderPreset, SettingsFormData } from '../types';
+import './AiConfigSection.css';
+import { IconKeySkeleton, IconExternalWire, IconApprovalCheck } from '../../../../components/icons';
+import { ProviderPreset, SettingsFormData } from '../../types';
 
 export interface AiConfigSectionProps {
   baseURL: string;
@@ -22,27 +23,24 @@ export const AiConfigSection: React.FC<AiConfigSectionProps> = ({
   onUpdateField,
 }) => {
   return (
-    <div className="glass-card" id="tutorial-ai-config">
+    <div className="card settings-card" id="tutorial-ai-config">
       <h3 className="settings-section-title config-title">
-        <Key size={20} />
+        <IconKeySkeleton size={20} />
         <span>Configuration</span>
       </h3>
 
       <div className="input-group settings-input-group">
-        <label
-          htmlFor="ai-base-url-input"
-          className="settings-label-with-link"
-        >
-          <span>Base URL</span>
+        <div className="settings-label-with-link">
+          <label htmlFor="ai-base-url-input">Base URL</label>
           <a
             href={activePreset.docsURL}
             target="_blank"
             rel="noopener noreferrer"
             className="settings-docs-link"
           >
-            <ExternalLink size={12} /> {activePreset.name} docs
+            <IconExternalWire size={12} /> {activePreset.name} docs
           </a>
-        </label>
+        </div>
         <input
           id="ai-base-url-input"
           type="text"
@@ -99,12 +97,14 @@ export const AiConfigSection: React.FC<AiConfigSectionProps> = ({
             </span>
           </div>
           <div className="settings-info-box settings-info-box-primary">
-            🔑 The API key is stored encrypted in the database and is never sent back to the browser.
+            <IconKeySkeleton size={16} />
+            <span>The API key is stored encrypted in the database and is never sent back to the browser.</span>
           </div>
         </>
       ) : (
         <div className="settings-info-box settings-info-box-success">
-          Ollama runs locally and does not require an API key.
+          <IconApprovalCheck size={16} />
+          <span>Ollama runs locally and does not require an API key.</span>
         </div>
       )}
     </div>

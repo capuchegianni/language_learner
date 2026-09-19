@@ -74,7 +74,7 @@ export const RuleModal: React.FC<RuleModalProps> = ({
             type="text"
             value={formData.exceptions}
             onChange={(e) => onFieldChange('exceptions', e.target.value)}
-            placeholder="Irregular patchim rules..."
+            placeholder="Irregular rules..."
           />
         </div>
 

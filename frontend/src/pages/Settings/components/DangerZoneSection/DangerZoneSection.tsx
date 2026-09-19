@@ -1,5 +1,6 @@
 import React from 'react';
-import { AlertTriangle, Trash2 } from 'lucide-react';
+import { IconHazardAlert, IconTrashShears } from '../../../../components/icons';
+import './DangerZoneSection.css';
 
 export interface DangerZoneSectionProps {
   onOpenResetModal: () => void;
@@ -11,9 +12,9 @@ export const DangerZoneSection: React.FC<DangerZoneSectionProps> = ({
   onOpenDeleteAccountModal,
 }) => {
   return (
-    <div className="glass-card settings-danger-card">
+    <div className="card settings-card settings-danger-card" id="tutorial-danger-zone">
       <h3 className="settings-section-title danger-title">
-        <AlertTriangle size={20} />
+        <IconHazardAlert size={20} />
         <span>Danger Zone</span>
       </h3>
       <p className="settings-section-desc">
@@ -23,7 +24,7 @@ export const DangerZoneSection: React.FC<DangerZoneSectionProps> = ({
       <div className="settings-danger-list">
         {/* Reset Specific Data */}
         <div className="danger-zone-item settings-danger-divider">
-          <div>
+          <div className="danger-zone-item-info">
             <div className="danger-zone-item-title">
               Reset Specific Data
             </div>
@@ -37,14 +38,14 @@ export const DangerZoneSection: React.FC<DangerZoneSectionProps> = ({
             id="open-reset-modal-btn"
             onClick={onOpenResetModal}
           >
-            <Trash2 size={16} />
+            <IconTrashShears size={16} />
             <span>Reset Data</span>
           </button>
         </div>
 
         {/* Delete Account */}
         <div className="danger-zone-item">
-          <div>
+          <div className="danger-zone-item-info">
             <div className="danger-zone-item-title">
               Delete Account
             </div>
@@ -58,7 +59,7 @@ export const DangerZoneSection: React.FC<DangerZoneSectionProps> = ({
             id="open-delete-account-modal-btn"
             onClick={onOpenDeleteAccountModal}
           >
-            <Trash2 size={16} />
+            <IconTrashShears size={16} />
             <span>Delete Account</span>
           </button>
         </div>

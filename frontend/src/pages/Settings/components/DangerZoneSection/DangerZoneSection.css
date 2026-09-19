@@ -1,0 +1,66 @@
+/* ========================================================= */
+/* DangerZoneSection Styles                                   */
+/* ========================================================= */
+
+.settings-danger-card {
+  background: var(--stamp-red-bg);
+  border: 1.5px solid var(--stamp-red, #8b1c1c);
+  border-left: 4px solid var(--stamp-red, #8b1c1c);
+  box-shadow: 2px 3px 0px var(--border-color);
+}
+
+.settings-section-title.danger-title {
+  color: var(--stamp-red, #8b1c1c);
+}
+
+.settings-danger-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.danger-zone-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.danger-zone-item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.danger-zone-item-title {
+  font-family: var(--font-masthead);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.danger-zone-item-desc {
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+.settings-danger-divider {
+  padding-bottom: 1.25rem;
+  border-bottom: 1px dashed var(--border-color-light);
+}
+
+/* Responsive */
+@media (max-width: 650px) {
+  .danger-zone-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .danger-zone-item button {
+    width: 100%;
+    justify-content: center;
+  }
+}

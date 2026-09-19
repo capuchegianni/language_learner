@@ -1,5 +1,7 @@
-import { AlertTriangle, Save } from 'lucide-react';
-import { LoadingSpinner } from '../../../components/LoadingSpinner';
+import React from 'react';
+import './UnsavedChangesBanner.css';
+import { IconHazardAlert, IconSaveLedger } from '../../../../components/icons';
+import { LoadingSpinner } from '../../../../components/LoadingSpinner';
 
 export interface UnsavedChangesBannerProps {
   hasUnsavedChanges: boolean;
@@ -20,13 +22,13 @@ export const UnsavedChangesBanner: React.FC<UnsavedChangesBannerProps> = ({
 
   return (
     <div
-      className="unsaved-changes-bubble"
+      className="card unsaved-changes-bubble"
       role="alert"
       id="unsaved-changes-warning"
     >
       <div className="unsaved-changes-content">
         <div className="unsaved-changes-icon-badge">
-          <AlertTriangle size={20} />
+          <IconHazardAlert size={20} />
         </div>
         <div className="unsaved-changes-text">
           <div className="unsaved-changes-title">Unsaved Changes</div>
@@ -60,7 +62,7 @@ export const UnsavedChangesBanner: React.FC<UnsavedChangesBannerProps> = ({
             />
           ) : (
             <>
-              <Save size={16} />
+              <IconSaveLedger size={16} />
               <span>Save Settings</span>
             </>
           )}

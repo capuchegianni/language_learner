@@ -1,5 +1,6 @@
 import React from 'react';
-import { Upload, Download, CheckCircle2 } from 'lucide-react';
+import { IconUploadPress, IconDownloadPress, IconApprovalCheck } from '../../../../components/icons';
+import './ImportExportSection.css';
 
 export interface ImportExportSectionProps {
   onOpenImportModal: () => void;
@@ -14,9 +15,9 @@ export const ImportExportSection: React.FC<ImportExportSectionProps> = ({
 }) => {
   return (
     <>
-      <div className="glass-card settings-import-export-card">
+      <div className="card settings-card settings-import-export-card" id="tutorial-import-export">
         <h3 className="settings-section-title import-export-title">
-          <Upload size={20} />
+          <IconUploadPress size={20} />
           <span>Import / Export Data</span>
         </h3>
         <p className="settings-section-desc">
@@ -28,7 +29,7 @@ export const ImportExportSection: React.FC<ImportExportSectionProps> = ({
             className="btn btn-secondary"
             onClick={onOpenImportModal}
           >
-            <Download size={16} />
+            <IconUploadPress size={16} />
             <span>Import JSON File</span>
           </button>
           <button
@@ -36,15 +37,15 @@ export const ImportExportSection: React.FC<ImportExportSectionProps> = ({
             className="btn btn-secondary"
             onClick={onOpenExportModal}
           >
-            <Upload size={16} />
+            <IconDownloadPress size={16} />
             <span>Export Data</span>
           </button>
         </div>
       </div>
 
       {importSuccess && (
-        <div className="glass-card settings-success-alert">
-          <CheckCircle2 size={20} />
+        <div className="card settings-success-alert">
+          <IconApprovalCheck size={20} />
           <span>Data imported successfully!</span>
         </div>
       )}

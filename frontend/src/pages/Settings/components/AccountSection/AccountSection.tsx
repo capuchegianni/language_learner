@@ -1,8 +1,9 @@
 import React from 'react';
-import { User, HelpCircle, LogOut } from 'lucide-react';
-import { useAuth } from '../../../contexts/AuthContext';
-import { useTutorial } from '../../../components/Tutorial';
-import { API_BASE } from '../../../services/api';
+import './AccountSection.css';
+import { IconUserBust, IconQueryNotice, IconExitGate } from '../../../../components/icons';
+import { useAuth } from '../../../../contexts/AuthContext';
+import { useTutorial } from '../../../../components/Tutorial';
+import { API_BASE } from '../../../../services/api';
 
 export const AccountSection: React.FC = () => {
   const { user } = useAuth();
@@ -13,9 +14,9 @@ export const AccountSection: React.FC = () => {
   };
 
   return (
-    <div className="glass-card settings-account-card" id="tutorial-account-card">
+    <div className="card settings-account-card" id="tutorial-account-card">
       <h3 className="settings-section-title account-title">
-        <User size={20} />
+        <IconUserBust size={20} />
         <span>Account</span>
       </h3>
       <div className="settings-account-content">
@@ -49,7 +50,7 @@ export const AccountSection: React.FC = () => {
             id="replay-tutorial-btn"
             title="Replay the onboarding walkthrough"
           >
-            <HelpCircle size={16} />
+            <IconQueryNotice size={16} />
             <span>Replay Tutorial</span>
           </button>
           <button
@@ -58,7 +59,7 @@ export const AccountSection: React.FC = () => {
             onClick={handleLogout}
             id="logout-button"
           >
-            <LogOut size={16} />
+            <IconExitGate size={16} />
             <span>Sign Out</span>
           </button>
         </div>

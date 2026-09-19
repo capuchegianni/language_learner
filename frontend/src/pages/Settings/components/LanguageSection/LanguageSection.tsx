@@ -1,7 +1,8 @@
 import React from 'react';
-import { Globe } from 'lucide-react';
-import { useLanguages } from '../../../contexts/LanguageContext';
-import { SettingsFormData } from '../types';
+import './LanguageSection.css';
+import { IconGlobe, IconHazardAlert } from '../../../../components/icons';
+import { useLanguages } from '../../../../contexts/LanguageContext';
+import { SettingsFormData } from '../../types';
 
 export interface LanguageSectionProps {
   nativeLanguage: string;
@@ -17,22 +18,22 @@ export const LanguageSection: React.FC<LanguageSectionProps> = ({
   const { languages } = useLanguages();
 
   return (
-    <div className="glass-card" id="tutorial-language-prefs">
+    <div className="card settings-card" id="tutorial-language-prefs">
       <h3 className="settings-section-title language-title">
-        <Globe size={20} />
+        <IconGlobe size={20} />
         <span>Language Preferences</span>
       </h3>
       <p className="settings-section-desc">
-        Choose your native language and the language you want to learn. All AI-generated lessons, exercises, and feedback will adapt to your selection.
+        Select your native language and the language you want to learn.
       </p>
 
       <div className="settings-language-grid">
         <div className="input-group">
-          <label htmlFor="native-language-select">I speak (native language)</label>
+          <label htmlFor="native-language-select">Native Language</label>
           <select
+            id="native-language-select"
             value={nativeLanguage}
             onChange={(e) => onUpdateField('nativeLanguage', e.target.value)}
-            id="native-language-select"
           >
             {languages.map((lang) => (
               <option key={`native-${lang.name}`} value={lang.name}>
@@ -41,12 +42,13 @@ export const LanguageSection: React.FC<LanguageSectionProps> = ({
             ))}
           </select>
         </div>
+
         <div className="input-group">
-          <label htmlFor="target-language-select">I want to learn</label>
+          <label htmlFor="target-language-select">Target Language</label>
           <select
+            id="target-language-select"
             value={targetLanguage}
             onChange={(e) => onUpdateField('targetLanguage', e.target.value)}
-            id="target-language-select"
           >
             {languages
               .filter((lang) => lang.name !== nativeLanguage)
@@ -61,7 +63,8 @@ export const LanguageSection: React.FC<LanguageSectionProps> = ({
 
       {nativeLanguage === targetLanguage && (
         <div className="settings-language-error">
-          ⚠️ Native and target languages cannot be the same.
+          <IconHazardAlert size={16} />
+          <span>Native and target languages cannot be the same.</span>
         </div>
       )}
     </div>

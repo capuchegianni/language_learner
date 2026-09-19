@@ -1,8 +1,9 @@
 import React from 'react';
-import { Download } from 'lucide-react';
-import { Modal } from '../../../components/Modal';
-import { LoadingSpinner } from '../../../components/LoadingSpinner';
-import { ExportInclude } from '../types';
+import './ExportModal.css';
+import { IconDownloadPress, IconHazardAlert } from '../../../../components/icons';
+import { Modal } from '../../../../components/Modal';
+import { LoadingSpinner } from '../../../../components/LoadingSpinner';
+import { ExportInclude } from '../../types';
 
 export interface ExportModalProps {
   isOpen: boolean;
@@ -33,7 +34,8 @@ export const ExportModal: React.FC<ExportModalProps> = ({
         Select which data you would like to include in the exported JSON file.
       </p>
       <div className="settings-modal-notice-box">
-        ⚠️ Your API key is never included in the export for security reasons.
+        <IconHazardAlert size={16} />
+        <span>Your API key is never included in the export for security reasons.</span>
       </div>
 
       <div className="settings-checkbox-group">
@@ -89,7 +91,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
             />
           ) : (
             <>
-              <Download size={18} />
+              <IconDownloadPress size={18} />
               <span>Download JSON</span>
             </>
           )}

@@ -1,8 +1,9 @@
 import React from 'react';
-import { AlertTriangle, Trash2 } from 'lucide-react';
-import { Modal } from '../../../components/Modal';
-import { LoadingSpinner } from '../../../components/LoadingSpinner';
-import { ResetInclude } from '../types';
+import './ResetDataModal.css';
+import { IconHazardAlert, IconTrashShears } from '../../../../components/icons';
+import { Modal } from '../../../../components/Modal';
+import { LoadingSpinner } from '../../../../components/LoadingSpinner';
+import { ResetInclude } from '../../types';
 
 export interface ResetDataModalProps {
   isOpen: boolean;
@@ -50,7 +51,7 @@ export const ResetDataModal: React.FC<ResetDataModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title="Reset Data"
-      icon={<AlertTriangle size={22} color="var(--accent-danger)" />}
+      icon={<IconHazardAlert size={22} color="var(--accent-danger)" />}
       danger={true}
       maxWidth="520px"
     >
@@ -58,7 +59,8 @@ export const ResetDataModal: React.FC<ResetDataModalProps> = ({
         Select which data you would like to permanently delete from your account.
       </p>
       <div className="settings-modal-warning-box">
-        ⚠️ Warning: Selected data will be permanently removed. This action cannot be undone.
+        <IconHazardAlert size={16} />
+        <span><strong>Warning:</strong> Selected data will be permanently removed. This action cannot be undone.</span>
       </div>
 
       <div className="settings-selection-toolbar">
@@ -138,7 +140,7 @@ export const ResetDataModal: React.FC<ResetDataModalProps> = ({
             />
           ) : (
             <>
-              <Trash2 size={18} />
+              <IconTrashShears size={18} />
               <span>Reset Selected Data</span>
             </>
           )}

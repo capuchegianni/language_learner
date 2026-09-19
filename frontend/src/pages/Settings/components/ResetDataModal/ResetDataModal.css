@@ -1,0 +1,62 @@
+/* ========================================================= */
+/* ResetDataModal Styles                                      */
+/* ========================================================= */
+
+.settings-selection-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.settings-selection-label {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+}
+
+.settings-selection-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.settings-text-btn {
+  background: transparent;
+  border: none;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+  transition: color 0.12s ease, transform 0.12s ease;
+}
+
+.settings-text-btn.primary {
+  color: var(--text-primary);
+}
+
+.settings-text-btn.muted {
+  color: var(--text-muted);
+}
+
+.settings-text-btn:hover {
+  color: var(--text-primary);
+}
+
+.settings-text-btn:active {
+  transform: translateY(1px);
+}
+
+.settings-selection-divider {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+}
