@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { X } from 'lucide-react';
-import { IconButton } from '../IconButton';
+import { IconCloseDismiss } from '../icons';
+import { IconButton } from '../Button';
 import './Modal.css';
 
 export interface ModalProps {
@@ -18,6 +18,7 @@ export interface ModalProps {
   closeOnEscape?: boolean;
   danger?: boolean;
 }
+
 
 export const Modal: React.FC<ModalProps> = ({
   isOpen,
@@ -57,27 +58,27 @@ export const Modal: React.FC<ModalProps> = ({
 
   return (
     <div
-      className={`app-modal-overlay ${className}`}
+      className={`modal-overlay ${className}`.trim()}
       onMouseDown={handleBackdropMouseDown}
       role="dialog"
       aria-modal="true"
       aria-label={typeof title === 'string' ? title : ariaLabel}
     >
       <div
-        className={`app-modal-content ${danger ? 'app-modal-danger' : ''} ${contentClassName}`}
+        className={`modal-content ${danger ? 'modal-danger' : ''} ${contentClassName}`.trim()}
         style={maxWidth ? { maxWidth } : undefined}
         onMouseDown={(e) => e.stopPropagation()}
       >
         {(title || icon) && (
-          <div className="app-modal-header">
-            <h3 className="app-modal-title">
-              {icon}
-              <span>{title}</span>
+          <div className="modal-header">
+            <h3 className="modal-title">
+              {icon && <span className="modal-title-icon">{icon}</span>}
+              <span className="modal-title-text">{title}</span>
             </h3>
             <IconButton
-              icon={<X />}
-              size={36}
-              iconSize={18}
+              icon={<IconCloseDismiss size={16} />}
+              size="sm"
+              iconSize={16}
               onClick={onClose}
               title="Close dialog"
               aria-label="Close dialog"
@@ -85,10 +86,12 @@ export const Modal: React.FC<ModalProps> = ({
           </div>
         )}
 
-        <div className="app-modal-body">{children}</div>
+        <div className="modal-body">{children}</div>
 
-        {footer && <div className="app-modal-footer">{footer}</div>}
+        {footer && <div className="modal-footer">{footer}</div>}
       </div>
     </div>
   );
 };
+
+export default Modal;

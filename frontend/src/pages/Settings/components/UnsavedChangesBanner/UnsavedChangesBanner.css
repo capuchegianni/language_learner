@@ -1,0 +1,122 @@
+/* ========================================================= */
+/* UnsavedChangesBanner Styles                                */
+/* ========================================================= */
+
+.unsaved-changes-bubble {
+  position: fixed;
+  bottom: var(--space-2xl);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: var(--z-toast);
+  background: var(--bg-card-alt);
+  border: var(--border-width-medium) solid var(--border-color);
+  border-left: var(--border-width-heavy) solid var(--stamp-amber);
+  box-shadow: var(--shadow-float);
+  padding: var(--space-sm) var(--space-lg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-xl);
+  max-width: min(92vw, 580px);
+  width: max-content;
+  box-sizing: border-box;
+  animation: bubbleSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.unsaved-changes-content {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  min-width: 0;
+}
+
+.unsaved-changes-icon-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--stamp-amber);
+  background: var(--stamp-amber-bg);
+  border: var(--border-width-hairline) solid var(--stamp-amber);
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.unsaved-changes-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xs);
+}
+
+.unsaved-changes-title {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  color: var(--text-primary);
+  line-height: var(--line-height-tight);
+}
+
+.unsaved-changes-desc {
+  font-family: var(--font-body);
+  font-size: var(--font-size-2xs);
+  color: var(--text-secondary);
+  line-height: var(--line-height-tight);
+}
+
+.unsaved-changes-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  flex-shrink: 0;
+}
+
+.unsaved-changes-btn {
+  font-size: var(--font-size-2xs);
+}
+
+.unsaved-changes-discard-btn {
+  padding: var(--space-xs) var(--space-sm);
+}
+
+.unsaved-changes-save-btn {
+  padding: var(--space-xs) var(--space-md);
+}
+
+@keyframes bubbleSlideUp {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 20px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+/* Responsive */
+@media (max-width: 650px) {
+  .unsaved-changes-bubble {
+    bottom: var(--space-md);
+    padding: var(--space-sm) var(--space-md);
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-sm);
+    width: min(92vw, 420px);
+  }
+
+  .unsaved-changes-actions {
+    display: flex;
+    flex-direction: column-reverse;
+    width: 100%;
+    gap: var(--space-xs);
+  }
+
+  .unsaved-changes-actions .btn {
+    width: 100%;
+    flex: none;
+    justify-content: center;
+  }
+}

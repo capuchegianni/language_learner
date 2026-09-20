@@ -1,0 +1,38 @@
+/* ========================================================= */
+/* ImportModal Styles                                         */
+/* ========================================================= */
+
+.no-border-code-block {
+  border: none;
+  box-shadow: none;
+  padding: 0 !important;
+  margin-top: 0;
+}
+
+.settings-modal-checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-xl);
+}
+
+.settings-modal-checkbox-label {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.settings-file-upload-btn {
+  cursor: pointer;
+}
+
+.settings-file-upload-btn:active:not(.disabled) {
+  transform: var(--motion-press);
+  box-shadow: var(--shadow-subtle);
+}
+
+.settings-hidden-input {
+  display: none;
+}

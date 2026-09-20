@@ -76,9 +76,9 @@ export const TUTORIAL_STEPS: TutorialStep[] = [
     title: 'AI Rule Proposals & Word Count',
     description:
       'The AI proposes 3 grammar rules tailored to your proficiency. You can change target new words (3, 5, 7, 10) or click the refresh icon on any card to get a different proposal.',
-    placement: 'top',
+    placement: 'right',
     iconName: 'Scroll',
-    highlightPadding: 20,
+    highlightPadding: 10,
     scrollBlock: 'top',
   },
   {
@@ -89,7 +89,7 @@ export const TUTORIAL_STEPS: TutorialStep[] = [
     title: 'Custom Topics & Spaced Review',
     description:
       'Want to learn something specific? Type any custom topic (e.g. "Ordering coffee in a café"), or choose the Spaced Repetition card below to reinforce previously learned rules.',
-    placement: 'top',
+    placement: 'bottom',
     iconName: 'BookOpen',
     highlightPadding: 12,
     scrollBlock: 'center',

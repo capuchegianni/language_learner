@@ -1,384 +1,355 @@
+/* ==========================================================================
+   THE BROADSHEET DESIGN SYSTEM — Language Learner Editorial Edition
+   ========================================================================== */
+
 :root {
-  --font-main: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-kr: 'Noto Sans KR', sans-serif;
+  /* ==========================================================================
+     Structural Design Tokens (Theme-Agnostic Single Source of Truth)
+     ========================================================================== */
 
-  /* Color System */
-  --bg-dark: #0f172a;
-  --bg-card: rgba(30, 41, 59, 0.7);
-  --bg-card-hover: rgba(30, 41, 59, 0.9);
-  --bg-glass: rgba(15, 23, 42, 0.85);
-  --border-color: rgba(255, 255, 255, 0.1);
-  --border-color-glow: rgba(99, 102, 241, 0.4);
+  /* Typography Families */
+  --font-masthead: 'Newsreader', Georgia, 'Noto Serif KR', 'Noto Serif JP', 'Noto Serif SC', 'Noto Serif Devanagari', 'Noto Naskh Arabic', serif;
+  --font-body: 'Source Serif 4', 'Times New Roman', 'Noto Serif KR', 'Noto Serif JP', 'Noto Serif SC', 'Noto Serif Devanagari', 'Noto Naskh Arabic', serif;
+  --font-main: var(--font-body);
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+  --font-target: 'Noto Serif KR', 'Noto Serif JP', 'Noto Serif SC', 'Noto Serif Devanagari', 'Noto Naskh Arabic', 'Nanum Myeongjo', serif;
 
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
+  /* Modular Typography Scale */
+  --font-size-3xs: 0.6875rem; /* 11px — micro labels, timestamp details */
+  --font-size-2xs: 0.75rem;   /* 12px — stamp badges, keyboard shortcuts, uppercase pills */
+  --font-size-xs: 0.8125rem;  /* 13px — secondary metadata, helper descriptions */
+  --font-size-sm: 0.875rem;   /* 14px — button text, input labels, table cell text */
+  --font-size-base: 1rem;     /* 16px — standard body text, input fields */
+  --font-size-md: 1.125rem;   /* 18px — card section subheadings, lead notes */
+  --font-size-lg: 1.25rem;    /* 20px — sub-mastheads, modal titles */
+  --font-size-xl: 1.5rem;     /* 24px — primary section headlines */
+  --font-size-2xl: 2rem;      /* 32px — dashboard stats, page titles */
+  --font-size-3xl: 2.5rem;    /* 40px — major editorial banners */
+  --font-size-display: 3.5rem;/* 56px — drop caps, hero mastheads */
 
-  --accent-primary: #6366f1;
-  --accent-primary-hover: #4f46e5;
-  --accent-secondary: #06b6d4;
-  --accent-purple: #a855f7;
-  --accent-success: #10b981;
-  --accent-warning: #f59e0b;
-  --accent-danger: #ef4444;
+  /* Font Weights */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-heavy: 800;
 
-  --gradient-main: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #06b6d4 100%);
-  --gradient-glow: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(168, 85, 247, 0.15) 100%);
-  --shadow-lg: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 0 25px rgba(99, 102, 241, 0.25);
-  --radius-lg: 16px;
-  --radius-md: 12px;
-  --radius-sm: 8px;
+  /* Line Heights */
+  --line-height-tight: 1.15;
+  --line-height-snug: 1.35;
+  --line-height-normal: 1.6;
+  --line-height-relaxed: 1.75;
+
+  /* Letter Spacings */
+  --letter-spacing-tight: -0.02em;
+  --letter-spacing-normal: 0.01em;
+  --letter-spacing-wide: 0.08em;
+  --letter-spacing-stamp: 0.14em;
+
+  /* Spacing Scale */
+  --space-3xs: 0.125rem; /* 2px */
+  --space-2xs: 0.25rem;  /* 4px */
+  --space-xs: 0.5rem;    /* 8px */
+  --space-sm: 0.75rem;   /* 12px */
+  --space-md: 1rem;      /* 16px */
+  --space-lg: 1.25rem;   /* 20px */
+  --space-xl: 1.5rem;    /* 24px */
+  --space-2xl: 2rem;     /* 32px */
+  --space-3xl: 3rem;     /* 48px */
+
+  /* Border Widths */
+  --border-width-hairline: 1px;
+  --border-width-regular: 1.5px;
+  --border-width-medium: 2px;
+  --border-width-heavy: 3px;
+
+  /* Strict Print Sharp Corners */
+  --radius-lg: 0px;
+  --radius-md: 0px;
+  --radius-sm: 0px;
+  --radius-full: 9999px;
+
+  /* Motion & Transition Tokens */
+  --transition-instant: 0.08s ease;
+  --transition-fast: 0.12s ease;
+  --transition-normal: 0.2s ease;
+  --transition-smooth: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Interaction Motion Transforms */
+  --motion-press: translate(1px, 1px);
+  --motion-lift: translate(-1px, -1px);
+
+  /* Z-Index Hierarchy Layering */
+  --z-base: 1;
+  --z-dropdown: 10;
+  --z-sticky: 20;
+  --z-banner: 40;
+  --z-modal-backdrop: 100;
+  --z-modal: 110;
+  --z-tutorial: 500;
+  --z-toast: 900;
+  --z-texture: 9999;
+
+  /* Interactive Control Standard Dimensions */
+  --control-height-xs: 24px;
+  --control-height-sm: 32px;
+  --control-height-md: 40px;
+  --control-height-lg: 48px;
 }
+
+:root,
+[data-theme="morning"] {
+  /* ==========================================================================
+     Morning Edition Color Palette (Subtle Bleached Print & Crisp Carbon Ink)
+     ========================================================================== */
+  --bg-dark: #faf8f5;
+  --bg-card: #ffffff;
+  --bg-card-hover: #ffffff;
+  --bg-card-alt: #f4f0e8;
+  --bg-glass: #faf8f5;
+
+  --border-color: #141312;
+  --border-color-light: #e4dfd5;
+  --border-color-glow: #141312;
+
+  --text-primary: #111111;
+  --text-secondary: #33312c;
+  --text-muted: #625d53;
+
+  --accent-primary: #111111;
+  --accent-primary-hover: #000000;
+  --accent-secondary: #264b6e;
+  --accent-purple: #5c3558;
+  --accent-success: #1b5e20;
+  --accent-warning: #925400;
+  --accent-danger: #8b1c1c;
+
+  /* Stamp Colors */
+  --stamp-red: #8b1c1c;
+  --stamp-red-bg: rgba(139, 28, 28, 0.08);
+  --stamp-green: #1b5e20;
+  --stamp-green-bg: rgba(27, 94, 32, 0.08);
+  --stamp-amber: #925400;
+  --stamp-amber-bg: rgba(146, 84, 0, 0.08);
+  --stamp-blue: #1e456d;
+  --stamp-blue-bg: rgba(30, 69, 109, 0.08);
+  --stamp-ink: #111111;
+  --stamp-ink-bg: rgba(17, 17, 17, 0.05);
+
+  --gradient-main: #111111;
+  --gradient-glow: rgba(17, 17, 17, 0.04);
+
+  /* Elevation & Physical Press Shadows */
+  --shadow-subtle: 1px 1px 0px var(--border-color);
+  --shadow-press: 2px 2px 0px var(--border-color);
+  --shadow-card: 2px 3px 0px var(--border-color);
+  --shadow-hover: 3px 3px 0px var(--border-color);
+  --shadow-float: 4px 5px 0px var(--border-color);
+  --shadow-modal: 6px 8px 0px var(--border-color);
+  --shadow-danger: 4px 5px 0px var(--stamp-red);
+  --shadow-lg: 3px 4px 0px rgba(17, 17, 17, 0.12);
+  --shadow-glow: none;
+
+  --paper-texture-opacity: 0.015;
+}
+
+[data-theme="evening"] {
+  /* ==========================================================================
+     Evening Edition Color Palette (Carbon Slate & High-Legibility Bone Ink)
+     ========================================================================== */
+  --bg-dark: #121215;
+  --bg-card: #1c1c23;
+  --bg-card-hover: #24242e;
+  --bg-card-alt: #292936;
+  --bg-glass: #121215;
+
+  --border-color: #5c5966;
+  --border-color-light: #3e3c4a;
+  --border-color-glow: #ffffff;
+
+  --text-primary: #ffffff;
+  --text-secondary: #ede9e0;
+  --text-muted: #cbc6ba;
+
+  --accent-primary: #ffffff;
+  --accent-primary-hover: #f0f0f5;
+  --accent-secondary: #7bb5e6;
+  --accent-purple: #d199e3;
+  --accent-success: #54c259;
+  --accent-warning: #f7b038;
+  --accent-danger: #e86363;
+
+  /* Stamp Colors */
+  --stamp-red: #e86363;
+  --stamp-red-bg: rgba(232, 99, 99, 0.14);
+  --stamp-green: #54c259;
+  --stamp-green-bg: rgba(84, 194, 89, 0.14);
+  --stamp-amber: #f7b038;
+  --stamp-amber-bg: rgba(247, 176, 56, 0.14);
+  --stamp-blue: #7bb5e6;
+  --stamp-blue-bg: rgba(123, 181, 230, 0.14);
+  --stamp-ink: #ffffff;
+  --stamp-ink-bg: rgba(255, 255, 255, 0.08);
+
+  --gradient-main: #ffffff;
+  --gradient-glow: rgba(255, 255, 255, 0.05);
+
+  /* Elevation & Physical Press Shadows */
+  --shadow-subtle: 1px 1px 0px var(--border-color);
+  --shadow-press: 2px 2px 0px var(--border-color);
+  --shadow-card: 2px 3px 0px var(--border-color);
+  --shadow-hover: 3px 3px 0px var(--border-color);
+  --shadow-float: 4px 5px 0px var(--border-color);
+  --shadow-modal: 6px 8px 0px rgba(0, 0, 0, 0.7);
+  --shadow-danger: 4px 5px 0px var(--stamp-red);
+  --shadow-lg: 3px 4px 0px rgba(0, 0, 0, 0.6);
+  --shadow-glow: none;
+
+  --paper-texture-opacity: 0.012;
+}
+
+/* ==========================================================================
+   Base Elements & Reset
+   ========================================================================== */
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
   -webkit-tap-highlight-color: transparent;
+  border-radius: 0;
 }
 
-html, body {
-  width: 100%;
-  overflow-x: hidden;
+/* Custom Scrollbars on Desktop */
+@media (min-width: 1040px) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-color) var(--bg-card-alt);
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--bg-card-alt);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--text-primary);
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
 }
 
+/* Completely Hide Scrollbars on Medium and Small Screens (<= 1040px) */
+@media (max-width: 1040px) {
+  html,
+  body,
+  * {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  ::-webkit-scrollbar,
+  *::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+    background: transparent;
+  }
+}
+
+html,
 body {
-  font-family: var(--font-main);
-  background-color: var(--bg-dark);
-  color: var(--text-primary);
+  width: 100%;
   min-height: 100vh;
   min-height: 100dvh;
-  line-height: 1.5;
-  background-image:
-    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.12) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.12) 0px, transparent 50%);
-  background-attachment: fixed;
-  -webkit-overflow-scrolling: touch;
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Subtle Newsprint Paper Fiber Texture */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: var(--paper-texture-opacity);
+  background-image: radial-gradient(#000 1px, transparent 1px);
+  background-size: 4px 4px;
 }
 
 /* Prevent auto-zooming on iOS devices by setting min 16px font */
-input, select, textarea {
+input,
+select,
+textarea {
   font-size: 16px;
 }
 
-/* Korean font class */
-.kr-text {
-  font-family: var(--font-kr);
-}
-
-/* App Container Layout */
-.app-layout {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  min-height: 100dvh;
-  width: 100%;
-  overflow-x: hidden;
-}
-
-.main-content {
-  flex: 1;
-  max-width: 1240px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 2rem 1.5rem;
-  padding-left: max(1.5rem, env(safe-area-inset-left));
-  padding-right: max(1.5rem, env(safe-area-inset-right));
-  padding-bottom: max(2.5rem, calc(1.5rem + env(safe-area-inset-bottom)));
-}
-
-.app-footer {
-  border-top: 1px solid var(--border-color);
-  padding: 1.5rem;
-  text-align: center;
-  color: var(--text-muted);
-  font-size: 0.85rem;
-}
-
-/* Text Accent Color Utilities */
-.text-accent-primary {
-  color: var(--accent-primary);
-}
-
-.text-accent-secondary {
-  color: var(--accent-secondary);
-}
-
-.text-accent-purple {
-  color: var(--accent-purple);
-}
-
-.text-accent-success {
-  color: var(--accent-success);
-}
-
-.text-accent-warning {
-  color: var(--accent-warning);
-}
-
-.text-accent-danger {
-  color: var(--accent-danger);
-}
-
-/* Glass Card */
-.glass-card {
-  background: var(--bg-card);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  padding: 1.5rem;
-  box-shadow: var(--shadow-lg);
-  position: relative;
-}
-
-/* Buttons */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.6rem 1.2rem;
-  border-radius: var(--radius-sm);
-  font-weight: 500;
-  font-size: 0.9rem;
-  cursor: pointer;
-  border: none;
-  font-family: inherit;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  user-select: none;
-  min-height: 44px;
-}
-
-.btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none !important;
-}
-
-.btn-primary {
-  background: var(--gradient-main);
-  color: #fff;
-  box-shadow: 0 4px 14px 0 rgba(99, 102, 241, 0.39);
-}
-
-.btn-primary:hover:not(:disabled) {
-  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
-  transform: translateY(-1px);
-}
-
-.btn-primary:active:not(:disabled) {
-  transform: translateY(0);
-}
-
-.btn-secondary {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--border-color);
+/* Headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-masthead);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
   color: var(--text-primary);
 }
 
-.btn-secondary:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
-  transform: translateY(-1px);
+/* Target Language & Non-Latin Serif Classes */
+.target-text,
+[lang="ko"],
+[lang="ja"],
+[lang="zh"],
+[lang="hi"],
+[lang="ar"] {
+  font-family: var(--font-target);
 }
 
-.btn-secondary:active:not(:disabled) {
-  transform: translateY(0);
+code,
+pre {
+  font-family: var(--font-mono);
 }
 
-.btn-danger {
-  background: rgba(239, 68, 68, 0.15);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  color: #fca5a5;
-}
 
-.btn-danger:hover:not(:disabled) {
-  background: rgba(239, 68, 68, 0.25);
-  border-color: var(--accent-danger);
-  color: #fff;
-}
 
 /* Accessibility Focus States */
 button:focus-visible,
 a:focus-visible {
-  outline: 2px solid var(--accent-primary);
+  outline: var(--border-width-medium) solid var(--text-primary);
   outline-offset: 2px;
-}
-
-input:focus,
-input:focus-visible,
-select:focus,
-select:focus-visible,
-textarea:focus,
-textarea:focus-visible {
-  outline: none;
-}
-
-/* Form Inputs */
-.input-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-
-.input-group label {
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--text-secondary);
-}
-
-input[type="text"],
-input[type="password"],
-input[type="email"],
-input[type="search"],
-input[type="number"],
-select,
-textarea {
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-sm);
-  padding: 0.65rem 0.85rem;
-  color: #fff;
-  font-family: inherit;
-  font-size: 0.95rem;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.15);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-  min-height: 44px;
-}
-
-input[type="text"]:hover,
-input[type="password"]:hover,
-input[type="email"]:hover,
-input[type="search"]:hover,
-input[type="number"]:hover,
-select:hover,
-textarea:hover {
-  border-color: rgba(99, 102, 241, 0.35);
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 12px rgba(99, 102, 241, 0.15);
-}
-
-select {
-  cursor: pointer;
-  padding-right: 2.5rem;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 0.85rem center;
-  background-size: 1rem;
-}
-
-input[type="text"]:focus,
-input[type="password"]:focus,
-input[type="email"]:focus,
-input[type="search"]:focus,
-input[type="number"]:focus,
-select:focus,
-textarea:focus {
-  outline: none;
-  border-color: var(--accent-primary);
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.25), 0 0 20px rgba(99, 102, 241, 0.35);
-}
-
-/* Autofill & Autocomplete Dark Theme Styling */
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-input:-webkit-autofill:active,
-textarea:-webkit-autofill,
-textarea:-webkit-autofill:hover,
-textarea:-webkit-autofill:focus,
-textarea:-webkit-autofill:active,
-select:-webkit-autofill,
-select:-webkit-autofill:hover,
-select:-webkit-autofill:focus,
-select:-webkit-autofill:active {
-  -webkit-text-fill-color: #fff !important;
-  caret-color: #fff !important;
-  -webkit-box-shadow: none !important;
-  box-shadow: none !important;
-  transition: background-color 50000s ease-in-out 0s !important;
-}
-
-input:autofill,
-textarea:autofill,
-select:autofill {
-  -webkit-text-fill-color: #fff !important;
-  caret-color: #fff !important;
-  box-shadow: none !important;
-  transition: background-color 50000s ease-in-out 0s !important;
-}
-
-textarea {
-  min-height: 100px;
-  resize: vertical;
-}
-
-/* Loading Spinner Animation */
-.spinner {
-  width: 24px;
-  height: 24px;
-  border: 3px solid rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
-  border-top-color: #fff;
-  animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Code Snippet / Raw Prompt Block */
-.code-block {
-  background: rgba(15, 23, 42, 0.8);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-sm);
-  padding: 1rem;
-  font-family: monospace;
-  font-size: 0.85rem;
-  color: var(--text-primary);
-  white-space: pre-wrap;
-  word-break: break-all;
-  max-height: 400px;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-@media (max-width: 412px) {
-  .main-content {
-    padding: 1.4rem 1rem;
-    padding-left: max(1rem, env(safe-area-inset-left));
-    padding-right: max(1rem, env(safe-area-inset-right));
-    padding-bottom: max(2rem, calc(1rem + env(safe-area-inset-bottom)));
-  }
-
-  .glass-card {
-    padding: 1rem;
-  }
-}
-
-/* Accessibility: High-contrast mode support */
-@media (forced-colors: active) {
-  .btn-primary,
-  .btn-secondary,
-  .btn-danger,
-  .glass-card {
-    border: 1px solid ButtonText !important;
-  }
 }
 
 /* Accessibility: Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
-  .btn,
-  .icon-btn,
-  .icon-btn-delete,
-  .icon-btn-edit,
-  .icon-btn-audio {
-    transition: none !important;
-    transform: none !important;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

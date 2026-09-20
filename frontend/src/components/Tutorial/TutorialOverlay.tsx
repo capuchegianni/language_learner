@@ -1,20 +1,21 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import {
-  Sparkles,
-  Key,
-  Cpu,
-  Globe,
-  Scroll,
-  BookOpen,
-  Volume2,
-  Clock,
-  Award,
-  CheckCircle2,
-  X,
-  ChevronRight,
-  ChevronLeft,
-} from 'lucide-react';
+  IconNewDispatch,
+  IconKeySkeleton,
+  IconLinotypeMatrix,
+  IconGlobe,
+  IconGrammarGazette,
+  IconLexicon,
+  IconPhonographAudio,
+  IconChronicle,
+  IconAwardLaurel,
+  IconApprovalCheck,
+  IconCloseDismiss,
+  IconManiculeRight,
+  IconManiculeLeft,
+} from '../icons';
+import { Button, IconButton } from '../Button';
 import { useTutorial } from './TutorialContext';
 import { TargetRect } from './types';
 import './TutorialOverlay.css';
@@ -42,26 +43,26 @@ export const TutorialOverlay: React.FC = () => {
   const renderStepIcon = (name?: string) => {
     switch (name) {
       case 'Key':
-        return <Key size={20} className="tutorial-icon-key" />;
+        return <IconKeySkeleton size={18} />;
       case 'Cpu':
-        return <Cpu size={20} className="tutorial-icon-cpu" />;
+        return <IconLinotypeMatrix size={18} />;
       case 'Globe':
-        return <Globe size={20} className="tutorial-icon-globe" />;
+        return <IconGlobe size={18} />;
       case 'Scroll':
-        return <Scroll size={20} className="tutorial-icon-scroll" />;
+        return <IconGrammarGazette size={18} />;
       case 'BookOpen':
-        return <BookOpen size={20} className="tutorial-icon-book" />;
+        return <IconLexicon size={18} />;
       case 'Volume2':
-        return <Volume2 size={20} className="tutorial-icon-audio" />;
+        return <IconPhonographAudio size={18} />;
       case 'Clock':
-        return <Clock size={20} className="tutorial-icon-clock" />;
+        return <IconChronicle size={18} />;
       case 'Award':
-        return <Award size={20} className="tutorial-icon-award" />;
+        return <IconAwardLaurel size={18} />;
       case 'CheckCircle2':
-        return <CheckCircle2 size={20} className="tutorial-icon-check" />;
+        return <IconApprovalCheck size={18} />;
       case 'Sparkles':
       default:
-        return <Sparkles size={20} className="tutorial-icon-sparkles" />;
+        return <IconNewDispatch size={18} />;
     }
   };
 
@@ -205,7 +206,7 @@ export const TutorialOverlay: React.FC = () => {
     if (!isActive || !currentStep) return;
 
     const cardEl = cardRef.current;
-    const cardWidth = cardEl ? cardEl.offsetWidth : 400;
+    const cardWidth = cardEl ? cardEl.offsetWidth : 420;
     const cardHeight = cardEl ? cardEl.offsetHeight : 230;
     const margin = 14;
     const vWidth = window.innerWidth;
@@ -394,8 +395,8 @@ export const TutorialOverlay: React.FC = () => {
                 y={targetRect.y}
                 width={targetRect.width}
                 height={targetRect.height}
-                rx="14"
-                ry="14"
+                rx="0"
+                ry="0"
                 fill="black"
                 className="tutorial-mask-cutout"
               />
@@ -409,7 +410,7 @@ export const TutorialOverlay: React.FC = () => {
           y="0"
           width="100%"
           height="100%"
-          fill="rgba(10, 15, 29, 0.82)"
+          fill="rgba(18, 17, 15, 0.72)"
           mask="url(#tutorial-spotlight-mask)"
           className="tutorial-backdrop-rect"
         />
@@ -441,7 +442,7 @@ export const TutorialOverlay: React.FC = () => {
       {/* Floating Tutorial Card */}
       <div
         ref={cardRef}
-        className="tutorial-popover-card glass-card"
+        className="tutorial-popover-card card"
         onPointerDown={(e) => e.stopPropagation()}
         onMouseDown={(e) => e.stopPropagation()}
         onTouchStart={(e) => e.stopPropagation()}
@@ -461,15 +462,14 @@ export const TutorialOverlay: React.FC = () => {
             </span>
           </div>
 
-          <button
-            type="button"
-            className="tutorial-close-btn"
+          <IconButton
+            icon={<IconCloseDismiss size={14} />}
+            size="sm"
+            iconSize={14}
             onClick={skipTutorial}
-            aria-label="Skip Tutorial"
-            title="Skip Tutorial"
-          >
-            <X size={18} />
-          </button>
+            title="Dismiss tutorial"
+            aria-label="Dismiss tutorial"
+          />
         </div>
 
         {/* Progress Bar */}
@@ -493,41 +493,42 @@ export const TutorialOverlay: React.FC = () => {
 
         {/* Card Footer Actions */}
         <div className="tutorial-card-footer">
-          <button
-            type="button"
-            className="btn btn-secondary tutorial-skip-btn"
+          <Button
+            variant="secondary"
+            className="tutorial-skip-btn"
             onClick={skipTutorial}
             id="tutorial-skip-btn"
           >
             <span>Skip</span>
-          </button>
+          </Button>
 
           <div className="tutorial-nav-buttons">
-            <button
-              type="button"
-              className="btn btn-secondary tutorial-prev-btn"
+            <Button
+              variant="secondary"
+              className="tutorial-prev-btn"
               onClick={prevStep}
               disabled={isFirstStep}
-              style={{ opacity: isFirstStep ? 0.4 : 1, cursor: isFirstStep ? 'not-allowed' : 'pointer' }}
               id="tutorial-prev-btn"
+              icon={<IconManiculeLeft size={15} />}
             >
-              <ChevronLeft size={16} />
               <span>Previous</span>
-            </button>
+            </Button>
 
-            <button
-              ref={nextBtnRef}
-              type="button"
-              className="btn btn-primary tutorial-next-btn"
+            <Button
+              variant="primary"
+              className="tutorial-next-btn"
               onClick={nextStep}
               id="tutorial-next-btn"
+              icon={isLastStep ? <IconApprovalCheck size={15} /> : <IconManiculeRight size={15} />}
+              iconPosition="right"
             >
               <span>{isLastStep ? 'Get Started' : 'Next'}</span>
-              {isLastStep ? <CheckCircle2 size={16} /> : <ChevronRight size={16} />}
-            </button>
+            </Button>
           </div>
         </div>
       </div>
     </div>
   );
 };
+
+export default TutorialOverlay;

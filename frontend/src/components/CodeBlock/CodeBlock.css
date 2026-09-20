@@ -1,51 +1,71 @@
-.app-code-block-card {
+/* ==========================================================================
+   Typeset Inked Code Block (CodeBlock)
+   ========================================================================== */
+
+.code-block-card {
+  background: var(--bg-card);
+  border: var(--border-width-regular) solid var(--border-color);
+  box-shadow: var(--shadow-press);
+  padding: var(--space-lg);
+  margin: var(--space-md) 0;
   position: relative;
-  overflow: hidden;
+  box-sizing: border-box;
 }
 
-.app-code-block-header {
+.code-block-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.75rem;
+  justify-content: space-between;
+  border-bottom: var(--border-width-regular) solid var(--border-color);
+  padding-bottom: var(--space-sm);
+  margin-bottom: var(--space-sm);
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: var(--space-xs);
 }
 
-.app-code-block-title {
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: #fff;
+.code-block-title {
+  font-family: var(--font-masthead);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
   margin: 0;
 }
 
-.app-code-block-desc {
-  font-size: 0.85rem;
+.code-block-desc {
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
   color: var(--text-secondary);
-  margin-bottom: 0.85rem;
-  line-height: 1.4;
+  margin-bottom: var(--space-sm);
+  font-style: italic;
+  line-height: var(--line-height-snug);
 }
 
-.app-code-block-pre {
-  background: rgba(0, 0, 0, 0.45);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-sm);
-  padding: 1rem;
-  font-family: 'Fira Code', monospace, monospace;
-  font-size: 0.85rem;
-  color: #e2e8f0;
+.code-block-pre {
+  background: var(--bg-card-alt);
+  border: var(--border-width-hairline) dashed var(--border-color);
+  padding: var(--space-md);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-normal);
+  color: var(--text-primary);
+  overflow-x: auto;
   white-space: pre-wrap;
   word-break: break-all;
-  overflow-x: auto;
-  line-height: 1.5;
   margin: 0;
   -webkit-overflow-scrolling: touch;
 }
 
-.app-code-block-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.82rem;
-  padding: 0.35rem 0.8rem;
+.code-block-btn {
+  font-size: var(--font-size-2xs);
+  padding: var(--space-2xs) var(--space-sm);
+  min-height: var(--control-height-sm);
+}
+
+@media (max-width: 650px) {
+  .code-block-card {
+    padding: var(--space-sm);
+  }
 }

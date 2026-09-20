@@ -1,0 +1,311 @@
+/* ==========================================================================
+   Broadsheet Modular Form Controls: Input & Textarea
+   ========================================================================== */
+
+/* --- Container & Label Layouts --- */
+.input-group,
+.input-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.input-container-inline {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-sm);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.input-label {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  color: var(--text-secondary);
+  width: fit-content;
+  max-width: max-content;
+  cursor: default;
+  user-select: none;
+  margin-bottom: var(--space-3xs);
+  line-height: var(--line-height-tight);
+}
+
+.input-container-inline .input-label {
+  margin-bottom: 0;
+  white-space: nowrap;
+}
+
+/* Wrapper for input with left/right icons or clear button */
+.input-control-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* --- Base Standard Input & Textarea Elements --- */
+.input-field,
+.textarea-field {
+  background: var(--bg-card);
+  border: var(--border-width-regular) solid var(--border-color);
+  padding: var(--space-xs) var(--space-sm);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  box-shadow: var(--shadow-subtle);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast);
+  min-height: var(--control-height-md);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  line-height: var(--line-height-snug);
+  outline: none;
+}
+
+.textarea-field {
+  min-height: 100px;
+  resize: vertical;
+  line-height: var(--line-height-normal);
+}
+
+.input-field::placeholder,
+.textarea-field::placeholder {
+  color: var(--text-muted);
+  font-size: var(--font-size-xs);
+}
+
+/* Unified Broadsheet Hover & Focus Motion (Lift & Shadow Press, No Outline) */
+.input-field:hover,
+.input-field:focus,
+.input-field:focus-visible,
+.textarea-field:hover,
+.textarea-field:focus,
+.textarea-field:focus-visible {
+  transform: var(--motion-lift);
+  box-shadow: var(--shadow-hover);
+  background-color: var(--bg-card-hover);
+  outline: none !important;
+}
+
+/* Active / Onclick Press Motion */
+.input-field:active,
+.textarea-field:active {
+  transform: var(--motion-press);
+  box-shadow: var(--shadow-press);
+}
+
+.input-field:disabled,
+.textarea-field:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: var(--bg-card-alt);
+  box-shadow: none;
+  transform: none;
+}
+
+/* Sizes */
+.input-field.input-sm {
+  min-height: var(--control-height-sm);
+  padding: var(--space-3xs) var(--space-xs);
+  font-size: var(--font-size-xs);
+}
+
+.input-field.input-lg {
+  min-height: var(--control-height-lg);
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--font-size-base);
+}
+
+/* Icon / Padding adjustments */
+.input-has-icon-left .input-field {
+  padding-left: calc(var(--space-sm) + 22px);
+}
+
+.input-has-icon-right .input-field,
+.input-has-clear .input-field {
+  padding-right: calc(var(--space-sm) + 24px);
+}
+
+.input-icon-left {
+  position: absolute;
+  left: var(--space-sm);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--transition-fast);
+}
+
+.input-icon-right {
+  position: absolute;
+  right: var(--space-sm);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--transition-fast);
+}
+
+.input-clear-btn {
+  position: absolute;
+  right: var(--space-xs);
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3xs);
+  flex-shrink: 0;
+  transition: color var(--transition-fast), transform var(--transition-fast);
+}
+
+.input-clear-btn:hover {
+  color: var(--text-primary);
+}
+
+/* Motion harmony for icons and clear button inside input-control-wrapper */
+.input-control-wrapper:hover .input-icon-left,
+.input-control-wrapper:focus-within .input-icon-left,
+.input-control-wrapper:hover .input-icon-right,
+.input-control-wrapper:focus-within .input-icon-right,
+.input-control-wrapper:hover .input-clear-btn,
+.input-control-wrapper:focus-within .input-clear-btn {
+  transform: translateY(-50%) var(--motion-lift);
+}
+
+.input-control-wrapper:active .input-icon-left,
+.input-control-wrapper:active .input-icon-right,
+.input-control-wrapper:active .input-clear-btn {
+  transform: translateY(-50%) var(--motion-press);
+}
+
+/* --- Error & Hint Messages --- */
+.input-container.has-error .input-field,
+.input-container.has-error .textarea-field {
+  border-color: var(--stamp-red);
+}
+
+.input-error-msg {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--stamp-red);
+  margin-top: var(--space-3xs);
+}
+
+.input-hint-msg {
+  font-family: var(--font-body);
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: var(--space-3xs);
+  line-height: var(--line-height-snug);
+  word-break: break-word;
+}
+
+/* --- Variant: Filter (Search Card) --- */
+.filter-search-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  background-color: var(--bg-card);
+  border: var(--border-width-regular) solid var(--border-color);
+  padding: var(--space-xs) var(--space-md);
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: var(--control-height-md);
+  cursor: text;
+  box-shadow: var(--shadow-subtle);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.filter-search-card:hover,
+.filter-search-card:focus-within {
+  transform: var(--motion-lift);
+  box-shadow: var(--shadow-hover);
+  background-color: var(--bg-card-hover);
+  outline: none;
+}
+
+.filter-search-card:active {
+  transform: var(--motion-press);
+  box-shadow: var(--shadow-press);
+}
+
+.filter-search-icon {
+  color: var(--text-secondary);
+  flex-shrink: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+}
+
+.filter-search-input {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  color: var(--text-primary) !important;
+  font-family: var(--font-mono) !important;
+  font-size: var(--font-size-sm) !important;
+  line-height: var(--line-height-snug) !important;
+  width: 100% !important;
+  box-shadow: none !important;
+  outline: none !important;
+  min-height: auto !important;
+}
+
+.filter-search-input::placeholder {
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-size: var(--font-size-xs);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.filter-search-input:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.filter-clear-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3xs);
+  flex-shrink: 0;
+  transition: color var(--transition-fast);
+}
+
+.filter-clear-btn:hover {
+  color: var(--text-primary);
+}
+
+@media (max-width: 650px) {
+  .filter-search-card {
+    width: 100%;
+  }
+}

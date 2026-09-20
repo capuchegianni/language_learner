@@ -1,7 +1,13 @@
 import React from 'react';
-import { Image as ImageIcon, Upload, Send, PenTool, X } from 'lucide-react';
+import {
+  IconDaguerreotype,
+  IconUploadPress,
+  IconSendTelegraph,
+  IconDraftingEdit,
+  IconCloseDismiss,
+} from '../../../../components/icons';
 import { LessonContent } from '../../../../types';
-import { LoadingSpinner } from '../../../../components/LoadingSpinner';
+import { LoadingSpinner, Card, Button, Input, Textarea } from '../../../../components';
 import { ExerciseOneDispatcher } from './ExerciseOne/ExerciseOneDispatcher';
 import './ExercisePhase.css';
 
@@ -42,9 +48,9 @@ export const ExercisePhase: React.FC<ExercisePhaseProps> = ({
 }) => {
   return (
     <form onSubmit={onSubmit} className={`exercise-phase-form ${className}`.trim()}>
-      <div className="glass-card exercise-phase-card">
+      <Card className="exercise-phase-card">
         <h3 className="exercise-phase-header">
-          <PenTool size={16} color="var(--accent-primary)" />
+          <IconDraftingEdit size={16} />
           <span>Interactive Exercise Worksheet</span>
         </h3>
 
@@ -82,12 +88,10 @@ export const ExercisePhase: React.FC<ExercisePhaseProps> = ({
             <div className="exercise-sentences-container">
               {lessonContent.exercise2.sentencesToTranslate?.map((sentence, idx) => (
                 <div key={idx} className="exercise-sentence-item">
-                  <label htmlFor={`ex2-sentence-${idx}`} className="exercise-target-words-highlight">
-                    {idx + 1}. {sentence}
-                  </label>
-                  <input
+                  <Input
                     id={`ex2-sentence-${idx}`}
-                    type="text"
+                    label={`${idx + 1}. ${sentence}`}
+                    labelProps={{ className: 'exercise-target-words-highlight' }}
                     placeholder="Type translation..."
                     value={ex2Answers[idx] || ''}
                     onChange={(e) => {
@@ -115,7 +119,7 @@ export const ExercisePhase: React.FC<ExercisePhaseProps> = ({
             <div className="exercise-story-prompt">
               "{lessonContent.exercise3.textToTranslate}"
             </div>
-            <textarea
+            <Textarea
               rows={4}
               placeholder="Write the full translated paragraph here..."
               value={ex3Answer}
@@ -128,7 +132,7 @@ export const ExercisePhase: React.FC<ExercisePhaseProps> = ({
         {/* Multimodal Vision Upload Option */}
         <div className="vision-upload-section">
           <label className="vision-upload-label">
-            <ImageIcon size={18} />
+            <IconDaguerreotype size={18} />
             <span>Or Upload Photo of Handwritten Exercises (Vision AI OCR)</span>
           </label>
           <p className="vision-upload-desc">
@@ -161,7 +165,7 @@ export const ExercisePhase: React.FC<ExercisePhaseProps> = ({
                   />
                   <div className="vision-preview-overlay">
                     <div className="vision-preview-remove-icon">
-                      <X size={20} strokeWidth={2.5} />
+                      <IconCloseDismiss size={20} />
                     </div>
                   </div>
                 </div>
@@ -170,8 +174,8 @@ export const ExercisePhase: React.FC<ExercisePhaseProps> = ({
           )}
 
           <div className="vision-upload-controls">
-            <label className={`btn btn-secondary vision-file-btn ${imageFiles.length >= 3 ? 'disabled' : ''}`}>
-              <Upload size={18} />
+            <label className={`btn btn-secondary ${imageFiles.length >= 3 ? 'disabled' : ''}`}>
+              <IconUploadPress size={18} />
               <span>{imageFiles.length >= 3 ? '3 Photos Uploaded (Max)' : 'Choose Photo(s)'}</span>
               <input
                 type="file"
@@ -184,23 +188,25 @@ export const ExercisePhase: React.FC<ExercisePhaseProps> = ({
             </label>
           </div>
         </div>
-      </div>
+      </Card>
 
       {/* Submission Actions */}
       <div className="exercise-action-buttons">
-        <button
-          type="button"
-          className="btn btn-secondary exercise-btn"
+        <Button
+          variant="secondary"
+          className="exercise-btn"
           onClick={onBack}
           disabled={submitting}
         >
           Back to Selection
-        </button>
+        </Button>
 
-        <button
+        <Button
           type="submit"
-          className="btn btn-primary exercise-btn"
+          variant="primary"
+          className="exercise-btn"
           disabled={submitting}
+          icon={!submitting ? <IconSendTelegraph size={18} /> : undefined}
         >
           {submitting ? (
             <LoadingSpinner
@@ -209,12 +215,9 @@ export const ExercisePhase: React.FC<ExercisePhaseProps> = ({
               message="Grading with AI Teacher..."
             />
           ) : (
-            <>
-              <Send size={18} />
-              <span>Submit for AI Grading</span>
-            </>
+            'Submit for AI Grading'
           )}
-        </button>
+        </Button>
       </div>
     </form>
   );

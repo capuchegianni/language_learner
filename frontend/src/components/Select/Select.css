@@ -1,0 +1,231 @@
+/* ==========================================================================
+   Broadsheet Modular Form Controls: Select
+   ========================================================================== */
+
+/* --- Container & Label Layouts --- */
+.select-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.select-container-inline {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-sm);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.select-label {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  color: var(--text-secondary);
+  width: fit-content;
+  max-width: max-content;
+  cursor: default;
+  user-select: none;
+  margin-bottom: var(--space-3xs);
+  line-height: var(--line-height-tight);
+}
+
+.select-container-inline .select-label {
+  margin-bottom: 0;
+  white-space: nowrap;
+}
+
+/* --- Base Standard Select Element --- */
+.select-field {
+  background-color: var(--bg-card);
+  border: var(--border-width-regular) solid var(--border-color);
+  padding: var(--space-xs) var(--space-2xl) var(--space-xs) var(--space-sm);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  box-shadow: var(--shadow-subtle);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast);
+  min-height: var(--control-height-md);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  line-height: var(--line-height-snug);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23111111' stroke-width='3' stroke-linecap='square' stroke-linejoin='miter'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 0.85rem;
+  outline: none;
+}
+
+[data-theme="evening"] .select-field {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='3' stroke-linecap='square' stroke-linejoin='miter'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+
+/* Unified Broadsheet Hover & Focus Motion (Lift & Shadow Press, No Outline) */
+.select-field:hover,
+.select-field:focus,
+.select-field:focus-visible {
+  transform: var(--motion-lift);
+  box-shadow: var(--shadow-hover);
+  background-color: var(--bg-card-hover);
+  outline: none !important;
+}
+
+/* Active / Onclick Press Motion */
+.select-field:active {
+  transform: var(--motion-press);
+  box-shadow: var(--shadow-press);
+}
+
+.select-field:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: var(--bg-card-alt);
+  box-shadow: none;
+  transform: none;
+}
+
+.select-field option {
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+  padding: var(--space-xs);
+}
+
+/* Sizes */
+.select-field.select-sm {
+  min-height: var(--control-height-sm);
+  padding: var(--space-3xs) var(--space-xl) var(--space-3xs) var(--space-xs);
+  font-size: var(--font-size-xs);
+  background-size: 0.75rem;
+}
+
+.select-field.select-lg {
+  min-height: var(--control-height-lg);
+  padding: var(--space-sm) var(--space-2xl) var(--space-sm) var(--space-md);
+  font-size: var(--font-size-base);
+}
+
+/* --- Error & Hint Messages --- */
+.select-container.has-error .select-field {
+  border-color: var(--stamp-red);
+}
+
+.select-error-msg {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--stamp-red);
+  margin-top: var(--space-3xs);
+}
+
+.select-hint-msg {
+  font-family: var(--font-body);
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: var(--space-3xs);
+  line-height: var(--line-height-snug);
+  word-break: break-word;
+}
+
+/* --- Variant: Filter (Compact Card with Inline Label) --- */
+.filter-select-card {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  background-color: var(--bg-card);
+  border: var(--border-width-regular) solid var(--border-color);
+  padding: var(--space-xs) var(--space-md);
+  cursor: pointer;
+  user-select: none;
+  box-shadow: var(--shadow-subtle);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast);
+  min-height: var(--control-height-md);
+  box-sizing: border-box;
+  flex-shrink: 0;
+  width: fit-content;
+}
+
+.filter-select-card:hover,
+.filter-select-card:focus-within {
+  transform: var(--motion-lift);
+  box-shadow: var(--shadow-hover);
+  background-color: var(--bg-card-hover);
+  outline: none;
+}
+
+.filter-select-card:active {
+  transform: var(--motion-press);
+  box-shadow: var(--shadow-press);
+}
+
+.filter-select-label {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  color: var(--text-secondary);
+  white-space: nowrap;
+  line-height: var(--line-height-snug);
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+}
+
+.filter-select-input {
+  background: transparent !important;
+  background-image: none !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  color: var(--text-primary) !important;
+  font-family: var(--font-mono) !important;
+  font-size: var(--font-size-sm) !important;
+  font-weight: var(--font-weight-semibold) !important;
+  text-transform: uppercase;
+  line-height: var(--line-height-snug) !important;
+  cursor: pointer;
+  box-shadow: none !important;
+  outline: none !important;
+  min-height: auto !important;
+  height: auto !important;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.filter-select-input:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.filter-select-input option {
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+  padding: var(--space-xs);
+}
+
+@media (max-width: 650px) {
+  .filter-select-card {
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .filter-select-input {
+    text-align: left;
+    text-align-last: left;
+  }
+}

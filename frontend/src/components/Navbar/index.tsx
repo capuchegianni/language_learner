@@ -1,54 +1,82 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import {
-  Sparkles,
-  BookOpen,
-  Settings as SettingsIcon,
-  LayoutDashboard,
-  Scroll,
-  History,
-  Menu,
-  X,
-} from 'lucide-react';
+  IconFrontPage,
+  IconNewDispatch,
+  IconChronicle,
+  IconLexicon,
+  IconGrammarGazette,
+  IconPrintShop,
+  IconSunCelestial,
+  IconMoonCelestial,
+  IconMenuBroadsheet,
+  IconCloseDismiss,
+} from '../icons';
 import './Navbar.css';
+import { Button } from '../Button';
 
-export const Navbar: React.FC = () => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+export interface NavbarProps {
+  editionNo?: number;
+}
+
+export const Navbar: React.FC<NavbarProps> = ({ editionNo }) => {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [currentTheme, setCurrentTheme] = useState<'morning' | 'evening'>(() => {
+    const saved = localStorage.getItem('broadsheet-theme') as 'morning' | 'evening';
+    if (saved === 'morning' || saved === 'evening') {
+      return saved;
+    }
+    return document.documentElement.getAttribute('data-theme') === 'evening'
+      ? 'evening'
+      : 'morning';
+  });
+
   const location = useLocation();
-  const menuRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLUListElement>(null);
   const toggleBtnRef = useRef<HTMLButtonElement>(null);
+
+  // Sync initial theme to documentElement
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', currentTheme);
+  }, [currentTheme]);
+
+  const toggleTheme = () => {
+    const nextTheme = currentTheme === 'morning' ? 'evening' : 'morning';
+    setCurrentTheme(nextTheme);
+    document.documentElement.setAttribute('data-theme', nextTheme);
+    localStorage.setItem('broadsheet-theme', nextTheme);
+  };
 
   // Automatically close mobile menu when route changes
   useEffect(() => {
-    setMobileMenuOpen(false);
+    setMobileOpen(false);
   }, [location.pathname]);
 
   // Prevent background scrolling when mobile menu is open
   useEffect(() => {
-    if (mobileMenuOpen) {
+    if (mobileOpen) {
+      const originalOverflow = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
     }
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [mobileMenuOpen]);
+  }, [mobileOpen]);
 
   // Close on Escape key press
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && mobileMenuOpen) {
-        setMobileMenuOpen(false);
+      if (e.key === 'Escape' && mobileOpen) {
+        setMobileOpen(false);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [mobileMenuOpen]);
+  }, [mobileOpen]);
 
   // Close when clicking anywhere outside the menu
   useEffect(() => {
-    if (!mobileMenuOpen) return;
+    if (!mobileOpen) return;
 
     const handleOutsideClick = (e: MouseEvent | TouchEvent) => {
       const target = e.target as Node;
@@ -58,7 +86,7 @@ export const Navbar: React.FC = () => {
         toggleBtnRef.current &&
         !toggleBtnRef.current.contains(target)
       ) {
-        setMobileMenuOpen(false);
+        setMobileOpen(false);
       }
     };
 
@@ -68,20 +96,49 @@ export const Navbar: React.FC = () => {
       document.removeEventListener('mousedown', handleOutsideClick);
       document.removeEventListener('touchstart', handleOutsideClick);
     };
-  }, [mobileMenuOpen]);
+  }, [mobileOpen]);
 
   const handleBackdropDismiss = (e: React.SyntheticEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setMobileMenuOpen(false);
+    setMobileOpen(false);
   };
 
-  const closeMenu = () => setMobileMenuOpen(false);
+  const closeMenu = () => setMobileOpen(false);
+
+  // Use previous standard page names as requested
+  const navItems = [
+    { path: '/', label: 'Dashboard', icon: <IconFrontPage size={16} /> },
+    { path: '/lessons/new', label: 'New Lesson', icon: <IconNewDispatch size={16} /> },
+    { path: '/history', label: 'History', icon: <IconChronicle size={16} /> },
+    { path: '/words', label: 'Word Bank', icon: <IconLexicon size={16} /> },
+    { path: '/rules', label: 'Rule Bank', icon: <IconGrammarGazette size={16} /> },
+    { path: '/settings', label: 'Settings', icon: <IconPrintShop size={16} /> },
+  ];
+
+  const currentDate = new Date().toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+
+  // Calculate day of year for period volume/number if editionNo not provided
+  const calculateEdition = () => {
+    if (editionNo) return editionNo;
+    const now = new Date();
+    const start = new Date(now.getFullYear(), 0, 0);
+    const diff = now.getTime() - start.getTime();
+    const oneDay = 1000 * 60 * 60 * 24;
+    return Math.floor(diff / oneDay);
+  };
+
+  const currentEdition = calculateEdition();
 
   return (
-    <nav className={`navbar ${mobileMenuOpen ? 'menu-open' : ''}`}>
-      {/* Mobile Backdrop Overlay - Placed inside navbar to guarantee correct stacking layer below navbar items */}
-      {mobileMenuOpen && (
+    <nav className={`navbar ${mobileOpen ? 'menu-open' : ''}`} role="banner">
+      {/* Mobile Backdrop Overlay */}
+      {mobileOpen && (
         <div
           className="nav-backdrop"
           onClick={handleBackdropDismiss}
@@ -90,93 +147,106 @@ export const Navbar: React.FC = () => {
         />
       )}
 
-      <div className="navbar-container">
+      {/* Top Ear Strip (Hidden on screens <= 1040px) */}
+      <div className="nav-ears">
+        <div className="nav-ear-item">
+          <span>VOL. IV • NO. {currentEdition}</span>
+          <span>•</span>
+          <span>DAILY EDITION</span>
+        </div>
+
+        <div className="nav-ear-item">
+          <span>{currentDate}</span>
+          <Button
+            size="xs"
+            onClick={toggleTheme}
+            aria-label={`Switch to ${currentTheme === 'morning' ? 'Evening' : 'Morning'} Edition`}
+          >
+            {currentTheme === 'morning' ? (
+              <>
+                <IconMoonCelestial size={14} />
+                <span className="theme-toggle-text">EVENING EDITION</span>
+              </>
+            ) : (
+              <>
+                <IconSunCelestial size={14} />
+                <span className="theme-toggle-text">MORNING EDITION</span>
+              </>
+            )}
+          </Button>
+        </div>
+
+        <div className="nav-ear-item">
+          <span>PRICE: OPEN SOURCE</span>
+          <span>•</span>
+          <span>GLOBAL</span>
+        </div>
+      </div>
+
+      {/* Main Masthead Display (Hidden on small screens <= 650px) */}
+      <div className="masthead-hero">
         <NavLink
           to="/"
-          className="logo-brand"
+          className="masthead-title"
           onClick={closeMenu}
         >
-          <div className="logo-badge">🌍</div>
-          <div>
-            <div className="logo-title">Language Learner</div>
-            <div className="logo-subtitle">
-              AI Language Tutor &amp; Progress Storage
-            </div>
-          </div>
+          The Language Learner
         </NavLink>
+      </div>
 
-        {/* Mobile Hamburger Toggle Button */}
-        <button
+
+      {/* Navigation Section Bar */}
+      <div className="nav-section-bar">
+        {/* Medium/Small Screen Theme Toggle Button inside the Navigation Bar */}
+        <Button
+          size='sm'
+          className="nav-bar-theme-btn"
+          onClick={toggleTheme}
+          aria-label={`Switch to ${currentTheme === 'morning' ? 'Evening' : 'Morning'} Edition`}
+        >
+          {currentTheme === 'morning' ? (
+            <>
+              <IconMoonCelestial size={16} />
+              <span className="theme-toggle-text">EVENING EDITION</span>
+            </>
+          ) : (
+            <>
+              <IconSunCelestial size={16} />
+              <span className="theme-toggle-text">MORNING EDITION</span>
+            </>
+          )}
+        </Button>
+
+        <Button
+          size='sm'
           ref={toggleBtnRef}
-          type="button"
           className="nav-mobile-toggle"
-          onClick={() => setMobileMenuOpen((prev) => !prev)}
-          aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
-          aria-expanded={mobileMenuOpen}
+          onClick={() => setMobileOpen((prev) => !prev)}
+          aria-label={mobileOpen ? 'Close section index' : 'Open section index'}
+          aria-expanded={mobileOpen}
         >
-          {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+          {mobileOpen ? <IconCloseDismiss size={18} /> : <IconMenuBroadsheet size={18} />}
+          <span className="nav-toggle-text">{mobileOpen ? 'CLOSE INDEX' : 'SECTIONS INDEX'}</span>
+        </Button>
 
-        {/* Nav Links Container */}
-        <div
+        <ul
           ref={menuRef}
-          className={`nav-links ${mobileMenuOpen ? 'open' : ''}`}
+          className={`nav-links ${mobileOpen ? 'open' : ''}`}
         >
-          <NavLink
-            to="/"
-            end
-            className={({ isActive }) => (isActive ? 'active' : '')}
-            onClick={closeMenu}
-          >
-            <LayoutDashboard size={18} />
-            <span>Dashboard</span>
-          </NavLink>
-
-          <NavLink
-            to="/lessons/new"
-            className={({ isActive }) => (isActive ? 'active' : '')}
-            onClick={closeMenu}
-          >
-            <Sparkles size={18} />
-            <span>New Lesson</span>
-          </NavLink>
-
-          <NavLink
-            to="/history"
-            className={({ isActive }) => (isActive ? 'active' : '')}
-            onClick={closeMenu}
-          >
-            <History size={18} />
-            <span>History</span>
-          </NavLink>
-
-          <NavLink
-            to="/words"
-            className={({ isActive }) => (isActive ? 'active' : '')}
-            onClick={closeMenu}
-          >
-            <BookOpen size={18} />
-            <span>Word Bank</span>
-          </NavLink>
-
-          <NavLink
-            to="/rules"
-            className={({ isActive }) => (isActive ? 'active' : '')}
-            onClick={closeMenu}
-          >
-            <Scroll size={18} />
-            <span>Rule Bank</span>
-          </NavLink>
-
-          <NavLink
-            to="/settings"
-            className={({ isActive }) => (isActive ? 'active' : '')}
-            onClick={closeMenu}
-          >
-            <SettingsIcon size={18} />
-            <span>Settings</span>
-          </NavLink>
-        </div>
+          {navItems.map((item) => (
+            <li key={item.path} className="nav-link-item">
+              <NavLink
+                to={item.path}
+                end={item.path === '/'}
+                className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`.trim()}
+                onClick={closeMenu}
+              >
+                {item.icon}
+                <span>{item.label}</span>
+              </NavLink>
+            </li>
+          ))}
+        </ul>
       </div>
     </nav>
   );

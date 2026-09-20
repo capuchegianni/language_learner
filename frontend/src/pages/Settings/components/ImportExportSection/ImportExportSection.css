@@ -1,0 +1,29 @@
+/* ========================================================= */
+/* ImportExportSection Styles                                 */
+/* ========================================================= */
+
+.settings-import-export-card {
+  background: var(--bg-card);
+}
+
+.settings-import-export-actions {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  margin-top: var(--space-xs);
+}
+
+/* Responsive */
+@media (max-width: 650px) {
+  .settings-import-export-actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    width: 100%;
+  }
+
+  .settings-import-export-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

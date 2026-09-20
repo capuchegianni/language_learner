@@ -1,5 +1,5 @@
 import React from 'react';
-import { FilterBar, FilterInput, FilterSelect } from '../../../components';
+import { FilterBar, Input, Select } from '../../../components';
 
 export interface WordFilterBarProps {
   searchQuery: string;
@@ -18,17 +18,21 @@ export const WordFilterBar: React.FC<WordFilterBarProps> = ({
 }) => {
   return (
     <FilterBar id="tutorial-wordbank-filter">
-      <FilterInput
+      <Input
+        variant="filter"
         id="wordbank-search-input"
         value={searchQuery}
-        onChange={onSearchChange}
+        onChange={(e) => onSearchChange(e.target.value)}
+        clearable
+        onClear={() => onSearchChange('')}
         placeholder="Search vocabulary, meaning, or pronunciation..."
       />
-      <FilterSelect
+      <Select
+        variant="filter"
         id="wordbank-category-filter"
         label="Category:"
         value={selectedCategory}
-        onChange={onCategoryChange}
+        onChange={(e) => onCategoryChange(e.target.value)}
         options={categories}
         allLabel="All Categories"
       />

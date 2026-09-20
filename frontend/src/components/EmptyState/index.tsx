@@ -1,5 +1,6 @@
 import React from 'react';
-import { Inbox } from 'lucide-react';
+import { IconChronicle } from '../icons';
+import { Card } from '../Card';
 import './EmptyState.css';
 
 export interface EmptyStateProps {
@@ -11,18 +12,20 @@ export interface EmptyStateProps {
 }
 
 export const EmptyState: React.FC<EmptyStateProps> = ({
-  icon = <Inbox size={40} />,
+  icon = <IconChronicle size={44} />,
   title,
   message,
   action,
   className = '',
 }) => {
   return (
-    <div className={`glass-card app-empty-state ${className}`}>
-      {icon && <div className="app-empty-state-icon">{icon}</div>}
-      {title && <h3 className="app-empty-state-title">{title}</h3>}
-      {message && <p className="app-empty-state-message">{message}</p>}
-      {action && <div className="app-empty-state-action">{action}</div>}
-    </div>
+    <Card className={`empty-state ${className}`.trim()}>
+      {icon && <div className="empty-state-icon">{icon}</div>}
+      {title && <h3 className="empty-state-title">{title}</h3>}
+      {message && <p className="empty-state-message">{message}</p>}
+      {action && <div className="empty-state-action">{action}</div>}
+    </Card>
   );
 };
+
+export default EmptyState;

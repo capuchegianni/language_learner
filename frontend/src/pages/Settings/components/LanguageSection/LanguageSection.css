@@ -1,0 +1,34 @@
+/* ========================================================= */
+/* LanguageSection Styles                                     */
+/* ========================================================= */
+
+.settings-language-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+}
+
+.settings-language-error {
+  margin-top: var(--space-md);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--stamp-red);
+  background: var(--stamp-red-bg);
+  border: var(--border-width-regular) solid var(--stamp-red);
+  border-left: var(--border-width-heavy) solid var(--stamp-red);
+  box-shadow: var(--shadow-subtle);
+  padding: var(--space-sm) var(--space-md);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  box-sizing: border-box;
+}
+
+/* Responsive */
+@media (max-width: 650px) {
+  .settings-language-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+}

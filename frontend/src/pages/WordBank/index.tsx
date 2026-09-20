@@ -1,13 +1,11 @@
 import React from 'react';
-import { BookOpen, Plus } from 'lucide-react';
+import { IconLexicon, IconFleuronPlus } from '../../components/icons';
 import { useLanguages } from '../../contexts/LanguageContext';
 import { useWordBank } from './hooks/useWordBank';
 import { WordCard } from './components/WordCard';
 import { WordModal } from './components/WordModal';
 import { WordFilterBar } from './components/WordFilterBar';
-import { PageHeader } from '../../components/PageHeader';
-import { LoadingSpinner } from '../../components/LoadingSpinner';
-import { EmptyState } from '../../components/EmptyState';
+import { PageHeader, LoadingSpinner, EmptyState, Button } from '../../components';
 import './WordBank.css';
 
 export const WordBank: React.FC = () => {
@@ -40,19 +38,18 @@ export const WordBank: React.FC = () => {
     <div className="wordbank-container">
       <PageHeader
         id="tutorial-wordbank-header"
-        icon={<BookOpen className="text-accent-secondary" />}
+        icon={<IconLexicon size={40} />}
         title={`${targetLanguage} Word Bank`}
         subtitle={`All learned vocabulary automatically tracked from lessons or added manually. Total: ${words.length} words.`}
         actions={
-          <button
-            type="button"
-            className="btn btn-primary"
+          <Button
+            variant="primary"
             id="tutorial-wordbank-add-btn"
             onClick={openAddModal}
+            icon={<IconFleuronPlus size={18} />}
           >
-            <Plus size={18} />
             <span>Add Custom Word</span>
-          </button>
+          </Button>
         }
       />
 

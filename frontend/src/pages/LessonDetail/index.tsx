@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { IconManiculeLeft } from '../../components/icons';
 import { api } from '../../services/api';
 import { Lesson, LessonContent, GradingResult } from '../../types';
 import { RuleExplanation } from '../NewLesson/components/RuleExplanation';
 import { WordsLearned } from '../NewLesson/components/WordsLearned';
 import { AIFeedbackDisplay } from '../NewLesson/components/AIFeedbackDisplay';
-import { LoadingSpinner } from '../../components/LoadingSpinner';
-import { EmptyState } from '../../components/EmptyState';
-import { CodeBlock } from '../../components/CodeBlock';
-import { Pill } from '../../components/Pill';
+import { LoadingSpinner, EmptyState, CodeBlock, Pill, Button, Card } from '../../components';
 import './LessonDetail.css';
 
 export interface LessonDetailProps {
@@ -77,13 +74,12 @@ export const LessonDetail: React.FC<LessonDetailProps> = ({
           title="Lesson Not Found"
           message="The requested lesson could not be loaded or has been deleted."
           action={
-            <button
-              type="button"
-              className="btn btn-secondary"
+            <Button
+              variant="secondary"
               onClick={() => navigate(-1)}
             >
               Back to Dashboard
-            </button>
+            </Button>
           }
         />
       </div>
@@ -102,20 +98,20 @@ export const LessonDetail: React.FC<LessonDetailProps> = ({
   return (
     <div className="lesson-detail-container">
       {showBackBtn && (
-        <button
-          type="button"
-          className="btn btn-secondary back-btn"
+        <Button
+          variant="secondary"
+          className="back-btn"
           onClick={() => navigate(-1)}
+          icon={<IconManiculeLeft size={18} />}
         >
-          <ArrowLeft size={18} />
           <span>Back</span>
-        </button>
+        </Button>
       )}
 
-      <div className="glass-card lesson-detail-header-card">
+      <Card className="lesson-detail-header-card">
         <div className="lesson-detail-title-group">
           <div className="lesson-detail-title-row">
-            <h1 className="kr-text lesson-detail-title">
+            <h1 className="target-text lesson-detail-title">
               {lesson.rule?.title || lesson.title}
             </h1>
             {lesson.isReview && <Pill variant="warning">Review</Pill>}
@@ -137,7 +133,7 @@ export const LessonDetail: React.FC<LessonDetailProps> = ({
             </div>
           </div>
         )}
-      </div>
+      </Card>
 
       {/* Rule Details & Words Learned */}
       {lessonContent && <WordsLearned lessonContent={lessonContent} />}
@@ -162,15 +158,13 @@ export const LessonDetail: React.FC<LessonDetailProps> = ({
       )}
 
       {showFinishBtn && (
-        <div className="lesson-detail-finish-container">
-          <button
-            type="button"
-            className="btn btn-primary lesson-detail-finish-btn"
-            onClick={onFinish || (() => navigate('/'))}
-          >
-            Finish Lesson &amp; Return to Dashboard
-          </button>
-        </div>
+        <Button
+          variant="primary"
+          className="lesson-detail-finish-btn"
+          onClick={onFinish || (() => navigate('/'))}
+        >
+          Finish Lesson &amp; Return to Dashboard
+        </Button>
       )}
     </div>
   );
