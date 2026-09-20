@@ -1,43 +1,51 @@
-.app-empty-state {
+/* ==========================================================================
+   Archive Notice Empty State (EmptyState)
+   ========================================================================== */
+
+.empty-state {
+  background: var(--bg-card);
+  border: var(--border-width-medium) solid var(--border-color);
+  outline: var(--border-width-hairline) dashed var(--border-color-light);
+  outline-offset: 4px;
+  padding: var(--space-3xl) var(--space-2xl);
   text-align: center;
-  padding: 3rem 1.5rem;
-  color: var(--text-secondary);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: var(--space-md);
+  margin: var(--space-xl) 0;
+  box-shadow: var(--shadow-card);
+  box-sizing: border-box;
+  width: 100%;
 }
 
-.app-empty-state-icon {
-  margin-bottom: 1rem;
-  color: var(--text-muted);
-  opacity: 0.6;
+.empty-state-icon {
+  color: var(--text-primary);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  margin-bottom: var(--space-2xs);
 }
 
-.app-empty-state:hover .app-empty-state-icon {
-  transform: scale(1.05);
-  opacity: 0.85;
-}
-
-.app-empty-state-title {
-  font-size: 1.15rem;
-  font-weight: 600;
+.empty-state-title {
+  font-family: var(--font-masthead);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
   color: var(--text-primary);
-  margin-bottom: 0.5rem;
+  line-height: var(--line-height-tight);
 }
 
-.app-empty-state-message {
-  font-size: 0.92rem;
+.empty-state-message {
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
   color: var(--text-secondary);
   max-width: 480px;
+  line-height: var(--line-height-normal);
+  font-style: italic;
   margin: 0 auto;
-  line-height: 1.5;
 }
 
-.app-empty-state-action {
-  margin-top: 1.5rem;
+.empty-state-action {
+  margin-top: var(--space-xs);
 }

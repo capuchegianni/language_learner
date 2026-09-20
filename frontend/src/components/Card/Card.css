@@ -1,0 +1,78 @@
+/* ==========================================================================
+   The Broadsheet Box / Card Component
+   ========================================================================== */
+
+.card {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: var(--border-width-regular) solid var(--border-color);
+  padding: var(--space-lg) var(--space-xl);
+  box-shadow: var(--shadow-card);
+  position: relative;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+  box-sizing: border-box;
+}
+
+.card-alt {
+  background: var(--bg-card-alt);
+}
+
+.card-framed {
+  border: var(--border-width-medium) solid var(--border-color);
+  outline: var(--border-width-hairline) solid var(--border-color);
+  outline-offset: 3px;
+}
+
+.card-pressed {
+  box-shadow: var(--shadow-subtle);
+}
+
+.card-danger {
+  border-color: var(--stamp-red);
+  background: var(--stamp-red-bg);
+}
+
+.card-padding-none {
+  padding: 0;
+}
+
+.card-padding-sm {
+  padding: var(--space-sm);
+}
+
+.card-padding-lg {
+  padding: var(--space-2xl);
+}
+
+.card-interactive {
+  cursor: pointer;
+}
+
+.card-interactive:hover {
+  background: var(--bg-card-hover);
+  transform: var(--motion-lift);
+  box-shadow: var(--shadow-float);
+}
+
+.card-interactive:active {
+  transform: var(--motion-press);
+  box-shadow: var(--shadow-press);
+}
+
+.lesson-card:focus-visible {
+  outline: var(--border-width-medium) solid var(--text-primary);
+  outline-offset: 2px;
+}
+
+@media (max-width: 650px) {
+  .card:not(.card-padding-none):not(.card-padding-sm) {
+    padding: var(--space-md);
+  }
+}
+
+/* Accessibility: High-contrast mode support */
+@media (forced-colors: active) {
+  .card {
+    border: var(--border-width-regular) solid ButtonText;
+  }
+}

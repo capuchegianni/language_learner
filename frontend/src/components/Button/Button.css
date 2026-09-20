@@ -1,0 +1,253 @@
+/* ==========================================================================
+   The Broadsheet Button Component Styles (Unified Physical Press Plates)
+   ========================================================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-md);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  cursor: pointer;
+  border: var(--border-width-regular) solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-press);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+  min-height: var(--control-height-md);
+  user-select: none;
+  box-sizing: border-box;
+  text-decoration: none;
+}
+
+.btn-full-width {
+  width: 100%;
+}
+
+.btn:hover:not(:disabled):not(.disabled) {
+  transform: var(--motion-lift);
+  box-shadow: var(--shadow-hover);
+}
+
+.btn:active:not(:disabled):not(.disabled),
+.btn.active {
+  transform: var(--motion-press);
+  box-shadow: var(--shadow-press);
+}
+
+.btn:disabled,
+.btn.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+  box-shadow: none;
+  border-color: var(--border-color-light);
+  color: var(--text-muted);
+  transform: none;
+}
+
+/* Variant: Primary */
+.btn-primary {
+  background: var(--text-primary);
+  color: var(--bg-dark);
+  border-color: var(--text-primary);
+}
+
+.btn-primary:hover:not(:disabled):not(.disabled) {
+  background: var(--accent-primary-hover);
+  color: var(--bg-dark);
+}
+
+/* Variant: Secondary */
+.btn-secondary {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.btn-secondary:hover:not(:disabled):not(.disabled) {
+  background: var(--bg-card-alt);
+}
+
+/* Variant: Danger */
+.btn-danger {
+  background: var(--stamp-red-bg);
+  border-color: var(--stamp-red);
+  color: var(--stamp-red);
+}
+
+.btn-danger:hover:not(:disabled):not(.disabled) {
+  background: var(--stamp-red);
+  color: #ffffff;
+}
+
+/* Variant: Edit (Amber Ink) */
+.btn-edit,
+.icon-btn-edit {
+  color: var(--text-secondary);
+}
+
+.btn-edit:hover:not(:disabled):not(.disabled),
+.icon-btn-edit:hover:not(:disabled):not(.disabled) {
+  border-color: var(--stamp-amber);
+  color: var(--stamp-amber);
+  background: var(--stamp-amber-bg);
+}
+
+/* Variant: Delete (Red Ink) */
+.btn-delete,
+.icon-btn-delete {
+  color: var(--text-secondary);
+}
+
+.btn-delete:hover:not(:disabled):not(.disabled),
+.icon-btn-delete:hover:not(:disabled):not(.disabled) {
+  border-color: var(--stamp-red);
+  color: var(--stamp-red);
+  background: var(--stamp-red-bg);
+}
+
+/* Variant: Audio (Sound Horn Blue) */
+.btn-audio,
+.icon-btn-audio {
+  color: var(--text-secondary);
+}
+
+.btn-audio:hover:not(:disabled):not(.disabled),
+.btn-audio.active,
+.icon-btn-audio:hover:not(:disabled):not(.disabled),
+.icon-btn-audio.active {
+  border-color: var(--stamp-blue);
+  color: var(--stamp-blue);
+  background: var(--stamp-blue-bg);
+}
+
+/* Variant: Note (Plum/Purple) */
+.btn-note,
+.icon-btn-note {
+  color: var(--text-secondary);
+}
+
+.btn-note:hover:not(:disabled):not(.disabled),
+.icon-btn-note:hover:not(:disabled):not(.disabled) {
+  border-color: var(--accent-purple);
+  color: var(--accent-purple);
+  background: rgba(92, 53, 88, 0.1);
+}
+
+/* Icon-Only Mode (Supports IconButton aliases) */
+.btn-icon-only,
+.icon-btn {
+  padding: 0;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-subtle);
+  min-height: auto;
+}
+
+.btn-icon-only:hover:not(:disabled):not(.disabled),
+.icon-btn:hover:not(:disabled):not(.disabled) {
+  transform: var(--motion-lift);
+  box-shadow: var(--shadow-hover);
+  background: var(--bg-card-alt);
+}
+
+.btn-icon-only:active:not(:disabled):not(.disabled),
+.btn-icon-only.active,
+.icon-btn:active:not(:disabled):not(.disabled),
+.icon-btn.active {
+  transform: var(--motion-press);
+  box-shadow: var(--shadow-press);
+  background: var(--text-primary);
+  color: var(--bg-dark);
+}
+
+.btn-icon-only.btn-size-xs,
+.icon-btn.btn-size-xs {
+  width: var(--control-height-xs);
+  height: var(--control-height-xs);
+  min-width: var(--control-height-xs);
+  min-height: var(--control-height-xs);
+}
+
+.btn-icon-only.btn-size-sm,
+.icon-btn.btn-size-sm {
+  width: var(--control-height-sm);
+  height: var(--control-height-sm);
+  min-width: var(--control-height-sm);
+  min-height: var(--control-height-sm);
+}
+
+.btn-icon-only.btn-size-md,
+.icon-btn.btn-size-md {
+  width: var(--control-height-md);
+  height: var(--control-height-md);
+  min-width: var(--control-height-md);
+  min-height: var(--control-height-md);
+}
+
+.btn-icon-only.btn-size-lg,
+.icon-btn.btn-size-lg {
+  width: var(--control-height-lg);
+  height: var(--control-height-lg);
+  min-width: var(--control-height-lg);
+  min-height: var(--control-height-lg);
+}
+
+/* Sizes */
+.btn-size-xs {
+  padding: var(--space-3xs) var(--space-xs);
+  font-size: var(--font-size-3xs);
+  min-height: var(--control-height-xs);
+}
+
+.btn-size-sm {
+  padding: var(--space-2xs) var(--space-sm);
+  font-size: var(--font-size-2xs);
+  min-height: var(--control-height-sm);
+}
+
+.btn-size-md {
+  padding: var(--space-xs) var(--space-md);
+  font-size: var(--font-size-xs);
+  min-height: var(--control-height-md);
+}
+
+.btn-size-lg {
+  padding: var(--space-sm) var(--space-2xl);
+  font-size: var(--font-size-sm);
+  min-height: var(--control-height-lg);
+}
+
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.btn-spinner {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+/* Accessibility Focus States */
+.btn:focus-visible {
+  outline: var(--border-width-medium) solid var(--text-primary);
+  outline-offset: 2px;
+}
+
+@media (forced-colors: active) {
+  .btn,
+  .btn-primary,
+  .btn-secondary,
+  .btn-danger,
+  .icon-btn {
+    border: var(--border-width-regular) solid ButtonText;
+  }
+}

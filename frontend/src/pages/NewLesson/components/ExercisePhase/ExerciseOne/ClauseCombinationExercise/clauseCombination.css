@@ -6,37 +6,42 @@
 .ex1-clause-list {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: var(--space-lg);
 }
 
 .ex1-clause-card {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--space-xs);
 }
 
 .ex1-clause-pair-display {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-xs);
   flex-wrap: wrap;
 }
 
 .ex1-clause-pill {
-  font-size: 0.98rem;
-  font-weight: 600;
+  font-family: var(--font-target);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
   color: var(--text-primary);
+  line-height: var(--line-height-snug);
 }
 
 .ex1-clause-plus {
-  color: var(--accent-primary);
-  font-size: 0.85rem;
-  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-bold);
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
-  padding: 0.15rem 0.45rem;
-  border-radius: 4px;
-  background: rgba(99, 102, 241, 0.12);
-  border: 1px solid rgba(99, 102, 241, 0.25);
+  gap: var(--space-2xs);
+  padding: var(--space-3xs) var(--space-xs);
+  background: var(--bg-card-alt);
+  border: var(--border-width-regular) solid var(--border-color);
+  user-select: none;
 }
+
+

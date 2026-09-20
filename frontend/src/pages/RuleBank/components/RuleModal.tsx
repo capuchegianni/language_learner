@@ -1,7 +1,7 @@
 import React from 'react';
 import { Rule } from '../../../types';
 import { RuleFormData } from '../types';
-import { Modal } from '../../../components/Modal';
+import { Modal, Button, Input, Textarea } from '../../../components';
 import { useLanguages } from '../../../contexts/LanguageContext';
 
 export interface RuleModalProps {
@@ -30,61 +30,49 @@ export const RuleModal: React.FC<RuleModalProps> = ({
       title={editingRule ? 'Edit Grammar Rule' : 'Add Rule to Bank'}
     >
       <form onSubmit={onSubmit} className="rule-form-container">
-        <div className="input-group">
-          <label htmlFor="rule-title-input">Rule Title / Expression*</label>
-          <input
-            id="rule-title-input"
-            autoFocus
-            type="text"
-            className="kr-text"
-            value={formData.title}
-            onChange={(e) => onFieldChange('title', e.target.value)}
-            required
-            placeholder="e.g. -(으)ㄹ 수 있다"
-          />
-        </div>
+        <Input
+          id="rule-title-input"
+          autoFocus
+          label="Rule Title / Expression*"
+          className="target-text"
+          value={formData.title}
+          onChange={(e) => onFieldChange('title', e.target.value)}
+          required
+          placeholder="e.g. -(으)ㄹ 수 있다"
+        />
 
-        <div className="input-group">
-          <label htmlFor="rule-explanation-input">Explanation &amp; Usage*</label>
-          <textarea
-            id="rule-explanation-input"
-            value={formData.explanation}
-            onChange={(e) => onFieldChange('explanation', e.target.value)}
-            required
-            placeholder="Explain when and how to form this rule..."
-          />
-        </div>
+        <Textarea
+          id="rule-explanation-input"
+          label="Explanation & Usage*"
+          value={formData.explanation}
+          onChange={(e) => onFieldChange('explanation', e.target.value)}
+          required
+          placeholder="Explain when and how to form this rule..."
+        />
 
-        <div className="input-group">
-          <label htmlFor="rule-examples-input">
-            Examples (Format: {targetLanguage} = {nativeLanguage} translation per line)
-          </label>
-          <textarea
-            id="rule-examples-input"
-            value={formData.examplesText}
-            onChange={(e) => onFieldChange('examplesText', e.target.value)}
-            placeholder={`Example in ${targetLanguage} = Translation in ${nativeLanguage}`}
-          />
-        </div>
+        <Textarea
+          id="rule-examples-input"
+          label={`Examples (Format: ${targetLanguage} = ${nativeLanguage} translation per line)`}
+          value={formData.examplesText}
+          onChange={(e) => onFieldChange('examplesText', e.target.value)}
+          placeholder={`Example in ${targetLanguage} = Translation in ${nativeLanguage}`}
+        />
 
-        <div className="input-group">
-          <label htmlFor="rule-exceptions-input">Exceptions or Notes</label>
-          <input
-            id="rule-exceptions-input"
-            type="text"
-            value={formData.exceptions}
-            onChange={(e) => onFieldChange('exceptions', e.target.value)}
-            placeholder="Irregular patchim rules..."
-          />
-        </div>
+        <Input
+          id="rule-exceptions-input"
+          label="Exceptions or Notes"
+          value={formData.exceptions}
+          onChange={(e) => onFieldChange('exceptions', e.target.value)}
+          placeholder="Irregular rules..."
+        />
 
-        <div className="app-modal-footer">
-          <button type="button" className="btn btn-secondary" onClick={onClose}>
+        <div className="modal-footer">
+          <Button variant="secondary" onClick={onClose}>
             Cancel
-          </button>
-          <button type="submit" className="btn btn-primary">
+          </Button>
+          <Button variant="primary" type="submit">
             Save Rule
-          </button>
+          </Button>
         </div>
       </form>
     </Modal>

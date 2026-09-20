@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link2, Plus } from 'lucide-react';
+import { IconPaperclipLink, IconFleuronPlus } from '../../../../../../components/icons';
+import { Input } from '../../../../../../components';
 import { ExerciseOneComponentProps } from '../types';
 import './clauseCombination.css';
 
@@ -21,7 +22,7 @@ export const ClauseCombinationExercise: React.FC<ExerciseOneComponentProps> = ({
     <div className="ex1-container">
       <div className="ex1-header-block">
         <span className="ex1-type-badge">
-          <Link2 size={13} />
+          <IconPaperclipLink size={13} />
           Clause Connector Combination
         </span>
         <p className="ex1-instruction">{instruction}</p>
@@ -34,17 +35,17 @@ export const ClauseCombinationExercise: React.FC<ExerciseOneComponentProps> = ({
           return (
             <div key={idx} className="ex1-clause-card">
               <div className="ex1-clause-pair-display">
-                <span className="ex1-clause-pill kr-text">{clauseA}</span>
+                <span className="ex1-clause-pill target-text">{clauseA}</span>
                 {clauseB && (
                   <>
                     <span className="ex1-clause-plus">
-                      <Plus size={12} /> connector
+                      <IconFleuronPlus size={12} /> connector
                     </span>
-                    <span className="ex1-clause-pill kr-text">{clauseB}</span>
+                    <span className="ex1-clause-pill target-text">{clauseB}</span>
                   </>
                 )}
               </div>
-              <input
+              <Input
                 type="text"
                 id={`ex1-clause-${idx}`}
                 placeholder="Combine clauses into a single sentence using the rule..."

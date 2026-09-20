@@ -1,10 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Clock, History, ArrowRight } from 'lucide-react';
+import { IconChronicle, IconManiculeRight } from '../../../components/icons';
 import { Lesson, DashboardStats } from '../../../types';
-import { LoadingSpinner } from '../../../components/LoadingSpinner';
-import { EmptyState } from '../../../components/EmptyState';
-import { LessonCard } from '../../../components/LessonCard';
+import { LoadingSpinner, EmptyState, LessonCard, Button, Card } from '../../../components';
 
 export interface RecentLessonsListProps {
   stats: DashboardStats | null;
@@ -35,16 +33,15 @@ export const RecentLessonsList: React.FC<RecentLessonsListProps> = ({
       <div className="dashboard-recent-column">
         <h2 className="dashboard-section-title">Recent Lessons</h2>
         <EmptyState
-          icon={<Clock size={40} />}
+          icon={<IconChronicle size={40} />}
           message="No lessons generated yet."
           action={
-            <button
-              type="button"
-              className="btn btn-primary"
+            <Button
+              variant="primary"
               onClick={() => navigate('/lessons/new')}
             >
               Create Your First Lesson
-            </button>
+            </Button>
           }
         />
       </div>
@@ -69,8 +66,9 @@ export const RecentLessonsList: React.FC<RecentLessonsListProps> = ({
       ))}
 
       {recentLessons.length >= 3 && (
-        <div
-          className="glass-card quick-hub-card"
+        <Card
+          isInteractive
+          className="quick-hub-card"
           onClick={() => navigate('/history')}
           role="button"
           tabIndex={0}
@@ -82,8 +80,8 @@ export const RecentLessonsList: React.FC<RecentLessonsListProps> = ({
           }}
         >
           <div className="quick-hub-card-content">
-            <div className="quick-hub-icon quick-hub-icon-warning">
-              <History size={24} />
+            <div className="quick-hub-icon">
+              <IconChronicle size={24} />
             </div>
             <div className="quick-hub-text">
               <h3 className="quick-hub-title">View All Past Lessons</h3>
@@ -92,10 +90,10 @@ export const RecentLessonsList: React.FC<RecentLessonsListProps> = ({
               </p>
             </div>
             <div className="quick-hub-arrow-wrapper">
-              <ArrowRight size={18} color="var(--text-secondary)" className="quick-hub-arrow" />
+              <IconManiculeRight size={18} className="quick-hub-arrow" />
             </div>
           </div>
-        </div>
+        </Card>
       )}
     </div>
   );

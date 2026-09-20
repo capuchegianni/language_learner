@@ -1,5 +1,6 @@
 import React from 'react';
-import { CheckCircle2 } from 'lucide-react';
+import { IconApprovalCheck } from '../../../../../../components/icons';
+import { Select } from '../../../../../../components';
 import { ExerciseOneComponentProps } from '../types';
 import './contrastPair.css';
 
@@ -27,7 +28,7 @@ export const ContrastPairExercise: React.FC<ExerciseOneComponentProps> = ({
   <div className="ex1-container">
     <div className="ex1-header-block">
       <span className="ex1-type-badge">
-        <CheckCircle2 size={13} />
+        <IconApprovalCheck size={13} />
         Contrast Pair Drill
       </span>
       <p className="ex1-instruction">{instruction}</p>
@@ -41,10 +42,11 @@ export const ContrastPairExercise: React.FC<ExerciseOneComponentProps> = ({
 
         return (
           <div key={idx} className="ex1-contrast-card">
-            <p className="ex1-contrast-sentence kr-text">
+            <p className="ex1-contrast-sentence target-text">
               <span>{idx + 1}.&nbsp;{before}</span>
-              <select
+              <Select
                 id={`ex1-contrast-${idx}`}
+                size="sm"
                 className="ex1-contrast-select"
                 value={answers[idx] || ''}
                 onChange={(e) => onAnswerChange(idx, e.target.value)}
@@ -53,7 +55,7 @@ export const ContrastPairExercise: React.FC<ExerciseOneComponentProps> = ({
                 {choices.map((choice) => (
                   <option key={choice} value={choice}>{choice}</option>
                 ))}
-              </select>
+              </Select>
               <span>{after}</span>
             </p>
           </div>

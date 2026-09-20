@@ -6,44 +6,50 @@
 .ex1-agreement-list {
   display: flex;
   flex-direction: column;
-  gap: 1.1rem;
+  gap: var(--space-md);
 }
 
 .ex1-agreement-item {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--space-xs);
 }
 
 .ex1-agreement-prompt-row {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-xs);
   flex-wrap: wrap;
 }
 
 .ex1-agreement-base-word {
-  font-size: 0.98rem;
-  font-weight: 600;
+  font-family: var(--font-target);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
   color: var(--text-primary);
-  line-height: 1.4;
+  line-height: var(--line-height-snug);
 }
 
 .ex1-agreement-condition {
   display: inline-flex;
   align-items: center;
-  font-size: 0.78rem;
-  font-weight: 600;
-  padding: 0.2rem 0.55rem;
-  border-radius: 4px;
-  background: rgba(56, 189, 248, 0.12);
-  color: #38bdf8;
-  border: 1px solid rgba(56, 189, 248, 0.25);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  padding: var(--space-3xs) var(--space-xs);
+  background: var(--bg-card-alt);
+  color: var(--text-primary);
+  border: var(--border-width-regular) solid var(--border-color);
+  user-select: none;
 }
 
 .ex1-agreement-arrow {
   flex-shrink: 0;
   margin-top: 2px;
-  color: var(--accent-secondary);
+  color: var(--text-secondary);
 }
+
+
 

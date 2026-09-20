@@ -1,7 +1,7 @@
 import React from 'react';
 import { Word } from '../../../types';
 import { WordFormData } from '../types';
-import { Modal } from '../../../components/Modal';
+import { Modal, Button, Input, Textarea } from '../../../components';
 import { useLanguages } from '../../../contexts/LanguageContext';
 
 export interface WordModalProps {
@@ -33,49 +33,39 @@ export const WordModal: React.FC<WordModalProps> = ({
       title={editingWord ? 'Edit Word' : 'Add New Word to Bank'}
     >
       <form onSubmit={onSubmit} className="word-form-container">
-        <div className="input-group">
-          <label htmlFor="word-target-input">{targetLanguage}*</label>
-          <input
-            id="word-target-input"
-            autoFocus
-            type="text"
-            className="kr-text"
-            value={formData.targetLanguage}
-            onChange={(e) => onFieldChange('targetLanguage', e.target.value)}
-            required
-            placeholder={`Word in ${targetLanguage}`}
-          />
-        </div>
+        <Input
+          id="word-target-input"
+          autoFocus
+          label={`${targetLanguage}*`}
+          className="target-text"
+          value={formData.targetLanguage}
+          onChange={(e) => onFieldChange('targetLanguage', e.target.value)}
+          required
+          placeholder={`Word in ${targetLanguage}`}
+        />
 
-        <div className="input-group">
-          <label htmlFor="word-native-input">{nativeLanguage} Meaning*</label>
-          <input
-            id="word-native-input"
-            type="text"
-            value={formData.nativeLanguage}
-            onChange={(e) => onFieldChange('nativeLanguage', e.target.value)}
-            required
-            placeholder={`Meaning in ${nativeLanguage}`}
-          />
-        </div>
+        <Input
+          id="word-native-input"
+          label={`${nativeLanguage} Meaning*`}
+          value={formData.nativeLanguage}
+          onChange={(e) => onFieldChange('nativeLanguage', e.target.value)}
+          required
+          placeholder={`Meaning in ${nativeLanguage}`}
+        />
 
-        <div className="input-group">
-          <label htmlFor="word-pronunciation-input">Pronunciation</label>
-          <input
-            id="word-pronunciation-input"
-            type="text"
-            value={formData.pronunciation || ''}
-            onChange={(e) => onFieldChange('pronunciation', e.target.value)}
-            placeholder="e.g. romanized pronunciation"
-          />
-        </div>
+        <Input
+          id="word-pronunciation-input"
+          label="Pronunciation"
+          value={formData.pronunciation || ''}
+          onChange={(e) => onFieldChange('pronunciation', e.target.value)}
+          placeholder="e.g. romanized pronunciation"
+        />
 
-        <div className="input-group">
-          <label htmlFor="word-pos-input">Part of Speech (Category)</label>
-          <input
+        <div>
+          <Input
             id="word-pos-input"
+            label="Part of Speech (Category)"
             list="pos-options"
-            type="text"
             value={formData.partOfSpeech || ''}
             onChange={(e) => onFieldChange('partOfSpeech', e.target.value)}
             placeholder="e.g. verb, noun, adjective"
@@ -87,33 +77,31 @@ export const WordModal: React.FC<WordModalProps> = ({
           </datalist>
         </div>
 
-        <div className="input-group">
-          <div className="word-form-notes-label">
-            <label htmlFor="word-notes-input">
-              Notes / Context
-            </label>
-            <span
-              className={`word-form-notes-counter ${notesLength >= 80 ? 'limit' : 'normal'}`}
-            >
-              {notesLength}/80
-            </span>
-          </div>
-          <textarea
-            id="word-notes-input"
-            maxLength={80}
-            value={formData.notes || ''}
-            onChange={(e) => onFieldChange('notes', e.target.value)}
-            placeholder="Usage hints or sentence example (max 80 characters)..."
-          />
-        </div>
+        <Textarea
+          id="word-notes-input"
+          label={
+            <div className="word-form-notes-label">
+              <span>Notes / Context</span>
+              <span
+                className={`word-form-notes-counter ${notesLength >= 80 ? 'limit' : 'normal'}`}
+              >
+                {notesLength}/80
+              </span>
+            </div>
+          }
+          maxLength={80}
+          value={formData.notes || ''}
+          onChange={(e) => onFieldChange('notes', e.target.value)}
+          placeholder="Usage hints or sentence example (max 80 characters)..."
+        />
 
-        <div className="app-modal-footer">
-          <button type="button" className="btn btn-secondary" onClick={onClose}>
+        <div className="modal-footer">
+          <Button variant="secondary" onClick={onClose}>
             Cancel
-          </button>
-          <button type="submit" className="btn btn-primary">
+          </Button>
+          <Button variant="primary" type="submit">
             Save Word
-          </button>
+          </Button>
         </div>
       </form>
     </Modal>

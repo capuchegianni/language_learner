@@ -18,16 +18,16 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
     size !== undefined
       ? size
       : variant === 'fullscreen'
-      ? 40
+      ? 44
       : variant === 'button' || variant === 'raw'
       ? 16
       : variant === 'inline'
       ? 20
-      : 24;
+      : 28;
 
-  const spinnerElement = (
+  const rollerElement = (
     <div
-      className={`spinner ${variant === 'raw' ? className : ''}`.trim()}
+      className={`press-roller ${variant === 'raw' ? className : ''}`.trim()}
       style={{
         width: typeof defaultSize === 'number' ? `${defaultSize}px` : defaultSize,
         height: typeof defaultSize === 'number' ? `${defaultSize}px` : defaultSize,
@@ -38,40 +38,42 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   );
 
   if (variant === 'raw') {
-    return spinnerElement;
+    return rollerElement;
   }
 
   if (variant === 'card') {
     return (
-      <div className={`glass-card app-loading-container variant-card ${className}`.trim()}>
-        {spinnerElement}
-        {message && <div className="app-loading-message">{message}</div>}
+      <div className={`card loading-container variant-card ${className}`.trim()}>
+        {rollerElement}
+        {message && <span className="loading-message">{message}</span>}
       </div>
     );
   }
 
   if (variant === 'fullscreen') {
     return (
-      <div className={`app-loading-container variant-fullscreen ${className}`.trim()}>
-        {spinnerElement}
-        {message && <div className="app-loading-message">{message}</div>}
+      <div className={`loading-container variant-fullscreen ${className}`.trim()}>
+        {rollerElement}
+        {message && <span className="loading-message">{message}</span>}
       </div>
     );
   }
 
   if (variant === 'button') {
     return (
-      <span className={`app-loading-container variant-button ${className}`.trim()}>
-        {spinnerElement}
-        {message && <span className="app-loading-message">{message}</span>}
+      <span className={`loading-container variant-button ${className}`.trim()}>
+        {rollerElement}
+        {message && <span className="loading-message">{message}</span>}
       </span>
     );
   }
 
   return (
-    <div className={`app-loading-container variant-inline ${className}`.trim()}>
-      {spinnerElement}
-      {message && <span className="app-loading-message">{message}</span>}
+    <div className={`loading-container variant-inline ${className}`.trim()}>
+      {rollerElement}
+      {message && <span className="loading-message">{message}</span>}
     </div>
   );
 };
+
+export default LoadingSpinner;

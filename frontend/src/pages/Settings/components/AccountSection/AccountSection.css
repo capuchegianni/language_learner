@@ -1,0 +1,100 @@
+/* ========================================================= */
+/* AccountSection Styles                                      */
+/* ========================================================= */
+
+.settings-account-card {
+  margin-bottom: 0;
+}
+
+.settings-account-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  width: 100%;
+}
+
+.settings-account-profile {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  min-width: 0;
+}
+
+.settings-account-info {
+  min-width: 0;
+}
+
+.settings-account-name {
+  font-family: var(--font-masthead);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-md);
+  color: var(--text-primary);
+  word-break: break-word;
+}
+
+.settings-account-email {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+  word-break: break-word;
+  margin-top: var(--space-3xs);
+}
+
+.settings-avatar-img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: var(--border-width-regular) solid var(--border-color);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.settings-avatar-fallback {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--bg-card-alt);
+  border: var(--border-width-regular) solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  flex-shrink: 0;
+}
+
+.settings-account-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  width: 100%;
+}
+
+.settings-replay-btn,
+.settings-logout-btn {
+  font-size: var(--font-size-xs);
+  flex: 1;
+}
+
+/* Responsive */
+@media (max-width: 650px) {
+  .settings-account-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-md);
+  }
+
+  .settings-account-actions {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .settings-account-actions .btn {
+    width: 100%;
+    flex: none;
+    justify-content: center;
+  }
+}

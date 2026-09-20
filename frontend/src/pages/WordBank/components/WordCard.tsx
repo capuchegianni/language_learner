@@ -1,7 +1,12 @@
 import React from 'react';
-import { Volume2, FileText, Edit, Trash2 } from 'lucide-react';
+import {
+  IconPhonographAudio,
+  IconParchmentCopy,
+  IconDraftingEdit,
+  IconTrashShears,
+} from '../../../components/icons';
 import { Word } from '../../../types';
-import { Pill, IconButton } from '../../../components';
+import { Pill, IconButton, Card } from '../../../components';
 
 export interface WordCardProps {
   word: Word;
@@ -23,11 +28,11 @@ export const WordCard: React.FC<WordCardProps> = ({
   onDelete,
 }) => {
   return (
-    <div className="glass-card word-card">
+    <Card className="word-card">
       <div>
         <div className="word-card-header">
           <div className="word-card-target">
-            <span className="kr-text word-target-text">
+            <span className="target-text word-target-text">
               {word.targetLanguage}
             </span>
             <IconButton
@@ -36,7 +41,7 @@ export const WordCard: React.FC<WordCardProps> = ({
               onClick={() => onPlayAudio(word)}
               title="Play pronunciation (Click again to play slower)"
               aria-label={`Play pronunciation for ${word.targetLanguage}`}
-              icon={<Volume2 />}
+              icon={<IconPhonographAudio />}
             />
             {word.notes && (
               <IconButton
@@ -45,7 +50,7 @@ export const WordCard: React.FC<WordCardProps> = ({
                 onClick={() => onToggleNote(word.id)}
                 title={isNoteExpanded ? 'Hide note' : 'Show note'}
                 aria-label={isNoteExpanded ? 'Hide note' : 'Show note'}
-                icon={<FileText />}
+                icon={<IconParchmentCopy />}
               />
             )}
           </div>
@@ -85,17 +90,17 @@ export const WordCard: React.FC<WordCardProps> = ({
             onClick={() => onEdit(word)}
             title="Edit word"
             aria-label={`Edit ${word.targetLanguage}`}
-            icon={<Edit />}
+            icon={<IconDraftingEdit />}
           />
           <IconButton
             variant="delete"
             onClick={() => onDelete(word.id)}
             title="Delete word"
             aria-label={`Delete ${word.targetLanguage}`}
-            icon={<Trash2 />}
+            icon={<IconTrashShears />}
           />
         </div>
       </div>
-    </div>
+    </Card>
   );
 };

@@ -6,31 +6,34 @@
 .ex1-sentence-trans-list {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: var(--space-lg);
 }
 
 .ex1-sentence-trans-card {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--space-xs);
 }
 
 .ex1-original-sentence-box {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-xs);
 }
 
 .ex1-original-sentence-text {
-  font-size: 0.98rem;
-  font-weight: 600;
+  font-family: var(--font-target);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
   color: var(--text-primary);
-  line-height: 1.4;
+  line-height: var(--line-height-snug);
 }
 
 .ex1-trans-arrow {
   flex-shrink: 0;
   margin-top: 2px;
-  color: var(--accent-secondary);
+  color: var(--text-secondary);
 }
+
+
 

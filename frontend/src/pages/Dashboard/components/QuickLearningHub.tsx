@@ -1,6 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Sparkles, BookOpen, Scroll, ArrowRight } from 'lucide-react';
+import { Card } from '../../../components';
+import {
+  IconNewDispatch,
+  IconLexicon,
+  IconGrammarGazette,
+  IconManiculeRight,
+} from '../../../components/icons';
 import { useLanguages } from '../../../contexts/LanguageContext';
 
 export const QuickLearningHub: React.FC = () => {
@@ -11,8 +17,9 @@ export const QuickLearningHub: React.FC = () => {
     <div id="tutorial-quick-hub" className="dashboard-hub-column">
       <h2 className="dashboard-section-title">Quick Learning Hub</h2>
 
-      <div
-        className="glass-card quick-hub-card"
+      <Card
+        isInteractive
+        className="quick-hub-card"
         onClick={() => navigate('/lessons/new')}
         role="button"
         tabIndex={0}
@@ -24,8 +31,8 @@ export const QuickLearningHub: React.FC = () => {
         }}
       >
         <div className="quick-hub-card-content">
-          <div className="quick-hub-icon quick-hub-icon-primary">
-            <Sparkles size={24} />
+          <div className="quick-hub-icon">
+            <IconNewDispatch size={24} />
           </div>
           <div className="quick-hub-text">
             <h3 className="quick-hub-title">Generate Daily Lesson</h3>
@@ -34,13 +41,14 @@ export const QuickLearningHub: React.FC = () => {
             </p>
           </div>
           <div className="quick-hub-arrow-wrapper">
-            <ArrowRight size={18} color="var(--text-secondary)" className="quick-hub-arrow" />
+            <IconManiculeRight size={18} className="quick-hub-arrow" />
           </div>
         </div>
-      </div>
+      </Card>
 
-      <div
-        className="glass-card quick-hub-card"
+      <Card
+        isInteractive
+        className="quick-hub-card"
         onClick={() => navigate('/words')}
         role="button"
         tabIndex={0}
@@ -52,8 +60,8 @@ export const QuickLearningHub: React.FC = () => {
         }}
       >
         <div className="quick-hub-card-content">
-          <div className="quick-hub-icon quick-hub-icon-secondary">
-            <BookOpen size={24} />
+          <div className="quick-hub-icon">
+            <IconLexicon size={24} />
           </div>
           <div className="quick-hub-text">
             <h3 className="quick-hub-title">Manage Vocabulary Bank</h3>
@@ -62,13 +70,14 @@ export const QuickLearningHub: React.FC = () => {
             </p>
           </div>
           <div className="quick-hub-arrow-wrapper">
-            <ArrowRight size={18} color="var(--text-secondary)" className="quick-hub-arrow" />
+            <IconManiculeRight size={18} className="quick-hub-arrow" />
           </div>
         </div>
-      </div>
+      </Card>
 
-      <div
-        className="glass-card quick-hub-card"
+      <Card
+        isInteractive
+        className="quick-hub-card"
         onClick={() => navigate('/rules')}
         role="button"
         tabIndex={0}
@@ -80,8 +89,8 @@ export const QuickLearningHub: React.FC = () => {
         }}
       >
         <div className="quick-hub-card-content">
-          <div className="quick-hub-icon quick-hub-icon-purple">
-            <Scroll size={24} />
+          <div className="quick-hub-icon">
+            <IconGrammarGazette size={24} />
           </div>
           <div className="quick-hub-text">
             <h3 className="quick-hub-title">Browse Grammar Rule Bank</h3>
@@ -90,10 +99,10 @@ export const QuickLearningHub: React.FC = () => {
             </p>
           </div>
           <div className="quick-hub-arrow-wrapper">
-            <ArrowRight size={18} color="var(--text-secondary)" className="quick-hub-arrow" />
+            <IconManiculeRight size={18} className="quick-hub-arrow" />
           </div>
         </div>
-      </div>
+      </Card>
     </div>
   );
 };

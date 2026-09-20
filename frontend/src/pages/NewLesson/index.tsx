@@ -9,7 +9,7 @@ import {
   WordsLearned,
   LessonDetail,
 } from './components';
-import { CodeBlock } from '../../components/CodeBlock';
+import { CodeBlock, Button } from '../../components';
 import './NewLesson.css';
 
 export const NewLesson: React.FC = () => {
@@ -92,20 +92,18 @@ export const NewLesson: React.FC = () => {
           <RuleExplanation lessonContent={lessonContent} />
 
           <div className="new-lesson-tab-buttons">
-            <button
-              type="button"
-              className={`btn ${activeTab === 'interactive' ? 'btn-primary' : 'btn-secondary'}`}
+            <Button
+              variant={activeTab === 'interactive' ? 'primary' : 'secondary'}
               onClick={() => setActiveTab('interactive')}
             >
               Interactive Exercise
-            </button>
-            <button
-              type="button"
-              className={`btn ${activeTab === 'raw_prompt' ? 'btn-primary' : 'btn-secondary'}`}
+            </Button>
+            <Button
+              variant={activeTab === 'raw_prompt' ? 'primary' : 'secondary'}
               onClick={() => setActiveTab('raw_prompt')}
             >
               View Raw Compiled Prompt
-            </button>
+            </Button>
           </div>
 
           {activeTab === 'interactive' && (

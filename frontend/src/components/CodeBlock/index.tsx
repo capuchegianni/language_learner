@@ -1,5 +1,7 @@
 import React from 'react';
-import { Copy, Check } from 'lucide-react';
+import { IconApprovalCheck, IconParchmentCopy } from '../icons';
+import { Button } from '../Button';
+import { Card } from '../Card';
 import { useClipboard } from '../../hooks/useClipboard';
 import './CodeBlock.css';
 
@@ -31,12 +33,12 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
   const { copied, copy } = useClipboard();
 
   return (
-    <div className={`glass-card app-code-block-card ${className}`}>
+    <Card className={`code-block-card ${className}`.trim()}>
       {(title || copyable) && (
-        <div className="app-code-block-header">
+        <div className="code-block-header">
           {title ? (
             typeof title === 'string' ? (
-              <h3 className="app-code-block-title">{title}</h3>
+              <h3 className="code-block-title">{title}</h3>
             ) : (
               title
             )
@@ -45,34 +47,37 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
           )}
 
           {copyable && (
-            <button
-              type="button"
-              className={`btn btn-${buttonVariant} app-code-block-btn`}
+            <Button
+              size="sm"
+              variant={buttonVariant}
+              className="code-block-btn"
               onClick={() => copy(code)}
               title={copied ? copiedButtonLabel : copyButtonLabel}
               aria-label={copied ? copiedButtonLabel : copyButtonLabel}
+              icon={copied ? <IconApprovalCheck size={14} /> : <IconParchmentCopy size={14} />}
             >
-              {copied ? <Check size={15} /> : <Copy size={15} />}
               <span>{copied ? copiedButtonLabel : copyButtonLabel}</span>
-            </button>
+            </Button>
           )}
         </div>
       )}
 
       {description && (
         typeof description === 'string' ? (
-          <p className="app-code-block-desc">{description}</p>
+          <p className="code-block-desc">{description}</p>
         ) : (
           description
         )
       )}
 
       <pre
-        className={`code-block app-code-block-pre ${preClassName}`}
+        className={`code-block-pre ${preClassName}`.trim()}
         style={maxHeight ? { maxHeight, overflowY: 'auto' } : undefined}
       >
         {code}
       </pre>
-    </div>
+    </Card>
   );
 };
+
+export default CodeBlock;

@@ -8,35 +8,45 @@
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: var(--space-xl);
   width: 100%;
 }
 
 /* Error Alert */
 .new-lesson-error-box {
-  background: rgba(239, 68, 68, 0.15);
-  border: 1px solid rgba(239, 68, 68, 0.5);
-  padding: 1rem;
-  border-radius: var(--radius-md);
-  color: #fff;
+  background: var(--stamp-red-bg);
+  border: var(--border-width-regular) solid var(--stamp-red);
+  border-left: var(--border-width-heavy) solid var(--stamp-red);
+  box-shadow: var(--shadow-subtle);
+  padding: var(--space-sm) var(--space-md);
+  color: var(--text-primary);
   margin-bottom: 0;
+  box-sizing: border-box;
 }
 
 .new-lesson-error-title {
-  color: #fca5a5;
+  color: var(--stamp-red);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
   display: block;
-  margin-bottom: 0.25rem;
+  margin-bottom: var(--space-2xs);
+  line-height: var(--line-height-tight);
 }
 
 .new-lesson-error-desc {
-  font-size: 0.9rem;
-  color: #fecaca;
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  line-height: var(--line-height-snug);
 }
 
 /* Workspace Tab Buttons */
 .new-lesson-tab-buttons {
   display: flex;
-  gap: 0.75rem;
+  gap: var(--space-sm);
   margin: 0;
   flex-wrap: wrap;
 }
@@ -45,7 +55,7 @@
 @media (max-width: 650px) {
   .new-lesson-tab-buttons {
     flex-direction: column;
-    gap: 0.6rem;
+    gap: var(--space-xs);
   }
 
   .new-lesson-tab-buttons .btn {

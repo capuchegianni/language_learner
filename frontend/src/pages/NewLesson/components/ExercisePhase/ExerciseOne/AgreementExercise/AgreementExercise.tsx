@@ -1,5 +1,6 @@
 import React from 'react';
-import { SlidersHorizontal, ArrowRight } from 'lucide-react';
+import { IconTypesetSliders, IconManiculeRight } from '../../../../../../components/icons';
+import { Input } from '../../../../../../components';
 import { ExerciseOneComponentProps } from '../types';
 import './agreementExercise.css';
 
@@ -27,7 +28,7 @@ export const AgreementExercise: React.FC<ExerciseOneComponentProps> = ({
     <div className="ex1-container">
       <div className="ex1-header-block">
         <span className="ex1-type-badge">
-          <SlidersHorizontal size={13} />
+          <IconTypesetSliders size={13} />
           Gender &amp; Number Agreement Drill
         </span>
         <p className="ex1-instruction">{instruction}</p>
@@ -40,18 +41,18 @@ export const AgreementExercise: React.FC<ExerciseOneComponentProps> = ({
           return (
             <div key={idx} className="ex1-agreement-item">
               <div className="ex1-agreement-prompt-row">
-                <ArrowRight
+                <IconManiculeRight
                   size={16}
                   className="ex1-agreement-arrow"
                 />
-                <span className="ex1-agreement-base-word kr-text">{baseWord}</span>
+                <span className="ex1-agreement-base-word target-text">{baseWord}</span>
                 {condition && (
                   <span className="ex1-agreement-condition">
                     {condition}
                   </span>
                 )}
               </div>
-              <input
+              <Input
                 type="text"
                 id={`ex1-agree-${idx}`}
                 placeholder={`Enter inflected form for "${baseWord}"...`}

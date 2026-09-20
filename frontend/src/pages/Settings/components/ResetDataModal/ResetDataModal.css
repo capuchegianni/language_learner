@@ -1,0 +1,62 @@
+/* ========================================================= */
+/* ResetDataModal Styles                                      */
+/* ========================================================= */
+
+.settings-selection-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-sm);
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.settings-selection-label {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  color: var(--text-secondary);
+}
+
+.settings-selection-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.settings-text-btn {
+  background: transparent;
+  border: none;
+  font-family: var(--font-mono);
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+  transition: color var(--transition-fast), transform var(--transition-fast);
+}
+
+.settings-text-btn.primary {
+  color: var(--text-primary);
+}
+
+.settings-text-btn.muted {
+  color: var(--text-muted);
+}
+
+.settings-text-btn:hover {
+  color: var(--text-primary);
+}
+
+.settings-text-btn:active {
+  transform: translateY(1px);
+}
+
+.settings-selection-divider {
+  color: var(--text-muted);
+  font-size: var(--font-size-2xs);
+}

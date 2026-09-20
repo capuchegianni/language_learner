@@ -2,48 +2,50 @@
 /* Words Learned Component Styles                            */
 /* ========================================================= */
 
-.words-learned-card {
-  margin: 0;
-}
-
 .words-learned-header {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
+  font-family: var(--font-masthead);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-md);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-xs);
+  color: var(--text-primary);
 }
 
 .words-learned-grid {
   display: flex;
-  gap: 0.75rem;
+  gap: var(--space-xs);
   width: 100%;
 }
 
 .word-learned-item {
   flex: 1 1 0;
   min-width: 0;
-  background: rgba(15, 23, 42, 0.6);
-  padding: 0.75rem 1rem;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border-color);
+  background: var(--bg-card-alt);
+  padding: var(--space-sm) var(--space-md);
+  border: var(--border-width-regular) solid var(--border-color);
+  box-shadow: var(--shadow-subtle);
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: var(--space-2xs);
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 .word-learned-target {
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--accent-secondary);
+  font-family: var(--font-target);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  line-height: var(--line-height-tight);
 }
 
 .word-learned-native {
-  font-size: 0.85rem;
-  color: var(--text-primary);
-  line-height: 1.35;
+  font-family: var(--font-body);
+  font-size: var(--font-size-2xs);
+  color: var(--text-secondary);
+  line-height: var(--line-height-snug);
   word-break: break-word;
 }
 
@@ -51,7 +53,8 @@
 @media (max-width: 1040px) {
   .words-learned-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--space-xs);
   }
 }
 
@@ -59,5 +62,8 @@
   .words-learned-grid {
     display: grid;
     grid-template-columns: 1fr;
+    gap: var(--space-xs);
   }
 }
+
+

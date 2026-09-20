@@ -1,0 +1,66 @@
+/* ========================================================= */
+/* DangerZoneSection Styles                                   */
+/* ========================================================= */
+
+.settings-danger-card {
+  background: var(--stamp-red-bg);
+  border: var(--border-width-regular) solid var(--stamp-red);
+  border-left: var(--border-width-heavy) solid var(--stamp-red);
+  box-shadow: var(--shadow-card);
+}
+
+.settings-section-title.danger-title {
+  color: var(--stamp-red);
+}
+
+.settings-danger-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.danger-zone-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-xl);
+}
+
+.danger-zone-item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.danger-zone-item-title {
+  font-family: var(--font-masthead);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-md);
+  color: var(--text-primary);
+  margin-bottom: var(--space-2xs);
+}
+
+.danger-zone-item-desc {
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  line-height: var(--line-height-snug);
+}
+
+.settings-danger-divider {
+  padding-bottom: var(--space-lg);
+  border-bottom: var(--border-width-hairline) dashed var(--border-color-light);
+}
+
+/* Responsive */
+@media (max-width: 650px) {
+  .danger-zone-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm);
+  }
+
+  .danger-zone-item button {
+    width: 100%;
+    justify-content: center;
+  }
+}

@@ -5,39 +5,43 @@
 .ex1-cloze-list {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: var(--space-lg);
 }
 
 .ex1-cloze-card {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--space-xs);
 }
 
 .ex1-cloze-prompt-box {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
+  gap: var(--space-xs);
   flex-wrap: wrap;
 }
 
 .ex1-cloze-sentence {
-  font-size: 0.98rem;
-  font-weight: 600;
+  font-family: var(--font-target);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
   color: var(--text-primary);
-  line-height: 1.4;
+  line-height: var(--line-height-snug);
 }
 
 .ex1-cloze-choices-badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  font-size: 0.8rem;
-  font-weight: 600;
-  padding: 0.25rem 0.6rem;
-  border-radius: 9999px;
-  background: rgba(168, 85, 247, 0.15);
-  color: #c084fc;
-  border: 1px solid rgba(168, 85, 247, 0.3);
+  gap: var(--space-2xs);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-bold);
+  padding: var(--space-3xs) var(--space-xs);
+  background: var(--bg-card-alt);
+  color: var(--text-primary);
+  border: var(--border-width-regular) solid var(--border-color);
+  user-select: none;
 }
+
+
