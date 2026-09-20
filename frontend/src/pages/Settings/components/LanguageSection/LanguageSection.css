@@ -5,74 +5,23 @@
 .settings-language-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.25rem;
-}
-
-.settings-language-grid .input-group label {
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-secondary);
-  margin-bottom: 0.35rem;
-  width: fit-content;
-  max-width: max-content;
-  cursor: default;
-  pointer-events: none;
-  user-select: none;
-}
-
-.settings-language-grid select {
-  width: 100%;
-  padding: 0.65rem 2.2rem 0.65rem 0.85rem;
-  background-color: var(--bg-card);
-  color: var(--text-primary);
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
-  font-weight: 600;
-  border: 1.5px solid var(--border-color);
-  box-shadow: 1px 1px 0px var(--border-color);
-  cursor: pointer;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  border-radius: 0;
-  min-height: 44px;
-  box-sizing: border-box;
-  outline: none;
-  transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.12s ease, border-color 0.12s ease;
-}
-
-.settings-language-grid select:hover,
-.settings-language-grid select:focus,
-.settings-language-grid select:focus-visible {
-  transform: translate(-1px, -1px);
-  box-shadow: 2px 2px 0px var(--border-color);
-  background-color: var(--bg-card-hover);
-  border-color: var(--border-color);
-  outline: none;
-}
-
-.settings-language-grid select:active {
-  transform: translate(0, 0);
-  box-shadow: 1px 1px 0px var(--border-color);
+  gap: var(--space-lg);
 }
 
 .settings-language-error {
-  margin-top: 1rem;
+  margin-top: var(--space-md);
   font-family: var(--font-mono);
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--stamp-red, #8b1c1c);
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--stamp-red);
   background: var(--stamp-red-bg);
-  border: 1.5px solid var(--stamp-red, #8b1c1c);
-  border-left: 4px solid var(--stamp-red, #8b1c1c);
-  box-shadow: 1.5px 1.5px 0px var(--border-color);
-  padding: 0.65rem 0.9rem;
+  border: var(--border-width-regular) solid var(--stamp-red);
+  border-left: var(--border-width-heavy) solid var(--stamp-red);
+  box-shadow: var(--shadow-subtle);
+  padding: var(--space-sm) var(--space-md);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-xs);
   box-sizing: border-box;
 }
 
@@ -80,6 +29,6 @@
 @media (max-width: 650px) {
   .settings-language-grid {
     grid-template-columns: 1fr;
-    gap: 1rem;
+    gap: var(--space-md);
   }
 }

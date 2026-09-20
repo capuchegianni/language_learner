@@ -1,5 +1,6 @@
 import React from 'react';
 import { IconTypesetSliders, IconManiculeRight } from '../../../../../../components/icons';
+import { Input } from '../../../../../../components';
 import { ExerciseOneComponentProps } from '../types';
 import './agreementExercise.css';
 
@@ -51,7 +52,7 @@ export const AgreementExercise: React.FC<ExerciseOneComponentProps> = ({
                   </span>
                 )}
               </div>
-              <input
+              <Input
                 type="text"
                 id={`ex1-agree-${idx}`}
                 placeholder={`Enter inflected form for "${baseWord}"...`}

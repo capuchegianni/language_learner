@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { IconLinotypeLayers } from '../../../../../../components/icons';
+import { Input } from '../../../../../../components';
 import { ExerciseOneComponentProps } from '../types';
 import './subjectConjugation.css';
 
@@ -170,7 +171,7 @@ export const SubjectConjugationExercise: React.FC<ExerciseOneComponentProps> = (
               <span className="ex1-verb-title target-text">
                 {idx + 1}. {verb}
               </span>
-              <input
+              <Input
                 type="text"
                 id={`ex1-conj-${idx}`}
                 placeholder={`Conjugate "${verb}" for all subjects separated by commas...`}
@@ -216,7 +217,7 @@ export const SubjectConjugationExercise: React.FC<ExerciseOneComponentProps> = (
                   </td>
                   {targetWords.map((verb, vIdx) => (
                     <td key={vIdx} className="ex1-table-cell-wrapper">
-                      <input
+                      <Input
                         type="text"
                         id={`ex1-conj-cell-${vIdx}-${pIdx}`}
                         value={cellMatrix[vIdx]?.[pIdx] || ''}
@@ -225,7 +226,7 @@ export const SubjectConjugationExercise: React.FC<ExerciseOneComponentProps> = (
                         }
                         className="ex1-table-direct-input"
                         autoComplete="off"
-                        spellCheck="false"
+                        spellCheck={false}
                       />
                     </td>
                   ))}

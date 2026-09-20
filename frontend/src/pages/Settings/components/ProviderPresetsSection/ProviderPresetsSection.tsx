@@ -1,5 +1,6 @@
 import React from 'react';
 import './ProviderPresetsSection.css';
+import { Card, Button } from '../../../../components';
 import { IconLinotypeMatrix } from '../../../../components/icons';
 import { ProviderPreset, PROVIDER_PRESETS } from '../../types';
 
@@ -13,8 +14,8 @@ export const ProviderPresetsSection: React.FC<ProviderPresetsSectionProps> = ({
   onSelectPreset,
 }) => {
   return (
-    <div className="card" id="tutorial-provider-presets">
-      <h3 className="settings-section-title presets-title">
+    <Card id="tutorial-provider-presets">
+      <h3 className="settings-section-title">
         <IconLinotypeMatrix size={20} />
         <span>Provider Presets</span>
       </h3>
@@ -25,17 +26,18 @@ export const ProviderPresetsSection: React.FC<ProviderPresetsSectionProps> = ({
         {PROVIDER_PRESETS.map((preset) => {
           const isSelected = selectedPreset.name === preset.name;
           return (
-            <button
+            <Button
               key={preset.name}
               type="button"
+              active={isSelected}
               onClick={() => onSelectPreset(preset)}
-              className={`btn preset-chip ${isSelected ? 'active' : 'inactive'}`}
+              className={`preset-chip ${isSelected ? 'active' : 'inactive'}`}
             >
               {preset.name}
-            </button>
+            </Button>
           );
         })}
       </div>
-    </div>
+    </Card>
   );
 };

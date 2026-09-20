@@ -5,9 +5,7 @@ import { useWordBank } from './hooks/useWordBank';
 import { WordCard } from './components/WordCard';
 import { WordModal } from './components/WordModal';
 import { WordFilterBar } from './components/WordFilterBar';
-import { PageHeader } from '../../components/PageHeader';
-import { LoadingSpinner } from '../../components/LoadingSpinner';
-import { EmptyState } from '../../components/EmptyState';
+import { PageHeader, LoadingSpinner, EmptyState, Button } from '../../components';
 import './WordBank.css';
 
 export const WordBank: React.FC = () => {
@@ -44,15 +42,14 @@ export const WordBank: React.FC = () => {
         title={`${targetLanguage} Word Bank`}
         subtitle={`All learned vocabulary automatically tracked from lessons or added manually. Total: ${words.length} words.`}
         actions={
-          <button
-            type="button"
-            className="btn btn-primary"
+          <Button
+            variant="primary"
             id="tutorial-wordbank-add-btn"
             onClick={openAddModal}
+            icon={<IconFleuronPlus size={18} />}
           >
-            <IconFleuronPlus size={18} />
             <span>Add Custom Word</span>
-          </button>
+          </Button>
         }
       />
 

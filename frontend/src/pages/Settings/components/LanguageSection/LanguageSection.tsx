@@ -1,5 +1,6 @@
 import React from 'react';
 import './LanguageSection.css';
+import { Card, Select } from '../../../../components';
 import { IconGlobe, IconHazardAlert } from '../../../../components/icons';
 import { useLanguages } from '../../../../contexts/LanguageContext';
 import { SettingsFormData } from '../../types';
@@ -18,8 +19,8 @@ export const LanguageSection: React.FC<LanguageSectionProps> = ({
   const { languages } = useLanguages();
 
   return (
-    <div className="card settings-card" id="tutorial-language-prefs">
-      <h3 className="settings-section-title language-title">
+    <Card className="settings-card" id="tutorial-language-prefs">
+      <h3 className="settings-section-title">
         <IconGlobe size={20} />
         <span>Language Preferences</span>
       </h3>
@@ -28,37 +29,23 @@ export const LanguageSection: React.FC<LanguageSectionProps> = ({
       </p>
 
       <div className="settings-language-grid">
-        <div className="input-group">
-          <label htmlFor="native-language-select">Native Language</label>
-          <select
-            id="native-language-select"
-            value={nativeLanguage}
-            onChange={(e) => onUpdateField('nativeLanguage', e.target.value)}
-          >
-            {languages.map((lang) => (
-              <option key={`native-${lang.name}`} value={lang.name}>
-                {lang.name}
-              </option>
-            ))}
-          </select>
-        </div>
+        <Select
+          id="native-language-select"
+          label="Native Language"
+          value={nativeLanguage}
+          onChange={(e) => onUpdateField('nativeLanguage', e.target.value)}
+          options={languages.map((lang) => ({ value: lang.name, label: lang.name }))}
+        />
 
-        <div className="input-group">
-          <label htmlFor="target-language-select">Target Language</label>
-          <select
-            id="target-language-select"
-            value={targetLanguage}
-            onChange={(e) => onUpdateField('targetLanguage', e.target.value)}
-          >
-            {languages
-              .filter((lang) => lang.name !== nativeLanguage)
-              .map((lang) => (
-                <option key={`target-${lang.name}`} value={lang.name}>
-                  {lang.name}
-                </option>
-              ))}
-          </select>
-        </div>
+        <Select
+          id="target-language-select"
+          label="Target Language"
+          value={targetLanguage}
+          onChange={(e) => onUpdateField('targetLanguage', e.target.value)}
+          options={languages
+            .filter((lang) => lang.name !== nativeLanguage)
+            .map((lang) => ({ value: lang.name, label: lang.name }))}
+        />
       </div>
 
       {nativeLanguage === targetLanguage && (
@@ -67,6 +54,6 @@ export const LanguageSection: React.FC<LanguageSectionProps> = ({
           <span>Native and target languages cannot be the same.</span>
         </div>
       )}
-    </div>
+    </Card>
   );
 };

@@ -4,10 +4,7 @@ import { IconChronicle, IconNewDispatch } from '../../components/icons';
 import { useLanguages } from '../../contexts/LanguageContext';
 import { useLessonHistory } from './hooks/useLessonHistory';
 import { HistoryFilterBar } from './components/HistoryFilterBar';
-import { PageHeader } from '../../components/PageHeader';
-import { LessonCard } from '../../components/LessonCard';
-import { LoadingSpinner } from '../../components/LoadingSpinner';
-import { EmptyState } from '../../components/EmptyState';
+import { PageHeader, LessonCard, LoadingSpinner, EmptyState, Button } from '../../components';
 import './LessonHistory.css';
 
 export const LessonHistory: React.FC = () => {
@@ -32,14 +29,13 @@ export const LessonHistory: React.FC = () => {
         title="Lesson History"
         subtitle={`All past generated, submitted, and graded ${targetLanguage} lessons. Total: ${lessons.length} lesson${lessons.length !== 1 ? 's' : ''}.`}
         actions={
-          <button
-            type="button"
-            className="btn btn-primary"
+          <Button
+            variant="primary"
             onClick={() => navigate('/lessons/new')}
+            icon={<IconNewDispatch size={18} />}
           >
-            <IconNewDispatch size={18} />
             <span>New Lesson</span>
-          </button>
+          </Button>
         }
       />
 

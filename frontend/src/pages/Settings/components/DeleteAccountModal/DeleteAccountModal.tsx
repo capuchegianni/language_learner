@@ -1,8 +1,7 @@
 import React from 'react';
 import './DeleteAccountModal.css';
 import { IconHazardAlert, IconTrashShears } from '../../../../components/icons';
-import { Modal } from '../../../../components/Modal';
-import { LoadingSpinner } from '../../../../components/LoadingSpinner';
+import { Modal, Button, LoadingSpinner } from '../../../../components';
 import { useAuth } from '../../../../contexts/AuthContext';
 
 export interface DeleteAccountModalProps {
@@ -44,20 +43,19 @@ export const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({
       )}
 
       <div className="settings-modal-actions">
-        <button
-          type="button"
-          className="btn btn-secondary"
+        <Button
+          variant="secondary"
           onClick={onClose}
           disabled={deletingAccount}
         >
           Cancel
-        </button>
-        <button
-          type="button"
-          className="btn settings-btn-danger-solid"
+        </Button>
+        <Button
+          variant="danger"
           id="confirm-delete-account-btn"
           disabled={deletingAccount}
           onClick={onDeleteAccount}
+          icon={deletingAccount ? undefined : <IconTrashShears size={16} />}
         >
           {deletingAccount ? (
             <LoadingSpinner
@@ -66,12 +64,9 @@ export const DeleteAccountModal: React.FC<DeleteAccountModalProps> = ({
               message="Deleting Account..."
             />
           ) : (
-            <>
-              <IconTrashShears size={16} />
-              <span>Permanently Delete Account</span>
-            </>
+            <span>Permanently Delete Account</span>
           )}
-        </button>
+        </Button>
       </div>
     </Modal>
   );

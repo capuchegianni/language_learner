@@ -8,9 +8,9 @@
 
 .settings-import-export-actions {
   display: flex;
-  gap: 0.75rem;
+  gap: var(--space-sm);
   flex-wrap: wrap;
-  margin-top: 0.5rem;
+  margin-top: var(--space-xs);
 }
 
 /* Responsive */
@@ -18,7 +18,7 @@
   .settings-import-export-actions {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: var(--space-sm);
     width: 100%;
   }
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import { IconApprovalCheck } from '../../../../../../components/icons';
+import { Select } from '../../../../../../components';
 import { ExerciseOneComponentProps } from '../types';
 import './contrastPair.css';
 
@@ -43,8 +44,9 @@ export const ContrastPairExercise: React.FC<ExerciseOneComponentProps> = ({
           <div key={idx} className="ex1-contrast-card">
             <p className="ex1-contrast-sentence target-text">
               <span>{idx + 1}.&nbsp;{before}</span>
-              <select
+              <Select
                 id={`ex1-contrast-${idx}`}
+                size="sm"
                 className="ex1-contrast-select"
                 value={answers[idx] || ''}
                 onChange={(e) => onAnswerChange(idx, e.target.value)}
@@ -53,7 +55,7 @@ export const ContrastPairExercise: React.FC<ExerciseOneComponentProps> = ({
                 {choices.map((choice) => (
                   <option key={choice} value={choice}>{choice}</option>
                 ))}
-              </select>
+              </Select>
               <span>{after}</span>
             </p>
           </div>

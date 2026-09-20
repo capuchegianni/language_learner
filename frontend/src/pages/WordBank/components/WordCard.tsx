@@ -6,7 +6,7 @@ import {
   IconTrashShears,
 } from '../../../components/icons';
 import { Word } from '../../../types';
-import { Pill, IconButton } from '../../../components';
+import { Pill, IconButton, Card } from '../../../components';
 
 export interface WordCardProps {
   word: Word;
@@ -28,7 +28,7 @@ export const WordCard: React.FC<WordCardProps> = ({
   onDelete,
 }) => {
   return (
-    <div className="card word-card">
+    <Card className="word-card">
       <div>
         <div className="word-card-header">
           <div className="word-card-target">
@@ -101,6 +101,6 @@ export const WordCard: React.FC<WordCardProps> = ({
           />
         </div>
       </div>
-    </div>
+    </Card>
   );
 };

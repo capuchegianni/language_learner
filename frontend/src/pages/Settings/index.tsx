@@ -1,8 +1,7 @@
 import React from 'react';
 import { Settings as SettingsIcon, CheckCircle2 } from 'lucide-react';
 import { useSettingsState } from './hooks/useSettingsState';
-import { PageHeader } from '../../components/PageHeader';
-import { LoadingSpinner } from '../../components/LoadingSpinner';
+import { PageHeader, LoadingSpinner, Card } from '../../components';
 import { AccountSection } from './components/AccountSection/AccountSection';
 import { LanguageSection } from './components/LanguageSection/LanguageSection';
 import { ProviderPresetsSection } from './components/ProviderPresetsSection/ProviderPresetsSection';
@@ -76,9 +75,7 @@ export const Settings: React.FC = () => {
   const canSave = nativeLanguage !== targetLanguage;
 
   return (
-    <div
-      className={`settings-container ${hasUnsavedChanges ? 'has-unsaved' : 'no-unsaved'}`}
-    >
+    <div className="settings-container">
       <PageHeader
         icon={<SettingsIcon className="settings-header-icon" />}
         title="AI &amp; Application Settings"
@@ -90,18 +87,18 @@ export const Settings: React.FC = () => {
 
       {/* Save Success Alert */}
       {savedSuccess && (
-        <div className="card settings-success-alert">
+        <Card className="settings-success-alert">
           <CheckCircle2 size={20} />
           <span>Settings saved successfully!</span>
-        </div>
+        </Card>
       )}
 
       {/* Reset Success Alert */}
       {resetSuccess && (
-        <div className="card settings-success-alert">
+        <Card className="settings-success-alert">
           <CheckCircle2 size={20} />
           <span>{resetMessage || 'Data has been reset successfully!'}</span>
-        </div>
+        </Card>
       )}
 
       <form onSubmit={handleSave} className="settings-form">

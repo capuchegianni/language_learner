@@ -8,7 +8,7 @@ import {
 } from '../../../components/icons';
 import { Rule } from '../../../types';
 import { RuleExample } from '../types';
-import { IconButton } from '../../../components';
+import { IconButton, Card, Button } from '../../../components';
 
 export interface RuleCardProps {
   rule: Rule;
@@ -30,16 +30,15 @@ export const RuleCard: React.FC<RuleCardProps> = ({ rule, onEdit, onDelete }) =>
   }
 
   return (
-    <div className="card rule-card">
+    <Card className="rule-card">
       <div className="rule-card-header">
         <div className="rule-card-title-group">
           <h3 className="target-text rule-card-title">{rule.title}</h3>
         </div>
         <div className="rule-card-actions">
           {rule._count && rule._count.lessons > 0 && (
-            <button
-              type="button"
-              className="rule-count-badge"
+            <Button
+              variant="secondary"
               onClick={() =>
                 navigate(`/history?q=${encodeURIComponent(rule.title)}`)
               }
@@ -50,7 +49,7 @@ export const RuleCard: React.FC<RuleCardProps> = ({ rule, onEdit, onDelete }) =>
                 {rule._count.lessons} Lesson
                 {rule._count.lessons !== 1 ? 's' : ''}
               </span>
-            </button>
+            </Button>
           )}
           <IconButton
             variant="edit"
@@ -115,7 +114,7 @@ export const RuleCard: React.FC<RuleCardProps> = ({ rule, onEdit, onDelete }) =>
           <p className="rule-exceptions-text">{rule.exceptions}</p>
         </div>
       )}
-    </div>
+    </Card>
   );
 };
 

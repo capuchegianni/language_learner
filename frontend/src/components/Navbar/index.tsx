@@ -13,6 +13,7 @@ import {
   IconCloseDismiss,
 } from '../icons';
 import './Navbar.css';
+import { Button } from '../Button';
 
 export interface NavbarProps {
   editionNo?: number;
@@ -156,9 +157,8 @@ export const Navbar: React.FC<NavbarProps> = ({ editionNo }) => {
 
         <div className="nav-ear-item">
           <span>{currentDate}</span>
-          <button
-            type="button"
-            className="theme-toggle-btn nav-ears-theme-btn"
+          <Button
+            size="xs"
             onClick={toggleTheme}
             aria-label={`Switch to ${currentTheme === 'morning' ? 'Evening' : 'Morning'} Edition`}
           >
@@ -173,7 +173,7 @@ export const Navbar: React.FC<NavbarProps> = ({ editionNo }) => {
                 <span className="theme-toggle-text">MORNING EDITION</span>
               </>
             )}
-          </button>
+          </Button>
         </div>
 
         <div className="nav-ear-item">
@@ -198,9 +198,9 @@ export const Navbar: React.FC<NavbarProps> = ({ editionNo }) => {
       {/* Navigation Section Bar */}
       <div className="nav-section-bar">
         {/* Medium/Small Screen Theme Toggle Button inside the Navigation Bar */}
-        <button
-          type="button"
-          className="theme-toggle-btn nav-bar-theme-btn"
+        <Button
+          size='sm'
+          className="nav-bar-theme-btn"
           onClick={toggleTheme}
           aria-label={`Switch to ${currentTheme === 'morning' ? 'Evening' : 'Morning'} Edition`}
         >
@@ -215,11 +215,11 @@ export const Navbar: React.FC<NavbarProps> = ({ editionNo }) => {
               <span className="theme-toggle-text">MORNING EDITION</span>
             </>
           )}
-        </button>
+        </Button>
 
-        <button
+        <Button
+          size='sm'
           ref={toggleBtnRef}
-          type="button"
           className="nav-mobile-toggle"
           onClick={() => setMobileOpen((prev) => !prev)}
           aria-label={mobileOpen ? 'Close section index' : 'Open section index'}
@@ -227,7 +227,7 @@ export const Navbar: React.FC<NavbarProps> = ({ editionNo }) => {
         >
           {mobileOpen ? <IconCloseDismiss size={18} /> : <IconMenuBroadsheet size={18} />}
           <span className="nav-toggle-text">{mobileOpen ? 'CLOSE INDEX' : 'SECTIONS INDEX'}</span>
-        </button>
+        </Button>
 
         <ul
           ref={menuRef}

@@ -4,18 +4,18 @@
 
 .empty-state {
   background: var(--bg-card);
-  border: 2px solid var(--border-color);
-  outline: 1px dashed var(--border-color-light);
+  border: var(--border-width-medium) solid var(--border-color);
+  outline: var(--border-width-hairline) dashed var(--border-color-light);
   outline-offset: 4px;
-  padding: 3rem 2rem;
+  padding: var(--space-3xl) var(--space-2xl);
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
-  margin: 1.5rem 0;
-  box-shadow: 2px 3px 0px var(--border-color);
+  gap: var(--space-md);
+  margin: var(--space-xl) 0;
+  box-shadow: var(--shadow-card);
   box-sizing: border-box;
   width: 100%;
 }
@@ -25,27 +25,27 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 0.25rem;
+  margin-bottom: var(--space-2xs);
 }
 
 .empty-state-title {
   font-family: var(--font-masthead);
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
   color: var(--text-primary);
-  line-height: 1.2;
+  line-height: var(--line-height-tight);
 }
 
 .empty-state-message {
   font-family: var(--font-body);
-  font-size: 1rem;
+  font-size: var(--font-size-base);
   color: var(--text-secondary);
   max-width: 480px;
-  line-height: 1.55;
+  line-height: var(--line-height-normal);
   font-style: italic;
   margin: 0 auto;
 }
 
 .empty-state-action {
-  margin-top: 0.5rem;
+  margin-top: var(--space-xs);
 }

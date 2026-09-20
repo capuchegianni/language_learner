@@ -1,5 +1,7 @@
 import React from 'react';
 import { IconApprovalCheck, IconParchmentCopy } from '../icons';
+import { Button } from '../Button';
+import { Card } from '../Card';
 import { useClipboard } from '../../hooks/useClipboard';
 import './CodeBlock.css';
 
@@ -31,7 +33,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
   const { copied, copy } = useClipboard();
 
   return (
-    <div className={`card code-block-card ${className}`.trim()}>
+    <Card className={`code-block-card ${className}`.trim()}>
       {(title || copyable) && (
         <div className="code-block-header">
           {title ? (
@@ -45,16 +47,17 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
           )}
 
           {copyable && (
-            <button
-              type="button"
-              className={`btn btn-${buttonVariant} code-block-btn`}
+            <Button
+              size="sm"
+              variant={buttonVariant}
+              className="code-block-btn"
               onClick={() => copy(code)}
               title={copied ? copiedButtonLabel : copyButtonLabel}
               aria-label={copied ? copiedButtonLabel : copyButtonLabel}
+              icon={copied ? <IconApprovalCheck size={14} /> : <IconParchmentCopy size={14} />}
             >
-              {copied ? <IconApprovalCheck size={16} /> : <IconParchmentCopy size={16} />}
               <span>{copied ? copiedButtonLabel : copyButtonLabel}</span>
-            </button>
+            </Button>
           )}
         </div>
       )}
@@ -73,7 +76,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
       >
         {code}
       </pre>
-    </div>
+    </Card>
   );
 };
 

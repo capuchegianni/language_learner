@@ -6,7 +6,7 @@
 .ex1-table-container {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--space-xs);
   width: 100%;
 }
 
@@ -14,8 +14,8 @@
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  border: 1.5px solid var(--border-color);
-  box-shadow: 2px 2px 0px var(--border-color);
+  border: var(--border-width-regular) solid var(--border-color);
+  box-shadow: var(--shadow-press);
   background: var(--bg-card);
   box-sizing: border-box;
 }
@@ -29,21 +29,21 @@
 
 .ex1-conj-table thead {
   background: var(--bg-card-alt);
-  border-bottom: 1.5px solid var(--border-color);
+  border-bottom: var(--border-width-regular) solid var(--border-color);
 }
 
 /* Column Titles: SUBJECT and Verb names aligned, same size, same padding */
 .ex1-table-pronoun-th,
 .ex1-table-verb-th {
   font-family: var(--font-mono);
-  font-size: 0.88rem;
-  font-weight: 700;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  line-height: 1.4;
+  letter-spacing: var(--letter-spacing-wide);
+  line-height: var(--line-height-snug);
   vertical-align: middle;
-  padding: 0.85rem 1rem;
-  border-right: 1.5px solid var(--border-color);
+  padding: var(--space-sm) var(--space-md);
+  border-right: var(--border-width-regular) solid var(--border-color);
   box-sizing: border-box;
   color: var(--text-primary);
 }
@@ -57,7 +57,7 @@
 .ex1-table-verb-th {
   min-width: 180px;
   font-family: var(--font-target);
-  font-size: 1.05rem;
+  font-size: var(--font-size-base);
   text-transform: none;
   letter-spacing: normal;
   text-align: left;
@@ -71,19 +71,19 @@
 .ex1-table-pronoun-cell {
   width: 1%;
   white-space: nowrap;
-  padding: 0.85rem 1rem;
+  padding: var(--space-sm) var(--space-md);
   font-family: var(--font-target);
-  font-weight: 700;
-  font-size: 1rem;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-base);
   color: var(--text-primary);
   background: var(--bg-card-alt);
-  border-right: 1.5px solid var(--border-color);
-  border-bottom: 1.5px solid var(--border-color);
+  border-right: var(--border-width-regular) solid var(--border-color);
+  border-bottom: var(--border-width-regular) solid var(--border-color);
   vertical-align: middle;
 }
 
 .ex1-table-pronoun-tag {
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   color: var(--text-primary);
 }
 
@@ -93,8 +93,8 @@
   margin: 0 !important;
   min-width: 180px;
   height: 100%;
-  border-right: 1.5px solid var(--border-color);
-  border-bottom: 1.5px solid var(--border-color);
+  border-right: var(--border-width-regular) solid var(--border-color);
+  border-bottom: var(--border-width-regular) solid var(--border-color);
   vertical-align: stretch;
   background: transparent;
 }
@@ -104,8 +104,8 @@
 }
 
 .ex1-conj-table tbody tr {
-  border-bottom: 1.5px solid var(--border-color);
-  transition: background 0.15s ease;
+  border-bottom: var(--border-width-regular) solid var(--border-color);
+  transition: background var(--transition-fast);
 }
 
 .ex1-conj-table tbody tr:hover {
@@ -131,8 +131,8 @@ td.ex1-table-cell-wrapper input.ex1-table-direct-input,
   height: 100% !important;
   min-height: 52px !important;
   margin: 0 !important;
-  padding: 0.85rem 1rem !important;
-  font-size: 0.95rem !important;
+  padding: var(--space-sm) var(--space-md) !important;
+  font-size: var(--font-size-sm) !important;
   font-family: var(--font-target) !important;
   color: var(--text-primary) !important;
   background: transparent !important;
@@ -141,7 +141,7 @@ td.ex1-table-cell-wrapper input.ex1-table-direct-input,
   box-shadow: none !important;
   outline: none !important;
   box-sizing: border-box !important;
-  transition: background 0.15s ease !important;
+  transition: background var(--transition-fast) !important;
 }
 
 table.ex1-conj-table td.ex1-table-cell-wrapper input[type="text"].ex1-table-direct-input:hover,
@@ -160,42 +160,37 @@ td.ex1-table-cell-wrapper input.ex1-table-direct-input:focus,
   outline: none !important;
   border: none !important;
   background: var(--bg-card-hover) !important;
-  box-shadow: inset 0 0 0 2px var(--border-color) !important;
+  box-shadow: inset 0 0 0 var(--border-width-medium) var(--border-color) !important;
 }
 
 /* Conjugation Card Layout (Fallback when no pronouns specified) */
 .ex1-conjugation-list {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: var(--space-lg);
 }
 
 .ex1-conjugation-card {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--space-xs);
 }
 
 .ex1-verb-title {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-xs);
   font-family: var(--font-target);
-  font-size: 1.15rem;
-  font-weight: 700;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
   color: var(--text-primary);
 }
 
 .ex1-conjugation-input {
   width: 100%;
-  padding: 0.75rem 0.95rem;
-  font-size: 0.95rem;
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--font-size-sm);
   box-sizing: border-box;
 }
 
-@media (max-width: 650px) {
-  .ex1-table-scroll-hint {
-    display: none;
-  }
-}
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Card, Button } from '../../../../components';
 import { IconUploadPress, IconDownloadPress, IconApprovalCheck } from '../../../../components/icons';
 import './ImportExportSection.css';
 
@@ -15,8 +16,8 @@ export const ImportExportSection: React.FC<ImportExportSectionProps> = ({
 }) => {
   return (
     <>
-      <div className="card settings-card settings-import-export-card" id="tutorial-import-export">
-        <h3 className="settings-section-title import-export-title">
+      <Card className="settings-card settings-import-export-card" id="tutorial-import-export">
+        <h3 className="settings-section-title">
           <IconUploadPress size={20} />
           <span>Import / Export Data</span>
         </h3>
@@ -24,30 +25,28 @@ export const ImportExportSection: React.FC<ImportExportSectionProps> = ({
           Import or export your words, rules, lessons, and settings as a JSON file.
         </p>
         <div className="settings-import-export-actions">
-          <button
-            type="button"
-            className="btn btn-secondary"
+          <Button
+            variant="secondary"
             onClick={onOpenImportModal}
+            icon={<IconUploadPress size={16} />}
           >
-            <IconUploadPress size={16} />
             <span>Import JSON File</span>
-          </button>
-          <button
-            type="button"
-            className="btn btn-secondary"
+          </Button>
+          <Button
+            variant="secondary"
             onClick={onOpenExportModal}
+            icon={<IconDownloadPress size={16} />}
           >
-            <IconDownloadPress size={16} />
             <span>Export Data</span>
-          </button>
+          </Button>
         </div>
-      </div>
+      </Card>
 
       {importSuccess && (
-        <div className="card settings-success-alert">
+        <Card className="settings-success-alert">
           <IconApprovalCheck size={20} />
           <span>Data imported successfully!</span>
-        </div>
+        </Card>
       )}
     </>
   );

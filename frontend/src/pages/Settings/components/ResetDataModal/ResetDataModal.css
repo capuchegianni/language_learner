@@ -6,38 +6,38 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.75rem;
+  margin-bottom: var(--space-sm);
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: var(--space-xs);
 }
 
 .settings-selection-label {
   font-family: var(--font-mono);
-  font-size: 0.78rem;
-  font-weight: 600;
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-semibold);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: var(--letter-spacing-wide);
   color: var(--text-secondary);
 }
 
 .settings-selection-actions {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-xs);
 }
 
 .settings-text-btn {
   background: transparent;
   border: none;
   font-family: var(--font-mono);
-  font-size: 0.78rem;
-  font-weight: 700;
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-bold);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: var(--letter-spacing-wide);
   cursor: pointer;
   text-decoration: underline;
   padding: 0;
-  transition: color 0.12s ease, transform 0.12s ease;
+  transition: color var(--transition-fast), transform var(--transition-fast);
 }
 
 .settings-text-btn.primary {
@@ -58,5 +58,5 @@
 
 .settings-selection-divider {
   color: var(--text-muted);
-  font-size: 0.78rem;
+  font-size: var(--font-size-2xs);
 }

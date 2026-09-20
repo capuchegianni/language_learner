@@ -2,29 +2,20 @@
 /* Words Learned Component Styles                            */
 /* ========================================================= */
 
-.words-learned-card {
-  margin: 0;
-  background: var(--bg-card);
-  border: 1.5px solid var(--border-color);
-  box-shadow: 2px 3px 0px var(--border-color);
-  padding: 1.25rem 1.4rem;
-  box-sizing: border-box;
-}
-
 .words-learned-header {
   font-family: var(--font-masthead);
-  font-size: 1.15rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-md);
   display: flex;
   align-items: center;
-  gap: 0.55rem;
+  gap: var(--space-xs);
   color: var(--text-primary);
 }
 
 .words-learned-grid {
   display: flex;
-  gap: 0.75rem;
+  gap: var(--space-xs);
   width: 100%;
 }
 
@@ -32,29 +23,29 @@
   flex: 1 1 0;
   min-width: 0;
   background: var(--bg-card-alt);
-  padding: 0.85rem 1rem;
-  border: 1.5px solid var(--border-color);
-  box-shadow: 1.5px 1.5px 0px var(--border-color);
+  padding: var(--space-sm) var(--space-md);
+  border: var(--border-width-regular) solid var(--border-color);
+  box-shadow: var(--shadow-subtle);
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: var(--space-2xs);
   overflow: hidden;
   box-sizing: border-box;
 }
 
 .word-learned-target {
   font-family: var(--font-target);
-  font-size: 1.2rem;
-  font-weight: 700;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
   color: var(--text-primary);
-  line-height: 1.25;
+  line-height: var(--line-height-tight);
 }
 
 .word-learned-native {
   font-family: var(--font-body);
-  font-size: 0.88rem;
+  font-size: var(--font-size-2xs);
   color: var(--text-secondary);
-  line-height: 1.35;
+  line-height: var(--line-height-snug);
   word-break: break-word;
 }
 
@@ -63,7 +54,7 @@
   .words-learned-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 0.75rem;
+    gap: var(--space-xs);
   }
 }
 
@@ -71,7 +62,8 @@
   .words-learned-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 0.65rem;
+    gap: var(--space-xs);
   }
 }
+
 

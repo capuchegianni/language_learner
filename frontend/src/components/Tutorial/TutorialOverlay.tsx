@@ -15,7 +15,7 @@ import {
   IconManiculeRight,
   IconManiculeLeft,
 } from '../icons';
-import { IconButton } from '../IconButton';
+import { Button, IconButton } from '../Button';
 import { useTutorial } from './TutorialContext';
 import { TargetRect } from './types';
 import './TutorialOverlay.css';
@@ -464,7 +464,7 @@ export const TutorialOverlay: React.FC = () => {
 
           <IconButton
             icon={<IconCloseDismiss size={14} />}
-            size={28}
+            size="sm"
             iconSize={14}
             onClick={skipTutorial}
             title="Dismiss tutorial"
@@ -493,38 +493,37 @@ export const TutorialOverlay: React.FC = () => {
 
         {/* Card Footer Actions */}
         <div className="tutorial-card-footer">
-          <button
-            type="button"
-            className="btn btn-secondary tutorial-skip-btn"
+          <Button
+            variant="secondary"
+            className="tutorial-skip-btn"
             onClick={skipTutorial}
             id="tutorial-skip-btn"
           >
             <span>Skip</span>
-          </button>
+          </Button>
 
           <div className="tutorial-nav-buttons">
-            <button
-              type="button"
-              className="btn btn-secondary tutorial-prev-btn"
+            <Button
+              variant="secondary"
+              className="tutorial-prev-btn"
               onClick={prevStep}
               disabled={isFirstStep}
-              style={{ opacity: isFirstStep ? 0.4 : 1, cursor: isFirstStep ? 'not-allowed' : 'pointer' }}
               id="tutorial-prev-btn"
+              icon={<IconManiculeLeft size={15} />}
             >
-              <IconManiculeLeft size={15} />
               <span>Previous</span>
-            </button>
+            </Button>
 
-            <button
-              ref={nextBtnRef}
-              type="button"
-              className="btn btn-primary tutorial-next-btn"
+            <Button
+              variant="primary"
+              className="tutorial-next-btn"
               onClick={nextStep}
               id="tutorial-next-btn"
+              icon={isLastStep ? <IconApprovalCheck size={15} /> : <IconManiculeRight size={15} />}
+              iconPosition="right"
             >
               <span>{isLastStep ? 'Get Started' : 'Next'}</span>
-              {isLastStep ? <IconApprovalCheck size={15} /> : <IconManiculeRight size={15} />}
-            </button>
+            </Button>
           </div>
         </div>
       </div>

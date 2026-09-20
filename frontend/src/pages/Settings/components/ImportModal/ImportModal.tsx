@@ -1,8 +1,7 @@
 import React from 'react';
 import './ImportModal.css';
 import { IconUploadPress } from '../../../../components/icons';
-import { Modal } from '../../../../components/Modal';
-import { LoadingSpinner } from '../../../../components/LoadingSpinner';
+import { Modal, Button, LoadingSpinner, CodeBlock } from '../../../../components';
 
 export interface ImportModalProps {
   isOpen: boolean;
@@ -40,13 +39,12 @@ export const ImportModal: React.FC<ImportModalProps> = ({
 }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Import Data" maxWidth="600px">
-      <p className="settings-modal-description">
-        Your JSON file should have the following structure. Any fields not matching the format will be skipped.
-      </p>
-
-      <pre className="code-block settings-schema-code">
-        {IMPORT_SCHEMA_SAMPLE}
-      </pre>
+      <CodeBlock
+        code={IMPORT_SCHEMA_SAMPLE}
+        description="Your JSON file should have the following structure. Any fields not matching the format will be skipped."
+        copyable={false}
+        className="no-border-code-block"
+      />
 
       {importError && (
         <div className="settings-modal-error">{importError}</div>
@@ -68,14 +66,13 @@ export const ImportModal: React.FC<ImportModalProps> = ({
       </div>
 
       <div className="settings-modal-actions">
-        <button
-          type="button"
-          className="btn btn-secondary"
+        <Button
+          variant="secondary"
           onClick={onClose}
           disabled={importing}
         >
           Cancel
-        </button>
+        </Button>
         <label className="btn btn-primary settings-file-upload-btn">
           {importing ? (
             <LoadingSpinner

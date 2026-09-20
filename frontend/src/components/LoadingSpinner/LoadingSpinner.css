@@ -3,7 +3,7 @@
    ========================================================================== */
 
 .press-roller {
-  border: 2px solid currentColor;
+  border: var(--border-width-medium) solid currentColor;
   position: relative;
   animation: pressRoll 1s linear infinite;
   display: inline-flex;
@@ -41,18 +41,18 @@
 .loading-container {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: var(--space-sm);
   font-family: var(--font-mono);
-  font-size: 0.8rem;
+  font-size: var(--font-size-xs);
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: var(--letter-spacing-stamp);
   color: var(--text-primary);
 }
 
 .loading-container.variant-card {
   background-color: var(--bg-card);
-  border: 1.5px solid var(--border-color);
-  padding: 2.5rem;
+  border: var(--border-width-regular) solid var(--border-color);
+  padding: var(--space-3xl);
   justify-content: center;
   box-shadow: var(--shadow-press);
   color: var(--text-primary);
@@ -62,7 +62,7 @@
 
 .loading-container.variant-card .loading-message {
   color: var(--text-secondary);
-  margin-top: 0.5rem;
+  margin-top: var(--space-xs);
   text-align: center;
 }
 
@@ -76,7 +76,7 @@
   background-color: rgba(18, 17, 15, 0.7);
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
-  z-index: 9999;
+  z-index: var(--z-modal-backdrop);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -86,14 +86,14 @@
 
 .loading-container.variant-fullscreen .loading-message {
   color: #ffffff;
-  margin-top: 0.75rem;
+  margin-top: var(--space-sm);
   text-align: center;
 }
 
 .loading-container.variant-button {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-xs);
   color: inherit;
 }
 
@@ -106,7 +106,7 @@
   flex-direction: row;
   align-items: center;
   color: var(--text-primary);
-  padding: 0.25rem 0.5rem;
+  padding: var(--space-2xs) var(--space-xs);
 }
 
 .loading-container.variant-inline .loading-message {

@@ -1,7 +1,7 @@
 import React from 'react';
 import './Pill.css';
 
-export type PillVariant = 'primary' | 'success' | 'warning' | 'danger';
+export type PillVariant = 'primary' | 'success' | 'warning' | 'danger' | 'info' | 'blue';
 
 export interface PillProps extends React.HTMLAttributes<HTMLSpanElement> {
   variant?: PillVariant;

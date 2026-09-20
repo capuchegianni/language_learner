@@ -5,6 +5,7 @@ import {
   IconPressPin,
   IconBookmarkRibbon,
 } from '../../../../../../components/icons';
+import { Input } from '../../../../../../components';
 import { ExerciseOneComponentProps } from '../types';
 import './wordInflection.css';
 
@@ -47,7 +48,7 @@ export const WordInflectionExercise: React.FC<ExerciseOneComponentProps> = ({
               <span className="ex1-inflection-word target-text">{word}</span>
               <IconManiculeRight size={14} className="ex1-inflection-arrow" />
             </div>
-            <input
+            <Input
               type="text"
               id={`ex1-inflect-${idx}`}
               placeholder={getPlaceholder(word)}

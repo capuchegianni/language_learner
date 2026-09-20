@@ -1,6 +1,7 @@
 import React from 'react';
 import { IconGrammarGazette, IconHazardAlert } from '../../../../components/icons';
 import { LessonContent } from '../../../../types';
+import { Card } from '../../../../components';
 import './RuleExplanation.css';
 
 export interface RuleExplanationProps {
@@ -14,7 +15,7 @@ export const RuleExplanation: React.FC<RuleExplanationProps> = ({ lessonContent,
   const hasExamples = Boolean(lessonContent.rule.examples && lessonContent.rule.examples.length > 0);
 
   return (
-    <div className={`card rule-explanation-card ${className}`.trim()}>
+    <Card className={`${className}`.trim()}>
       <div className="rule-explanation-header-wrapper">
         <div className="rule-explanation-badge-row">
           <IconGrammarGazette size={16} />
@@ -65,7 +66,7 @@ export const RuleExplanation: React.FC<RuleExplanationProps> = ({ lessonContent,
           <p className="rule-exceptions-text">{lessonContent.rule.exceptions}</p>
         </div>
       )}
-    </div>
+    </Card>
   );
 };
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { IconAwardLaurel } from '../../../../components/icons';
 import { GradingResult, LessonContent } from '../../../../types';
-import { Pill } from '../../../../components/Pill';
+import { Pill, Card } from '../../../../components';
 import './AIFeedbackDisplay.css';
 
 export interface AIFeedbackDisplayProps {
@@ -22,7 +22,7 @@ export const AIFeedbackDisplay: React.FC<AIFeedbackDisplayProps> = ({
   return (
     <div className={`feedback-display-container ${className}`.trim()}>
       {/* Overall Score Banner */}
-      <div className="card feedback-score-banner">
+      <Card className="feedback-score-banner">
         <IconAwardLaurel size={48} className="feedback-score-icon" />
         <h2 className="feedback-score-title">{title}</h2>
         <div
@@ -31,20 +31,20 @@ export const AIFeedbackDisplay: React.FC<AIFeedbackDisplayProps> = ({
           {gradingResult.overallScore}%
         </div>
         <p className="feedback-general-text">{gradingResult.generalFeedback}</p>
-      </div>
+      </Card>
 
       {/* OCR Box if image uploaded */}
       {gradingResult.handwrittenOcrText && (
-        <div className="card feedback-ocr-card">
+        <Card className="feedback-ocr-card">
           <h3 className="feedback-ocr-header">
             Vision AI OCR Handwritten Transcription:
           </h3>
           <p className="target-text feedback-ocr-text">{gradingResult.handwrittenOcrText}</p>
-        </div>
+        </Card>
       )}
 
       {/* Exercise 1 Breakdown */}
-      <div className="card feedback-exercise-card">
+      <Card className="feedback-exercise-card">
         <div className="feedback-exercise-header">
           <h3 className="feedback-exercise-title">
             Exercise 1: Rule Application
@@ -92,10 +92,10 @@ export const AIFeedbackDisplay: React.FC<AIFeedbackDisplayProps> = ({
             </ul>
           </div>
         )}
-      </div>
+      </Card>
 
       {/* Exercise 2 Breakdown */}
-      <div className="card feedback-exercise-card">
+      <Card className="feedback-exercise-card">
         <div className="feedback-exercise-header">
           <h3 className="feedback-exercise-title">
             Exercise 2: Sentence Translations
@@ -137,10 +137,10 @@ export const AIFeedbackDisplay: React.FC<AIFeedbackDisplayProps> = ({
             </ul>
           </div>
         )}
-      </div>
+      </Card>
 
       {/* Exercise 3 Breakdown */}
-      <div className="card feedback-exercise-card">
+      <Card className="feedback-exercise-card">
         <div className="feedback-exercise-header">
           <h3 className="feedback-exercise-title">
             Exercise 3: Free Paragraph Creation
@@ -176,7 +176,7 @@ export const AIFeedbackDisplay: React.FC<AIFeedbackDisplayProps> = ({
             </ul>
           </div>
         )}
-      </div>
+      </Card>
     </div>
   );
 };

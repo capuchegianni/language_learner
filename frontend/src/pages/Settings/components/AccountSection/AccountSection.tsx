@@ -1,5 +1,6 @@
 import React from 'react';
 import './AccountSection.css';
+import { Card, Button } from '../../../../components';
 import { IconUserBust, IconQueryNotice, IconExitGate } from '../../../../components/icons';
 import { useAuth } from '../../../../contexts/AuthContext';
 import { useTutorial } from '../../../../components/Tutorial';
@@ -14,8 +15,8 @@ export const AccountSection: React.FC = () => {
   };
 
   return (
-    <div className="card settings-account-card" id="tutorial-account-card">
-      <h3 className="settings-section-title account-title">
+    <Card className="settings-account-card" id="tutorial-account-card">
+      <h3 className="settings-section-title">
         <IconUserBust size={20} />
         <span>Account</span>
       </h3>
@@ -43,27 +44,27 @@ export const AccountSection: React.FC = () => {
           </div>
         </div>
         <div className="settings-account-actions">
-          <button
-            type="button"
-            className="btn btn-secondary settings-replay-btn"
+          <Button
+            variant="secondary"
+            className="settings-replay-btn"
             onClick={() => startTutorial(0)}
             id="replay-tutorial-btn"
             title="Replay the onboarding walkthrough"
+            icon={<IconQueryNotice size={16} />}
           >
-            <IconQueryNotice size={16} />
             <span>Replay Tutorial</span>
-          </button>
-          <button
-            type="button"
-            className="btn btn-secondary settings-logout-btn"
+          </Button>
+          <Button
+            variant="secondary"
+            className="settings-logout-btn"
             onClick={handleLogout}
             id="logout-button"
+            icon={<IconExitGate size={16} />}
           >
-            <IconExitGate size={16} />
             <span>Sign Out</span>
-          </button>
+          </Button>
         </div>
       </div>
-    </div>
+    </Card>
   );
 };

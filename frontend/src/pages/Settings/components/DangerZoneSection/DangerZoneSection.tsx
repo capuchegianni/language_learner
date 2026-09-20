@@ -1,4 +1,5 @@
 import React from 'react';
+import { Card, Button } from '../../../../components';
 import { IconHazardAlert, IconTrashShears } from '../../../../components/icons';
 import './DangerZoneSection.css';
 
@@ -12,7 +13,7 @@ export const DangerZoneSection: React.FC<DangerZoneSectionProps> = ({
   onOpenDeleteAccountModal,
 }) => {
   return (
-    <div className="card settings-card settings-danger-card" id="tutorial-danger-zone">
+    <Card className="settings-card settings-danger-card" id="tutorial-danger-zone">
       <h3 className="settings-section-title danger-title">
         <IconHazardAlert size={20} />
         <span>Danger Zone</span>
@@ -32,15 +33,14 @@ export const DangerZoneSection: React.FC<DangerZoneSectionProps> = ({
               Select specific data categories (Settings, Words, Rules, Lessons) to permanently clear.
             </div>
           </div>
-          <button
-            type="button"
-            className="btn btn-danger"
+          <Button
+            variant="danger"
             id="open-reset-modal-btn"
             onClick={onOpenResetModal}
+            icon={<IconTrashShears size={16} />}
           >
-            <IconTrashShears size={16} />
             <span>Reset Data</span>
-          </button>
+          </Button>
         </div>
 
         {/* Delete Account */}
@@ -53,17 +53,16 @@ export const DangerZoneSection: React.FC<DangerZoneSectionProps> = ({
               Permanently delete your user account and all associated data.
             </div>
           </div>
-          <button
-            type="button"
-            className="btn btn-danger"
+          <Button
+            variant="danger"
             id="open-delete-account-modal-btn"
             onClick={onOpenDeleteAccountModal}
+            icon={<IconTrashShears size={16} />}
           >
-            <IconTrashShears size={16} />
             <span>Delete Account</span>
-          </button>
+          </Button>
         </div>
       </div>
-    </div>
+    </Card>
   );
 };

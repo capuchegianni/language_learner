@@ -1,8 +1,7 @@
 import React from 'react';
 import './ExportModal.css';
 import { IconDownloadPress, IconHazardAlert } from '../../../../components/icons';
-import { Modal } from '../../../../components/Modal';
-import { LoadingSpinner } from '../../../../components/LoadingSpinner';
+import { Modal, Button, LoadingSpinner } from '../../../../components';
 import { ExportInclude } from '../../types';
 
 export interface ExportModalProps {
@@ -69,19 +68,18 @@ export const ExportModal: React.FC<ExportModalProps> = ({
       )}
 
       <div className="settings-modal-actions">
-        <button
-          type="button"
-          className="btn btn-secondary"
+        <Button
+          variant="secondary"
           onClick={onClose}
           disabled={exporting}
         >
           Cancel
-        </button>
-        <button
-          type="button"
-          className="btn btn-primary"
+        </Button>
+        <Button
+          variant="primary"
           disabled={exporting || !hasSelection}
           onClick={onExport}
+          icon={exporting ? undefined : <IconDownloadPress size={18} />}
         >
           {exporting ? (
             <LoadingSpinner
@@ -90,12 +88,9 @@ export const ExportModal: React.FC<ExportModalProps> = ({
               message="Exporting..."
             />
           ) : (
-            <>
-              <IconDownloadPress size={18} />
-              <span>Download JSON</span>
-            </>
+            <span>Download JSON</span>
           )}
-        </button>
+        </Button>
       </div>
     </Modal>
   );

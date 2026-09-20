@@ -1,5 +1,5 @@
 import React from 'react';
-import { FilterBar, FilterInput, FilterSelect } from '../../../components';
+import { FilterBar, Input, Select } from '../../../components';
 
 export interface HistoryFilterBarProps {
   search: string;
@@ -22,17 +22,21 @@ export const HistoryFilterBar: React.FC<HistoryFilterBarProps> = ({
 }) => {
   return (
     <FilterBar id="tutorial-history-filter">
-      <FilterInput
+      <Input
+        variant="filter"
         id="history-search-input"
         value={search}
-        onChange={onSearchChange}
+        onChange={(e) => onSearchChange(e.target.value)}
+        clearable
+        onClear={() => onSearchChange('')}
         placeholder="Search lessons by rule title..."
       />
-      <FilterSelect
+      <Select
+        variant="filter"
         id="history-status-filter"
         label="Status:"
         value={filterStatus}
-        onChange={onFilterStatusChange}
+        onChange={(e) => onFilterStatusChange(e.target.value)}
         options={STATUS_OPTIONS}
         allLabel="All Lessons"
       />

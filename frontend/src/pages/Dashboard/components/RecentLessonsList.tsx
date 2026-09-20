@@ -2,9 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IconChronicle, IconManiculeRight } from '../../../components/icons';
 import { Lesson, DashboardStats } from '../../../types';
-import { LoadingSpinner } from '../../../components/LoadingSpinner';
-import { EmptyState } from '../../../components/EmptyState';
-import { LessonCard } from '../../../components/LessonCard';
+import { LoadingSpinner, EmptyState, LessonCard, Button, Card } from '../../../components';
 
 export interface RecentLessonsListProps {
   stats: DashboardStats | null;
@@ -38,13 +36,12 @@ export const RecentLessonsList: React.FC<RecentLessonsListProps> = ({
           icon={<IconChronicle size={40} />}
           message="No lessons generated yet."
           action={
-            <button
-              type="button"
-              className="btn btn-primary"
+            <Button
+              variant="primary"
               onClick={() => navigate('/lessons/new')}
             >
               Create Your First Lesson
-            </button>
+            </Button>
           }
         />
       </div>
@@ -69,8 +66,9 @@ export const RecentLessonsList: React.FC<RecentLessonsListProps> = ({
       ))}
 
       {recentLessons.length >= 3 && (
-        <div
-          className="card quick-hub-card"
+        <Card
+          isInteractive
+          className="quick-hub-card"
           onClick={() => navigate('/history')}
           role="button"
           tabIndex={0}
@@ -95,7 +93,7 @@ export const RecentLessonsList: React.FC<RecentLessonsListProps> = ({
               <IconManiculeRight size={18} className="quick-hub-arrow" />
             </div>
           </div>
-        </div>
+        </Card>
       )}
     </div>
   );

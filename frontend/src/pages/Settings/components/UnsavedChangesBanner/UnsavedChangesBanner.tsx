@@ -1,7 +1,7 @@
 import React from 'react';
 import './UnsavedChangesBanner.css';
+import { Card, Button, LoadingSpinner } from '../../../../components';
 import { IconHazardAlert, IconSaveLedger } from '../../../../components/icons';
-import { LoadingSpinner } from '../../../../components/LoadingSpinner';
 
 export interface UnsavedChangesBannerProps {
   hasUnsavedChanges: boolean;
@@ -21,8 +21,8 @@ export const UnsavedChangesBanner: React.FC<UnsavedChangesBannerProps> = ({
   if (!hasUnsavedChanges) return null;
 
   return (
-    <div
-      className="card unsaved-changes-bubble"
+    <Card
+      className="unsaved-changes-bubble"
       role="alert"
       id="unsaved-changes-warning"
     >
@@ -38,21 +38,22 @@ export const UnsavedChangesBanner: React.FC<UnsavedChangesBannerProps> = ({
         </div>
       </div>
       <div className="unsaved-changes-actions">
-        <button
-          type="button"
-          className="btn btn-secondary unsaved-changes-btn unsaved-changes-discard-btn"
+        <Button
+          variant="secondary"
+          className="unsaved-changes-btn unsaved-changes-discard-btn"
           onClick={onDiscard}
           disabled={saving}
           id="discard-settings-btn"
         >
           Discard
-        </button>
-        <button
-          type="button"
-          className="btn btn-primary unsaved-changes-btn unsaved-changes-save-btn"
+        </Button>
+        <Button
+          variant="primary"
+          className="unsaved-changes-btn unsaved-changes-save-btn"
           onClick={() => onSave()}
           disabled={saving || !canSave}
           id="save-settings-btn"
+          icon={saving ? undefined : <IconSaveLedger size={16} />}
         >
           {saving ? (
             <LoadingSpinner
@@ -61,13 +62,10 @@ export const UnsavedChangesBanner: React.FC<UnsavedChangesBannerProps> = ({
               message="Saving..."
             />
           ) : (
-            <>
-              <IconSaveLedger size={16} />
-              <span>Save Settings</span>
-            </>
+            <span>Save Settings</span>
           )}
-        </button>
+        </Button>
       </div>
-    </div>
+    </Card>
   );
 };

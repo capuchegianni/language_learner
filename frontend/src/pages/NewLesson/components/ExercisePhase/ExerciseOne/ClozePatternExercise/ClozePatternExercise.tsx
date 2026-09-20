@@ -1,5 +1,6 @@
 import React from 'react';
 import { IconQueryNotice } from '../../../../../../components/icons';
+import { Input } from '../../../../../../components';
 import { ExerciseOneComponentProps } from '../types';
 import './clozePattern.css';
 
@@ -42,7 +43,7 @@ export const ClozePatternExercise: React.FC<ExerciseOneComponentProps> = ({
                 </span>
               )}
             </div>
-            <input
+            <Input
               type="text"
               id={`ex1-cloze-${idx}`}
               placeholder={`Fill in the blank using "${hint || 'target'}"...`}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { IconLexicon } from '../../../../components/icons';
 import { LessonContent } from '../../../../types';
+import { Card } from '../../../../components';
 import './WordsLearned.css';
 
 export interface WordsLearnedProps {
@@ -12,7 +13,7 @@ export const WordsLearned: React.FC<WordsLearnedProps> = ({ lessonContent, class
   if (!lessonContent.newWords || lessonContent.newWords.length === 0) return null;
 
   return (
-    <div className={`card words-learned-card ${className}`.trim()}>
+    <Card className={`${className}`.trim()}>
       <h3 className="words-learned-header">
         <IconLexicon size={18} />
         <span>Words Introduced in this Lesson</span>
@@ -25,7 +26,7 @@ export const WordsLearned: React.FC<WordsLearnedProps> = ({ lessonContent, class
           </div>
         ))}
       </div>
-    </div>
+    </Card>
   );
 };
 

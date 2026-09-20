@@ -1,0 +1,14 @@
+/* ==========================================================================
+   The Broadsheet Footer Component Styles
+   ========================================================================== */
+
+.app-footer {
+  border-top: var(--border-width-hairline) solid var(--border-color-light);
+  padding: var(--space-xl);
+  text-align: center;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+}

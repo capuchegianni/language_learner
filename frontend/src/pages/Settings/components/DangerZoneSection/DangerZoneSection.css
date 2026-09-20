@@ -4,26 +4,26 @@
 
 .settings-danger-card {
   background: var(--stamp-red-bg);
-  border: 1.5px solid var(--stamp-red, #8b1c1c);
-  border-left: 4px solid var(--stamp-red, #8b1c1c);
-  box-shadow: 2px 3px 0px var(--border-color);
+  border: var(--border-width-regular) solid var(--stamp-red);
+  border-left: var(--border-width-heavy) solid var(--stamp-red);
+  box-shadow: var(--shadow-card);
 }
 
 .settings-section-title.danger-title {
-  color: var(--stamp-red, #8b1c1c);
+  color: var(--stamp-red);
 }
 
 .settings-danger-list {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: var(--space-lg);
 }
 
 .danger-zone-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 1.5rem;
+  gap: var(--space-xl);
 }
 
 .danger-zone-item-info {
@@ -33,22 +33,22 @@
 
 .danger-zone-item-title {
   font-family: var(--font-masthead);
-  font-weight: 700;
-  font-size: 1.1rem;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-md);
   color: var(--text-primary);
-  margin-bottom: 0.25rem;
+  margin-bottom: var(--space-2xs);
 }
 
 .danger-zone-item-desc {
   font-family: var(--font-body);
-  font-size: 0.88rem;
+  font-size: var(--font-size-sm);
   color: var(--text-secondary);
-  line-height: 1.45;
+  line-height: var(--line-height-snug);
 }
 
 .settings-danger-divider {
-  padding-bottom: 1.25rem;
-  border-bottom: 1px dashed var(--border-color-light);
+  padding-bottom: var(--space-lg);
+  border-bottom: var(--border-width-hairline) dashed var(--border-color-light);
 }
 
 /* Responsive */
@@ -56,7 +56,7 @@
   .danger-zone-item {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.75rem;
+    gap: var(--space-sm);
   }
 
   .danger-zone-item button {

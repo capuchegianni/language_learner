@@ -2,8 +2,11 @@
    THE BROADSHEET DESIGN SYSTEM — Language Learner Editorial Edition
    ========================================================================== */
 
-:root,
-[data-theme="morning"] {
+:root {
+  /* ==========================================================================
+     Structural Design Tokens (Theme-Agnostic Single Source of Truth)
+     ========================================================================== */
+
   /* Typography Families */
   --font-masthead: 'Newsreader', Georgia, 'Noto Serif KR', 'Noto Serif JP', 'Noto Serif SC', 'Noto Serif Devanagari', 'Noto Naskh Arabic', serif;
   --font-body: 'Source Serif 4', 'Times New Roman', 'Noto Serif KR', 'Noto Serif JP', 'Noto Serif SC', 'Noto Serif Devanagari', 'Noto Naskh Arabic', serif;
@@ -11,7 +14,94 @@
   --font-mono: 'JetBrains Mono', 'Courier New', monospace;
   --font-target: 'Noto Serif KR', 'Noto Serif JP', 'Noto Serif SC', 'Noto Serif Devanagari', 'Noto Naskh Arabic', 'Nanum Myeongjo', serif;
 
-  /* Morning Edition Color Palette (Subtle Bleached Print & Crisp Carbon Ink) */
+  /* Modular Typography Scale */
+  --font-size-3xs: 0.6875rem; /* 11px — micro labels, timestamp details */
+  --font-size-2xs: 0.75rem;   /* 12px — stamp badges, keyboard shortcuts, uppercase pills */
+  --font-size-xs: 0.8125rem;  /* 13px — secondary metadata, helper descriptions */
+  --font-size-sm: 0.875rem;   /* 14px — button text, input labels, table cell text */
+  --font-size-base: 1rem;     /* 16px — standard body text, input fields */
+  --font-size-md: 1.125rem;   /* 18px — card section subheadings, lead notes */
+  --font-size-lg: 1.25rem;    /* 20px — sub-mastheads, modal titles */
+  --font-size-xl: 1.5rem;     /* 24px — primary section headlines */
+  --font-size-2xl: 2rem;      /* 32px — dashboard stats, page titles */
+  --font-size-3xl: 2.5rem;    /* 40px — major editorial banners */
+  --font-size-display: 3.5rem;/* 56px — drop caps, hero mastheads */
+
+  /* Font Weights */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-heavy: 800;
+
+  /* Line Heights */
+  --line-height-tight: 1.15;
+  --line-height-snug: 1.35;
+  --line-height-normal: 1.6;
+  --line-height-relaxed: 1.75;
+
+  /* Letter Spacings */
+  --letter-spacing-tight: -0.02em;
+  --letter-spacing-normal: 0.01em;
+  --letter-spacing-wide: 0.08em;
+  --letter-spacing-stamp: 0.14em;
+
+  /* Spacing Scale */
+  --space-3xs: 0.125rem; /* 2px */
+  --space-2xs: 0.25rem;  /* 4px */
+  --space-xs: 0.5rem;    /* 8px */
+  --space-sm: 0.75rem;   /* 12px */
+  --space-md: 1rem;      /* 16px */
+  --space-lg: 1.25rem;   /* 20px */
+  --space-xl: 1.5rem;    /* 24px */
+  --space-2xl: 2rem;     /* 32px */
+  --space-3xl: 3rem;     /* 48px */
+
+  /* Border Widths */
+  --border-width-hairline: 1px;
+  --border-width-regular: 1.5px;
+  --border-width-medium: 2px;
+  --border-width-heavy: 3px;
+
+  /* Strict Print Sharp Corners */
+  --radius-lg: 0px;
+  --radius-md: 0px;
+  --radius-sm: 0px;
+  --radius-full: 9999px;
+
+  /* Motion & Transition Tokens */
+  --transition-instant: 0.08s ease;
+  --transition-fast: 0.12s ease;
+  --transition-normal: 0.2s ease;
+  --transition-smooth: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Interaction Motion Transforms */
+  --motion-press: translate(1px, 1px);
+  --motion-lift: translate(-1px, -1px);
+
+  /* Z-Index Hierarchy Layering */
+  --z-base: 1;
+  --z-dropdown: 10;
+  --z-sticky: 20;
+  --z-banner: 40;
+  --z-modal-backdrop: 100;
+  --z-modal: 110;
+  --z-tutorial: 500;
+  --z-toast: 900;
+  --z-texture: 9999;
+
+  /* Interactive Control Standard Dimensions */
+  --control-height-xs: 24px;
+  --control-height-sm: 32px;
+  --control-height-md: 40px;
+  --control-height-lg: 48px;
+}
+
+:root,
+[data-theme="morning"] {
+  /* ==========================================================================
+     Morning Edition Color Palette (Subtle Bleached Print & Crisp Carbon Ink)
+     ========================================================================== */
   --bg-dark: #faf8f5;
   --bg-card: #ffffff;
   --bg-card-hover: #ffffff;
@@ -21,7 +111,6 @@
   --border-color: #141312;
   --border-color-light: #e4dfd5;
   --border-color-glow: #141312;
-  --border-width-heavy: 3px;
 
   --text-primary: #111111;
   --text-secondary: #33312c;
@@ -50,20 +139,24 @@
   --gradient-main: #111111;
   --gradient-glow: rgba(17, 17, 17, 0.04);
 
-  --shadow-lg: 3px 4px 0px rgba(17, 17, 17, 0.12);
+  /* Elevation & Physical Press Shadows */
+  --shadow-subtle: 1px 1px 0px var(--border-color);
   --shadow-press: 2px 2px 0px var(--border-color);
+  --shadow-card: 2px 3px 0px var(--border-color);
+  --shadow-hover: 3px 3px 0px var(--border-color);
+  --shadow-float: 4px 5px 0px var(--border-color);
+  --shadow-modal: 6px 8px 0px var(--border-color);
+  --shadow-danger: 4px 5px 0px var(--stamp-red);
+  --shadow-lg: 3px 4px 0px rgba(17, 17, 17, 0.12);
   --shadow-glow: none;
-
-  /* Strict Print Sharp Corners */
-  --radius-lg: 0px;
-  --radius-md: 0px;
-  --radius-sm: 0px;
 
   --paper-texture-opacity: 0.015;
 }
 
 [data-theme="evening"] {
-  /* Evening Edition Color Palette (Carbon Slate & High-Legibility Bone Ink) */
+  /* ==========================================================================
+     Evening Edition Color Palette (Carbon Slate & High-Legibility Bone Ink)
+     ========================================================================== */
   --bg-dark: #121215;
   --bg-card: #1c1c23;
   --bg-card-hover: #24242e;
@@ -73,7 +166,6 @@
   --border-color: #5c5966;
   --border-color-light: #3e3c4a;
   --border-color-glow: #ffffff;
-  --border-width-heavy: 3px;
 
   --text-primary: #ffffff;
   --text-secondary: #ede9e0;
@@ -102,13 +194,16 @@
   --gradient-main: #ffffff;
   --gradient-glow: rgba(255, 255, 255, 0.05);
 
-  --shadow-lg: 3px 4px 0px rgba(0, 0, 0, 0.6);
+  /* Elevation & Physical Press Shadows */
+  --shadow-subtle: 1px 1px 0px var(--border-color);
   --shadow-press: 2px 2px 0px var(--border-color);
+  --shadow-card: 2px 3px 0px var(--border-color);
+  --shadow-hover: 3px 3px 0px var(--border-color);
+  --shadow-float: 4px 5px 0px var(--border-color);
+  --shadow-modal: 6px 8px 0px rgba(0, 0, 0, 0.7);
+  --shadow-danger: 4px 5px 0px var(--stamp-red);
+  --shadow-lg: 3px 4px 0px rgba(0, 0, 0, 0.6);
   --shadow-glow: none;
-
-  --radius-lg: 0px;
-  --radius-md: 0px;
-  --radius-sm: 0px;
 
   --paper-texture-opacity: 0.012;
 }
@@ -159,16 +254,16 @@
   html,
   body,
   * {
-    scrollbar-width: none !important;
-    -ms-overflow-style: none !important;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
 
   ::-webkit-scrollbar,
   *::-webkit-scrollbar {
-    display: none !important;
-    width: 0 !important;
-    height: 0 !important;
-    background: transparent !important;
+    display: none;
+    width: 0;
+    height: 0;
+    background: transparent;
   }
 }
 
@@ -233,426 +328,28 @@ h6 {
   font-family: var(--font-target);
 }
 
-.mono-text,
 code,
-pre,
-.classified-mono {
+pre {
   font-family: var(--font-mono);
 }
 
-/* ==========================================================================
-   Broadsheet Layout Containers & Newspaper Rules
-   ========================================================================== */
 
-.app-layout {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  min-height: 100dvh;
-  width: 100%;
-}
-
-.main-content {
-  flex: 1;
-  max-width: 1280px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 1.5rem 1.5rem 3rem 1.5rem;
-  padding-left: max(1.5rem, env(safe-area-inset-left));
-  padding-right: max(1.5rem, env(safe-area-inset-right));
-  padding-bottom: max(2.5rem, calc(1.5rem + env(safe-area-inset-bottom)));
-}
-
-.app-footer {
-  border-top: 1px solid var(--border-color-light);
-  padding: 1.5rem;
-  text-align: center;
-  color: var(--text-muted);
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-/* Broadsheet Section Double Rule */
-.double-rule {
-  border-top: 3px solid var(--border-color);
-  border-bottom: 1px solid var(--border-color);
-  padding: 0.35rem 0;
-  margin: 1.25rem 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  text-transform: uppercase;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.15em;
-  color: var(--text-secondary);
-}
-
-.single-rule {
-  border-bottom: 1px solid var(--border-color);
-  margin: 1rem 0;
-}
-
-.thick-rule {
-  border-bottom: 3px solid var(--border-color);
-  margin: 1rem 0;
-}
-
-.dashed-rule {
-  border-bottom: 1px dashed var(--border-color-light);
-  margin: 0.75rem 0;
-}
-
-/* Card Equivalent: The Broadsheet Box */
-.card {
-  background: var(--bg-card);
-  color: var(--text-primary);
-  border: 1.5px solid var(--border-color);
-  padding: 1.25rem;
-  box-shadow: var(--shadow-press);
-  position: relative;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
-}
-
-.card:hover {
-  background: var(--bg-card-hover);
-}
-
-/* Heavy Framed Article Box */
-.box-framed {
-  border: 2px solid var(--border-color);
-  outline: 1px solid var(--border-color);
-  outline-offset: 3px;
-  background: var(--bg-card);
-  padding: 1.5rem;
-}
-
-/* Column Divider utilities */
-.column-border-r {
-  border-right: 1px solid var(--border-color-light);
-}
-
-.column-border-l {
-  border-left: 1px solid var(--border-color-light);
-}
-
-/* ==========================================================================
-   Buttons (Physical Press Inked Plates)
-   ========================================================================== */
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.55rem 1.15rem;
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  cursor: pointer;
-  border: 1.5px solid var(--border-color);
-  background: var(--bg-card);
-  color: var(--text-primary);
-  box-shadow: var(--shadow-press);
-  transition: all 0.12s ease;
-  min-height: 40px;
-  user-select: none;
-}
-
-.btn:hover:not(:disabled) {
-  transform: translate(-1px, -1px);
-  box-shadow: 3px 3px 0px var(--border-color);
-}
-
-.btn:active:not(:disabled) {
-  transform: translate(1px, 1px);
-  box-shadow: 1px 1px 0px var(--border-color);
-}
-
-.btn:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-  box-shadow: none;
-  border-color: var(--border-color-light);
-  transform: none !important;
-}
-
-/* Button Variants */
-.btn-primary {
-  background: var(--text-primary);
-  color: var(--bg-dark);
-  border-color: var(--text-primary);
-}
-
-.btn-primary:hover:not(:disabled) {
-  background: var(--accent-primary-hover);
-  color: var(--bg-dark);
-}
-
-.btn-secondary {
-  background: var(--bg-card);
-  color: var(--text-primary);
-  border-color: var(--border-color);
-}
-
-.btn-secondary:hover:not(:disabled) {
-  background: var(--bg-card-alt);
-}
-
-.btn-danger {
-  background: var(--stamp-red-bg);
-  border-color: var(--stamp-red);
-  color: var(--stamp-red);
-}
-
-.btn-danger:hover:not(:disabled) {
-  background: var(--stamp-red);
-  color: #ffffff;
-}
 
 /* Accessibility Focus States */
 button:focus-visible,
 a:focus-visible {
-  outline: 2px solid var(--text-primary);
+  outline: var(--border-width-medium) solid var(--text-primary);
   outline-offset: 2px;
-}
-
-/* ==========================================================================
-   Form Inputs & Selects (Typewriter & Form Ledger Styling)
-   ========================================================================== */
-
-.input-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.input-group label {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-secondary);
-}
-
-input[type="text"],
-input[type="password"],
-input[type="email"],
-input[type="search"],
-input[type="number"],
-select,
-textarea {
-  background-color: var(--bg-card);
-  border: 1.5px solid var(--border-color);
-  padding: 0.6rem 0.8rem;
-  color: var(--text-primary);
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
-  box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.06);
-  transition: border-color 0.15s ease, background-color 0.15s ease;
-  min-height: 42px;
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
-input[type="text"]:focus,
-input[type="password"]:focus,
-input[type="email"]:focus,
-input[type="search"]:focus,
-input[type="number"]:focus,
-select:focus,
-textarea:focus {
-  outline: 2px solid var(--text-primary);
-  outline-offset: -1px;
-  background-color: var(--bg-card-hover);
-}
-
-select {
-  cursor: pointer;
-  padding-right: 2.2rem;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23111111' stroke-width='3' stroke-linecap='square' stroke-linejoin='miter'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat: no-repeat !important;
-  background-position: right 0.75rem center !important;
-  background-size: 0.85rem !important;
-}
-
-[data-theme="evening"] select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='3' stroke-linecap='square' stroke-linejoin='miter'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat: no-repeat !important;
-  background-position: right 0.75rem center !important;
-  background-size: 0.85rem !important;
-}
-
-textarea {
-  min-height: 100px;
-  resize: vertical;
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
-/* ==========================================================================
-   Editorial Rubber Stamps & Status Badges
-   ========================================================================== */
-
-.editorial-stamp-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.25rem 0.65rem;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  border: 2px solid currentColor;
-  position: relative;
-  line-height: 1.2;
-}
-
-.stamp-tilt {
-  transform: rotate(-3deg);
-  display: inline-block;
-}
-
-.stamp-red {
-  color: var(--stamp-red);
-  background-color: var(--stamp-red-bg);
-  border-style: solid;
-}
-
-.stamp-green {
-  color: var(--stamp-green);
-  background-color: var(--stamp-green-bg);
-  border-style: solid;
-}
-
-.stamp-amber {
-  color: var(--stamp-amber);
-  background-color: var(--stamp-amber-bg);
-  border-style: solid;
-}
-
-.stamp-blue {
-  color: var(--stamp-blue);
-  background-color: var(--stamp-blue-bg);
-  border-style: solid;
-}
-
-.stamp-ink {
-  color: var(--text-primary);
-  background-color: var(--stamp-ink-bg);
-  border-style: solid;
-}
-
-/* Distressed Rubber Stamp Border Effect */
-.stamp-distressed {
-  border-width: 2.5px;
-  border-style: double;
-  mask-image: linear-gradient(rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.85));
-}
-
-/* ==========================================================================
-   Drop Cap & Newspaper Editorial Utilities
-   ========================================================================== */
-
-.editorial-lead {
-  font-size: 1.15rem;
-  line-height: 1.65;
-  color: var(--text-primary);
-  margin-bottom: 1rem;
-}
-
-.drop-cap::first-letter {
-  font-family: var(--font-masthead);
-  font-size: 3.5rem;
-  font-weight: 800;
-  float: left;
-  line-height: 0.8;
-  margin-right: 0.5rem;
-  padding: 0.1rem 0.2rem 0 0;
-  color: var(--text-primary);
-}
-
-/* Text Accent Utilities */
-.text-accent-primary {
-  color: var(--text-primary);
-}
-
-.text-accent-secondary {
-  color: var(--accent-secondary);
-}
-
-.text-accent-purple {
-  color: var(--accent-purple);
-}
-
-.text-accent-success {
-  color: var(--accent-success);
-}
-
-.text-accent-warning {
-  color: var(--accent-warning);
-}
-
-.text-accent-danger {
-  color: var(--accent-danger);
-}
-
-/* Code Snippet / Raw Prompt Block */
-.code-block {
-  background-color: var(--bg-card-alt);
-  border: 1.5px solid var(--border-color);
-  padding: 1rem;
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  color: var(--text-primary);
-  white-space: pre-wrap;
-  word-break: break-all;
-  max-height: 400px;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-@media (max-width: 650px) {
-  .main-content {
-    padding: 1.25rem 1rem 2.5rem 1rem;
-  }
-
-  .card {
-    padding: 1rem;
-  }
-}
-
-/* Accessibility: High-contrast mode support */
-@media (forced-colors: active) {
-  .btn-primary,
-  .btn-secondary,
-  .btn-danger,
-  .card {
-    border: 1.5px solid ButtonText !important;
-  }
 }
 
 /* Accessibility: Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
-  .btn,
-  .icon-btn,
-  .icon-btn-delete,
-  .icon-btn-edit,
-  .icon-btn-audio {
-    transition: none !important;
-    transform: none !important;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

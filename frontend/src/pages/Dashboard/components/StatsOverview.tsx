@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Card } from '../../../components';
 import {
   IconLexicon,
   IconGrammarGazette,
@@ -18,9 +19,10 @@ export const StatsOverview: React.FC<StatsOverviewProps> = ({ stats, loading }) 
 
   return (
     <div className="stats-grid" id="tutorial-stats-grid">
-      <button
-        type="button"
-        className="card stat-card stat-card-clickable"
+      <Card
+        as="button"
+        isInteractive
+        className="stat-card"
         onClick={() => navigate('/words')}
         aria-label="View Words in Bank"
         title="Go to Word Bank"
@@ -32,11 +34,12 @@ export const StatsOverview: React.FC<StatsOverviewProps> = ({ stats, loading }) 
           <div className="stat-value">{loading ? '-' : stats?.totalWords ?? 0}</div>
           <div className="stat-label">Words in Bank</div>
         </div>
-      </button>
+      </Card>
 
-      <button
-        type="button"
-        className="card stat-card stat-card-clickable"
+      <Card
+        as="button"
+        isInteractive
+        className="stat-card"
         onClick={() => navigate('/rules')}
         aria-label="View Mastered Rules"
         title="Go to Rule Bank"
@@ -48,11 +51,12 @@ export const StatsOverview: React.FC<StatsOverviewProps> = ({ stats, loading }) 
           <div className="stat-value">{loading ? '-' : stats?.totalRules ?? 0}</div>
           <div className="stat-label">Mastered Rules</div>
         </div>
-      </button>
+      </Card>
 
-      <button
-        type="button"
-        className="card stat-card stat-card-clickable"
+      <Card
+        as="button"
+        isInteractive
+        className="stat-card"
         onClick={() => navigate('/history?status=GRADED')}
         aria-label="View Completed Lessons"
         title="Go to History (Graded Lessons)"
@@ -64,9 +68,9 @@ export const StatsOverview: React.FC<StatsOverviewProps> = ({ stats, loading }) 
           <div className="stat-value">{loading ? '-' : stats?.completedLessons ?? 0}</div>
           <div className="stat-label">Completed Lessons</div>
         </div>
-      </button>
+      </Card>
 
-      <div className="card stat-card">
+      <Card className="stat-card">
         <div className="stat-icon">
           <IconAwardLaurel size={32} />
         </div>
@@ -74,7 +78,7 @@ export const StatsOverview: React.FC<StatsOverviewProps> = ({ stats, loading }) 
           <div className="stat-value">{loading ? '-' : `${stats?.averageScore ?? 0}%`}</div>
           <div className="stat-label">Average Score</div>
         </div>
-      </div>
+      </Card>
     </div>
   );
 };

@@ -1,8 +1,7 @@
 import React from 'react';
 import './ResetDataModal.css';
 import { IconHazardAlert, IconTrashShears } from '../../../../components/icons';
-import { Modal } from '../../../../components/Modal';
-import { LoadingSpinner } from '../../../../components/LoadingSpinner';
+import { Modal, Button, LoadingSpinner } from '../../../../components';
 import { ResetInclude } from '../../types';
 
 export interface ResetDataModalProps {
@@ -117,20 +116,20 @@ export const ResetDataModal: React.FC<ResetDataModalProps> = ({
       )}
 
       <div className="settings-modal-actions">
-        <button
-          type="button"
-          className="btn btn-secondary"
+        <Button
+          variant="secondary"
           onClick={onClose}
           disabled={resetting}
         >
           Cancel
-        </button>
-        <button
-          type="button"
-          className="btn settings-btn-danger-solid"
+        </Button>
+        <Button
+          variant="danger"
+          className="settings-btn-danger-solid"
           id="confirm-reset-btn"
           disabled={resetting || !hasSelection}
           onClick={onResetData}
+          icon={resetting ? undefined : <IconTrashShears size={18} />}
         >
           {resetting ? (
             <LoadingSpinner
@@ -139,12 +138,9 @@ export const ResetDataModal: React.FC<ResetDataModalProps> = ({
               message="Resetting..."
             />
           ) : (
-            <>
-              <IconTrashShears size={18} />
-              <span>Reset Selected Data</span>
-            </>
+            <span>Reset Selected Data</span>
           )}
-        </button>
+        </Button>
       </div>
     </Modal>
   );

@@ -4,7 +4,7 @@ import { useLanguages } from '../../contexts/LanguageContext';
 import { useRuleBank } from './hooks/useRuleBank';
 import { RuleCard } from './components/RuleCard';
 import { RuleModal } from './components/RuleModal';
-import { PageHeader, FilterBar, FilterInput, LoadingSpinner, EmptyState } from '../../components';
+import { PageHeader, FilterBar, Input, LoadingSpinner, EmptyState, Button } from '../../components';
 import './RuleBank.css';
 
 export const RuleBank: React.FC = () => {
@@ -30,26 +30,28 @@ export const RuleBank: React.FC = () => {
       <PageHeader
         id="tutorial-rulebank-header"
         icon={<IconGrammarGazette size={40} />}
-        title="Mastered Grammar Rule Bank"
-        subtitle={`A comprehensive index of all ${targetLanguage} grammar rules learned in lessons. Total: ${rules.length} rules.`}
+        title={`${targetLanguage} Grammar Rules`}
+        subtitle={`All mastered grammar patterns and rules in your bank. Total: ${rules.length} rule${rules.length !== 1 ? 's' : ''}.`}
         actions={
-          <button
-            type="button"
-            className="btn btn-primary"
+          <Button
+            variant="primary"
             id="tutorial-rulebank-add-btn"
             onClick={openAddModal}
+            icon={<IconFleuronPlus size={18} />}
           >
-            <IconFleuronPlus size={18} />
             <span>Add Custom Rule</span>
-          </button>
+          </Button>
         }
       />
 
       <FilterBar id="tutorial-rulebank-filter">
-        <FilterInput
+        <Input
+          variant="filter"
           id="rulebank-search-input"
           value={searchQuery}
-          onChange={setSearchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          clearable
+          onClear={() => setSearchQuery('')}
           placeholder="Search rule title or explanation..."
         />
       </FilterBar>

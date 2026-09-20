@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Card } from '../../../components';
 import {
   IconNewDispatch,
   IconLexicon,
@@ -16,8 +17,9 @@ export const QuickLearningHub: React.FC = () => {
     <div id="tutorial-quick-hub" className="dashboard-hub-column">
       <h2 className="dashboard-section-title">Quick Learning Hub</h2>
 
-      <div
-        className="card quick-hub-card"
+      <Card
+        isInteractive
+        className="quick-hub-card"
         onClick={() => navigate('/lessons/new')}
         role="button"
         tabIndex={0}
@@ -42,10 +44,11 @@ export const QuickLearningHub: React.FC = () => {
             <IconManiculeRight size={18} className="quick-hub-arrow" />
           </div>
         </div>
-      </div>
+      </Card>
 
-      <div
-        className="card quick-hub-card"
+      <Card
+        isInteractive
+        className="quick-hub-card"
         onClick={() => navigate('/words')}
         role="button"
         tabIndex={0}
@@ -70,10 +73,11 @@ export const QuickLearningHub: React.FC = () => {
             <IconManiculeRight size={18} className="quick-hub-arrow" />
           </div>
         </div>
-      </div>
+      </Card>
 
-      <div
-        className="card quick-hub-card"
+      <Card
+        isInteractive
+        className="quick-hub-card"
         onClick={() => navigate('/rules')}
         role="button"
         tabIndex={0}
@@ -98,7 +102,7 @@ export const QuickLearningHub: React.FC = () => {
             <IconManiculeRight size={18} className="quick-hub-arrow" />
           </div>
         </div>
-      </div>
+      </Card>
     </div>
   );
 };

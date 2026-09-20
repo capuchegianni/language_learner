@@ -7,10 +7,7 @@ import {
   IconApprovalCheck,
 } from '../../../../components/icons';
 import { useLanguages } from '../../../../contexts/LanguageContext';
-import { Pill } from '../../../../components/Pill';
-import { FilterSelect } from '../../../../components/FilterSelect';
-import { IconButton } from '../../../../components/IconButton';
-import { LoadingSpinner } from '../../../../components/LoadingSpinner';
+import { Pill, Select, IconButton, LoadingSpinner, Card, Button, Input } from '../../../../components';
 import './ProposalPhase.css';
 
 export interface ProposalPhaseProps {
@@ -72,7 +69,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
 
   return (
     <div id="tutorial-lesson-container" className={`proposal-phase-container ${className}`.trim()}>
-      <div className="card proposal-header-card">
+      <Card className="proposal-header-card">
         <h2 className="proposal-header-title">
           Select Today's {targetLanguage} Rule
         </h2>
@@ -81,11 +78,12 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
         </p>
 
         {/* Word Count Selector */}
-        <FilterSelect
+        <Select
+          variant="filter"
           id="proposal-word-count-select"
           label="Target New Words:"
           value={String(wordsCount)}
-          onChange={(val) => setWordsCount(Number(val))}
+          onChange={(e) => setWordsCount(Number(e.target.value))}
           options={[
             { value: '3', label: '3 Words' },
             { value: '5', label: '5 Words (Standard)' },
@@ -94,7 +92,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
           ]}
           className="proposal-word-count-filter"
         />
-      </div>
+      </Card>
 
       {loadingProposals ? (
         <LoadingSpinner
@@ -113,9 +111,10 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
                 const isReplacing = replacingIndex === idx;
 
                 return (
-                  <div
+                  <Card
                     key={idx}
-                    className={`card proposal-card ${isSelected ? 'selected' : ''} ${isReplacing ? 'replacing' : ''}`}
+                    isInteractive
+                    className={`proposal-card ${isSelected ? 'selected' : ''} ${isReplacing ? 'replacing' : ''}`}
                     onClick={() => {
                       if (!isReplacing) onSelectRule(prop.title, false);
                     }}
@@ -150,7 +149,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
                         </div>
                       </>
                     )}
-                  </div>
+                  </Card>
                 );
               })}
             </div>
@@ -161,13 +160,15 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
             <h3 className="proposal-section-title">
               Create Your Own Lesson
             </h3>
-            <label
+            <Card
+              as="label"
               htmlFor="custom-lesson-rule-input"
-              className={`card custom-rule-card ${isCustomSelected ? 'selected' : ''}`}
+              isInteractive
+              className={`custom-rule-card ${isCustomSelected ? 'selected' : ''}`}
               onClick={handleCustomCardClick}
             >
               <div className="custom-rule-input-wrapper">
-                <input
+                <Input
                   id="custom-lesson-rule-input"
                   ref={customInputRef}
                   type="text"
@@ -194,7 +195,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
                 {isCustomSelected ? <IconApprovalCheck size={18} /> : <div className="proposal-unselected-circle large" />}
                 <span>{isCustomSelected ? 'Selected' : 'Select'}</span>
               </div>
-            </label>
+            </Card>
           </div>
 
           {/* Spaced Repetition Review Rule Option */}
@@ -203,8 +204,9 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
               <h3 className="proposal-section-title">
                 Spaced Repetition Review
               </h3>
-              <div
-                className={`card review-rule-card ${isReviewSelection ? 'selected' : ''}`}
+              <Card
+                isInteractive
+                className={`review-rule-card ${isReviewSelection ? 'selected' : ''}`}
                 onClick={() => onSelectRule(reviewRule.title, true)}
               >
                 <div className="review-rule-content">
@@ -222,7 +224,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
                   {isReviewSelection ? <IconApprovalCheck size={18} /> : <IconLexicon size={18} />}
                   <span>{isReviewSelection ? 'Selected Review' : 'Select Review'}</span>
                 </div>
-              </div>
+              </Card>
             </div>
           )}
         </div>
@@ -230,21 +232,22 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
 
       {/* Action Button */}
       <div className="proposal-action-buttons">
-        <button
-          type="button"
-          className="btn btn-secondary proposal-btn"
+        <Button
+          variant="secondary"
+          className="proposal-btn"
           onClick={() => fetchProposals(true)}
           disabled={loadingProposals || generatingLesson}
+          icon={<IconRefreshCrank size={18} />}
         >
-          <IconRefreshCrank size={18} />
-          <span>Refresh Proposals</span>
-        </button>
-        <button
-          type="button"
-          className="btn btn-primary proposal-btn"
+          Refresh Proposals
+        </Button>
+        <Button
+          variant="primary"
+          className="proposal-btn"
           id="tutorial-generate-btn"
           disabled={!selectedRuleTitle || generatingLesson}
           onClick={onGenerateLesson}
+          icon={!generatingLesson ? <IconNewDispatch size={20} /> : undefined}
         >
           {generatingLesson ? (
             <LoadingSpinner
@@ -253,12 +256,9 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
               message="Generating Lesson..."
             />
           ) : (
-            <>
-              <IconNewDispatch size={20} />
-              <span>Generate Lesson &amp; Exercises</span>
-            </>
+            'Generate Lesson & Exercises'
           )}
-        </button>
+        </Button>
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Card, Button } from '../../../components';
 import { IconNewDispatch } from '../../../components/icons';
 import { useLanguages } from '../../../contexts/LanguageContext';
 
@@ -8,8 +9,8 @@ export const WelcomeBanner: React.FC = () => {
   const { targetLanguage } = useLanguages();
 
   return (
-    <div
-      className="card welcome-banner"
+    <Card
+      className="welcome-banner"
       id="tutorial-welcome-banner"
     >
       <div className="welcome-banner-content">
@@ -21,16 +22,16 @@ export const WelcomeBanner: React.FC = () => {
             Your personal AI tutor generates custom rules, manages your vocabulary bank, and evaluates your handwritten or typed exercise submissions in real time.
           </p>
         </div>
-        <button
-          type="button"
-          className="btn btn-primary welcome-action-btn"
+        <Button
+          variant="primary"
+          className="welcome-action-btn"
           id="tutorial-start-lesson-btn"
           onClick={() => navigate('/lessons/new')}
+          icon={<IconNewDispatch size={20} />}
         >
-          <IconNewDispatch size={20} />
           <span>Start Daily Lesson</span>
-        </button>
+        </Button>
       </div>
-    </div>
+    </Card>
   );
 };

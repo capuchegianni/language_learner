@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { IconTrashShears } from '../icons';
 import { Lesson } from '../../types';
 import { Pill, PillVariant } from '../Pill';
-import { IconButton } from '../IconButton';
+import { IconButton } from '../Button';
+import { Card } from '../Card';
 import './LessonCard.css';
 
 export interface LessonCardProps {
@@ -53,10 +54,11 @@ export const LessonCard: React.FC<LessonCardProps> = ({
   const formattedDate = new Date(lesson.createdAt).toLocaleDateString();
 
   return (
-    <div
-      className={`card lesson-card ${className}`.trim()}
+    <Card
+      className={`lesson-card ${className}`.trim()}
       onClick={handleClick}
       role="button"
+      isInteractive
       tabIndex={0}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -105,7 +107,7 @@ export const LessonCard: React.FC<LessonCardProps> = ({
         {onDelete && (
           <IconButton
             variant="delete"
-            size={34}
+            size="sm"
             iconSize={15}
             onClick={(e) => {
               e.stopPropagation();
@@ -117,7 +119,7 @@ export const LessonCard: React.FC<LessonCardProps> = ({
           />
         )}
       </div>
-    </div>
+    </Card>
   );
 };
 

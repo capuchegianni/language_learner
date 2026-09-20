@@ -6,42 +6,42 @@
 .ex1-agreement-list {
   display: flex;
   flex-direction: column;
-  gap: 1.1rem;
+  gap: var(--space-md);
 }
 
 .ex1-agreement-item {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--space-xs);
 }
 
 .ex1-agreement-prompt-row {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-xs);
   flex-wrap: wrap;
 }
 
 .ex1-agreement-base-word {
   font-family: var(--font-target);
-  font-size: 1.05rem;
-  font-weight: 700;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
   color: var(--text-primary);
-  line-height: 1.35;
+  line-height: var(--line-height-snug);
 }
 
 .ex1-agreement-condition {
   display: inline-flex;
   align-items: center;
   font-family: var(--font-mono);
-  font-size: 0.78rem;
-  font-weight: 700;
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-bold);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  padding: 0.2rem 0.55rem;
+  letter-spacing: var(--letter-spacing-wide);
+  padding: var(--space-3xs) var(--space-xs);
   background: var(--bg-card-alt);
   color: var(--text-primary);
-  border: 1.5px solid var(--border-color);
+  border: var(--border-width-regular) solid var(--border-color);
   user-select: none;
 }
 
@@ -50,5 +50,6 @@
   margin-top: 2px;
   color: var(--text-secondary);
 }
+
 
 

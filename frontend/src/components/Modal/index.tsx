@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { IconCloseDismiss } from '../icons';
-import { IconButton } from '../IconButton';
+import { IconButton } from '../Button';
 import './Modal.css';
 
 export interface ModalProps {
@@ -77,7 +77,7 @@ export const Modal: React.FC<ModalProps> = ({
             </h3>
             <IconButton
               icon={<IconCloseDismiss size={16} />}
-              size={36}
+              size="sm"
               iconSize={16}
               onClick={onClose}
               title="Close dialog"

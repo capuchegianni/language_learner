@@ -6,46 +6,46 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.85rem;
+  gap: var(--space-sm);
   flex-wrap: wrap;
-  padding: 0.5rem 0;
+  padding: var(--space-xs) 0;
 }
 
 .step-indicator-item {
   display: flex;
   align-items: center;
-  gap: 0.55rem;
+  gap: var(--space-xs);
   font-family: var(--font-masthead);
-  font-size: 0.95rem;
-  transition: color 0.2s ease;
+  font-size: var(--font-size-sm);
+  transition: color var(--transition-normal);
 }
 
 .step-badge {
   width: 26px;
   height: 26px;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-mono);
-  font-size: 0.82rem;
-  font-weight: 700;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
   line-height: 1;
   text-align: center;
   box-sizing: border-box;
   padding: 0;
   flex-shrink: 0;
-  transition: all 0.2s ease;
+  transition: all var(--transition-normal);
 }
 
 .step-label {
-  font-size: 0.95rem;
+  font-size: var(--font-size-sm);
   letter-spacing: -0.01em;
 }
 
 .step-label-mobile {
   display: none;
-  font-size: 0.85rem;
+  font-size: var(--font-size-xs);
 }
 
 .step-separator {
@@ -62,13 +62,13 @@
 .step-indicator-item.active .step-badge {
   background: var(--text-primary);
   color: var(--bg-dark);
-  border: 1.5px solid var(--border-color);
-  box-shadow: 1.5px 1.5px 0px var(--border-color);
+  border: var(--border-width-regular) solid var(--border-color);
+  box-shadow: var(--shadow-subtle);
 }
 
 .step-indicator-item.active .step-label,
 .step-indicator-item.active .step-label-mobile {
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   color: var(--text-primary);
 }
 
@@ -80,12 +80,12 @@
 .step-indicator-item.completed .step-badge {
   background: var(--bg-card-alt);
   color: var(--text-primary);
-  border: 1.5px solid var(--border-color);
+  border: var(--border-width-regular) solid var(--border-color);
 }
 
 .step-indicator-item.completed .step-label,
 .step-indicator-item.completed .step-label-mobile {
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   color: var(--text-secondary);
 }
 
@@ -97,12 +97,12 @@
 .step-indicator-item.pending .step-badge {
   background: var(--bg-card);
   color: var(--text-muted);
-  border: 1.5px dashed var(--border-color-light);
+  border: var(--border-width-regular) dashed var(--border-color-light);
 }
 
 .step-indicator-item.pending .step-label,
 .step-indicator-item.pending .step-label-mobile {
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   color: var(--text-muted);
 }
 
@@ -117,19 +117,19 @@
   }
 
   .step-indicator-container {
-    gap: 0.45rem;
-    padding: 0.25rem 0;
+    gap: var(--space-2xs);
+    padding: var(--space-3xs) 0;
   }
 
   .step-indicator-item {
-    gap: 0.35rem;
-    font-size: 0.85rem;
+    gap: var(--space-2xs);
+    font-size: var(--font-size-xs);
   }
 
   .step-badge {
     width: 22px;
     height: 22px;
-    font-size: 0.75rem;
+    font-size: var(--font-size-2xs);
   }
 
   .step-separator {
@@ -137,4 +137,5 @@
     height: 14px;
   }
 }
+
 

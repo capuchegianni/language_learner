@@ -9,14 +9,14 @@
 .settings-account-content {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: var(--space-lg);
   width: 100%;
 }
 
 .settings-account-profile {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: var(--space-md);
   min-width: 0;
 }
 
@@ -26,25 +26,25 @@
 
 .settings-account-name {
   font-family: var(--font-masthead);
-  font-weight: 700;
-  font-size: 1.15rem;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-md);
   color: var(--text-primary);
   word-break: break-word;
 }
 
 .settings-account-email {
   font-family: var(--font-mono);
-  font-size: 0.82rem;
+  font-size: var(--font-size-xs);
   color: var(--text-secondary);
   word-break: break-word;
-  margin-top: 0.15rem;
+  margin-top: var(--space-3xs);
 }
 
 .settings-avatar-img {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  border: 1.5px solid var(--border-color);
+  border: var(--border-width-regular) solid var(--border-color);
   object-fit: cover;
   flex-shrink: 0;
 }
@@ -54,12 +54,12 @@
   height: 48px;
   border-radius: 50%;
   background: var(--bg-card-alt);
-  border: 1.5px solid var(--border-color);
+  border: var(--border-width-regular) solid var(--border-color);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
-  font-weight: 700;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
   color: var(--text-primary);
   flex-shrink: 0;
 }
@@ -67,18 +67,14 @@
 .settings-account-actions {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: var(--space-sm);
   width: 100%;
-}
-
-.settings-account-actions .btn {
-  flex: 1;
-  justify-content: center;
 }
 
 .settings-replay-btn,
 .settings-logout-btn {
-  font-size: 0.82rem;
+  font-size: var(--font-size-xs);
+  flex: 1;
 }
 
 /* Responsive */
@@ -86,14 +82,14 @@
   .settings-account-content {
     flex-direction: column;
     align-items: flex-start;
-    gap: 1rem;
+    gap: var(--space-md);
   }
 
   .settings-account-actions {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: var(--space-sm);
   }
 
   .settings-account-actions .btn {
