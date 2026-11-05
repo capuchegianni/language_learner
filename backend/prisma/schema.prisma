@@ -40,7 +40,6 @@ model User {
   lessons         Lesson[]
   settings        Setting[]
   lessonProposals LessonProposal[]
-  usageRecords    UsageRecord[]
 }
 
 model Word {
@@ -154,12 +153,11 @@ model LessonProposal {
 
 model UsageRecord {
   id         String     @id @default(uuid())
-  userId     String
-  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userHash   String
   actionType ActionType
   date       String     // UTC date string "YYYY-MM-DD"
   count      Int        @default(0)
 
-  @@unique([userId, actionType, date])
-  @@index([userId])
+  @@unique([userHash, actionType, date])
+  @@index([userHash])
 }

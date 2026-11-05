@@ -36,7 +36,7 @@ export type UsageRecordSumAggregateOutputType = {
 
 export type UsageRecordMinAggregateOutputType = {
   id: string | null
-  userId: string | null
+  userHash: string | null
   actionType: $Enums.ActionType | null
   date: string | null
   count: number | null
@@ -44,7 +44,7 @@ export type UsageRecordMinAggregateOutputType = {
 
 export type UsageRecordMaxAggregateOutputType = {
   id: string | null
-  userId: string | null
+  userHash: string | null
   actionType: $Enums.ActionType | null
   date: string | null
   count: number | null
@@ -52,7 +52,7 @@ export type UsageRecordMaxAggregateOutputType = {
 
 export type UsageRecordCountAggregateOutputType = {
   id: number
-  userId: number
+  userHash: number
   actionType: number
   date: number
   count: number
@@ -70,7 +70,7 @@ export type UsageRecordSumAggregateInputType = {
 
 export type UsageRecordMinAggregateInputType = {
   id?: true
-  userId?: true
+  userHash?: true
   actionType?: true
   date?: true
   count?: true
@@ -78,7 +78,7 @@ export type UsageRecordMinAggregateInputType = {
 
 export type UsageRecordMaxAggregateInputType = {
   id?: true
-  userId?: true
+  userHash?: true
   actionType?: true
   date?: true
   count?: true
@@ -86,7 +86,7 @@ export type UsageRecordMaxAggregateInputType = {
 
 export type UsageRecordCountAggregateInputType = {
   id?: true
-  userId?: true
+  userHash?: true
   actionType?: true
   date?: true
   count?: true
@@ -181,7 +181,7 @@ export type UsageRecordGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inte
 
 export type UsageRecordGroupByOutputType = {
   id: string
-  userId: string
+  userHash: string
   actionType: $Enums.ActionType
   date: string
   count: number
@@ -212,38 +212,35 @@ export type UsageRecordWhereInput = {
   OR?: Prisma.UsageRecordWhereInput[]
   NOT?: Prisma.UsageRecordWhereInput | Prisma.UsageRecordWhereInput[]
   id?: Prisma.StringFilter<"UsageRecord"> | string
-  userId?: Prisma.StringFilter<"UsageRecord"> | string
+  userHash?: Prisma.StringFilter<"UsageRecord"> | string
   actionType?: Prisma.EnumActionTypeFilter<"UsageRecord"> | $Enums.ActionType
   date?: Prisma.StringFilter<"UsageRecord"> | string
   count?: Prisma.IntFilter<"UsageRecord"> | number
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type UsageRecordOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
+  userHash?: Prisma.SortOrder
   actionType?: Prisma.SortOrder
   date?: Prisma.SortOrder
   count?: Prisma.SortOrder
-  user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type UsageRecordWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  userId_actionType_date?: Prisma.UsageRecordUserIdActionTypeDateCompoundUniqueInput
+  userHash_actionType_date?: Prisma.UsageRecordUserHashActionTypeDateCompoundUniqueInput
   AND?: Prisma.UsageRecordWhereInput | Prisma.UsageRecordWhereInput[]
   OR?: Prisma.UsageRecordWhereInput[]
   NOT?: Prisma.UsageRecordWhereInput | Prisma.UsageRecordWhereInput[]
-  userId?: Prisma.StringFilter<"UsageRecord"> | string
+  userHash?: Prisma.StringFilter<"UsageRecord"> | string
   actionType?: Prisma.EnumActionTypeFilter<"UsageRecord"> | $Enums.ActionType
   date?: Prisma.StringFilter<"UsageRecord"> | string
   count?: Prisma.IntFilter<"UsageRecord"> | number
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-}, "id" | "userId_actionType_date">
+}, "id" | "userHash_actionType_date">
 
 export type UsageRecordOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
+  userHash?: Prisma.SortOrder
   actionType?: Prisma.SortOrder
   date?: Prisma.SortOrder
   count?: Prisma.SortOrder
@@ -259,7 +256,7 @@ export type UsageRecordScalarWhereWithAggregatesInput = {
   OR?: Prisma.UsageRecordScalarWhereWithAggregatesInput[]
   NOT?: Prisma.UsageRecordScalarWhereWithAggregatesInput | Prisma.UsageRecordScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"UsageRecord"> | string
-  userId?: Prisma.StringWithAggregatesFilter<"UsageRecord"> | string
+  userHash?: Prisma.StringWithAggregatesFilter<"UsageRecord"> | string
   actionType?: Prisma.EnumActionTypeWithAggregatesFilter<"UsageRecord"> | $Enums.ActionType
   date?: Prisma.StringWithAggregatesFilter<"UsageRecord"> | string
   count?: Prisma.IntWithAggregatesFilter<"UsageRecord"> | number
@@ -267,15 +264,15 @@ export type UsageRecordScalarWhereWithAggregatesInput = {
 
 export type UsageRecordCreateInput = {
   id?: string
+  userHash: string
   actionType: $Enums.ActionType
   date: string
   count?: number
-  user: Prisma.UserCreateNestedOneWithoutUsageRecordsInput
 }
 
 export type UsageRecordUncheckedCreateInput = {
   id?: string
-  userId: string
+  userHash: string
   actionType: $Enums.ActionType
   date: string
   count?: number
@@ -283,15 +280,15 @@ export type UsageRecordUncheckedCreateInput = {
 
 export type UsageRecordUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  userHash?: Prisma.StringFieldUpdateOperationsInput | string
   actionType?: Prisma.EnumActionTypeFieldUpdateOperationsInput | $Enums.ActionType
   date?: Prisma.StringFieldUpdateOperationsInput | string
   count?: Prisma.IntFieldUpdateOperationsInput | number
-  user?: Prisma.UserUpdateOneRequiredWithoutUsageRecordsNestedInput
 }
 
 export type UsageRecordUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  userHash?: Prisma.StringFieldUpdateOperationsInput | string
   actionType?: Prisma.EnumActionTypeFieldUpdateOperationsInput | $Enums.ActionType
   date?: Prisma.StringFieldUpdateOperationsInput | string
   count?: Prisma.IntFieldUpdateOperationsInput | number
@@ -299,7 +296,7 @@ export type UsageRecordUncheckedUpdateInput = {
 
 export type UsageRecordCreateManyInput = {
   id?: string
-  userId: string
+  userHash: string
   actionType: $Enums.ActionType
   date: string
   count?: number
@@ -307,6 +304,7 @@ export type UsageRecordCreateManyInput = {
 
 export type UsageRecordUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  userHash?: Prisma.StringFieldUpdateOperationsInput | string
   actionType?: Prisma.EnumActionTypeFieldUpdateOperationsInput | $Enums.ActionType
   date?: Prisma.StringFieldUpdateOperationsInput | string
   count?: Prisma.IntFieldUpdateOperationsInput | number
@@ -314,31 +312,21 @@ export type UsageRecordUpdateManyMutationInput = {
 
 export type UsageRecordUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  userHash?: Prisma.StringFieldUpdateOperationsInput | string
   actionType?: Prisma.EnumActionTypeFieldUpdateOperationsInput | $Enums.ActionType
   date?: Prisma.StringFieldUpdateOperationsInput | string
   count?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
-export type UsageRecordListRelationFilter = {
-  every?: Prisma.UsageRecordWhereInput
-  some?: Prisma.UsageRecordWhereInput
-  none?: Prisma.UsageRecordWhereInput
-}
-
-export type UsageRecordOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
-}
-
-export type UsageRecordUserIdActionTypeDateCompoundUniqueInput = {
-  userId: string
+export type UsageRecordUserHashActionTypeDateCompoundUniqueInput = {
+  userHash: string
   actionType: $Enums.ActionType
   date: string
 }
 
 export type UsageRecordCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
+  userHash?: Prisma.SortOrder
   actionType?: Prisma.SortOrder
   date?: Prisma.SortOrder
   count?: Prisma.SortOrder
@@ -350,7 +338,7 @@ export type UsageRecordAvgOrderByAggregateInput = {
 
 export type UsageRecordMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
+  userHash?: Prisma.SortOrder
   actionType?: Prisma.SortOrder
   date?: Prisma.SortOrder
   count?: Prisma.SortOrder
@@ -358,7 +346,7 @@ export type UsageRecordMaxOrderByAggregateInput = {
 
 export type UsageRecordMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
+  userHash?: Prisma.SortOrder
   actionType?: Prisma.SortOrder
   date?: Prisma.SortOrder
   count?: Prisma.SortOrder
@@ -368,186 +356,52 @@ export type UsageRecordSumOrderByAggregateInput = {
   count?: Prisma.SortOrder
 }
 
-export type UsageRecordCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.UsageRecordCreateWithoutUserInput, Prisma.UsageRecordUncheckedCreateWithoutUserInput> | Prisma.UsageRecordCreateWithoutUserInput[] | Prisma.UsageRecordUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.UsageRecordCreateOrConnectWithoutUserInput | Prisma.UsageRecordCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.UsageRecordCreateManyUserInputEnvelope
-  connect?: Prisma.UsageRecordWhereUniqueInput | Prisma.UsageRecordWhereUniqueInput[]
-}
-
-export type UsageRecordUncheckedCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.UsageRecordCreateWithoutUserInput, Prisma.UsageRecordUncheckedCreateWithoutUserInput> | Prisma.UsageRecordCreateWithoutUserInput[] | Prisma.UsageRecordUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.UsageRecordCreateOrConnectWithoutUserInput | Prisma.UsageRecordCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.UsageRecordCreateManyUserInputEnvelope
-  connect?: Prisma.UsageRecordWhereUniqueInput | Prisma.UsageRecordWhereUniqueInput[]
-}
-
-export type UsageRecordUpdateManyWithoutUserNestedInput = {
-  create?: Prisma.XOR<Prisma.UsageRecordCreateWithoutUserInput, Prisma.UsageRecordUncheckedCreateWithoutUserInput> | Prisma.UsageRecordCreateWithoutUserInput[] | Prisma.UsageRecordUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.UsageRecordCreateOrConnectWithoutUserInput | Prisma.UsageRecordCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.UsageRecordUpsertWithWhereUniqueWithoutUserInput | Prisma.UsageRecordUpsertWithWhereUniqueWithoutUserInput[]
-  createMany?: Prisma.UsageRecordCreateManyUserInputEnvelope
-  set?: Prisma.UsageRecordWhereUniqueInput | Prisma.UsageRecordWhereUniqueInput[]
-  disconnect?: Prisma.UsageRecordWhereUniqueInput | Prisma.UsageRecordWhereUniqueInput[]
-  delete?: Prisma.UsageRecordWhereUniqueInput | Prisma.UsageRecordWhereUniqueInput[]
-  connect?: Prisma.UsageRecordWhereUniqueInput | Prisma.UsageRecordWhereUniqueInput[]
-  update?: Prisma.UsageRecordUpdateWithWhereUniqueWithoutUserInput | Prisma.UsageRecordUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.UsageRecordUpdateManyWithWhereWithoutUserInput | Prisma.UsageRecordUpdateManyWithWhereWithoutUserInput[]
-  deleteMany?: Prisma.UsageRecordScalarWhereInput | Prisma.UsageRecordScalarWhereInput[]
-}
-
-export type UsageRecordUncheckedUpdateManyWithoutUserNestedInput = {
-  create?: Prisma.XOR<Prisma.UsageRecordCreateWithoutUserInput, Prisma.UsageRecordUncheckedCreateWithoutUserInput> | Prisma.UsageRecordCreateWithoutUserInput[] | Prisma.UsageRecordUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.UsageRecordCreateOrConnectWithoutUserInput | Prisma.UsageRecordCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.UsageRecordUpsertWithWhereUniqueWithoutUserInput | Prisma.UsageRecordUpsertWithWhereUniqueWithoutUserInput[]
-  createMany?: Prisma.UsageRecordCreateManyUserInputEnvelope
-  set?: Prisma.UsageRecordWhereUniqueInput | Prisma.UsageRecordWhereUniqueInput[]
-  disconnect?: Prisma.UsageRecordWhereUniqueInput | Prisma.UsageRecordWhereUniqueInput[]
-  delete?: Prisma.UsageRecordWhereUniqueInput | Prisma.UsageRecordWhereUniqueInput[]
-  connect?: Prisma.UsageRecordWhereUniqueInput | Prisma.UsageRecordWhereUniqueInput[]
-  update?: Prisma.UsageRecordUpdateWithWhereUniqueWithoutUserInput | Prisma.UsageRecordUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.UsageRecordUpdateManyWithWhereWithoutUserInput | Prisma.UsageRecordUpdateManyWithWhereWithoutUserInput[]
-  deleteMany?: Prisma.UsageRecordScalarWhereInput | Prisma.UsageRecordScalarWhereInput[]
-}
-
 export type EnumActionTypeFieldUpdateOperationsInput = {
   set?: $Enums.ActionType
-}
-
-export type UsageRecordCreateWithoutUserInput = {
-  id?: string
-  actionType: $Enums.ActionType
-  date: string
-  count?: number
-}
-
-export type UsageRecordUncheckedCreateWithoutUserInput = {
-  id?: string
-  actionType: $Enums.ActionType
-  date: string
-  count?: number
-}
-
-export type UsageRecordCreateOrConnectWithoutUserInput = {
-  where: Prisma.UsageRecordWhereUniqueInput
-  create: Prisma.XOR<Prisma.UsageRecordCreateWithoutUserInput, Prisma.UsageRecordUncheckedCreateWithoutUserInput>
-}
-
-export type UsageRecordCreateManyUserInputEnvelope = {
-  data: Prisma.UsageRecordCreateManyUserInput | Prisma.UsageRecordCreateManyUserInput[]
-}
-
-export type UsageRecordUpsertWithWhereUniqueWithoutUserInput = {
-  where: Prisma.UsageRecordWhereUniqueInput
-  update: Prisma.XOR<Prisma.UsageRecordUpdateWithoutUserInput, Prisma.UsageRecordUncheckedUpdateWithoutUserInput>
-  create: Prisma.XOR<Prisma.UsageRecordCreateWithoutUserInput, Prisma.UsageRecordUncheckedCreateWithoutUserInput>
-}
-
-export type UsageRecordUpdateWithWhereUniqueWithoutUserInput = {
-  where: Prisma.UsageRecordWhereUniqueInput
-  data: Prisma.XOR<Prisma.UsageRecordUpdateWithoutUserInput, Prisma.UsageRecordUncheckedUpdateWithoutUserInput>
-}
-
-export type UsageRecordUpdateManyWithWhereWithoutUserInput = {
-  where: Prisma.UsageRecordScalarWhereInput
-  data: Prisma.XOR<Prisma.UsageRecordUpdateManyMutationInput, Prisma.UsageRecordUncheckedUpdateManyWithoutUserInput>
-}
-
-export type UsageRecordScalarWhereInput = {
-  AND?: Prisma.UsageRecordScalarWhereInput | Prisma.UsageRecordScalarWhereInput[]
-  OR?: Prisma.UsageRecordScalarWhereInput[]
-  NOT?: Prisma.UsageRecordScalarWhereInput | Prisma.UsageRecordScalarWhereInput[]
-  id?: Prisma.StringFilter<"UsageRecord"> | string
-  userId?: Prisma.StringFilter<"UsageRecord"> | string
-  actionType?: Prisma.EnumActionTypeFilter<"UsageRecord"> | $Enums.ActionType
-  date?: Prisma.StringFilter<"UsageRecord"> | string
-  count?: Prisma.IntFilter<"UsageRecord"> | number
-}
-
-export type UsageRecordCreateManyUserInput = {
-  id?: string
-  actionType: $Enums.ActionType
-  date: string
-  count?: number
-}
-
-export type UsageRecordUpdateWithoutUserInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  actionType?: Prisma.EnumActionTypeFieldUpdateOperationsInput | $Enums.ActionType
-  date?: Prisma.StringFieldUpdateOperationsInput | string
-  count?: Prisma.IntFieldUpdateOperationsInput | number
-}
-
-export type UsageRecordUncheckedUpdateWithoutUserInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  actionType?: Prisma.EnumActionTypeFieldUpdateOperationsInput | $Enums.ActionType
-  date?: Prisma.StringFieldUpdateOperationsInput | string
-  count?: Prisma.IntFieldUpdateOperationsInput | number
-}
-
-export type UsageRecordUncheckedUpdateManyWithoutUserInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  actionType?: Prisma.EnumActionTypeFieldUpdateOperationsInput | $Enums.ActionType
-  date?: Prisma.StringFieldUpdateOperationsInput | string
-  count?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 
 
 export type UsageRecordSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  userId?: boolean
+  userHash?: boolean
   actionType?: boolean
   date?: boolean
   count?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["usageRecord"]>
 
 export type UsageRecordSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  userId?: boolean
+  userHash?: boolean
   actionType?: boolean
   date?: boolean
   count?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["usageRecord"]>
 
 export type UsageRecordSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  userId?: boolean
+  userHash?: boolean
   actionType?: boolean
   date?: boolean
   count?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["usageRecord"]>
 
 export type UsageRecordSelectScalar = {
   id?: boolean
-  userId?: boolean
+  userHash?: boolean
   actionType?: boolean
   date?: boolean
   count?: boolean
 }
 
-export type UsageRecordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "actionType" | "date" | "count", ExtArgs["result"]["usageRecord"]>
-export type UsageRecordInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-}
-export type UsageRecordIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-}
-export type UsageRecordIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-}
+export type UsageRecordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userHash" | "actionType" | "date" | "count", ExtArgs["result"]["usageRecord"]>
 
 export type $UsageRecordPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "UsageRecord"
-  objects: {
-    user: Prisma.$UserPayload<ExtArgs>
-  }
+  objects: {}
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    userId: string
+    userHash: string
     actionType: $Enums.ActionType
     date: string
     count: number
@@ -945,7 +799,6 @@ readonly fields: UsageRecordFieldRefs;
  */
 export interface Prisma__UsageRecordClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -976,7 +829,7 @@ export interface Prisma__UsageRecordClient<T, Null = never, ExtArgs extends runt
  */
 export interface UsageRecordFieldRefs {
   readonly id: Prisma.FieldRef<"UsageRecord", 'String'>
-  readonly userId: Prisma.FieldRef<"UsageRecord", 'String'>
+  readonly userHash: Prisma.FieldRef<"UsageRecord", 'String'>
   readonly actionType: Prisma.FieldRef<"UsageRecord", 'ActionType'>
   readonly date: Prisma.FieldRef<"UsageRecord", 'String'>
   readonly count: Prisma.FieldRef<"UsageRecord", 'Int'>
@@ -997,10 +850,6 @@ export type UsageRecordFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.I
    */
   omit?: Prisma.UsageRecordOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UsageRecordInclude<ExtArgs> | null
-  /**
    * Filter, which UsageRecord to fetch.
    */
   where: Prisma.UsageRecordWhereUniqueInput
@@ -1019,10 +868,6 @@ export type UsageRecordFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Exten
    */
   omit?: Prisma.UsageRecordOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UsageRecordInclude<ExtArgs> | null
-  /**
    * Filter, which UsageRecord to fetch.
    */
   where: Prisma.UsageRecordWhereUniqueInput
@@ -1040,10 +885,6 @@ export type UsageRecordFindFirstArgs<ExtArgs extends runtime.Types.Extensions.In
    * Omit specific fields from the UsageRecord
    */
   omit?: Prisma.UsageRecordOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UsageRecordInclude<ExtArgs> | null
   /**
    * Filter, which UsageRecord to fetch.
    */
@@ -1093,10 +934,6 @@ export type UsageRecordFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extens
    */
   omit?: Prisma.UsageRecordOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UsageRecordInclude<ExtArgs> | null
-  /**
    * Filter, which UsageRecord to fetch.
    */
   where?: Prisma.UsageRecordWhereInput
@@ -1145,10 +982,6 @@ export type UsageRecordFindManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    */
   omit?: Prisma.UsageRecordOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UsageRecordInclude<ExtArgs> | null
-  /**
    * Filter, which UsageRecords to fetch.
    */
   where?: Prisma.UsageRecordWhereInput
@@ -1192,10 +1025,6 @@ export type UsageRecordCreateArgs<ExtArgs extends runtime.Types.Extensions.Inter
    */
   omit?: Prisma.UsageRecordOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UsageRecordInclude<ExtArgs> | null
-  /**
    * The data needed to create a UsageRecord.
    */
   data: Prisma.XOR<Prisma.UsageRecordCreateInput, Prisma.UsageRecordUncheckedCreateInput>
@@ -1227,10 +1056,6 @@ export type UsageRecordCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Ext
    * The data used to create many UsageRecords.
    */
   data: Prisma.UsageRecordCreateManyInput | Prisma.UsageRecordCreateManyInput[]
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UsageRecordIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1245,10 +1070,6 @@ export type UsageRecordUpdateArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Omit specific fields from the UsageRecord
    */
   omit?: Prisma.UsageRecordOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UsageRecordInclude<ExtArgs> | null
   /**
    * The data needed to update a UsageRecord.
    */
@@ -1301,10 +1122,6 @@ export type UsageRecordUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Ext
    * Limit how many UsageRecords to update.
    */
   limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UsageRecordIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1319,10 +1136,6 @@ export type UsageRecordUpsertArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Omit specific fields from the UsageRecord
    */
   omit?: Prisma.UsageRecordOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UsageRecordInclude<ExtArgs> | null
   /**
    * The filter to search for the UsageRecord to update in case it exists.
    */
@@ -1349,10 +1162,6 @@ export type UsageRecordDeleteArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Omit specific fields from the UsageRecord
    */
   omit?: Prisma.UsageRecordOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UsageRecordInclude<ExtArgs> | null
   /**
    * Filter which UsageRecord to delete.
    */
@@ -1385,8 +1194,4 @@ export type UsageRecordDefaultArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Omit specific fields from the UsageRecord
    */
   omit?: Prisma.UsageRecordOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UsageRecordInclude<ExtArgs> | null
 }

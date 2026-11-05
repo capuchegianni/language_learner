@@ -1142,7 +1142,7 @@ export type LessonProposalScalarFieldEnum = (typeof LessonProposalScalarFieldEnu
 
 export const UsageRecordScalarFieldEnum = {
   id: 'id',
-  userId: 'userId',
+  userHash: 'userHash',
   actionType: 'actionType',
   date: 'date',
   count: 'count'
