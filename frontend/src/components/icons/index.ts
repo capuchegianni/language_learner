@@ -38,3 +38,5 @@ export * from './IconLinotypeLayers';
 export * from './IconTypesetSliders';
 export * from './IconPressPin';
 export * from './IconBookmarkRibbon';
+export * from './IconArrowDown';
+export * from './IconArrowUp';
