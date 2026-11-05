@@ -72,3 +72,8 @@ export type Setting = Prisma.SettingModel
  * 
  */
 export type LessonProposal = Prisma.LessonProposalModel
+/**
+ * Model UsageRecord
+ * 
+ */
+export type UsageRecord = Prisma.UsageRecordModel

@@ -30,6 +30,8 @@ export type UserMinAggregateOutputType = {
   displayName: string | null
   email: string | null
   avatarUrl: string | null
+  plan: $Enums.Plan | null
+  isCustom: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -40,6 +42,8 @@ export type UserMaxAggregateOutputType = {
   displayName: string | null
   email: string | null
   avatarUrl: string | null
+  plan: $Enums.Plan | null
+  isCustom: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -50,6 +54,8 @@ export type UserCountAggregateOutputType = {
   displayName: number
   email: number
   avatarUrl: number
+  plan: number
+  isCustom: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -62,6 +68,8 @@ export type UserMinAggregateInputType = {
   displayName?: true
   email?: true
   avatarUrl?: true
+  plan?: true
+  isCustom?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -72,6 +80,8 @@ export type UserMaxAggregateInputType = {
   displayName?: true
   email?: true
   avatarUrl?: true
+  plan?: true
+  isCustom?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -82,6 +92,8 @@ export type UserCountAggregateInputType = {
   displayName?: true
   email?: true
   avatarUrl?: true
+  plan?: true
+  isCustom?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -165,6 +177,8 @@ export type UserGroupByOutputType = {
   displayName: string
   email: string
   avatarUrl: string | null
+  plan: $Enums.Plan
+  isCustom: boolean
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -196,6 +210,8 @@ export type UserWhereInput = {
   displayName?: Prisma.StringFilter<"User"> | string
   email?: Prisma.StringFilter<"User"> | string
   avatarUrl?: Prisma.StringNullableFilter<"User"> | string | null
+  plan?: Prisma.EnumPlanFilter<"User"> | $Enums.Plan
+  isCustom?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   words?: Prisma.WordListRelationFilter
@@ -203,6 +219,7 @@ export type UserWhereInput = {
   lessons?: Prisma.LessonListRelationFilter
   settings?: Prisma.SettingListRelationFilter
   lessonProposals?: Prisma.LessonProposalListRelationFilter
+  usageRecords?: Prisma.UsageRecordListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -211,6 +228,8 @@ export type UserOrderByWithRelationInput = {
   displayName?: Prisma.SortOrder
   email?: Prisma.SortOrder
   avatarUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  plan?: Prisma.SortOrder
+  isCustom?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   words?: Prisma.WordOrderByRelationAggregateInput
@@ -218,6 +237,7 @@ export type UserOrderByWithRelationInput = {
   lessons?: Prisma.LessonOrderByRelationAggregateInput
   settings?: Prisma.SettingOrderByRelationAggregateInput
   lessonProposals?: Prisma.LessonProposalOrderByRelationAggregateInput
+  usageRecords?: Prisma.UsageRecordOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -229,6 +249,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   displayName?: Prisma.StringFilter<"User"> | string
   avatarUrl?: Prisma.StringNullableFilter<"User"> | string | null
+  plan?: Prisma.EnumPlanFilter<"User"> | $Enums.Plan
+  isCustom?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   words?: Prisma.WordListRelationFilter
@@ -236,6 +258,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   lessons?: Prisma.LessonListRelationFilter
   settings?: Prisma.SettingListRelationFilter
   lessonProposals?: Prisma.LessonProposalListRelationFilter
+  usageRecords?: Prisma.UsageRecordListRelationFilter
 }, "id" | "googleId" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -244,6 +267,8 @@ export type UserOrderByWithAggregationInput = {
   displayName?: Prisma.SortOrder
   email?: Prisma.SortOrder
   avatarUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  plan?: Prisma.SortOrder
+  isCustom?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -260,6 +285,8 @@ export type UserScalarWhereWithAggregatesInput = {
   displayName?: Prisma.StringWithAggregatesFilter<"User"> | string
   email?: Prisma.StringWithAggregatesFilter<"User"> | string
   avatarUrl?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  plan?: Prisma.EnumPlanWithAggregatesFilter<"User"> | $Enums.Plan
+  isCustom?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -270,6 +297,8 @@ export type UserCreateInput = {
   displayName: string
   email: string
   avatarUrl?: string | null
+  plan?: $Enums.Plan
+  isCustom?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   words?: Prisma.WordCreateNestedManyWithoutUserInput
@@ -277,6 +306,7 @@ export type UserCreateInput = {
   lessons?: Prisma.LessonCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingCreateNestedManyWithoutUserInput
   lessonProposals?: Prisma.LessonProposalCreateNestedManyWithoutUserInput
+  usageRecords?: Prisma.UsageRecordCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -285,6 +315,8 @@ export type UserUncheckedCreateInput = {
   displayName: string
   email: string
   avatarUrl?: string | null
+  plan?: $Enums.Plan
+  isCustom?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   words?: Prisma.WordUncheckedCreateNestedManyWithoutUserInput
@@ -292,6 +324,7 @@ export type UserUncheckedCreateInput = {
   lessons?: Prisma.LessonUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingUncheckedCreateNestedManyWithoutUserInput
   lessonProposals?: Prisma.LessonProposalUncheckedCreateNestedManyWithoutUserInput
+  usageRecords?: Prisma.UsageRecordUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -300,6 +333,8 @@ export type UserUpdateInput = {
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan?: Prisma.EnumPlanFieldUpdateOperationsInput | $Enums.Plan
+  isCustom?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   words?: Prisma.WordUpdateManyWithoutUserNestedInput
@@ -307,6 +342,7 @@ export type UserUpdateInput = {
   lessons?: Prisma.LessonUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingUpdateManyWithoutUserNestedInput
   lessonProposals?: Prisma.LessonProposalUpdateManyWithoutUserNestedInput
+  usageRecords?: Prisma.UsageRecordUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -315,6 +351,8 @@ export type UserUncheckedUpdateInput = {
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan?: Prisma.EnumPlanFieldUpdateOperationsInput | $Enums.Plan
+  isCustom?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   words?: Prisma.WordUncheckedUpdateManyWithoutUserNestedInput
@@ -322,6 +360,7 @@ export type UserUncheckedUpdateInput = {
   lessons?: Prisma.LessonUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingUncheckedUpdateManyWithoutUserNestedInput
   lessonProposals?: Prisma.LessonProposalUncheckedUpdateManyWithoutUserNestedInput
+  usageRecords?: Prisma.UsageRecordUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -330,6 +369,8 @@ export type UserCreateManyInput = {
   displayName: string
   email: string
   avatarUrl?: string | null
+  plan?: $Enums.Plan
+  isCustom?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -340,6 +381,8 @@ export type UserUpdateManyMutationInput = {
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan?: Prisma.EnumPlanFieldUpdateOperationsInput | $Enums.Plan
+  isCustom?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -350,6 +393,8 @@ export type UserUncheckedUpdateManyInput = {
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan?: Prisma.EnumPlanFieldUpdateOperationsInput | $Enums.Plan
+  isCustom?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -360,6 +405,8 @@ export type UserCountOrderByAggregateInput = {
   displayName?: Prisma.SortOrder
   email?: Prisma.SortOrder
   avatarUrl?: Prisma.SortOrder
+  plan?: Prisma.SortOrder
+  isCustom?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -370,6 +417,8 @@ export type UserMaxOrderByAggregateInput = {
   displayName?: Prisma.SortOrder
   email?: Prisma.SortOrder
   avatarUrl?: Prisma.SortOrder
+  plan?: Prisma.SortOrder
+  isCustom?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -380,6 +429,8 @@ export type UserMinOrderByAggregateInput = {
   displayName?: Prisma.SortOrder
   email?: Prisma.SortOrder
   avatarUrl?: Prisma.SortOrder
+  plan?: Prisma.SortOrder
+  isCustom?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -395,6 +446,14 @@ export type StringFieldUpdateOperationsInput = {
 
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
+}
+
+export type EnumPlanFieldUpdateOperationsInput = {
+  set?: $Enums.Plan
+}
+
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
 }
 
 export type DateTimeFieldUpdateOperationsInput = {
@@ -471,18 +530,35 @@ export type UserUpdateOneRequiredWithoutLessonProposalsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutLessonProposalsInput, Prisma.UserUpdateWithoutLessonProposalsInput>, Prisma.UserUncheckedUpdateWithoutLessonProposalsInput>
 }
 
+export type UserCreateNestedOneWithoutUsageRecordsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutUsageRecordsInput, Prisma.UserUncheckedCreateWithoutUsageRecordsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutUsageRecordsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutUsageRecordsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutUsageRecordsInput, Prisma.UserUncheckedCreateWithoutUsageRecordsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutUsageRecordsInput
+  upsert?: Prisma.UserUpsertWithoutUsageRecordsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutUsageRecordsInput, Prisma.UserUpdateWithoutUsageRecordsInput>, Prisma.UserUncheckedUpdateWithoutUsageRecordsInput>
+}
+
 export type UserCreateWithoutWordsInput = {
   id?: string
   googleId: string
   displayName: string
   email: string
   avatarUrl?: string | null
+  plan?: $Enums.Plan
+  isCustom?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   rules?: Prisma.RuleCreateNestedManyWithoutUserInput
   lessons?: Prisma.LessonCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingCreateNestedManyWithoutUserInput
   lessonProposals?: Prisma.LessonProposalCreateNestedManyWithoutUserInput
+  usageRecords?: Prisma.UsageRecordCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutWordsInput = {
@@ -491,12 +567,15 @@ export type UserUncheckedCreateWithoutWordsInput = {
   displayName: string
   email: string
   avatarUrl?: string | null
+  plan?: $Enums.Plan
+  isCustom?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutUserInput
   lessons?: Prisma.LessonUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingUncheckedCreateNestedManyWithoutUserInput
   lessonProposals?: Prisma.LessonProposalUncheckedCreateNestedManyWithoutUserInput
+  usageRecords?: Prisma.UsageRecordUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutWordsInput = {
@@ -521,12 +600,15 @@ export type UserUpdateWithoutWordsInput = {
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan?: Prisma.EnumPlanFieldUpdateOperationsInput | $Enums.Plan
+  isCustom?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rules?: Prisma.RuleUpdateManyWithoutUserNestedInput
   lessons?: Prisma.LessonUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingUpdateManyWithoutUserNestedInput
   lessonProposals?: Prisma.LessonProposalUpdateManyWithoutUserNestedInput
+  usageRecords?: Prisma.UsageRecordUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutWordsInput = {
@@ -535,12 +617,15 @@ export type UserUncheckedUpdateWithoutWordsInput = {
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan?: Prisma.EnumPlanFieldUpdateOperationsInput | $Enums.Plan
+  isCustom?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rules?: Prisma.RuleUncheckedUpdateManyWithoutUserNestedInput
   lessons?: Prisma.LessonUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingUncheckedUpdateManyWithoutUserNestedInput
   lessonProposals?: Prisma.LessonProposalUncheckedUpdateManyWithoutUserNestedInput
+  usageRecords?: Prisma.UsageRecordUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutRulesInput = {
@@ -549,12 +634,15 @@ export type UserCreateWithoutRulesInput = {
   displayName: string
   email: string
   avatarUrl?: string | null
+  plan?: $Enums.Plan
+  isCustom?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   words?: Prisma.WordCreateNestedManyWithoutUserInput
   lessons?: Prisma.LessonCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingCreateNestedManyWithoutUserInput
   lessonProposals?: Prisma.LessonProposalCreateNestedManyWithoutUserInput
+  usageRecords?: Prisma.UsageRecordCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutRulesInput = {
@@ -563,12 +651,15 @@ export type UserUncheckedCreateWithoutRulesInput = {
   displayName: string
   email: string
   avatarUrl?: string | null
+  plan?: $Enums.Plan
+  isCustom?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   words?: Prisma.WordUncheckedCreateNestedManyWithoutUserInput
   lessons?: Prisma.LessonUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingUncheckedCreateNestedManyWithoutUserInput
   lessonProposals?: Prisma.LessonProposalUncheckedCreateNestedManyWithoutUserInput
+  usageRecords?: Prisma.UsageRecordUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutRulesInput = {
@@ -593,12 +684,15 @@ export type UserUpdateWithoutRulesInput = {
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan?: Prisma.EnumPlanFieldUpdateOperationsInput | $Enums.Plan
+  isCustom?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   words?: Prisma.WordUpdateManyWithoutUserNestedInput
   lessons?: Prisma.LessonUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingUpdateManyWithoutUserNestedInput
   lessonProposals?: Prisma.LessonProposalUpdateManyWithoutUserNestedInput
+  usageRecords?: Prisma.UsageRecordUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRulesInput = {
@@ -607,12 +701,15 @@ export type UserUncheckedUpdateWithoutRulesInput = {
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan?: Prisma.EnumPlanFieldUpdateOperationsInput | $Enums.Plan
+  isCustom?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   words?: Prisma.WordUncheckedUpdateManyWithoutUserNestedInput
   lessons?: Prisma.LessonUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingUncheckedUpdateManyWithoutUserNestedInput
   lessonProposals?: Prisma.LessonProposalUncheckedUpdateManyWithoutUserNestedInput
+  usageRecords?: Prisma.UsageRecordUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutLessonsInput = {
@@ -621,12 +718,15 @@ export type UserCreateWithoutLessonsInput = {
   displayName: string
   email: string
   avatarUrl?: string | null
+  plan?: $Enums.Plan
+  isCustom?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   words?: Prisma.WordCreateNestedManyWithoutUserInput
   rules?: Prisma.RuleCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingCreateNestedManyWithoutUserInput
   lessonProposals?: Prisma.LessonProposalCreateNestedManyWithoutUserInput
+  usageRecords?: Prisma.UsageRecordCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLessonsInput = {
@@ -635,12 +735,15 @@ export type UserUncheckedCreateWithoutLessonsInput = {
   displayName: string
   email: string
   avatarUrl?: string | null
+  plan?: $Enums.Plan
+  isCustom?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   words?: Prisma.WordUncheckedCreateNestedManyWithoutUserInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingUncheckedCreateNestedManyWithoutUserInput
   lessonProposals?: Prisma.LessonProposalUncheckedCreateNestedManyWithoutUserInput
+  usageRecords?: Prisma.UsageRecordUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLessonsInput = {
@@ -665,12 +768,15 @@ export type UserUpdateWithoutLessonsInput = {
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan?: Prisma.EnumPlanFieldUpdateOperationsInput | $Enums.Plan
+  isCustom?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   words?: Prisma.WordUpdateManyWithoutUserNestedInput
   rules?: Prisma.RuleUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingUpdateManyWithoutUserNestedInput
   lessonProposals?: Prisma.LessonProposalUpdateManyWithoutUserNestedInput
+  usageRecords?: Prisma.UsageRecordUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLessonsInput = {
@@ -679,12 +785,15 @@ export type UserUncheckedUpdateWithoutLessonsInput = {
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan?: Prisma.EnumPlanFieldUpdateOperationsInput | $Enums.Plan
+  isCustom?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   words?: Prisma.WordUncheckedUpdateManyWithoutUserNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingUncheckedUpdateManyWithoutUserNestedInput
   lessonProposals?: Prisma.LessonProposalUncheckedUpdateManyWithoutUserNestedInput
+  usageRecords?: Prisma.UsageRecordUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSettingsInput = {
@@ -693,12 +802,15 @@ export type UserCreateWithoutSettingsInput = {
   displayName: string
   email: string
   avatarUrl?: string | null
+  plan?: $Enums.Plan
+  isCustom?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   words?: Prisma.WordCreateNestedManyWithoutUserInput
   rules?: Prisma.RuleCreateNestedManyWithoutUserInput
   lessons?: Prisma.LessonCreateNestedManyWithoutUserInput
   lessonProposals?: Prisma.LessonProposalCreateNestedManyWithoutUserInput
+  usageRecords?: Prisma.UsageRecordCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSettingsInput = {
@@ -707,12 +819,15 @@ export type UserUncheckedCreateWithoutSettingsInput = {
   displayName: string
   email: string
   avatarUrl?: string | null
+  plan?: $Enums.Plan
+  isCustom?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   words?: Prisma.WordUncheckedCreateNestedManyWithoutUserInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutUserInput
   lessons?: Prisma.LessonUncheckedCreateNestedManyWithoutUserInput
   lessonProposals?: Prisma.LessonProposalUncheckedCreateNestedManyWithoutUserInput
+  usageRecords?: Prisma.UsageRecordUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSettingsInput = {
@@ -737,12 +852,15 @@ export type UserUpdateWithoutSettingsInput = {
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan?: Prisma.EnumPlanFieldUpdateOperationsInput | $Enums.Plan
+  isCustom?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   words?: Prisma.WordUpdateManyWithoutUserNestedInput
   rules?: Prisma.RuleUpdateManyWithoutUserNestedInput
   lessons?: Prisma.LessonUpdateManyWithoutUserNestedInput
   lessonProposals?: Prisma.LessonProposalUpdateManyWithoutUserNestedInput
+  usageRecords?: Prisma.UsageRecordUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSettingsInput = {
@@ -751,12 +869,15 @@ export type UserUncheckedUpdateWithoutSettingsInput = {
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan?: Prisma.EnumPlanFieldUpdateOperationsInput | $Enums.Plan
+  isCustom?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   words?: Prisma.WordUncheckedUpdateManyWithoutUserNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutUserNestedInput
   lessons?: Prisma.LessonUncheckedUpdateManyWithoutUserNestedInput
   lessonProposals?: Prisma.LessonProposalUncheckedUpdateManyWithoutUserNestedInput
+  usageRecords?: Prisma.UsageRecordUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutLessonProposalsInput = {
@@ -765,12 +886,15 @@ export type UserCreateWithoutLessonProposalsInput = {
   displayName: string
   email: string
   avatarUrl?: string | null
+  plan?: $Enums.Plan
+  isCustom?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   words?: Prisma.WordCreateNestedManyWithoutUserInput
   rules?: Prisma.RuleCreateNestedManyWithoutUserInput
   lessons?: Prisma.LessonCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingCreateNestedManyWithoutUserInput
+  usageRecords?: Prisma.UsageRecordCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLessonProposalsInput = {
@@ -779,12 +903,15 @@ export type UserUncheckedCreateWithoutLessonProposalsInput = {
   displayName: string
   email: string
   avatarUrl?: string | null
+  plan?: $Enums.Plan
+  isCustom?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   words?: Prisma.WordUncheckedCreateNestedManyWithoutUserInput
   rules?: Prisma.RuleUncheckedCreateNestedManyWithoutUserInput
   lessons?: Prisma.LessonUncheckedCreateNestedManyWithoutUserInput
   settings?: Prisma.SettingUncheckedCreateNestedManyWithoutUserInput
+  usageRecords?: Prisma.UsageRecordUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLessonProposalsInput = {
@@ -809,12 +936,15 @@ export type UserUpdateWithoutLessonProposalsInput = {
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan?: Prisma.EnumPlanFieldUpdateOperationsInput | $Enums.Plan
+  isCustom?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   words?: Prisma.WordUpdateManyWithoutUserNestedInput
   rules?: Prisma.RuleUpdateManyWithoutUserNestedInput
   lessons?: Prisma.LessonUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingUpdateManyWithoutUserNestedInput
+  usageRecords?: Prisma.UsageRecordUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLessonProposalsInput = {
@@ -823,12 +953,99 @@ export type UserUncheckedUpdateWithoutLessonProposalsInput = {
   displayName?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan?: Prisma.EnumPlanFieldUpdateOperationsInput | $Enums.Plan
+  isCustom?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   words?: Prisma.WordUncheckedUpdateManyWithoutUserNestedInput
   rules?: Prisma.RuleUncheckedUpdateManyWithoutUserNestedInput
   lessons?: Prisma.LessonUncheckedUpdateManyWithoutUserNestedInput
   settings?: Prisma.SettingUncheckedUpdateManyWithoutUserNestedInput
+  usageRecords?: Prisma.UsageRecordUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutUsageRecordsInput = {
+  id?: string
+  googleId: string
+  displayName: string
+  email: string
+  avatarUrl?: string | null
+  plan?: $Enums.Plan
+  isCustom?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  words?: Prisma.WordCreateNestedManyWithoutUserInput
+  rules?: Prisma.RuleCreateNestedManyWithoutUserInput
+  lessons?: Prisma.LessonCreateNestedManyWithoutUserInput
+  settings?: Prisma.SettingCreateNestedManyWithoutUserInput
+  lessonProposals?: Prisma.LessonProposalCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutUsageRecordsInput = {
+  id?: string
+  googleId: string
+  displayName: string
+  email: string
+  avatarUrl?: string | null
+  plan?: $Enums.Plan
+  isCustom?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  words?: Prisma.WordUncheckedCreateNestedManyWithoutUserInput
+  rules?: Prisma.RuleUncheckedCreateNestedManyWithoutUserInput
+  lessons?: Prisma.LessonUncheckedCreateNestedManyWithoutUserInput
+  settings?: Prisma.SettingUncheckedCreateNestedManyWithoutUserInput
+  lessonProposals?: Prisma.LessonProposalUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutUsageRecordsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutUsageRecordsInput, Prisma.UserUncheckedCreateWithoutUsageRecordsInput>
+}
+
+export type UserUpsertWithoutUsageRecordsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutUsageRecordsInput, Prisma.UserUncheckedUpdateWithoutUsageRecordsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutUsageRecordsInput, Prisma.UserUncheckedCreateWithoutUsageRecordsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutUsageRecordsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutUsageRecordsInput, Prisma.UserUncheckedUpdateWithoutUsageRecordsInput>
+}
+
+export type UserUpdateWithoutUsageRecordsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  googleId?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan?: Prisma.EnumPlanFieldUpdateOperationsInput | $Enums.Plan
+  isCustom?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  words?: Prisma.WordUpdateManyWithoutUserNestedInput
+  rules?: Prisma.RuleUpdateManyWithoutUserNestedInput
+  lessons?: Prisma.LessonUpdateManyWithoutUserNestedInput
+  settings?: Prisma.SettingUpdateManyWithoutUserNestedInput
+  lessonProposals?: Prisma.LessonProposalUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutUsageRecordsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  googleId?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan?: Prisma.EnumPlanFieldUpdateOperationsInput | $Enums.Plan
+  isCustom?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  words?: Prisma.WordUncheckedUpdateManyWithoutUserNestedInput
+  rules?: Prisma.RuleUncheckedUpdateManyWithoutUserNestedInput
+  lessons?: Prisma.LessonUncheckedUpdateManyWithoutUserNestedInput
+  settings?: Prisma.SettingUncheckedUpdateManyWithoutUserNestedInput
+  lessonProposals?: Prisma.LessonProposalUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -842,6 +1059,7 @@ export type UserCountOutputType = {
   lessons: number
   settings: number
   lessonProposals: number
+  usageRecords: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -850,6 +1068,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   lessons?: boolean | UserCountOutputTypeCountLessonsArgs
   settings?: boolean | UserCountOutputTypeCountSettingsArgs
   lessonProposals?: boolean | UserCountOutputTypeCountLessonProposalsArgs
+  usageRecords?: boolean | UserCountOutputTypeCountUsageRecordsArgs
 }
 
 /**
@@ -897,6 +1116,13 @@ export type UserCountOutputTypeCountLessonProposalsArgs<ExtArgs extends runtime.
   where?: Prisma.LessonProposalWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountUsageRecordsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UsageRecordWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -904,6 +1130,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   displayName?: boolean
   email?: boolean
   avatarUrl?: boolean
+  plan?: boolean
+  isCustom?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   words?: boolean | Prisma.User$wordsArgs<ExtArgs>
@@ -911,6 +1139,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   lessons?: boolean | Prisma.User$lessonsArgs<ExtArgs>
   settings?: boolean | Prisma.User$settingsArgs<ExtArgs>
   lessonProposals?: boolean | Prisma.User$lessonProposalsArgs<ExtArgs>
+  usageRecords?: boolean | Prisma.User$usageRecordsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -920,6 +1149,8 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   displayName?: boolean
   email?: boolean
   avatarUrl?: boolean
+  plan?: boolean
+  isCustom?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -930,6 +1161,8 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   displayName?: boolean
   email?: boolean
   avatarUrl?: boolean
+  plan?: boolean
+  isCustom?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -940,17 +1173,20 @@ export type UserSelectScalar = {
   displayName?: boolean
   email?: boolean
   avatarUrl?: boolean
+  plan?: boolean
+  isCustom?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "googleId" | "displayName" | "email" | "avatarUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "googleId" | "displayName" | "email" | "avatarUrl" | "plan" | "isCustom" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   words?: boolean | Prisma.User$wordsArgs<ExtArgs>
   rules?: boolean | Prisma.User$rulesArgs<ExtArgs>
   lessons?: boolean | Prisma.User$lessonsArgs<ExtArgs>
   settings?: boolean | Prisma.User$settingsArgs<ExtArgs>
   lessonProposals?: boolean | Prisma.User$lessonProposalsArgs<ExtArgs>
+  usageRecords?: boolean | Prisma.User$usageRecordsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -964,6 +1200,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     lessons: Prisma.$LessonPayload<ExtArgs>[]
     settings: Prisma.$SettingPayload<ExtArgs>[]
     lessonProposals: Prisma.$LessonProposalPayload<ExtArgs>[]
+    usageRecords: Prisma.$UsageRecordPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -971,6 +1208,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     displayName: string
     email: string
     avatarUrl: string | null
+    plan: $Enums.Plan
+    isCustom: boolean
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -1372,6 +1611,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   lessons<T extends Prisma.User$lessonsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$lessonsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LessonPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   settings<T extends Prisma.User$settingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$settingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SettingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   lessonProposals<T extends Prisma.User$lessonProposalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$lessonProposalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LessonProposalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  usageRecords<T extends Prisma.User$usageRecordsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$usageRecordsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UsageRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1406,6 +1646,8 @@ export interface UserFieldRefs {
   readonly displayName: Prisma.FieldRef<"User", 'String'>
   readonly email: Prisma.FieldRef<"User", 'String'>
   readonly avatarUrl: Prisma.FieldRef<"User", 'String'>
+  readonly plan: Prisma.FieldRef<"User", 'Plan'>
+  readonly isCustom: Prisma.FieldRef<"User", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }
@@ -1911,6 +2153,30 @@ export type User$lessonProposalsArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.LessonProposalScalarFieldEnum | Prisma.LessonProposalScalarFieldEnum[]
+}
+
+/**
+ * User.usageRecords
+ */
+export type User$usageRecordsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UsageRecord
+   */
+  select?: Prisma.UsageRecordSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UsageRecord
+   */
+  omit?: Prisma.UsageRecordOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UsageRecordInclude<ExtArgs> | null
+  where?: Prisma.UsageRecordWhereInput
+  orderBy?: Prisma.UsageRecordOrderByWithRelationInput | Prisma.UsageRecordOrderByWithRelationInput[]
+  cursor?: Prisma.UsageRecordWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UsageRecordScalarFieldEnum | Prisma.UsageRecordScalarFieldEnum[]
 }
 
 /**

@@ -7,12 +7,31 @@ generator client {
   output   = "../src/generated/prisma"
 }
 
+enum Plan {
+  FREE
+  PREMIUM
+}
+
+enum LessonStatus {
+  GENERATED
+  SUBMITTED
+  GRADED
+}
+
+enum ActionType {
+  RULE_PROPOSAL
+  LESSON_GENERATION
+  LESSON_CORRECTION
+}
+
 model User {
   id          String   @id @default(uuid())
   googleId    String   @unique
   displayName String
   email       String   @unique
   avatarUrl   String?
+  plan        Plan     @default(FREE)
+  isCustom    Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -21,6 +40,7 @@ model User {
   lessons         Lesson[]
   settings        Setting[]
   lessonProposals LessonProposal[]
+  usageRecords    UsageRecord[]
 }
 
 model Word {
@@ -71,7 +91,7 @@ model Lesson {
   wordsCount Int    @default(5)
   lessonData String // JSON string containing 5 words, rules, Ex1, Ex2, Ex3
 
-  status          String  @default("GENERATED") // GENERATED | SUBMITTED | GRADED
+  status          LessonStatus @default(GENERATED)
   userSubmission  String? // JSON string of user answers
   submissionImage String? // Image file relative path if handwritten photo uploaded
   aiFeedback      String? // JSON string of AI feedback & score breakdown
@@ -129,5 +149,17 @@ model LessonProposal {
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([userId])
+}
+
+model UsageRecord {
+  id         String     @id @default(uuid())
+  userId     String
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  actionType ActionType
+  date       String     // UTC date string "YYYY-MM-DD"
+  count      Int        @default(0)
+
+  @@unique([userId, actionType, date])
   @@index([userId])
 }

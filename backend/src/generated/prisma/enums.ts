@@ -9,7 +9,27 @@
 * 🟢 You can import this file directly.
 */
 
+export const Plan = {
+  FREE: 'FREE',
+  PREMIUM: 'PREMIUM'
+} as const
+
+export type Plan = (typeof Plan)[keyof typeof Plan]
 
 
-// This file is empty because there are no enums in the schema.
-export {}
+export const LessonStatus = {
+  GENERATED: 'GENERATED',
+  SUBMITTED: 'SUBMITTED',
+  GRADED: 'GRADED'
+} as const
+
+export type LessonStatus = (typeof LessonStatus)[keyof typeof LessonStatus]
+
+
+export const ActionType = {
+  RULE_PROPOSAL: 'RULE_PROPOSAL',
+  LESSON_GENERATION: 'LESSON_GENERATION',
+  LESSON_CORRECTION: 'LESSON_CORRECTION'
+} as const
+
+export type ActionType = (typeof ActionType)[keyof typeof ActionType]
