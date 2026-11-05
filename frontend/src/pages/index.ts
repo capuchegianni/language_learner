@@ -6,3 +6,4 @@ export * from "./NewLesson";
 export * from "./RuleBank";
 export * from "./Settings";
 export * from "./WordBank";
+export * from "./Admin";

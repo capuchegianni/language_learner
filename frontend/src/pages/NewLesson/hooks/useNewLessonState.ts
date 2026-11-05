@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import confetti from 'canvas-confetti';
 import { api } from '../../../services/api';
-import { Lesson, LessonContent, ProposedRule, GradingResult } from '../../../types';
+import { Lesson, LessonContent, ProposedRule, GradingResult, UsageInfo } from '../../../types';
 import { LessonPhase } from '../components/StepIndicator';
 
 export interface UseNewLessonStateReturn {
@@ -32,6 +32,7 @@ export interface UseNewLessonStateReturn {
   submitting: boolean;
   gradingResult: GradingResult | null;
   error: string | null;
+  usageInfo: UsageInfo | null;
 
   // Actions
   fetchProposals: (forceRefresh?: boolean) => Promise<void>;
@@ -71,6 +72,7 @@ export function useNewLessonState(resumeLessonId?: string): UseNewLessonStateRet
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [gradingResult, setGradingResult] = useState<GradingResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [usageInfo, setUsageInfo] = useState<UsageInfo | null>(null);
 
   const loadSavedAnswers = useCallback((lessonId: string) => {
     const saved = localStorage.getItem(`lesson_answers_${lessonId}`);
@@ -90,11 +92,21 @@ export function useNewLessonState(resumeLessonId?: string): UseNewLessonStateRet
     }
   }, []);
 
+  const fetchUsage = useCallback(async () => {
+    try {
+      const usage = await api.getUsage();
+      setUsageInfo(usage);
+    } catch (err) {
+      console.error('Failed to fetch usage info', err);
+    }
+  }, []);
+
   const fetchProposals = useCallback(async (forceRefresh: boolean = false) => {
     try {
       setError(null);
       setLoadingProposals(true);
       const res = await api.getRuleProposals({ refresh: forceRefresh });
+      await fetchUsage();
       setProposals(res.proposedNewRules);
       setReviewRule(res.reviewRuleOption);
       if (res.proposedNewRules.length > 0) {
@@ -110,7 +122,7 @@ export function useNewLessonState(resumeLessonId?: string): UseNewLessonStateRet
     } finally {
       setLoadingProposals(false);
     }
-  }, []);
+  }, [fetchUsage]);
 
   const handleReplaceProposal = useCallback(
     async (indexToReplace: number, e: React.MouseEvent) => {
@@ -119,6 +131,7 @@ export function useNewLessonState(resumeLessonId?: string): UseNewLessonStateRet
         setError(null);
         setReplacingIndex(indexToReplace);
         const res = await api.replaceProposal(indexToReplace);
+        await fetchUsage();
         setProposals(res.proposedNewRules);
         if (res.reviewRuleOption) {
           setReviewRule(res.reviewRuleOption);
@@ -139,7 +152,7 @@ export function useNewLessonState(resumeLessonId?: string): UseNewLessonStateRet
         setReplacingIndex(null);
       }
     },
-    [selectedRuleTitle, proposals],
+    [selectedRuleTitle, proposals, fetchUsage],
   );
 
   useEffect(() => {
@@ -168,6 +181,7 @@ export function useNewLessonState(resumeLessonId?: string): UseNewLessonStateRet
         }
       };
       fetchResumedLesson();
+      fetchUsage();
     } else {
       setPhase('PROPOSAL');
       setCurrentLesson(null);
@@ -182,7 +196,7 @@ export function useNewLessonState(resumeLessonId?: string): UseNewLessonStateRet
       setGeneratingLesson(false);
       fetchProposals();
     }
-  }, [resumeLessonId, location.pathname, fetchProposals, loadSavedAnswers]);
+  }, [resumeLessonId, location.pathname, fetchProposals, loadSavedAnswers, fetchUsage]);
 
   const handleSelectRule = useCallback(
     (title: string, isReview: boolean = false) => {
@@ -202,6 +216,7 @@ export function useNewLessonState(resumeLessonId?: string): UseNewLessonStateRet
         wordsCount,
         isReview: isReviewSelection,
       });
+      await fetchUsage();
       const parsed: LessonContent = JSON.parse(lesson.lessonData);
       setLessonContent(parsed);
       loadSavedAnswers(lesson.id);
@@ -217,7 +232,7 @@ export function useNewLessonState(resumeLessonId?: string): UseNewLessonStateRet
     } finally {
       setGeneratingLesson(false);
     }
-  }, [selectedRuleTitle, wordsCount, isReviewSelection, loadSavedAnswers, navigate]);
+  }, [selectedRuleTitle, wordsCount, isReviewSelection, loadSavedAnswers, navigate, fetchUsage]);
 
   const handleImageChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -281,6 +296,7 @@ export function useNewLessonState(resumeLessonId?: string): UseNewLessonStateRet
           { ex1: formattedEx1, ex2: formattedEx2, ex3: ex3Answer },
           imageFiles.length > 0 ? imageFiles : null,
         );
+        await fetchUsage();
         setCurrentLesson(updatedLesson);
         if (updatedLesson.aiFeedback) {
           const feedback: GradingResult = JSON.parse(updatedLesson.aiFeedback);
@@ -303,7 +319,7 @@ export function useNewLessonState(resumeLessonId?: string): UseNewLessonStateRet
         setSubmitting(false);
       }
     },
-    [currentLesson, lessonContent, ex1Answers, ex2Answers, ex3Answer, imageFiles],
+    [currentLesson, lessonContent, ex1Answers, ex2Answers, ex3Answer, imageFiles, fetchUsage],
   );
 
   const handleBackFromExercises = useCallback(() => {
@@ -348,6 +364,7 @@ export function useNewLessonState(resumeLessonId?: string): UseNewLessonStateRet
     submitting,
     gradingResult,
     error,
+    usageInfo,
 
     fetchProposals,
     handleSelectRule,

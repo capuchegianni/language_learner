@@ -7,6 +7,9 @@ export interface AuthUser {
   displayName: string;
   email: string;
   avatarUrl: string | null;
+  plan?: 'FREE' | 'PREMIUM';
+  isCustom?: boolean;
+  isAdmin?: boolean;
 }
 
 interface AuthContextType {

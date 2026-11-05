@@ -4,6 +4,7 @@ import { useSettingsState } from './hooks/useSettingsState';
 import { PageHeader, LoadingSpinner, Card } from '../../components';
 import { AccountSection } from './components/AccountSection/AccountSection';
 import { LanguageSection } from './components/LanguageSection/LanguageSection';
+import { PlanUsageSection } from './components/PlanUsageSection/PlanUsageSection';
 import { ProviderPresetsSection } from './components/ProviderPresetsSection/ProviderPresetsSection';
 import { AiConfigSection } from './components/AiConfigSection/AiConfigSection';
 import { ImportExportSection } from './components/ImportExportSection/ImportExportSection';
@@ -28,6 +29,8 @@ export const Settings: React.FC = () => {
     savedSuccess,
     resetSuccess,
     resetMessage,
+    usageInfo,
+    plan,
 
     updateField,
     handleSelectPreset,
@@ -71,7 +74,7 @@ export const Settings: React.FC = () => {
     return <LoadingSpinner variant="card" size={32} />;
   }
 
-  const { baseURL, model, apiKey, nativeLanguage, targetLanguage } = formData;
+  const { baseURL, model, apiKey, nativeLanguage, targetLanguage, isCustom } = formData;
   const canSave = nativeLanguage !== targetLanguage;
 
   return (
@@ -79,7 +82,7 @@ export const Settings: React.FC = () => {
       <PageHeader
         icon={<SettingsIcon className="settings-header-icon" />}
         title="AI &amp; Application Settings"
-        subtitle="Configure any OpenAI-compatible AI provider. All providers share the same unified API format."
+        subtitle="Manage your account and AI settings."
       />
 
       {/* Account Section */}
@@ -109,22 +112,37 @@ export const Settings: React.FC = () => {
           onUpdateField={updateField}
         />
 
-        {/* Provider Presets */}
-        <ProviderPresetsSection
-          selectedPreset={selectedPreset}
-          onSelectPreset={handleSelectPreset}
+        {/* Plan & Usage Quotas */}
+        <PlanUsageSection
+          plan={plan}
+          isCustom={isCustom}
+          hasApiKey={hasApiKey}
+          isLocalOllama={isLocalOllamaBaseURL}
+          usageInfo={usageInfo}
+          onToggleCustom={(val) => updateField('isCustom', val)}
         />
 
-        {/* Configuration */}
-        <AiConfigSection
-          baseURL={baseURL}
-          model={model}
-          apiKey={apiKey}
-          hasApiKey={hasApiKey}
-          activePreset={activePreset}
-          isLocalOllamaBaseURL={isLocalOllamaBaseURL}
-          onUpdateField={updateField}
-        />
+        {/* Custom AI Provider Configuration (visible only when isCustom is true) */}
+        {isCustom && (
+          <>
+            {/* Provider Presets */}
+            <ProviderPresetsSection
+              selectedPreset={selectedPreset}
+              onSelectPreset={handleSelectPreset}
+            />
+
+            {/* Configuration */}
+            <AiConfigSection
+              baseURL={baseURL}
+              model={model}
+              apiKey={apiKey}
+              hasApiKey={hasApiKey}
+              activePreset={activePreset}
+              isLocalOllamaBaseURL={isLocalOllamaBaseURL}
+              onUpdateField={updateField}
+            />
+          </>
+        )}
       </form>
 
       {/* Import / Export Section */}

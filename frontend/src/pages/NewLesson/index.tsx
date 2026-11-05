@@ -42,6 +42,7 @@ export const NewLesson: React.FC = () => {
     submitting,
     gradingResult,
     error,
+    usageInfo,
 
     fetchProposals,
     handleSelectRule,
@@ -82,6 +83,7 @@ export const NewLesson: React.FC = () => {
           onGenerateLesson={handleGenerateLesson}
           generatingLesson={generatingLesson}
           fetchProposals={fetchProposals}
+          usageInfo={usageInfo}
         />
       )}
 
@@ -122,6 +124,7 @@ export const NewLesson: React.FC = () => {
               submitting={submitting}
               onSubmit={handleSubmitExercises}
               onBack={handleBackFromExercises}
+              usageInfo={usageInfo}
             />
           )}
 

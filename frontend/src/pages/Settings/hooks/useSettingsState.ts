@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { api } from '../../../services/api';
 import { useLanguages } from '../../../contexts/LanguageContext';
+import { UsageInfo } from '../../../types';
 import {
   SettingsFormData,
   DEFAULT_SETTINGS,
@@ -23,6 +24,8 @@ export interface UseSettingsStateReturn {
   savedSuccess: boolean;
   resetSuccess: boolean;
   resetMessage: string | null;
+  usageInfo: UsageInfo | null;
+  plan: 'FREE' | 'PREMIUM';
 
   // Form actions
   updateField: <K extends keyof SettingsFormData>(field: K, value: SettingsFormData[K]) => void;
@@ -115,7 +118,19 @@ export function useSettingsState(): UseSettingsStateReturn {
     lessons: true,
   });
 
-  const { model, baseURL, apiKey, nativeLanguage, targetLanguage } = formData;
+  const [usageInfo, setUsageInfo] = useState<UsageInfo | null>(null);
+  const [plan, setPlan] = useState<'FREE' | 'PREMIUM'>('FREE');
+
+  const fetchUsage = useCallback(async () => {
+    try {
+      const usage = await api.getUsage();
+      setUsageInfo(usage);
+    } catch (err) {
+      console.error('Failed to fetch usage info', err);
+    }
+  }, []);
+
+  const { model, baseURL, apiKey, nativeLanguage, targetLanguage, isCustom } = formData;
 
   const updateField = useCallback(
     <K extends keyof SettingsFormData>(field: K, value: SettingsFormData[K]) => {
@@ -136,6 +151,7 @@ export function useSettingsState(): UseSettingsStateReturn {
       model !== savedSettings.model ||
       nativeLanguage !== savedSettings.nativeLanguage ||
       targetLanguage !== savedSettings.targetLanguage ||
+      isCustom !== savedSettings.isCustom ||
       (apiKey.trim().length > 0 && !isLocalOllamaBaseURL));
 
   useEffect(() => {
@@ -159,8 +175,13 @@ export function useSettingsState(): UseSettingsStateReturn {
         apiKey: '',
         nativeLanguage: data.NATIVE_LANGUAGE || DEFAULT_SETTINGS.nativeLanguage,
         targetLanguage: data.TARGET_LANGUAGE || DEFAULT_SETTINGS.targetLanguage,
+        isCustom: !!data.isCustom,
       };
+      await fetchUsage();
       setHasApiKey(!!data.hasApiKey);
+      if (data.plan === 'PREMIUM' || data.plan === 'FREE') {
+        setPlan(data.plan);
+      }
       setFormData(loaded);
       setSavedSettings(loaded);
       const matchedPreset = PROVIDER_PRESETS.find((p) => p.baseURL === loaded.baseURL);
@@ -170,7 +191,7 @@ export function useSettingsState(): UseSettingsStateReturn {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [fetchUsage]);
 
   useEffect(() => {
     loadSettings();
@@ -205,9 +226,11 @@ export function useSettingsState(): UseSettingsStateReturn {
           AI_BASE_URL: baseURL,
           NATIVE_LANGUAGE: nativeLanguage,
           TARGET_LANGUAGE: targetLanguage,
+          isCustom,
           ...(apiKey.trim() && !isLocalOllamaBaseURL ? { api_key: apiKey.trim() } : {}),
         });
         await refreshLanguages();
+        await fetchUsage();
         setSavedSuccess(true);
         if (apiKey.trim() && !isLocalOllamaBaseURL) {
           setHasApiKey(true);
@@ -231,9 +254,11 @@ export function useSettingsState(): UseSettingsStateReturn {
       model,
       baseURL,
       apiKey,
+      isCustom,
       isLocalOllamaBaseURL,
       formData,
       refreshLanguages,
+      fetchUsage,
     ],
   );
 
@@ -410,5 +435,7 @@ export function useSettingsState(): UseSettingsStateReturn {
     exporting,
     exportError,
     handleExport,
+    usageInfo,
+    plan,
   };
 }

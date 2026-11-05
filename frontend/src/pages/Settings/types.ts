@@ -71,6 +71,7 @@ export interface SettingsFormData {
   apiKey: string;
   nativeLanguage: string;
   targetLanguage: string;
+  isCustom: boolean;
 }
 
 export const DEFAULT_SETTINGS: SettingsFormData = {
@@ -79,6 +80,7 @@ export const DEFAULT_SETTINGS: SettingsFormData = {
   apiKey: '',
   nativeLanguage: 'English',
   targetLanguage: 'Korean',
+  isCustom: false,
 };
 
 export interface ResetInclude {

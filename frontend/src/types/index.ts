@@ -3,6 +3,9 @@ export interface User {
   displayName: string;
   email: string;
   avatarUrl: string | null;
+  plan?: 'FREE' | 'PREMIUM';
+  isCustom?: boolean;
+  isAdmin?: boolean;
 }
 
 export interface AdminUser {
@@ -123,13 +126,31 @@ export interface DashboardStats {
   recentLessons: Lesson[];
 }
 
+export interface UsageRecordItem {
+  used: number;
+  limit: number | null;
+}
+
+export interface UsageInfo {
+  plan: 'FREE' | 'PREMIUM';
+  isCustom: boolean;
+  date: string;
+  usage: {
+    RULE_PROPOSAL: UsageRecordItem;
+    LESSON_GENERATION: UsageRecordItem;
+    LESSON_CORRECTION: UsageRecordItem;
+  };
+}
+
 export interface Settings {
-  AI_MODEL: string;
-  AI_BASE_URL: string;
+  AI_MODEL?: string;
+  AI_BASE_URL?: string;
   NATIVE_LANGUAGE?: string;
   TARGET_LANGUAGE?: string;
   hasApiKey?: boolean;
   TUTORIAL_COMPLETED?: string;
+  plan?: 'FREE' | 'PREMIUM';
+  isCustom?: boolean;
 }
 
 export interface SettingsUpdatePayload {
@@ -139,6 +160,7 @@ export interface SettingsUpdatePayload {
   NATIVE_LANGUAGE?: string;
   TARGET_LANGUAGE?: string;
   TUTORIAL_COMPLETED?: string;
+  isCustom?: boolean;
 }
 
 export interface LanguageOption {

@@ -261,4 +261,18 @@
   }
 }
 
+.exercise-limit-warning {
+  margin-bottom: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--stamp-red-bg, #fdf2f2);
+  border: var(--border-width-regular) solid var(--stamp-red, #c0392b);
+  border-left: var(--border-width-heavy) solid var(--stamp-red, #c0392b);
+  color: var(--stamp-red, #c0392b);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
 

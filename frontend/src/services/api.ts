@@ -1,11 +1,13 @@
 import axios from 'axios';
 import {
+  AdminUser,
   DashboardStats,
   Lesson,
   ProposedRule,
   Rule,
   Settings,
   SettingsUpdatePayload,
+  UsageInfo,
   Word,
 } from '../types';
 
@@ -148,6 +150,11 @@ export const api = {
     return res.data;
   },
 
+  async getUsage(): Promise<UsageInfo> {
+    const res = await axios.get(`${API_BASE}/settings/usage`);
+    return res.data;
+  },
+
   async updateSettings(settings: SettingsUpdatePayload): Promise<Settings> {
     const res = await axios.post(`${API_BASE}/settings`, settings);
     return res.data;
@@ -158,7 +165,7 @@ export const api = {
     return res.data;
   },
 
-  async exportData(include: { settings?: boolean; words?: boolean; rules?: boolean; lessons?: boolean }): Promise<any> {
+  async exportData(include: { settings?: boolean; words?: boolean; rules?: boolean; lessons?: boolean; usage?: boolean }): Promise<any> {
     const params = new URLSearchParams();
     if (include.settings) params.set('settings', 'true');
     if (include.words) params.set('words', 'true');
