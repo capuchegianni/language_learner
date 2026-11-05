@@ -1,5 +1,6 @@
-import { IsBoolean, IsInt, IsNotEmpty, IsOptional, IsString, Max, Min } from 'class-validator';
+import { IsBoolean, IsEnum, IsInt, IsNotEmpty, IsOptional, IsString, Max, Min } from 'class-validator';
 import { Type } from 'class-transformer';
+import { LessonStatus } from '../../generated/prisma/client';
 
 export class GenerateLessonDto {
   @IsString()
@@ -43,8 +44,8 @@ export class ReplaceProposalDto {
 
 export class LessonQueryDto {
   @IsOptional()
-  @IsString()
-  status?: string;
+  @IsEnum(LessonStatus)
+  status?: LessonStatus;
 
   @IsOptional()
   @IsString()

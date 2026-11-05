@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { LessonStatus } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { SettingsCryptoService } from './settings-crypto.service';
 import { ImportPayload, ResetDataDto } from '../dto/settings.dto';
@@ -173,7 +174,7 @@ export class SettingsBackupService {
               isReview: !!l.isReview,
               wordsCount: l.wordsCount || 5,
               lessonData: lessonDataStr,
-              status: l.status || 'GENERATED',
+              status: (l.status as LessonStatus) || LessonStatus.GENERATED,
               userSubmission: l.userSubmission ? (typeof l.userSubmission === 'string' ? l.userSubmission : JSON.stringify(l.userSubmission)) : null,
               submissionImage: l.submissionImage || null,
               aiFeedback: l.aiFeedback ? (typeof l.aiFeedback === 'string' ? l.aiFeedback : JSON.stringify(l.aiFeedback)) : null,

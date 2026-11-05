@@ -1,6 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { ActionType, LessonStatus } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AiService } from '../../ai/ai.service';
+import { UsageService } from '../../usage/usage.service';
 import { SubmitLessonDto } from '../dto/lesson.dto';
 
 @Injectable()
@@ -8,6 +10,7 @@ export class LessonGradingService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly aiService: AiService,
+    private readonly usageService: UsageService,
   ) {}
 
   /**
@@ -34,6 +37,8 @@ export class LessonGradingService {
       throw new NotFoundException('Corrupted lesson data format');
     }
 
+    await this.usageService.checkLimit(userId, ActionType.LESSON_CORRECTION);
+
     const grading = await this.aiService.gradeSubmission(
       userId,
       parsedContent,
@@ -41,10 +46,12 @@ export class LessonGradingService {
       imagePaths,
     );
 
+    await this.usageService.incrementUsage(userId, ActionType.LESSON_CORRECTION);
+
     const updated = await this.prisma.lesson.update({
       where: { id: lessonId },
       data: {
-        status: 'GRADED',
+        status: LessonStatus.GRADED,
         userSubmission: JSON.stringify(userAnswersText),
         aiFeedback: JSON.stringify(grading),
         overallScore: grading.overallScore,

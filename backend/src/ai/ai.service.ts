@@ -1,4 +1,5 @@
 import { Injectable, Logger, InternalServerErrorException, BadRequestException } from '@nestjs/common';
+import { ActionType } from '../generated/prisma/client';
 import { SettingsService } from '../settings/settings.service';
 import { AiLlmCallerService } from './services/ai-llm-caller.service';
 import { AiPromptService } from './services/ai-prompt.service';
@@ -62,7 +63,7 @@ export class AiService {
     );
 
     try {
-      const rawResponse = await this.llmCaller.callLlm(userId, systemPrompt);
+      const rawResponse = await this.llmCaller.callLlm(userId, systemPrompt, ActionType.RULE_PROPOSAL);
       const cleaned = this.llmCaller.cleanJsonResponse(rawResponse);
       const parsed = JSON.parse(cleaned);
       if (Array.isArray(parsed) && parsed.length >= count) {
@@ -104,7 +105,7 @@ export class AiService {
 
     try {
       const fullPrompt = `${systemInstructions}\n\nUSER PROMPT:\n${rawPrompt}`;
-      const rawResponse = await this.llmCaller.callLlm(userId, fullPrompt);
+      const rawResponse = await this.llmCaller.callLlm(userId, fullPrompt, ActionType.LESSON_GENERATION);
       const cleaned = this.llmCaller.cleanJsonResponse(rawResponse);
       const parsed = JSON.parse(cleaned);
       if (parsed.error) {
@@ -146,9 +147,18 @@ export class AiService {
       let rawResponse = '';
 
       if (hasImages) {
-        rawResponse = await this.llmCaller.callLlmWithImages(userId, gradingInstructions, imagePaths!);
+        rawResponse = await this.llmCaller.callLlmWithImages(
+          userId,
+          gradingInstructions,
+          imagePaths!,
+          ActionType.LESSON_CORRECTION,
+        );
       } else {
-        rawResponse = await this.llmCaller.callLlm(userId, gradingInstructions);
+        rawResponse = await this.llmCaller.callLlm(
+          userId,
+          gradingInstructions,
+          ActionType.LESSON_CORRECTION,
+        );
       }
 
       const cleaned = this.llmCaller.cleanJsonResponse(rawResponse);
