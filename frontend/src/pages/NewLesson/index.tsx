@@ -40,7 +40,6 @@ export const NewLesson: React.FC = () => {
     imageFiles,
     imagePreviews,
     submitting,
-    gradingResult,
     error,
     usageInfo,
 
