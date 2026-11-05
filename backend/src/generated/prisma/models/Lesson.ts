@@ -44,7 +44,7 @@ export type LessonMinAggregateOutputType = {
   isReview: boolean | null
   wordsCount: number | null
   lessonData: string | null
-  status: string | null
+  status: $Enums.LessonStatus | null
   userSubmission: string | null
   submissionImage: string | null
   aiFeedback: string | null
@@ -63,7 +63,7 @@ export type LessonMaxAggregateOutputType = {
   isReview: boolean | null
   wordsCount: number | null
   lessonData: string | null
-  status: string | null
+  status: $Enums.LessonStatus | null
   userSubmission: string | null
   submissionImage: string | null
   aiFeedback: string | null
@@ -257,7 +257,7 @@ export type LessonGroupByOutputType = {
   isReview: boolean
   wordsCount: number
   lessonData: string
-  status: string
+  status: $Enums.LessonStatus
   userSubmission: string | null
   submissionImage: string | null
   aiFeedback: string | null
@@ -299,7 +299,7 @@ export type LessonWhereInput = {
   isReview?: Prisma.BoolFilter<"Lesson"> | boolean
   wordsCount?: Prisma.IntFilter<"Lesson"> | number
   lessonData?: Prisma.StringFilter<"Lesson"> | string
-  status?: Prisma.StringFilter<"Lesson"> | string
+  status?: Prisma.EnumLessonStatusFilter<"Lesson"> | $Enums.LessonStatus
   userSubmission?: Prisma.StringNullableFilter<"Lesson"> | string | null
   submissionImage?: Prisma.StringNullableFilter<"Lesson"> | string | null
   aiFeedback?: Prisma.StringNullableFilter<"Lesson"> | string | null
@@ -346,7 +346,7 @@ export type LessonWhereUniqueInput = Prisma.AtLeast<{
   isReview?: Prisma.BoolFilter<"Lesson"> | boolean
   wordsCount?: Prisma.IntFilter<"Lesson"> | number
   lessonData?: Prisma.StringFilter<"Lesson"> | string
-  status?: Prisma.StringFilter<"Lesson"> | string
+  status?: Prisma.EnumLessonStatusFilter<"Lesson"> | $Enums.LessonStatus
   userSubmission?: Prisma.StringNullableFilter<"Lesson"> | string | null
   submissionImage?: Prisma.StringNullableFilter<"Lesson"> | string | null
   aiFeedback?: Prisma.StringNullableFilter<"Lesson"> | string | null
@@ -395,7 +395,7 @@ export type LessonScalarWhereWithAggregatesInput = {
   isReview?: Prisma.BoolWithAggregatesFilter<"Lesson"> | boolean
   wordsCount?: Prisma.IntWithAggregatesFilter<"Lesson"> | number
   lessonData?: Prisma.StringWithAggregatesFilter<"Lesson"> | string
-  status?: Prisma.StringWithAggregatesFilter<"Lesson"> | string
+  status?: Prisma.EnumLessonStatusWithAggregatesFilter<"Lesson"> | $Enums.LessonStatus
   userSubmission?: Prisma.StringNullableWithAggregatesFilter<"Lesson"> | string | null
   submissionImage?: Prisma.StringNullableWithAggregatesFilter<"Lesson"> | string | null
   aiFeedback?: Prisma.StringNullableWithAggregatesFilter<"Lesson"> | string | null
@@ -413,7 +413,7 @@ export type LessonCreateInput = {
   isReview?: boolean
   wordsCount?: number
   lessonData: string
-  status?: string
+  status?: $Enums.LessonStatus
   userSubmission?: string | null
   submissionImage?: string | null
   aiFeedback?: string | null
@@ -434,7 +434,7 @@ export type LessonUncheckedCreateInput = {
   isReview?: boolean
   wordsCount?: number
   lessonData: string
-  status?: string
+  status?: $Enums.LessonStatus
   userSubmission?: string | null
   submissionImage?: string | null
   aiFeedback?: string | null
@@ -453,7 +453,7 @@ export type LessonUpdateInput = {
   isReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
   wordsCount?: Prisma.IntFieldUpdateOperationsInput | number
   lessonData?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumLessonStatusFieldUpdateOperationsInput | $Enums.LessonStatus
   userSubmission?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submissionImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -474,7 +474,7 @@ export type LessonUncheckedUpdateInput = {
   isReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
   wordsCount?: Prisma.IntFieldUpdateOperationsInput | number
   lessonData?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumLessonStatusFieldUpdateOperationsInput | $Enums.LessonStatus
   userSubmission?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submissionImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -494,7 +494,7 @@ export type LessonCreateManyInput = {
   isReview?: boolean
   wordsCount?: number
   lessonData: string
-  status?: string
+  status?: $Enums.LessonStatus
   userSubmission?: string | null
   submissionImage?: string | null
   aiFeedback?: string | null
@@ -512,7 +512,7 @@ export type LessonUpdateManyMutationInput = {
   isReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
   wordsCount?: Prisma.IntFieldUpdateOperationsInput | number
   lessonData?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumLessonStatusFieldUpdateOperationsInput | $Enums.LessonStatus
   userSubmission?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submissionImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -530,7 +530,7 @@ export type LessonUncheckedUpdateManyInput = {
   isReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
   wordsCount?: Prisma.IntFieldUpdateOperationsInput | number
   lessonData?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumLessonStatusFieldUpdateOperationsInput | $Enums.LessonStatus
   userSubmission?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submissionImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -707,16 +707,16 @@ export type LessonUncheckedUpdateManyWithoutRuleNestedInput = {
   deleteMany?: Prisma.LessonScalarWhereInput | Prisma.LessonScalarWhereInput[]
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
 export type IntFieldUpdateOperationsInput = {
   set?: number
   increment?: number
   decrement?: number
   multiply?: number
   divide?: number
+}
+
+export type EnumLessonStatusFieldUpdateOperationsInput = {
+  set?: $Enums.LessonStatus
 }
 
 export type NullableIntFieldUpdateOperationsInput = {
@@ -748,7 +748,7 @@ export type LessonCreateWithoutUserInput = {
   isReview?: boolean
   wordsCount?: number
   lessonData: string
-  status?: string
+  status?: $Enums.LessonStatus
   userSubmission?: string | null
   submissionImage?: string | null
   aiFeedback?: string | null
@@ -768,7 +768,7 @@ export type LessonUncheckedCreateWithoutUserInput = {
   isReview?: boolean
   wordsCount?: number
   lessonData: string
-  status?: string
+  status?: $Enums.LessonStatus
   userSubmission?: string | null
   submissionImage?: string | null
   aiFeedback?: string | null
@@ -815,7 +815,7 @@ export type LessonScalarWhereInput = {
   isReview?: Prisma.BoolFilter<"Lesson"> | boolean
   wordsCount?: Prisma.IntFilter<"Lesson"> | number
   lessonData?: Prisma.StringFilter<"Lesson"> | string
-  status?: Prisma.StringFilter<"Lesson"> | string
+  status?: Prisma.EnumLessonStatusFilter<"Lesson"> | $Enums.LessonStatus
   userSubmission?: Prisma.StringNullableFilter<"Lesson"> | string | null
   submissionImage?: Prisma.StringNullableFilter<"Lesson"> | string | null
   aiFeedback?: Prisma.StringNullableFilter<"Lesson"> | string | null
@@ -833,7 +833,7 @@ export type LessonCreateWithoutRuleInput = {
   isReview?: boolean
   wordsCount?: number
   lessonData: string
-  status?: string
+  status?: $Enums.LessonStatus
   userSubmission?: string | null
   submissionImage?: string | null
   aiFeedback?: string | null
@@ -852,7 +852,7 @@ export type LessonUncheckedCreateWithoutRuleInput = {
   isReview?: boolean
   wordsCount?: number
   lessonData: string
-  status?: string
+  status?: $Enums.LessonStatus
   userSubmission?: string | null
   submissionImage?: string | null
   aiFeedback?: string | null
@@ -896,7 +896,7 @@ export type LessonCreateWithoutWordsInput = {
   isReview?: boolean
   wordsCount?: number
   lessonData: string
-  status?: string
+  status?: $Enums.LessonStatus
   userSubmission?: string | null
   submissionImage?: string | null
   aiFeedback?: string | null
@@ -916,7 +916,7 @@ export type LessonUncheckedCreateWithoutWordsInput = {
   isReview?: boolean
   wordsCount?: number
   lessonData: string
-  status?: string
+  status?: $Enums.LessonStatus
   userSubmission?: string | null
   submissionImage?: string | null
   aiFeedback?: string | null
@@ -950,7 +950,7 @@ export type LessonUpdateWithoutWordsInput = {
   isReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
   wordsCount?: Prisma.IntFieldUpdateOperationsInput | number
   lessonData?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumLessonStatusFieldUpdateOperationsInput | $Enums.LessonStatus
   userSubmission?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submissionImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -970,7 +970,7 @@ export type LessonUncheckedUpdateWithoutWordsInput = {
   isReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
   wordsCount?: Prisma.IntFieldUpdateOperationsInput | number
   lessonData?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumLessonStatusFieldUpdateOperationsInput | $Enums.LessonStatus
   userSubmission?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submissionImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -989,7 +989,7 @@ export type LessonCreateManyUserInput = {
   isReview?: boolean
   wordsCount?: number
   lessonData: string
-  status?: string
+  status?: $Enums.LessonStatus
   userSubmission?: string | null
   submissionImage?: string | null
   aiFeedback?: string | null
@@ -1006,7 +1006,7 @@ export type LessonUpdateWithoutUserInput = {
   isReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
   wordsCount?: Prisma.IntFieldUpdateOperationsInput | number
   lessonData?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumLessonStatusFieldUpdateOperationsInput | $Enums.LessonStatus
   userSubmission?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submissionImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1026,7 +1026,7 @@ export type LessonUncheckedUpdateWithoutUserInput = {
   isReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
   wordsCount?: Prisma.IntFieldUpdateOperationsInput | number
   lessonData?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumLessonStatusFieldUpdateOperationsInput | $Enums.LessonStatus
   userSubmission?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submissionImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1045,7 +1045,7 @@ export type LessonUncheckedUpdateManyWithoutUserInput = {
   isReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
   wordsCount?: Prisma.IntFieldUpdateOperationsInput | number
   lessonData?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumLessonStatusFieldUpdateOperationsInput | $Enums.LessonStatus
   userSubmission?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submissionImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1062,7 +1062,7 @@ export type LessonCreateManyRuleInput = {
   isReview?: boolean
   wordsCount?: number
   lessonData: string
-  status?: string
+  status?: $Enums.LessonStatus
   userSubmission?: string | null
   submissionImage?: string | null
   aiFeedback?: string | null
@@ -1080,7 +1080,7 @@ export type LessonUpdateWithoutRuleInput = {
   isReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
   wordsCount?: Prisma.IntFieldUpdateOperationsInput | number
   lessonData?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumLessonStatusFieldUpdateOperationsInput | $Enums.LessonStatus
   userSubmission?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submissionImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1099,7 +1099,7 @@ export type LessonUncheckedUpdateWithoutRuleInput = {
   isReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
   wordsCount?: Prisma.IntFieldUpdateOperationsInput | number
   lessonData?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumLessonStatusFieldUpdateOperationsInput | $Enums.LessonStatus
   userSubmission?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submissionImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1118,7 +1118,7 @@ export type LessonUncheckedUpdateManyWithoutRuleInput = {
   isReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
   wordsCount?: Prisma.IntFieldUpdateOperationsInput | number
   lessonData?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumLessonStatusFieldUpdateOperationsInput | $Enums.LessonStatus
   userSubmission?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submissionImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1275,7 +1275,7 @@ export type $LessonPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     isReview: boolean
     wordsCount: number
     lessonData: string
-    status: string
+    status: $Enums.LessonStatus
     userSubmission: string | null
     submissionImage: string | null
     aiFeedback: string | null
@@ -1717,7 +1717,7 @@ export interface LessonFieldRefs {
   readonly isReview: Prisma.FieldRef<"Lesson", 'Boolean'>
   readonly wordsCount: Prisma.FieldRef<"Lesson", 'Int'>
   readonly lessonData: Prisma.FieldRef<"Lesson", 'String'>
-  readonly status: Prisma.FieldRef<"Lesson", 'String'>
+  readonly status: Prisma.FieldRef<"Lesson", 'LessonStatus'>
   readonly userSubmission: Prisma.FieldRef<"Lesson", 'String'>
   readonly submissionImage: Prisma.FieldRef<"Lesson", 'String'>
   readonly aiFeedback: Prisma.FieldRef<"Lesson", 'String'>

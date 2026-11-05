@@ -1,5 +1,12 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, InternalServerErrorException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { PrismaService } from '../../prisma/prisma.service';
 import { SettingsService } from '../../settings/settings.service';
+import { ActionType, Plan } from '../../generated/prisma/client';
+import {
+  GEMINI_BASE_URL,
+  PLAN_MODELS,
+} from '../../usage/usage.constants';
 import OpenAI from 'openai';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -8,20 +15,61 @@ import * as path from 'path';
 export class AiLlmCallerService {
   private readonly logger = new Logger(AiLlmCallerService.name);
 
-  constructor(private readonly settingsService: SettingsService) {}
+  constructor(
+    private readonly settingsService: SettingsService,
+    private readonly prisma: PrismaService,
+    private readonly configService: ConfigService,
+  ) {}
 
   /**
-   * Creates an OpenAI client configured with the user's base URL and API key.
+   * Creates an OpenAI client configured for the given user and task.
+   * If isCustom is true, uses the user's custom settings (model, baseURL, API key).
+   * Otherwise, uses the server-side Gemini configuration based on the user's plan.
    */
-  async getClient(userId: string): Promise<{ client: OpenAI; model: string }> {
-    const [model, baseURL] = await Promise.all([
-      this.settingsService.getSetting(userId, 'AI_MODEL'),
-      this.settingsService.getSetting(userId, 'AI_BASE_URL'),
-    ]);
+  async getClient(
+    userId: string,
+    taskType: ActionType = ActionType.LESSON_GENERATION,
+  ): Promise<{ client: OpenAI; model: string }> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { plan: true, isCustom: true },
+    });
 
-    const apiKey = this.isLocalOllamaBaseURL(baseURL)
-      ? 'ollama'
-      : await this.settingsService.getSetting(userId, 'api_key');
+    const isCustom = user?.isCustom ?? false;
+
+    if (isCustom) {
+      const [model, baseURL] = await Promise.all([
+        this.settingsService.getSetting(userId, 'AI_MODEL'),
+        this.settingsService.getSetting(userId, 'AI_BASE_URL'),
+      ]);
+
+      const apiKey = this.isLocalOllamaBaseURL(baseURL)
+        ? 'ollama'
+        : await this.settingsService.getSetting(userId, 'api_key');
+
+      const client = new OpenAI({
+        apiKey,
+        baseURL,
+      });
+
+      return { client, model };
+    }
+
+    const plan: Plan = user?.plan || Plan.FREE;
+    const apiKey =
+      plan === Plan.PREMIUM
+        ? (this.configService.get<string>('GEMINI_PREMIUM_API_KEY') ||
+           this.configService.get<string>('GEMINI_API_KEY'))
+        : this.configService.get<string>('GEMINI_API_KEY');
+
+    if (!apiKey) {
+      throw new InternalServerErrorException(
+        `Server configuration error: Gemini API key for ${plan} plan is not configured.`,
+      );
+    }
+
+    const baseURL = GEMINI_BASE_URL;
+    const model = PLAN_MODELS[plan][taskType];
 
     const client = new OpenAI({
       apiKey,
@@ -44,8 +92,13 @@ export class AiLlmCallerService {
   /**
    * Calls the LLM using a text-only prompt via the configured OpenAI-compatible client.
    */
-  async callLlm(userId: string, prompt: string, retries = 2): Promise<string> {
-    const { client, model } = await this.getClient(userId);
+  async callLlm(
+    userId: string,
+    prompt: string,
+    taskType: ActionType = ActionType.LESSON_GENERATION,
+    retries = 2,
+  ): Promise<string> {
+    const { client, model } = await this.getClient(userId, taskType);
     for (let i = 0; i <= retries; i++) {
       try {
         const response = await client.chat.completions.create({
@@ -69,8 +122,14 @@ export class AiLlmCallerService {
   /**
    * Calls the LLM with an image attached (vision).
    */
-  async callLlmWithImages(userId: string, prompt: string, imagePaths: string[], retries = 2): Promise<string> {
-    const { client, model } = await this.getClient(userId);
+  async callLlmWithImages(
+    userId: string,
+    prompt: string,
+    imagePaths: string[],
+    taskType: ActionType = ActionType.LESSON_CORRECTION,
+    retries = 2,
+  ): Promise<string> {
+    const { client, model } = await this.getClient(userId, taskType);
 
     const contentParts: any[] = [{ type: 'text', text: prompt }];
 

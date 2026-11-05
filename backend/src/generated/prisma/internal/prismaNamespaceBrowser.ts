@@ -57,7 +57,8 @@ export const ModelName = {
   Lesson: 'Lesson',
   LessonWord: 'LessonWord',
   Setting: 'Setting',
-  LessonProposal: 'LessonProposal'
+  LessonProposal: 'LessonProposal',
+  UsageRecord: 'UsageRecord'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -79,6 +80,8 @@ export const UserScalarFieldEnum = {
   displayName: 'displayName',
   email: 'email',
   avatarUrl: 'avatarUrl',
+  plan: 'plan',
+  isCustom: 'isCustom',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -170,6 +173,17 @@ export const LessonProposalScalarFieldEnum = {
 } as const
 
 export type LessonProposalScalarFieldEnum = (typeof LessonProposalScalarFieldEnum)[keyof typeof LessonProposalScalarFieldEnum]
+
+
+export const UsageRecordScalarFieldEnum = {
+  id: 'id',
+  userHash: 'userHash',
+  actionType: 'actionType',
+  date: 'date',
+  count: 'count'
+} as const
+
+export type UsageRecordScalarFieldEnum = (typeof UsageRecordScalarFieldEnum)[keyof typeof UsageRecordScalarFieldEnum]
 
 
 export const SortOrder = {

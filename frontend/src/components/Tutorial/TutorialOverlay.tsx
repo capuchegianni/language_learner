@@ -14,6 +14,7 @@ import {
   IconCloseDismiss,
   IconManiculeRight,
   IconManiculeLeft,
+  IconTypesetSliders,
 } from '../icons';
 import { Button, IconButton } from '../Button';
 import { useTutorial } from './TutorialContext';
@@ -60,6 +61,8 @@ export const TutorialOverlay: React.FC = () => {
         return <IconAwardLaurel size={18} />;
       case 'CheckCircle2':
         return <IconApprovalCheck size={18} />;
+      case 'Sliders':
+        return <IconTypesetSliders size={18} />;
       case 'Sparkles':
       default:
         return <IconNewDispatch size={18} />;
@@ -179,7 +182,7 @@ export const TutorialOverlay: React.FC = () => {
 
     // Retry finding the target element periodically if it hasn't rendered yet
     let retries = 0;
-    const maxRetries = 15;
+    const maxRetries = 25;
     const interval = setInterval(() => {
       updateTargetPosition();
       retries++;

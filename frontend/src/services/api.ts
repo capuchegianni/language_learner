@@ -1,11 +1,13 @@
 import axios from 'axios';
 import {
+  AdminUser,
   DashboardStats,
   Lesson,
   ProposedRule,
   Rule,
   Settings,
   SettingsUpdatePayload,
+  UsageInfo,
   Word,
 } from '../types';
 
@@ -148,6 +150,11 @@ export const api = {
     return res.data;
   },
 
+  async getUsage(): Promise<UsageInfo> {
+    const res = await axios.get(`${API_BASE}/settings/usage`);
+    return res.data;
+  },
+
   async updateSettings(settings: SettingsUpdatePayload): Promise<Settings> {
     const res = await axios.post(`${API_BASE}/settings`, settings);
     return res.data;
@@ -175,6 +182,19 @@ export const api = {
 
   async deleteAccount(): Promise<{ success: boolean; message: string }> {
     const res = await axios.delete(`${API_BASE}/auth/account`);
+    return res.data;
+  },
+
+  // Admin
+  async getAdminUsers(query?: string): Promise<AdminUser[]> {
+    const res = await axios.get(`${API_BASE}/admin/users`, {
+      params: { q: query },
+    });
+    return res.data;
+  },
+
+  async updateUserPlan(userId: string, plan: 'FREE' | 'PREMIUM'): Promise<AdminUser> {
+    const res = await axios.patch(`${API_BASE}/admin/users/${userId}/plan`, { plan });
     return res.data;
   },
 };

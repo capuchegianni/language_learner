@@ -1,10 +1,11 @@
 import React, { useState, useRef } from 'react';
-import { ProposedRule } from '../../../../types';
+import { ProposedRule, UsageInfo } from '../../../../types';
 import {
   IconRefreshCrank,
   IconLexicon,
   IconNewDispatch,
   IconApprovalCheck,
+  IconHazardAlert,
 } from '../../../../components/icons';
 import { useLanguages } from '../../../../contexts/LanguageContext';
 import { Pill, Select, IconButton, LoadingSpinner, Card, Button, Input } from '../../../../components';
@@ -24,6 +25,7 @@ export interface ProposalPhaseProps {
   onGenerateLesson: () => void;
   generatingLesson: boolean;
   fetchProposals: (forceRefresh: boolean) => void;
+  usageInfo?: UsageInfo | null;
   className?: string;
 }
 
@@ -41,11 +43,28 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
   onGenerateLesson,
   generatingLesson,
   fetchProposals,
+  usageInfo,
   className = '',
 }) => {
   const { targetLanguage } = useLanguages();
   const [customRule, setCustomRule] = useState('');
   const customInputRef = useRef<HTMLInputElement>(null);
+
+  const isCustomPlan = usageInfo?.isCustom ?? false;
+  const proposalUsage = usageInfo?.usage.RULE_PROPOSAL;
+  const lessonGenUsage = usageInfo?.usage.LESSON_GENERATION;
+
+  const isProposalLimitReached =
+    !isCustomPlan &&
+    proposalUsage?.limit !== null &&
+    proposalUsage?.limit !== undefined &&
+    proposalUsage.used >= proposalUsage.limit;
+
+  const isLessonGenLimitReached =
+    !isCustomPlan &&
+    lessonGenUsage?.limit !== null &&
+    lessonGenUsage?.limit !== undefined &&
+    lessonGenUsage.used >= lessonGenUsage.limit;
 
   const isCustomSelected =
     selectedRuleTitle !== '' &&
@@ -92,6 +111,28 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
           ]}
           className="proposal-word-count-filter"
         />
+
+        {/* Daily Quota Indicator (if not on custom plan) */}
+        {!isCustomPlan && usageInfo && (
+          <div className="proposal-quota-bar">
+            <span>
+              Daily Quota: <strong>{lessonGenUsage?.used ?? 0} / {lessonGenUsage?.limit ?? 2}</strong> lessons
+            </span>
+            <span>•</span>
+            <span>
+              <strong>{proposalUsage?.used ?? 0} / {proposalUsage?.limit ?? 3}</strong> proposals used
+            </span>
+            <span>•</span>
+            <span>Resets at 00:00 UTC</span>
+          </div>
+        )}
+
+        {isLessonGenLimitReached && (
+          <div className="proposal-limit-warning" role="alert">
+            <IconHazardAlert size={16} />
+            <span>Daily lesson generation limit reached ({lessonGenUsage?.used}/{lessonGenUsage?.limit}). Resets at midnight UTC.</span>
+          </div>
+        )}
       </Card>
 
       {loadingProposals ? (
@@ -134,10 +175,14 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
                             </div>
                             <IconButton
                               icon={<IconRefreshCrank />}
-                              title="Replace this proposal"
+                              title={
+                                isProposalLimitReached
+                                  ? 'Daily proposal limit reached. Resets at 00:00 UTC.'
+                                  : 'Replace this proposal'
+                              }
                               aria-label={`Replace proposal: ${prop.title}`}
                               onClick={(e) => onReplaceProposal(idx, e)}
-                              disabled={replacingIndex !== null}
+                              disabled={replacingIndex !== null || isProposalLimitReached}
                             />
                           </div>
                           <h4 className="target-text proposal-card-title">{prop.title}</h4>
@@ -236,7 +281,8 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
           variant="secondary"
           className="proposal-btn"
           onClick={() => fetchProposals(true)}
-          disabled={loadingProposals || generatingLesson}
+          disabled={loadingProposals || generatingLesson || isProposalLimitReached}
+          title={isProposalLimitReached ? 'Daily proposal limit reached. Resets at 00:00 UTC.' : undefined}
           icon={<IconRefreshCrank size={18} />}
         >
           Refresh Proposals
@@ -245,7 +291,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
           variant="primary"
           className="proposal-btn"
           id="tutorial-generate-btn"
-          disabled={!selectedRuleTitle || generatingLesson}
+          disabled={!selectedRuleTitle || generatingLesson || isLessonGenLimitReached}
           onClick={onGenerateLesson}
           icon={!generatingLesson ? <IconNewDispatch size={20} /> : undefined}
         >
@@ -255,6 +301,8 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
               size={18}
               message="Generating Lesson..."
             />
+          ) : isLessonGenLimitReached ? (
+            `Daily Limit Reached (${lessonGenUsage?.used}/${lessonGenUsage?.limit})`
           ) : (
             'Generate Lesson & Exercises'
           )}

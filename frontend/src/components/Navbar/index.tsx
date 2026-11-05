@@ -11,9 +11,11 @@ import {
   IconMoonCelestial,
   IconMenuBroadsheet,
   IconCloseDismiss,
+  IconTypesetSliders,
 } from '../icons';
 import './Navbar.css';
 import { Button } from '../Button';
+import { useAuth } from '../../contexts/AuthContext';
 
 export interface NavbarProps {
   editionNo?: number;
@@ -106,6 +108,8 @@ export const Navbar: React.FC<NavbarProps> = ({ editionNo }) => {
 
   const closeMenu = () => setMobileOpen(false);
 
+  const { user } = useAuth();
+
   // Use previous standard page names as requested
   const navItems = [
     { path: '/', label: 'Dashboard', icon: <IconFrontPage size={16} /> },
@@ -114,6 +118,9 @@ export const Navbar: React.FC<NavbarProps> = ({ editionNo }) => {
     { path: '/words', label: 'Word Bank', icon: <IconLexicon size={16} /> },
     { path: '/rules', label: 'Rule Bank', icon: <IconGrammarGazette size={16} /> },
     { path: '/settings', label: 'Settings', icon: <IconPrintShop size={16} /> },
+    ...(user?.isAdmin
+      ? [{ path: '/admin', label: 'Admin', icon: <IconTypesetSliders size={16} /> }]
+      : []),
   ];
 
   const currentDate = new Date().toLocaleDateString('en-US', {

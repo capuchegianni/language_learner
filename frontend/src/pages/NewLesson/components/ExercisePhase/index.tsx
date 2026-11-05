@@ -5,8 +5,9 @@ import {
   IconSendTelegraph,
   IconDraftingEdit,
   IconCloseDismiss,
+  IconHazardAlert,
 } from '../../../../components/icons';
-import { LessonContent } from '../../../../types';
+import { LessonContent, UsageInfo } from '../../../../types';
 import { LoadingSpinner, Card, Button, Input, Textarea } from '../../../../components';
 import { ExerciseOneDispatcher } from './ExerciseOne/ExerciseOneDispatcher';
 import './ExercisePhase.css';
@@ -26,6 +27,7 @@ export interface ExercisePhaseProps {
   submitting: boolean;
   onSubmit: (e: React.SubmitEvent) => void;
   onBack: () => void;
+  usageInfo?: UsageInfo | null;
   className?: string;
 }
 
@@ -44,8 +46,17 @@ export const ExercisePhase: React.FC<ExercisePhaseProps> = ({
   submitting,
   onSubmit,
   onBack,
+  usageInfo,
   className = '',
 }) => {
+  const isCustomPlan = usageInfo?.isCustom ?? false;
+  const correctionUsage = usageInfo?.usage.LESSON_CORRECTION;
+  const isCorrectionLimitReached =
+    !isCustomPlan &&
+    correctionUsage?.limit !== null &&
+    correctionUsage?.limit !== undefined &&
+    correctionUsage.used >= correctionUsage.limit;
+
   return (
     <form onSubmit={onSubmit} className={`exercise-phase-form ${className}`.trim()}>
       <Card className="exercise-phase-card">
@@ -190,6 +201,16 @@ export const ExercisePhase: React.FC<ExercisePhaseProps> = ({
         </div>
       </Card>
 
+      {/* Limit Warning */}
+      {isCorrectionLimitReached && (
+        <div className="exercise-limit-warning" role="alert">
+          <IconHazardAlert size={16} />
+          <span>
+            Daily lesson correction limit reached ({correctionUsage?.used}/{correctionUsage?.limit}). Resets at midnight UTC.
+          </span>
+        </div>
+      )}
+
       {/* Submission Actions */}
       <div className="exercise-action-buttons">
         <Button
@@ -205,7 +226,7 @@ export const ExercisePhase: React.FC<ExercisePhaseProps> = ({
           type="submit"
           variant="primary"
           className="exercise-btn"
-          disabled={submitting}
+          disabled={submitting || isCorrectionLimitReached}
           icon={!submitting ? <IconSendTelegraph size={18} /> : undefined}
         >
           {submitting ? (
@@ -214,6 +235,8 @@ export const ExercisePhase: React.FC<ExercisePhaseProps> = ({
               size={18}
               message="Grading with AI Teacher..."
             />
+          ) : isCorrectionLimitReached ? (
+            `Daily Limit Reached (${correctionUsage?.used}/${correctionUsage?.limit})`
           ) : (
             'Submit for AI Grading'
           )}

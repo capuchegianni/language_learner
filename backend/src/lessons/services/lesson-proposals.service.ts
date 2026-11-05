@@ -1,12 +1,15 @@
 import { Injectable } from '@nestjs/common';
+import { ActionType } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AiService } from '../../ai/ai.service';
+import { UsageService } from '../../usage/usage.service';
 
 @Injectable()
 export class LessonProposalsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly aiService: AiService,
+    private readonly usageService: UsageService,
   ) {}
 
   /**
@@ -49,8 +52,10 @@ export class LessonProposalsService {
     const missingCount = Math.max(0, 3 - newRules.length);
 
     if (missingCount > 0) {
+      await this.usageService.checkLimit(userId, ActionType.RULE_PROPOSAL);
       const excludeTitles = newRules.map((p) => p.title);
       const generated = await this.aiService.proposeRules(userId, knownRuleTitles, missingCount, excludeTitles);
+      await this.usageService.incrementUsage(userId, ActionType.RULE_PROPOSAL);
 
       for (const p of generated) {
         const created = await this.prisma.lessonProposal.create({
@@ -122,7 +127,9 @@ export class LessonProposalsService {
 
     const targetProposal = index >= 0 && index < activeProposals.length ? activeProposals[index] : undefined;
     const excludeTitles = activeProposals.map((p) => p.title);
+    await this.usageService.checkLimit(userId, ActionType.RULE_PROPOSAL);
     const newRules = await this.aiService.proposeRules(userId, knownRuleTitles, 1, excludeTitles);
+    await this.usageService.incrementUsage(userId, ActionType.RULE_PROPOSAL);
 
     if (newRules.length > 0) {
       if (targetProposal) {

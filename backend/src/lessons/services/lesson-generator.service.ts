@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import { ActionType, LessonStatus } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AiService } from '../../ai/ai.service';
+import { UsageService } from '../../usage/usage.service';
 import { GenerateLessonDto } from '../dto/lesson.dto';
 
 @Injectable()
@@ -8,6 +10,7 @@ export class LessonGeneratorService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly aiService: AiService,
+    private readonly usageService: UsageService,
   ) {}
 
   /**
@@ -29,6 +32,9 @@ export class LessonGeneratorService {
     const knownWordsList = knownWords.map((w) => w.targetLanguage);
     const knownRulesList = knownRules.map((r) => r.title);
 
+    // Enforce daily usage limit before calling AI
+    await this.usageService.checkLimit(userId, ActionType.LESSON_GENERATION);
+
     // Call AI service to construct & execute prompt
     const content = await this.aiService.generateLesson(
       userId,
@@ -37,6 +43,8 @@ export class LessonGeneratorService {
       knownWordsList,
       knownRulesList,
     );
+
+    await this.usageService.incrementUsage(userId, ActionType.LESSON_GENERATION);
 
     // Execute all database operations inside a single transaction
     return this.prisma.$transaction(async (tx) => {
@@ -87,7 +95,7 @@ export class LessonGeneratorService {
           wordsCount,
           lessonData: JSON.stringify(content),
           rawPrompt: content.rawPrompt,
-          status: 'GENERATED',
+          status: LessonStatus.GENERATED,
           userId,
           words: {
             create: wordEntities.map((w) => ({ wordId: w.id })),

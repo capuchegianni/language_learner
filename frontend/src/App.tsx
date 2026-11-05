@@ -9,7 +9,8 @@ import {
   NewLesson,
   RuleBank,
   Settings,
-  WordBank
+  WordBank,
+  Admin,
 } from "./pages";
 import { useAuth } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
@@ -29,6 +30,7 @@ export const App: React.FC = () => {
         <Route path="/words" element={<ProtectedRoute><WordBank /></ProtectedRoute>} />
         <Route path="/rules" element={<ProtectedRoute><RuleBank /></ProtectedRoute>} />
         <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+        <Route path="/admin" element={<ProtectedRoute adminOnly><Admin /></ProtectedRoute>} />
       </Routes>
     </Layout>
   );
