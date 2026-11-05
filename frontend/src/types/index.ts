@@ -5,6 +5,22 @@ export interface User {
   avatarUrl: string | null;
 }
 
+export interface AdminUser {
+  id: string;
+  displayName: string;
+  email: string;
+  avatarUrl: string | null;
+  plan: 'FREE' | 'PREMIUM';
+  isCustom: boolean;
+  createdAt: string;
+  updatedAt: string;
+  _count?: {
+    lessons: number;
+    words: number;
+    rules: number;
+  };
+}
+
 export interface Word {
   id: string;
   targetLanguage: string;

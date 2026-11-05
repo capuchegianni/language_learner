@@ -177,6 +177,19 @@ export const api = {
     const res = await axios.delete(`${API_BASE}/auth/account`);
     return res.data;
   },
+
+  // Admin
+  async getAdminUsers(query?: string): Promise<AdminUser[]> {
+    const res = await axios.get(`${API_BASE}/admin/users`, {
+      params: { q: query },
+    });
+    return res.data;
+  },
+
+  async updateUserPlan(userId: string, plan: 'FREE' | 'PREMIUM'): Promise<AdminUser> {
+    const res = await axios.patch(`${API_BASE}/admin/users/${userId}/plan`, { plan });
+    return res.data;
+  },
 };
 
 
