@@ -165,7 +165,7 @@ export const api = {
     return res.data;
   },
 
-  async exportData(include: { settings?: boolean; words?: boolean; rules?: boolean; lessons?: boolean; usage?: boolean }): Promise<any> {
+  async exportData(include: { settings?: boolean; words?: boolean; rules?: boolean; lessons?: boolean }): Promise<any> {
     const params = new URLSearchParams();
     if (include.settings) params.set('settings', 'true');
     if (include.words) params.set('words', 'true');
