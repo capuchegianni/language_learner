@@ -149,58 +149,72 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
           <div className="proposal-section-group">
             <h3 className="proposal-section-title">AI Proposed New Rules</h3>
 
-            <div className="proposal-grid">
-              {proposals.map((prop, idx) => {
-                const isSelected = selectedRuleTitle === prop.title && !isReviewSelection;
-                const isReplacing = replacingIndex === idx;
+            {proposals.length === 0 ? (
+              <Card className="proposal-empty-info-card">
+                <p>No AI proposals currently available. Use custom lesson or review mode below.</p>
+              </Card>
+            ) : (
+              <div className="proposal-grid">
+                {proposals.map((prop, idx) => {
+                  const isSelected = selectedRuleTitle === prop.title && !isReviewSelection;
+                  const isReplacing = replacingIndex === idx;
 
-                return (
-                  <Card
-                    key={idx}
-                    isInteractive
-                    className={`proposal-card ${isSelected ? 'selected' : ''} ${isReplacing ? 'replacing' : ''}`}
-                    onClick={() => {
-                      if (!isReplacing) onSelectRule(prop.title, false);
-                    }}
-                  >
-                    {isReplacing ? (
-                      <div className="proposal-replacing-state">
-                        <LoadingSpinner size={24} variant="raw" />
-                        <span className="proposal-replacing-text">Generating new proposal...</span>
-                      </div>
-                    ) : (
-                      <>
-                        <div>
-                          <div className="proposal-card-header">
-                            <div className="proposal-card-pills">
-                              <Pill variant="primary">{prop.category}</Pill>
-                              <Pill variant="warning">{prop.difficulty}</Pill>
+                  return (
+                    <Card
+                      key={idx}
+                      isInteractive
+                      className={`proposal-card ${isSelected ? 'selected' : ''} ${isReplacing ? 'replacing' : ''}`}
+                      onClick={() => {
+                        if (!isReplacing) onSelectRule(prop.title, false);
+                      }}
+                    >
+                      {isReplacing ? (
+                        <div className="proposal-replacing-state">
+                          <LoadingSpinner size={24} variant="raw" />
+                          <span className="proposal-replacing-text">Generating new proposal...</span>
+                        </div>
+                      ) : (
+                        <>
+                          <div>
+                            <div className="proposal-card-header">
+                              <div className="proposal-card-pills">
+                                <Pill variant="primary">{prop.category}</Pill>
+                                <Pill variant="warning">{prop.difficulty}</Pill>
+                              </div>
+                              <IconButton
+                                size="xs"
+                                icon={<IconRefreshCrank size={12} />}
+                                title={
+                                  isProposalLimitReached
+                                    ? 'Daily proposal limit reached. Resets at 00:00 UTC.'
+                                    : 'Replace this proposal'
+                                }
+                                aria-label={`Replace proposal: ${prop.title}`}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setConfirmRefreshTarget({
+                                    type: 'single',
+                                    index: idx,
+                                    title: prop.title,
+                                  });
+                                }}
+                                disabled={replacingIndex !== null || isProposalLimitReached}
+                              />
                             </div>
-                            <IconButton
-                              icon={<IconRefreshCrank />}
-                              title={
-                                isProposalLimitReached
-                                  ? 'Daily proposal limit reached. Resets at 00:00 UTC.'
-                                  : 'Replace this proposal'
-                              }
-                              aria-label={`Replace proposal: ${prop.title}`}
-                              onClick={(e) => onReplaceProposal(idx, e)}
-                              disabled={replacingIndex !== null || isProposalLimitReached}
-                            />
+                            <h4 className="target-text proposal-card-title">{prop.title}</h4>
+                            <p className="proposal-card-desc">{prop.briefExplanation}</p>
                           </div>
-                          <h4 className="target-text proposal-card-title">{prop.title}</h4>
-                          <p className="proposal-card-desc">{prop.briefExplanation}</p>
-                        </div>
-                        <div className="proposal-select-indicator">
-                          {isSelected ? <IconApprovalCheck size={16} /> : <div className="proposal-unselected-circle" />}
-                          <span>{isSelected ? 'Selected Rule' : 'Select Rule'}</span>
-                        </div>
-                      </>
-                    )}
-                  </Card>
-                );
-              })}
-            </div>
+                          <div className="proposal-select-indicator">
+                            {isSelected ? <IconApprovalCheck size={16} /> : <div className="proposal-unselected-circle" />}
+                            <span>{isSelected ? 'Selected Rule' : 'Select Rule'}</span>
+                          </div>
+                        </>
+                      )}
+                    </Card>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
           {/* Custom Rule Input */}

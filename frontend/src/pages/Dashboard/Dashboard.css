@@ -93,7 +93,6 @@
   font-family: var(--font-body);
   font-size: var(--font-size-xs);
   color: var(--text-secondary);
-  margin-top: var(--space-2xs);
 }
 
 /* Dashboard Main Grid Layout */
@@ -108,13 +107,22 @@
 .dashboard-recent-column {
   display: flex;
   flex-direction: column;
-  gap: var(--space-lg);
+  gap: var(--space-2xs);
   height: 100%;
+}
+
+.dashboard-hub-column > * ~ *,
+.dashboard-recent-column > * ~ * {
+  margin-top: var(--space-sm);
+}
+
+.dashboard-section-title + * {
+  margin-top: 0;
 }
 
 .dashboard-section-title {
   font-family: var(--font-masthead);
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-bold);
   color: var(--text-primary);
   line-height: var(--line-height-snug);
