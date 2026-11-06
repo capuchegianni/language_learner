@@ -11,6 +11,12 @@
   gap: var(--space-sm);
   flex-wrap: wrap;
   margin-top: var(--space-xs);
+  width: 100%;
+}
+
+.settings-import-export-actions .btn {
+  flex: 1 1 0;
+  justify-content: center;
 }
 
 /* Responsive */

@@ -30,6 +30,8 @@
   font-size: var(--font-size-md);
   color: var(--text-primary);
   word-break: break-word;
+  line-height: var(--line-height-tight);
+  margin: 0;
 }
 
 .settings-account-email {
@@ -37,6 +39,7 @@
   font-size: var(--font-size-xs);
   color: var(--text-secondary);
   word-break: break-word;
+  line-height: var(--line-height-snug);
   margin-top: var(--space-3xs);
 }
 

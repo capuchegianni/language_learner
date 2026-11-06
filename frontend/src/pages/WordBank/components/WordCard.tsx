@@ -36,21 +36,23 @@ export const WordCard: React.FC<WordCardProps> = ({
               {word.targetLanguage}
             </span>
             <IconButton
+              size="sm"
               variant="audio"
               active={isPlaying}
               onClick={() => onPlayAudio(word)}
               title="Play pronunciation (Click again to play slower)"
               aria-label={`Play pronunciation for ${word.targetLanguage}`}
-              icon={<IconPhonographAudio />}
+              icon={<IconPhonographAudio size={16} />}
             />
             {word.notes && (
               <IconButton
+                size="sm"
                 variant="note"
                 active={isNoteExpanded}
                 onClick={() => onToggleNote(word.id)}
                 title={isNoteExpanded ? 'Hide note' : 'Show note'}
                 aria-label={isNoteExpanded ? 'Hide note' : 'Show note'}
-                icon={<IconParchmentCopy />}
+                icon={<IconParchmentCopy size={16} />}
               />
             )}
           </div>

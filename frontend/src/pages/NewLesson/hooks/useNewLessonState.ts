@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import confetti from 'canvas-confetti';
 import { api } from '../../../services/api';
-import { Lesson, LessonContent, ProposedRule, GradingResult, UsageInfo } from '../../../types';
+import { Lesson, LessonContent, ProposedRule, UsageInfo } from '../../../types';
 import { LessonPhase } from '../components/StepIndicator';
 
 export interface UseNewLessonStateReturn {
@@ -30,8 +30,9 @@ export interface UseNewLessonStateReturn {
   imageFiles: File[];
   imagePreviews: string[];
   submitting: boolean;
-  gradingResult: GradingResult | null;
   error: string | null;
+  imageError: string | null;
+  setImageError: (err: string | null) => void;
   usageInfo: UsageInfo | null;
 
   // Actions
@@ -70,7 +71,6 @@ export function useNewLessonState(resumeLessonId?: string): UseNewLessonStateRet
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState<boolean>(false);
-  const [gradingResult, setGradingResult] = useState<GradingResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [usageInfo, setUsageInfo] = useState<UsageInfo | null>(null);
 
@@ -168,7 +168,6 @@ export function useNewLessonState(resumeLessonId?: string): UseNewLessonStateRet
           setSelectedRuleTitle(lesson.rule?.title || lesson.title || '');
           loadSavedAnswers(lesson.id);
           if (lesson.status === 'GRADED' && lesson.aiFeedback) {
-            setGradingResult(JSON.parse(lesson.aiFeedback));
             setPhase('GRADED');
           } else {
             setPhase('GENERATED_WORKSPACE');
@@ -186,7 +185,6 @@ export function useNewLessonState(resumeLessonId?: string): UseNewLessonStateRet
       setPhase('PROPOSAL');
       setCurrentLesson(null);
       setLessonContent(null);
-      setGradingResult(null);
       setEx1Answers([]);
       setEx2Answers([]);
       setEx3Answer('');
@@ -234,6 +232,8 @@ export function useNewLessonState(resumeLessonId?: string): UseNewLessonStateRet
     }
   }, [selectedRuleTitle, wordsCount, isReviewSelection, loadSavedAnswers, navigate, fetchUsage]);
 
+  const [imageError, setImageError] = useState<string | null>(null);
+
   const handleImageChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       if (e.target.files && e.target.files.length > 0) {
@@ -242,7 +242,7 @@ export function useNewLessonState(resumeLessonId?: string): UseNewLessonStateRet
 
         const totalSize = newFiles.reduce((acc, file) => acc + file.size, 0);
         if (totalSize > 5 * 1024 * 1024) {
-          alert('Total image size cannot exceed 5MB.');
+          setImageError('Total image size cannot exceed 5MB. Please choose smaller images.');
           e.target.value = '';
           return;
         }
@@ -298,10 +298,6 @@ export function useNewLessonState(resumeLessonId?: string): UseNewLessonStateRet
         );
         await fetchUsage();
         setCurrentLesson(updatedLesson);
-        if (updatedLesson.aiFeedback) {
-          const feedback: GradingResult = JSON.parse(updatedLesson.aiFeedback);
-          setGradingResult(feedback);
-        }
         setPhase('GRADED');
         localStorage.removeItem(`lesson_answers_${currentLesson.id}`);
         confetti({
@@ -362,8 +358,9 @@ export function useNewLessonState(resumeLessonId?: string): UseNewLessonStateRet
     imageFiles,
     imagePreviews,
     submitting,
-    gradingResult,
     error,
+    imageError,
+    setImageError,
     usageInfo,
 
     fetchProposals,

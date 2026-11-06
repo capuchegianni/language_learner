@@ -9,7 +9,7 @@ import {
   WordsLearned,
   LessonDetail,
 } from './components';
-import { CodeBlock, Button } from '../../components';
+import { CodeBlock, Button, Modal } from '../../components';
 import './NewLesson.css';
 
 export const NewLesson: React.FC = () => {
@@ -40,8 +40,9 @@ export const NewLesson: React.FC = () => {
     imageFiles,
     imagePreviews,
     submitting,
-    gradingResult,
     error,
+    imageError,
+    setImageError,
     usageInfo,
 
     fetchProposals,
@@ -151,6 +152,23 @@ export const NewLesson: React.FC = () => {
           onFinish={() => navigate('/')}
         />
       )}
+
+      {/* Image Size Limit Modal */}
+      <Modal
+        isOpen={imageError !== null}
+        onClose={() => setImageError(null)}
+        title="File Size Notice"
+        maxWidth="440px"
+      >
+        <p className="modal-prompt-text">
+          {imageError}
+        </p>
+        <div className="modal-actions">
+          <Button variant="primary" onClick={() => setImageError(null)}>
+            Dismiss
+          </Button>
+        </div>
+      </Modal>
     </div>
   );
 };

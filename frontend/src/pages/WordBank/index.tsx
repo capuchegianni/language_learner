@@ -1,11 +1,12 @@
-import React from 'react';
-import { IconLexicon, IconFleuronPlus } from '../../components/icons';
+import React, { useState } from 'react';
+import { IconLexicon, IconFleuronPlus, IconTrashShears, IconHazardAlert } from '../../components/icons';
 import { useLanguages } from '../../contexts/LanguageContext';
 import { useWordBank } from './hooks/useWordBank';
 import { WordCard } from './components/WordCard';
 import { WordModal } from './components/WordModal';
 import { WordFilterBar } from './components/WordFilterBar';
-import { PageHeader, LoadingSpinner, EmptyState, Button } from '../../components';
+import { PageHeader, LoadingSpinner, EmptyState, Button, Modal } from '../../components';
+import { Word } from '../../types';
 import './WordBank.css';
 
 export const WordBank: React.FC = () => {
@@ -33,6 +34,8 @@ export const WordBank: React.FC = () => {
     expandedNotes,
     toggleNote,
   } = useWordBank();
+  const [wordToDelete, setWordToDelete] = useState<Word | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   return (
     <div className="wordbank-container">
@@ -40,7 +43,13 @@ export const WordBank: React.FC = () => {
         id="tutorial-wordbank-header"
         icon={<IconLexicon size={40} />}
         title={`${targetLanguage} Word Bank`}
-        subtitle={`All learned vocabulary automatically tracked from lessons or added manually. Total: ${words.length} words.`}
+        subtitle={
+          <>
+            <span>All learned vocabulary automatically tracked from lessons or added manually.</span>
+            <br />
+            <span>Total: {words.length} word{words.length !== 1 ? 's' : ''}.</span>
+          </>
+        }
         actions={
           <Button
             variant="primary"
@@ -77,7 +86,7 @@ export const WordBank: React.FC = () => {
                 onPlayAudio={playAudio}
                 onToggleNote={toggleNote}
                 onEdit={openEditModal}
-                onDelete={deleteWord}
+                onDelete={() => setWordToDelete(word)}
               />
             ))}
           </div>
@@ -93,6 +102,46 @@ export const WordBank: React.FC = () => {
         onFieldChange={updateFormField}
         onSubmit={saveWord}
       />
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        isOpen={wordToDelete !== null}
+        onClose={() => !isDeleting && setWordToDelete(null)}
+        icon={<IconHazardAlert size={20} />}
+        title="Delete Word"
+        maxWidth="440px"
+        danger
+      >
+        <p className="modal-prompt-text">
+          Are you sure you want to delete <strong>{wordToDelete?.targetLanguage}</strong> ({wordToDelete?.nativeLanguage}) from your vocabulary bank? This action cannot be undone.
+        </p>
+        <div className="modal-actions">
+          <Button
+            variant="secondary"
+            onClick={() => setWordToDelete(null)}
+            disabled={isDeleting}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            disabled={isDeleting}
+            icon={isDeleting ? undefined : <IconTrashShears size={16} />}
+            onClick={async () => {
+              if (!wordToDelete) return;
+              setIsDeleting(true);
+              try {
+                await deleteWord(wordToDelete.id);
+                setWordToDelete(null);
+              } finally {
+                setIsDeleting(false);
+              }
+            }}
+          >
+            {isDeleting ? 'Deleting...' : 'Delete'}
+          </Button>
+        </div>
+      </Modal>
     </div>
   );
 };

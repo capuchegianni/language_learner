@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   IconChronicle,
   IconDraftingEdit,
   IconTrashShears,
   IconHazardAlert,
+  IconArrowDown,
+  IconArrowUp,
 } from '../../../components/icons';
 import { Rule } from '../../../types';
 import { RuleExample } from '../types';
@@ -18,6 +20,7 @@ export interface RuleCardProps {
 
 export const RuleCard: React.FC<RuleCardProps> = ({ rule, onEdit, onDelete }) => {
   const navigate = useNavigate();
+  const [isExpanded, setIsExpanded] = useState(false);
 
   let parsedExamples: RuleExample[] = [];
   try {
@@ -28,6 +31,14 @@ export const RuleCard: React.FC<RuleCardProps> = ({ rule, onEdit, onDelete }) =>
   } catch {
     // fallback
   }
+
+  const isLong = (rule.explanation?.length ?? 0) > 300;
+  const hasExtraContent = isLong || parsedExamples.length > 0 || Boolean(rule.exceptions);
+
+  const displayedExplanation =
+    !isExpanded && isLong
+      ? `${rule.explanation.slice(0, 300).trim()}...`
+      : rule.explanation;
 
   return (
     <Card className="rule-card">
@@ -51,6 +62,15 @@ export const RuleCard: React.FC<RuleCardProps> = ({ rule, onEdit, onDelete }) =>
               </span>
             </Button>
           )}
+          {hasExtraContent && (
+            <IconButton
+              variant="note"
+              onClick={() => setIsExpanded(!isExpanded)}
+              title={isExpanded ? 'Collapse rule details' : 'Expand rule details'}
+              aria-label={isExpanded ? 'Collapse rule details' : 'Expand rule details'}
+              icon={isExpanded ? <IconArrowUp size={16} /> : <IconArrowDown size={16} />}
+            />
+          )}
           <IconButton
             variant="edit"
             onClick={() => onEdit(rule)}
@@ -69,7 +89,7 @@ export const RuleCard: React.FC<RuleCardProps> = ({ rule, onEdit, onDelete }) =>
       </div>
 
       <div className="rule-explanation-body">
-        {rule.explanation
+        {displayedExplanation
           ?.split(/\n\s*\n|(?=(?:^|\n)\s*\d+\.\s+)/)
           .map((part) => part.trim())
           .filter(Boolean)
@@ -80,39 +100,43 @@ export const RuleCard: React.FC<RuleCardProps> = ({ rule, onEdit, onDelete }) =>
           ))}
       </div>
 
-      {parsedExamples.length > 0 && (
-        <div className="rule-examples-container">
-          <h4 className="rule-examples-label">Examples:</h4>
-          <div className="rule-examples-list">
-            {parsedExamples.map((ex, idx) => (
-              <div key={idx} className="rule-example-box">
-                <div className="target-text rule-example-target">
-                  {ex.targetLanguage}
-                </div>
-                {ex.nativeLanguage && (
-                  <div className="rule-example-native">
-                    {ex.nativeLanguage}
+      {isExpanded && (
+        <>
+          {parsedExamples.length > 0 && (
+            <div className="rule-examples-container">
+              <h4 className="rule-examples-label">Examples:</h4>
+              <div className="rule-examples-list">
+                {parsedExamples.map((ex, idx) => (
+                  <div key={idx} className="rule-example-box">
+                    <div className="target-text rule-example-target">
+                      {ex.targetLanguage}
+                    </div>
+                    {ex.nativeLanguage && (
+                      <div className="rule-example-native">
+                        {ex.nativeLanguage}
+                      </div>
+                    )}
+                    {ex.explanation && (
+                      <div className="rule-example-expl">
+                        {ex.explanation}
+                      </div>
+                    )}
                   </div>
-                )}
-                {ex.explanation && (
-                  <div className="rule-example-expl">
-                    {ex.explanation}
-                  </div>
-                )}
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
-      )}
+            </div>
+          )}
 
-      {rule.exceptions && (
-        <div className="rule-exceptions-box">
-          <div className="rule-exceptions-header">
-            <IconHazardAlert size={16} />
-            <span>Note / Exceptions</span>
-          </div>
-          <p className="rule-exceptions-text">{rule.exceptions}</p>
-        </div>
+          {rule.exceptions && (
+            <div className="rule-exceptions-box">
+              <div className="rule-exceptions-header">
+                <IconHazardAlert size={16} />
+                <span>Note / Exceptions</span>
+              </div>
+              <p className="rule-exceptions-text">{rule.exceptions}</p>
+            </div>
+          )}
+        </>
       )}
     </Card>
   );

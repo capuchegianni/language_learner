@@ -135,6 +135,20 @@
   .word-card {
     padding: var(--space-md) var(--space-lg);
   }
+
+  .word-card-actions .icon-btn,
+  .word-card-actions .btn-icon-only {
+    width: var(--control-height-sm);
+    height: var(--control-height-sm);
+    min-width: var(--control-height-sm);
+    min-height: var(--control-height-sm);
+  }
+
+  .word-card-actions .icon-btn svg,
+  .word-card-actions .btn-icon-only svg {
+    width: 16px;
+    height: 16px;
+  }
 }
 
 @media (max-width: 1040px) {

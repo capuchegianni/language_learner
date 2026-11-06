@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { IconChronicle, IconManiculeRight } from '../../../components/icons';
+import { IconChronicle, IconHazardAlert, IconManiculeRight, IconTrashShears } from '../../../components/icons';
 import { Lesson, DashboardStats } from '../../../types';
-import { LoadingSpinner, EmptyState, LessonCard, Button, Card } from '../../../components';
+import { LoadingSpinner, EmptyState, LessonCard, Button, Card, Modal } from '../../../components';
 
 export interface RecentLessonsListProps {
   stats: DashboardStats | null;
   loading: boolean;
-  onDeleteLesson: (e: React.MouseEvent, id: string) => Promise<void>;
+  onDeleteLesson: (id: string) => Promise<void>;
 }
 
 export const RecentLessonsList: React.FC<RecentLessonsListProps> = ({
@@ -16,6 +16,8 @@ export const RecentLessonsList: React.FC<RecentLessonsListProps> = ({
   onDeleteLesson,
 }) => {
   const navigate = useNavigate();
+  const [lessonToDelete, setLessonToDelete] = useState<Lesson | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   if (loading) {
     return (
@@ -61,7 +63,7 @@ export const RecentLessonsList: React.FC<RecentLessonsListProps> = ({
         <LessonCard
           key={lesson.id}
           lesson={lesson}
-          onDelete={onDeleteLesson}
+          onDelete={() => setLessonToDelete(lesson)}
         />
       ))}
 
@@ -95,6 +97,46 @@ export const RecentLessonsList: React.FC<RecentLessonsListProps> = ({
           </div>
         </Card>
       )}
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        isOpen={lessonToDelete !== null}
+        onClose={() => !isDeleting && setLessonToDelete(null)}
+        icon={<IconHazardAlert size={20} />}
+        title="Delete Lesson"
+        maxWidth="440px"
+        danger
+      >
+        <p className="modal-prompt-text">
+          Are you sure you want to delete this lesson from history? This action cannot be undone.
+        </p>
+        <div className="modal-actions">
+          <Button
+            variant="secondary"
+            onClick={() => setLessonToDelete(null)}
+            disabled={isDeleting}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            disabled={isDeleting}
+            icon={isDeleting ? undefined : <IconTrashShears size={16} />}
+            onClick={async () => {
+              if (!lessonToDelete) return;
+              setIsDeleting(true);
+              try {
+                await onDeleteLesson(lessonToDelete.id);
+                setLessonToDelete(null);
+              } finally {
+                setIsDeleting(false);
+              }
+            }}
+          >
+            {isDeleting ? 'Deleting...' : 'Delete'}
+          </Button>
+        </div>
+      </Modal>
     </div>
   );
 };

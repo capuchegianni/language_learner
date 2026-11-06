@@ -268,18 +268,6 @@ export function useSettingsState(): UseSettingsStateReturn {
     );
     if (selectedKeys.length === 0) return;
 
-    const itemsFormatted = selectedKeys
-      .map((k) => k.charAt(0).toUpperCase() + k.slice(1))
-      .join(', ');
-
-    if (
-      !window.confirm(
-        `Are you sure you want to permanently reset: ${itemsFormatted}? This action cannot be undone.`,
-      )
-    ) {
-      return;
-    }
-
     try {
       setResetting(true);
       setResetError(null);

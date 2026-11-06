@@ -127,17 +127,11 @@ export function useRuleBank(): UseRuleBankReturn {
 
   const deleteRule = useCallback(
     async (id: string) => {
-      if (
-        window.confirm(
-          'Are you sure you want to delete this rule from your bank?',
-        )
-      ) {
-        try {
-          await api.deleteRule(id);
-          await loadRules(searchQuery);
-        } catch (err) {
-          console.error('Failed to delete rule', err);
-        }
+      try {
+        await api.deleteRule(id);
+        await loadRules(searchQuery);
+      } catch (err) {
+        console.error('Failed to delete rule', err);
       }
     },
     [searchQuery, loadRules],

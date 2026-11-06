@@ -145,17 +145,11 @@ export function useWordBank(): UseWordBankReturn {
 
   const deleteWord = useCallback(
     async (id: string) => {
-      if (
-        window.confirm(
-          'Are you sure you want to delete this word from your vocabulary bank?',
-        )
-      ) {
-        try {
-          await api.deleteWord(id);
-          await fetchWords(searchQuery);
-        } catch (err) {
-          console.error('Failed to delete word', err);
-        }
+      try {
+        await api.deleteWord(id);
+        await fetchWords(searchQuery);
+      } catch (err) {
+        console.error('Failed to delete word', err);
       }
     },
     [searchQuery, fetchWords],

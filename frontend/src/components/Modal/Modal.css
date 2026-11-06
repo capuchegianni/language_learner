@@ -72,19 +72,21 @@
 }
 
 .modal-title-icon {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   line-height: 1;
-  transform: translateY(-2px);
+}
+
+.modal-title-icon svg {
+  display: block;
 }
 
 .modal-title-text {
   display: inline-flex;
   align-items: center;
   line-height: 1;
-  transform: translateY(2px);
 }
 
 .modal-body {
@@ -134,6 +136,17 @@
 
 .modal-danger .modal-title {
   color: var(--stamp-red);
+}
+
+/* Modal Helper Utility Classes */
+.modal-prompt-text {
+  margin-bottom: var(--space-lg);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm);
 }
 
 @media (max-width: 650px) {
