@@ -31,6 +31,8 @@ export interface UseNewLessonStateReturn {
   imagePreviews: string[];
   submitting: boolean;
   error: string | null;
+  imageError: string | null;
+  setImageError: (err: string | null) => void;
   usageInfo: UsageInfo | null;
 
   // Actions
@@ -230,6 +232,8 @@ export function useNewLessonState(resumeLessonId?: string): UseNewLessonStateRet
     }
   }, [selectedRuleTitle, wordsCount, isReviewSelection, loadSavedAnswers, navigate, fetchUsage]);
 
+  const [imageError, setImageError] = useState<string | null>(null);
+
   const handleImageChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       if (e.target.files && e.target.files.length > 0) {
@@ -238,7 +242,7 @@ export function useNewLessonState(resumeLessonId?: string): UseNewLessonStateRet
 
         const totalSize = newFiles.reduce((acc, file) => acc + file.size, 0);
         if (totalSize > 5 * 1024 * 1024) {
-          alert('Total image size cannot exceed 5MB.');
+          setImageError('Total image size cannot exceed 5MB. Please choose smaller images.');
           e.target.value = '';
           return;
         }
@@ -355,6 +359,8 @@ export function useNewLessonState(resumeLessonId?: string): UseNewLessonStateRet
     imagePreviews,
     submitting,
     error,
+    imageError,
+    setImageError,
     usageInfo,
 
     fetchProposals,

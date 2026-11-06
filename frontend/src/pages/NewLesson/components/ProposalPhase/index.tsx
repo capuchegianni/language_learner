@@ -8,7 +8,7 @@ import {
   IconHazardAlert,
 } from '../../../../components/icons';
 import { useLanguages } from '../../../../contexts/LanguageContext';
-import { Pill, Select, IconButton, LoadingSpinner, Card, Button, Input } from '../../../../components';
+import { Pill, Select, IconButton, LoadingSpinner, Card, Button, Input, Modal } from '../../../../components';
 import './ProposalPhase.css';
 
 export interface ProposalPhaseProps {
@@ -49,6 +49,9 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
   const { targetLanguage } = useLanguages();
   const [customRule, setCustomRule] = useState('');
   const customInputRef = useRef<HTMLInputElement>(null);
+  const [confirmRefreshTarget, setConfirmRefreshTarget] = useState<
+    { type: 'all' } | { type: 'single'; index: number; title: string } | null
+  >(null);
 
   const isCustomPlan = usageInfo?.isCustom ?? false;
   const proposalUsage = usageInfo?.usage.RULE_PROPOSAL;
@@ -280,7 +283,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
         <Button
           variant="secondary"
           className="proposal-btn"
-          onClick={() => fetchProposals(true)}
+          onClick={() => setConfirmRefreshTarget({ type: 'all' })}
           disabled={loadingProposals || generatingLesson || isProposalLimitReached}
           title={isProposalLimitReached ? 'Daily proposal limit reached. Resets at 00:00 UTC.' : undefined}
           icon={<IconRefreshCrank size={18} />}
@@ -308,6 +311,39 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
           )}
         </Button>
       </div>
+
+      {/* Refresh Confirmation Modal */}
+      <Modal
+        isOpen={confirmRefreshTarget !== null}
+        onClose={() => setConfirmRefreshTarget(null)}
+        icon={<IconHazardAlert size={20} />}
+        title="Confirm Refresh"
+        maxWidth="440px"
+      >
+        <p className="modal-prompt-text">
+          {confirmRefreshTarget?.type === 'all'
+            ? 'Are you sure you want to refresh all proposals? The current proposals will be replaced and a proposal quota will be used.'
+            : `Are you sure you want to replace "${confirmRefreshTarget?.title}" with a new proposal?`}
+        </p>
+        <div className="modal-actions">
+          <Button variant="secondary" onClick={() => setConfirmRefreshTarget(null)}>
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            onClick={(e) => {
+              if (confirmRefreshTarget?.type === 'all') {
+                fetchProposals(true);
+              } else if (confirmRefreshTarget?.type === 'single') {
+                onReplaceProposal(confirmRefreshTarget.index, e);
+              }
+              setConfirmRefreshTarget(null);
+            }}
+          >
+            Confirm
+          </Button>
+        </div>
+      </Modal>
     </div>
   );
 };

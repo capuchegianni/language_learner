@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { IconChronicle, IconNewDispatch } from '../../components/icons';
+import { IconChronicle, IconNewDispatch, IconTrashShears, IconHazardAlert } from '../../components/icons';
 import { useLanguages } from '../../contexts/LanguageContext';
 import { useLessonHistory } from './hooks/useLessonHistory';
 import { HistoryFilterBar } from './components/HistoryFilterBar';
-import { PageHeader, LessonCard, LoadingSpinner, EmptyState, Button } from '../../components';
+import { PageHeader, LessonCard, LoadingSpinner, EmptyState, Button, Modal } from '../../components';
+import { Lesson } from '../../types';
 import './LessonHistory.css';
 
 export const LessonHistory: React.FC = () => {
@@ -20,6 +21,8 @@ export const LessonHistory: React.FC = () => {
     setFilterStatus,
     deleteLesson,
   } = useLessonHistory();
+  const [lessonToDelete, setLessonToDelete] = useState<Lesson | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   return (
     <div className="history-container">
@@ -27,7 +30,13 @@ export const LessonHistory: React.FC = () => {
         id="tutorial-history-header"
         icon={<IconChronicle size={40} />}
         title="Lesson History"
-        subtitle={`All past generated, submitted, and graded ${targetLanguage} lessons. Total: ${lessons.length} lesson${lessons.length !== 1 ? 's' : ''}.`}
+        subtitle={
+          <>
+            <span>All past generated, submitted, and graded {targetLanguage} lessons.</span>
+            <br />
+            <span>Total: {lessons.length} lesson{lessons.length !== 1 ? 's' : ''}.</span>
+          </>
+        }
         actions={
           <Button
             variant="primary"
@@ -64,13 +73,53 @@ export const LessonHistory: React.FC = () => {
               <LessonCard
                 key={lesson.id}
                 lesson={lesson}
-                onDelete={deleteLesson}
+                onDelete={() => setLessonToDelete(lesson)}
                 showStatusPill={true}
               />
             ))}
           </div>
         )}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        isOpen={lessonToDelete !== null}
+        onClose={() => !isDeleting && setLessonToDelete(null)}
+        icon={<IconHazardAlert size={20} />}
+        title="Delete Lesson"
+        maxWidth="440px"
+        danger
+      >
+        <p className="modal-prompt-text">
+          Are you sure you want to delete this lesson? This action cannot be undone.
+        </p>
+        <div className="modal-actions">
+          <Button
+            variant="secondary"
+            onClick={() => setLessonToDelete(null)}
+            disabled={isDeleting}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            disabled={isDeleting}
+            icon={isDeleting ? undefined : <IconTrashShears size={16} />}
+            onClick={async () => {
+              if (!lessonToDelete) return;
+              setIsDeleting(true);
+              try {
+                await deleteLesson(lessonToDelete.id);
+                setLessonToDelete(null);
+              } finally {
+                setIsDeleting(false);
+              }
+            }}
+          >
+            {isDeleting ? 'Deleting...' : 'Delete'}
+          </Button>
+        </div>
+      </Modal>
     </div>
   );
 };
