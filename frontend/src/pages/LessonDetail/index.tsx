@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { IconManiculeLeft } from '../../components/icons';
 import { api } from '../../services/api';
+import { parseLessonContent, parseAiFeedback, parseUserSubmission } from '../../services/lesson-adapter';
 import { Lesson, LessonContent, GradingResult } from '../../types';
 import { RuleExplanation } from '../NewLesson/components/RuleExplanation';
 import { WordsLearned } from '../NewLesson/components/WordsLearned';
@@ -86,14 +87,10 @@ export const LessonDetail: React.FC<LessonDetailProps> = ({
     );
   }
 
-  const lessonContent: LessonContent | null = lesson.lessonData
-    ? JSON.parse(lesson.lessonData)
-    : null;
-  const aiFeedback: GradingResult | null = lesson.aiFeedback
-    ? JSON.parse(lesson.aiFeedback)
-    : null;
+  const lessonContent: LessonContent | null = parseLessonContent(lesson);
+  const aiFeedback: GradingResult | null = parseAiFeedback(lesson);
   const userSubmission: { ex1?: string; ex2?: string; ex3?: string } | null =
-    lesson.userSubmission ? JSON.parse(lesson.userSubmission) : null;
+    parseUserSubmission(lesson);
 
   return (
     <div className="lesson-detail-container">

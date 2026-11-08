@@ -99,6 +99,20 @@ export interface GradingResult {
   exercise3: ExerciseGrading;
 }
 
+export interface LessonExercise {
+  id: string;
+  lessonId: string;
+  exerciseNumber: number;
+  instruction: string;
+  content: any;
+  userSubmission?: any;
+  score?: number | null;
+  feedback?: string | null;
+  corrections?: any;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface Lesson {
   id: string;
   title?: string;
@@ -107,12 +121,11 @@ export interface Lesson {
   rule?: Rule;
   isReview: boolean;
   wordsCount: number;
-  lessonData: string; // JSON string of LessonContent
+  exercises?: LessonExercise[]; // Structured relational exercises
   status: 'GENERATED' | 'SUBMITTED' | 'GRADED';
-  userSubmission?: string; // JSON string of {ex1, ex2, ex3}
-  submissionImage?: string;
-  aiFeedback?: string; // JSON string of GradingResult
   overallScore?: number;
+  generalFeedback?: string;
+  handwrittenOcrText?: string;
   rawPrompt?: string;
   createdAt: string;
   words?: Array<{ word: Word }>;

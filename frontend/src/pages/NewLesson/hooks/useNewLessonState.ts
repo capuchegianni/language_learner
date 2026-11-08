@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import confetti from 'canvas-confetti';
 import { api } from '../../../services/api';
+import { parseLessonContent } from '../../../services/lesson-adapter';
 import { Lesson, LessonContent, ProposedRule, UsageInfo } from '../../../types';
 import { LessonPhase } from '../components/StepIndicator';
 
@@ -163,11 +164,11 @@ export function useNewLessonState(resumeLessonId?: string): UseNewLessonStateRet
           setLoadingProposals(true);
           const lesson = await api.getLessonById(resumeLessonId);
           setCurrentLesson(lesson);
-          const parsed: LessonContent = JSON.parse(lesson.lessonData);
+          const parsed = parseLessonContent(lesson);
           setLessonContent(parsed);
           setSelectedRuleTitle(lesson.rule?.title || lesson.title || '');
           loadSavedAnswers(lesson.id);
-          if (lesson.status === 'GRADED' && lesson.aiFeedback) {
+          if (lesson.status === 'GRADED' && lesson.overallScore !== null) {
             setPhase('GRADED');
           } else {
             setPhase('GENERATED_WORKSPACE');
@@ -215,7 +216,7 @@ export function useNewLessonState(resumeLessonId?: string): UseNewLessonStateRet
         isReview: isReviewSelection,
       });
       await fetchUsage();
-      const parsed: LessonContent = JSON.parse(lesson.lessonData);
+      const parsed = parseLessonContent(lesson);
       setLessonContent(parsed);
       loadSavedAnswers(lesson.id);
       setCurrentLesson(lesson);
