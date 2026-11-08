@@ -1,8 +1,8 @@
-import { Injectable, Logger, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, Logger, InternalServerErrorException, BadRequestException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../../prisma/prisma.service';
 import { SettingsService } from '../../settings/settings.service';
-import { ActionType, Plan } from '../../generated/prisma/client';
+import { ActionType, Plan, User } from '../../generated/prisma/client';
 import {
   GEMINI_BASE_URL,
   PLAN_MODELS,
@@ -27,25 +27,44 @@ export class AiLlmCallerService {
    * Otherwise, uses the server-side Gemini configuration based on the user's plan.
    */
   async getClient(
-    userId: string,
+    userIdOrUser: string | User,
     taskType: ActionType = ActionType.LESSON_GENERATION,
   ): Promise<{ client: OpenAI; model: string }> {
-    const user = await this.prisma.user.findUnique({
-      where: { id: userId },
-      select: { plan: true, isCustom: true },
-    });
+    const user =
+      typeof userIdOrUser === 'string'
+        ? await this.prisma.user.findUnique({
+            where: { id: userIdOrUser },
+            select: { id: true, plan: true, isCustom: true },
+          })
+        : userIdOrUser;
 
+    const userId = typeof userIdOrUser === 'string' ? userIdOrUser : userIdOrUser.id;
     const isCustom = user?.isCustom ?? false;
 
     if (isCustom) {
-      const [model, baseURL] = await Promise.all([
-        this.settingsService.getSetting(userId, 'AI_MODEL'),
-        this.settingsService.getSetting(userId, 'AI_BASE_URL'),
+      const settings = await this.settingsService.getSettings(userId, [
+        'AI_MODEL',
+        'AI_BASE_URL',
+        'api_key',
       ]);
+
+      const model = settings['AI_MODEL'];
+      const baseURL = settings['AI_BASE_URL'];
+
+      if (!model) {
+        throw new BadRequestException('Missing AI configuration: AI_MODEL is not set in the Settings menu.');
+      }
+      if (!baseURL) {
+        throw new BadRequestException('Missing AI configuration: AI_BASE_URL is not set in the Settings menu.');
+      }
 
       const apiKey = this.isLocalOllamaBaseURL(baseURL)
         ? 'ollama'
-        : await this.settingsService.getSetting(userId, 'api_key');
+        : settings['api_key'];
+
+      if (!apiKey) {
+        throw new BadRequestException('Missing AI configuration: API key is not set in the Settings menu.');
+      }
 
       const client = new OpenAI({
         apiKey,
@@ -120,12 +139,12 @@ export class AiLlmCallerService {
    * Calls the LLM using a text-only prompt via the configured OpenAI-compatible client.
    */
   async callLlm(
-    userId: string,
+    userIdOrUser: string | User,
     prompt: string,
     taskType: ActionType = ActionType.LESSON_GENERATION,
     retries = 2,
   ): Promise<string> {
-    const { client, model } = await this.getClient(userId, taskType);
+    const { client, model } = await this.getClient(userIdOrUser, taskType);
     let useJsonFormat = true;
 
     for (let i = 0; i <= retries; i++) {
@@ -164,13 +183,13 @@ export class AiLlmCallerService {
    * Calls the LLM with an image attached (vision).
    */
   async callLlmWithImages(
-    userId: string,
+    userIdOrUser: string | User,
     prompt: string,
     imagePaths: string[],
     taskType: ActionType = ActionType.LESSON_CORRECTION,
     retries = 2,
   ): Promise<string> {
-    const { client, model } = await this.getClient(userId, taskType);
+    const { client, model } = await this.getClient(userIdOrUser, taskType);
 
     const contentParts: OpenAI.Chat.Completions.ChatCompletionContentPart[] = [
       { type: 'text', text: prompt },

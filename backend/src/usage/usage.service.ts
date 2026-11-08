@@ -8,6 +8,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { createHmac } from 'crypto';
+import { User } from '../generated/prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import {
   ActionType,
@@ -50,13 +51,21 @@ export class UsageService implements OnModuleInit {
     return createHmac('sha256', secret).update(googleId).digest('hex');
   }
 
-  private async getUserContext(userId: string): Promise<{
+  private async getUserContext(userIdOrUser: string | User): Promise<{
     userHash: string;
     plan: Plan;
     isCustom: boolean;
   }> {
+    if (typeof userIdOrUser !== 'string') {
+      return {
+        userHash: this.hashGoogleId(userIdOrUser.googleId),
+        plan: userIdOrUser.plan || Plan.FREE,
+        isCustom: userIdOrUser.isCustom,
+      };
+    }
+
     const user = await this.prisma.user.findUnique({
-      where: { id: userId },
+      where: { id: userIdOrUser },
       select: { plan: true, isCustom: true, googleId: true },
     });
 
@@ -71,8 +80,8 @@ export class UsageService implements OnModuleInit {
     };
   }
 
-  async checkLimit(userId: string, actionType: ActionType): Promise<void> {
-    const { userHash, plan, isCustom } = await this.getUserContext(userId);
+  async checkLimit(userIdOrUser: string | User, actionType: ActionType): Promise<void> {
+    const { userHash, plan, isCustom } = await this.getUserContext(userIdOrUser);
 
     if (isCustom) {
       return; // Unlimited on custom plan
@@ -100,8 +109,8 @@ export class UsageService implements OnModuleInit {
     }
   }
 
-  async incrementUsage(userId: string, actionType: ActionType): Promise<void> {
-    const { userHash } = await this.getUserContext(userId);
+  async incrementUsage(userIdOrUser: string | User, actionType: ActionType): Promise<void> {
+    const { userHash } = await this.getUserContext(userIdOrUser);
     const todayDate = this.getTodayUtcDate();
 
     await this.prisma.usageRecord.upsert({
@@ -124,8 +133,8 @@ export class UsageService implements OnModuleInit {
     });
   }
 
-  async getDailyUsageSummary(userId: string): Promise<DailyUsageSummary> {
-    const { userHash, plan, isCustom } = await this.getUserContext(userId);
+  async getDailyUsageSummary(userIdOrUser: string | User): Promise<DailyUsageSummary> {
+    const { userHash, plan, isCustom } = await this.getUserContext(userIdOrUser);
     const todayDate = this.getTodayUtcDate();
 
     const records = await this.prisma.usageRecord.findMany({

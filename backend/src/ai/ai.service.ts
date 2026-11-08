@@ -1,5 +1,5 @@
 import { Injectable, Logger, InternalServerErrorException, BadRequestException } from '@nestjs/common';
-import { ActionType, LessonExercise } from '../generated/prisma/client';
+import { ActionType, LessonExercise, User } from '../generated/prisma/client';
 import { SettingsService } from '../settings/settings.service';
 import { AiLlmCallerService } from './services/ai-llm-caller.service';
 import { AiPromptService } from './services/ai-prompt.service';
@@ -132,7 +132,7 @@ export class AiService {
    * Multimodal AI Grading of user answers (Text input or uploaded handwritten image).
    */
   async gradeSubmission(
-    userId: string,
+    userIdOrUser: string | User,
     lesson: {
       rule?: { title: string; explanation: string } | null;
       words?: Array<{ word: { targetLanguage: string; nativeLanguage: string } }>;
@@ -141,6 +141,7 @@ export class AiService {
     userSubmissions: Map<number, UserSubmission>,
     imagePaths?: string[],
   ): Promise<GradingResult> {
+    const userId = typeof userIdOrUser === 'string' ? userIdOrUser : userIdOrUser.id;
     const { nativeLanguage, targetLanguage } = await this.getUserLanguages(userId);
     const hasImages = !!(imagePaths && imagePaths.length > 0);
     const gradingInstructions = this.promptService.buildGradingPrompt(
@@ -157,14 +158,14 @@ export class AiService {
 
       if (hasImages) {
         rawResponse = await this.llmCaller.callLlmWithImages(
-          userId,
+          userIdOrUser,
           gradingInstructions,
           imagePaths!,
           ActionType.LESSON_CORRECTION,
         );
       } else {
         rawResponse = await this.llmCaller.callLlm(
-          userId,
+          userIdOrUser,
           gradingInstructions,
           ActionType.LESSON_CORRECTION,
         );
@@ -194,18 +195,13 @@ export class AiService {
    * Defaults to English -> Korean if not configured.
    */
   async getUserLanguages(userId: string): Promise<UserLanguages> {
-    let nativeLanguage = 'English';
-    let targetLanguage = 'Korean';
-    try {
-      nativeLanguage = await this.settingsService.getSetting(userId, 'NATIVE_LANGUAGE');
-    } catch {
-      // Not set yet, use default
-    }
-    try {
-      targetLanguage = await this.settingsService.getSetting(userId, 'TARGET_LANGUAGE');
-    } catch {
-      // Not set yet, use default
-    }
-    return { nativeLanguage, targetLanguage };
+    const settings = await this.settingsService.getSettings(userId, [
+      'NATIVE_LANGUAGE',
+      'TARGET_LANGUAGE',
+    ]);
+    return {
+      nativeLanguage: settings['NATIVE_LANGUAGE'],
+      targetLanguage: settings['TARGET_LANGUAGE'],
+    };
   }
 }

@@ -94,6 +94,28 @@ export class SettingsService {
     return record.value;
   }
 
+  async getSettings(userId: string, keys: string[]): Promise<Record<string, string>> {
+    const normalizedKeys = keys.map((k) => this.normalizeKey(k));
+    const records = await this.prisma.setting.findMany({
+      where: {
+        userId,
+        key: { in: normalizedKeys },
+      },
+    });
+
+    const result: Record<string, string> = {};
+    for (const rec of records) {
+      if (rec.key === SECRET_SETTING_KEY) {
+        if (rec.value) {
+          result[rec.key] = this.cryptoService.decryptSecret(rec.value);
+        }
+      } else {
+        result[rec.key] = rec.value;
+      }
+    }
+    return result;
+  }
+
   async updateSettings(userId: string, settings: Record<string, any>): Promise<Record<string, string | boolean>> {
     if (settings.isCustom !== undefined) {
       const isCustomBool = typeof settings.isCustom === 'boolean'

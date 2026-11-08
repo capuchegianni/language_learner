@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { ActionType, LessonStatus, Prisma } from '../../generated/prisma/client';
+import { ActionType, LessonStatus, Prisma, User } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AiService } from '../../ai/ai.service';
 import { UsageService } from '../../usage/usage.service';
@@ -18,11 +18,13 @@ export class LessonGradingService {
    * Submits user answers (text or uploaded image) and calls AI Vision/Grading engine.
    */
   async submitLesson(
-    userId: string,
+    user: User | string,
     lessonId: string,
     userAnswersText: SubmitLessonDto,
     imagePaths?: string[],
   ) {
+    const userId = typeof user === 'string' ? user : user.id;
+
     const lesson = await this.prisma.lesson.findFirst({
       where: { id: lessonId, userId },
       include: {
@@ -99,17 +101,17 @@ export class LessonGradingService {
             },
           ];
 
-    await this.usageService.checkLimit(userId, ActionType.LESSON_CORRECTION);
+    await this.usageService.checkLimit(user, ActionType.LESSON_CORRECTION);
 
     const grading = await this.aiService.gradeSubmission(
-      userId,
+      user,
       lesson,
       exercisesToGrade,
       userSubmissions,
       imagePaths,
     );
 
-    await this.usageService.incrementUsage(userId, ActionType.LESSON_CORRECTION);
+    await this.usageService.incrementUsage(user, ActionType.LESSON_CORRECTION);
 
     return this.prisma.$transaction(async (tx) => {
       const fallbackExercises: Array<{
@@ -124,50 +126,52 @@ export class LessonGradingService {
 
       const exerciseList = lesson.exercises.length > 0 ? lesson.exercises : fallbackExercises;
 
-      for (const ex of exerciseList) {
-        const sub = userSubmissions.get(ex.exerciseNumber);
-        const exerciseKey = `exercise${ex.exerciseNumber}` as 'exercise1' | 'exercise2' | 'exercise3';
-        const evalResult = grading[exerciseKey] as ExerciseGrading | undefined;
+      await Promise.all(
+        exerciseList.map((ex) => {
+          const sub = userSubmissions.get(ex.exerciseNumber);
+          const exerciseKey = `exercise${ex.exerciseNumber}` as 'exercise1' | 'exercise2' | 'exercise3';
+          const evalResult = grading[exerciseKey] as ExerciseGrading | undefined;
 
-        const score =
-          evalResult?.score !== undefined && evalResult?.score !== null
-            ? Number(evalResult.score)
-            : null;
+          const score =
+            evalResult?.score !== undefined && evalResult?.score !== null
+              ? Number(evalResult.score)
+              : null;
 
-        const userSubmissionJson: Prisma.InputJsonValue | Prisma.NullableJsonNullValueInput =
-          sub ? (sub as unknown as Prisma.InputJsonValue) : Prisma.DbNull;
+          const userSubmissionJson: Prisma.InputJsonValue | Prisma.NullableJsonNullValueInput =
+            sub ? (sub as unknown as Prisma.InputJsonValue) : Prisma.DbNull;
 
-        const correctionsJson: Prisma.InputJsonValue =
-          (evalResult?.corrections ?? []) as unknown as Prisma.InputJsonValue;
+          const correctionsJson: Prisma.InputJsonValue =
+            (evalResult?.corrections ?? []) as unknown as Prisma.InputJsonValue;
 
-        const contentJson: Prisma.InputJsonValue =
-          (ex.content ?? {}) as Prisma.InputJsonValue;
+          const contentJson: Prisma.InputJsonValue =
+            (ex.content ?? {}) as Prisma.InputJsonValue;
 
-        await tx.lessonExercise.upsert({
-          where: {
-            lessonId_exerciseNumber: {
+          return tx.lessonExercise.upsert({
+            where: {
+              lessonId_exerciseNumber: {
+                lessonId,
+                exerciseNumber: ex.exerciseNumber,
+              },
+            },
+            update: {
+              userSubmission: userSubmissionJson,
+              score,
+              feedback: evalResult?.feedback ?? null,
+              corrections: correctionsJson,
+            },
+            create: {
               lessonId,
               exerciseNumber: ex.exerciseNumber,
+              instruction: ex.instruction,
+              content: contentJson,
+              userSubmission: userSubmissionJson,
+              score,
+              feedback: evalResult?.feedback ?? null,
+              corrections: correctionsJson,
             },
-          },
-          update: {
-            userSubmission: userSubmissionJson,
-            score,
-            feedback: evalResult?.feedback ?? null,
-            corrections: correctionsJson,
-          },
-          create: {
-            lessonId,
-            exerciseNumber: ex.exerciseNumber,
-            instruction: ex.instruction,
-            content: contentJson,
-            userSubmission: userSubmissionJson,
-            score,
-            feedback: evalResult?.feedback ?? null,
-            corrections: correctionsJson,
-          },
-        });
-      }
+          });
+        }),
+      );
 
       const overallScore =
         grading.overallScore !== undefined && grading.overallScore !== null
@@ -187,13 +191,15 @@ export class LessonGradingService {
               : lesson.submissionImage || null,
         },
         include: {
-          rule: true,
-          words: { include: { word: true } },
           exercises: { orderBy: { exerciseNumber: 'asc' } },
         },
       });
 
-      return updatedLesson;
+      return {
+        ...updatedLesson,
+        rule: lesson.rule,
+        words: lesson.words,
+      };
     });
   }
 }
