@@ -84,9 +84,25 @@ export interface LessonContent {
   };
 }
 
-export interface ExerciseGrading {
+export type CorrectionErrorType =
+  | 'spelling'
+  | 'conjugation'
+  | 'grammar'
+  | 'vocabulary'
+  | 'syntax'
+  | 'other';
+
+export interface StructuredCorrection {
+  item: string;
+  original: string;
+  expected: string;
+  explanation: string;
+  errorType: CorrectionErrorType;
+}
+
+export interface ExerciseGrading<T = string> {
   score: number;
-  corrections: string[];
+  corrections: T[];
   feedback: string;
 }
 
@@ -108,7 +124,7 @@ export interface LessonExercise {
   userSubmission?: any;
   score?: number | null;
   feedback?: string | null;
-  corrections?: any;
+  corrections?: StructuredCorrection[] | string[] | any;
   createdAt?: string;
   updatedAt?: string;
 }

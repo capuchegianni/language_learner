@@ -64,23 +64,70 @@ export function parseLessonContent(lesson: Lesson): LessonContent | null {
   return null;
 }
 
+/**
+ * Normalizes correction items into formatted human-readable strings.
+ * - Leaves legacy string items unchanged.
+ * - Formats StructuredCorrection objects as "<item>: <original> ➔ <expected> (<explanation>)".
+ * - Omits empty parentheses if explanation is empty.
+ * - Gracefully handles stringified JSON, non-JSON plain text, null, and undefined.
+ */
+export function normalizeCorrections(rawCorrections: any): string[] {
+  if (rawCorrections === null || rawCorrections === undefined) {
+    return [];
+  }
+
+  let parsed = rawCorrections;
+
+  if (typeof rawCorrections === 'string') {
+    const trimmed = rawCorrections.trim();
+    if (!trimmed) {
+      return [];
+    }
+    try {
+      parsed = JSON.parse(trimmed);
+    } catch {
+      // Non-JSON plain text correction string
+      return [trimmed];
+    }
+  }
+
+  if (!Array.isArray(parsed)) {
+    if (parsed && typeof parsed === 'object') {
+      parsed = [parsed];
+    } else {
+      return [];
+    }
+  }
+
+  return parsed.map((item): string => {
+    if (typeof item === 'string') {
+      return item; // Preserved legacy string
+    }
+
+    if (item && typeof item === 'object') {
+      const label = item.item && typeof item.item === 'string' ? item.item.trim() : '';
+      const original =
+        item.original !== undefined && item.original !== null ? String(item.original).trim() : '';
+      const expected =
+        item.expected !== undefined && item.expected !== null ? String(item.expected).trim() : '';
+      const explanation =
+        item.explanation && typeof item.explanation === 'string' ? item.explanation.trim() : '';
+
+      const prefix = label ? `${label}: ` : '';
+      const explanationPart = explanation ? ` (${explanation})` : '';
+
+      return `${prefix}${original} ➔ ${expected}${explanationPart}`;
+    }
+
+    return String(item ?? '');
+  });
+}
+
 export function parseAiFeedback(lesson: Lesson): GradingResult | null {
   if (lesson.overallScore !== null && lesson.overallScore !== undefined) {
     const ex1 = lesson.exercises?.find((e) => e.exerciseNumber === 1);
     const ex2 = lesson.exercises?.find((e) => e.exerciseNumber === 2);
     const ex3 = lesson.exercises?.find((e) => e.exerciseNumber === 3);
-
-    const safeParse = (c: any) => {
-      if (!c) return [];
-      if (typeof c === 'string') {
-        try {
-          return JSON.parse(c);
-        } catch {
-          return [];
-        }
-      }
-      return c;
-    };
 
     return {
       overallScore: lesson.overallScore ?? 0,
@@ -88,17 +135,17 @@ export function parseAiFeedback(lesson: Lesson): GradingResult | null {
       handwrittenOcrText: lesson.handwrittenOcrText,
       exercise1: {
         score: ex1?.score ?? 0,
-        corrections: safeParse(ex1?.corrections),
+        corrections: normalizeCorrections(ex1?.corrections),
         feedback: ex1?.feedback || '',
       },
       exercise2: {
         score: ex2?.score ?? 0,
-        corrections: safeParse(ex2?.corrections),
+        corrections: normalizeCorrections(ex2?.corrections),
         feedback: ex2?.feedback || '',
       },
       exercise3: {
         score: ex3?.score ?? 0,
-        corrections: safeParse(ex3?.corrections),
+        corrections: normalizeCorrections(ex3?.corrections),
         feedback: ex3?.feedback || '',
       },
     };
