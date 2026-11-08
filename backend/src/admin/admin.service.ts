@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Plan } from '../generated/prisma/client';
+import { Plan, Prisma } from '../generated/prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -7,7 +7,7 @@ export class AdminService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getUsers(query?: string) {
-    const whereClause: any = {};
+    const whereClause: Prisma.UserWhereInput = {};
 
     if (query?.trim()) {
       const q = query.trim();

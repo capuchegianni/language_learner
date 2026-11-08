@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { LessonStatus } from '../../generated/prisma/client';
+import { LessonStatus, Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { LessonQueryDto } from '../dto/lesson.dto';
 
@@ -8,7 +8,7 @@ export class LessonQueriesService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getLessons(userId: string, options?: LessonQueryDto) {
-    const where: any = { userId };
+    const where: Prisma.LessonWhereInput = { userId };
     if (options?.status) {
       where.status = options.status as LessonStatus;
     }

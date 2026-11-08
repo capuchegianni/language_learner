@@ -10,6 +10,7 @@ import {
   UserLanguages,
   UserSubmission,
 } from './interfaces/ai.interfaces';
+import { validateAndRepairGrading } from './schemas/grading.schema';
 
 export * from './interfaces/ai.interfaces';
 
@@ -71,9 +72,10 @@ export class AiService {
         return parsed.slice(0, count);
       }
       throw new Error('AI returned an invalid or incomplete array format for rule proposals.');
-    } catch (err: any) {
-      this.logger.error(`Error generating rule proposals from LLM: ${err.message}`);
-      throw new InternalServerErrorException(`Failed to generate rule proposals. Details: ${err.message}`);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      this.logger.error(`Error generating rule proposals from LLM: ${msg}`);
+      throw new InternalServerErrorException(`Failed to generate rule proposals. Details: ${msg}`);
     }
   }
 
@@ -116,12 +118,13 @@ export class AiService {
         ...parsed,
         rawPrompt,
       };
-    } catch (err: any) {
+    } catch (err: unknown) {
       if (err instanceof BadRequestException) {
         throw err;
       }
-      this.logger.error(`Failed to generate lesson from AI API: ${err.message}`);
-      throw new InternalServerErrorException(`Failed to generate lesson. Please check your AI API key and model settings. Details: ${err.message}`);
+      const msg = err instanceof Error ? err.message : String(err);
+      this.logger.error(`Failed to generate lesson from AI API: ${msg}`);
+      throw new InternalServerErrorException(`Failed to generate lesson. Please check your AI API key and model settings. Details: ${msg}`);
     }
   }
 
@@ -168,10 +171,21 @@ export class AiService {
       }
 
       const cleaned = this.llmCaller.cleanJsonResponse(rawResponse);
-      return JSON.parse(cleaned);
-    } catch (err: any) {
-      this.logger.error(`Error grading submission via AI API: ${err.message}`);
-      throw new InternalServerErrorException(`Failed to grade submission. Please check your AI API configuration. Details: ${err.message}`);
+      let parsed: unknown = {};
+      try {
+        parsed = JSON.parse(cleaned);
+      } catch (parseErr: unknown) {
+        const msg = parseErr instanceof Error ? parseErr.message : String(parseErr);
+        this.logger.warn(
+          `Initial JSON.parse failed on cleaned LLM output: ${msg}. Passing to validateAndRepairGrading.`,
+        );
+        parsed = cleaned;
+      }
+      return validateAndRepairGrading(parsed);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      this.logger.error(`Error grading submission via AI API: ${msg}`);
+      throw new InternalServerErrorException(`Failed to grade submission. Please check your AI API configuration. Details: ${msg}`);
     }
   }
 

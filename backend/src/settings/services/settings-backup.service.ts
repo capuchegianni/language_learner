@@ -1,8 +1,47 @@
 import { Injectable } from '@nestjs/common';
-import { LessonStatus } from '../../generated/prisma/client';
+import { LessonStatus, Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { SettingsCryptoService } from './settings-crypto.service';
 import { ImportPayload, ResetDataDto } from '../dto/settings.dto';
+
+interface LegacyExercise1Data {
+  instruction?: string;
+  type?: string;
+  targetWords?: string[];
+  sampleWords?: string[];
+  subjectPronouns?: string[];
+}
+
+interface LegacyExercise2Data {
+  instruction?: string;
+  sentencesToTranslate?: string[];
+}
+
+interface LegacyExercise3Data {
+  instruction?: string;
+  textToTranslate?: string;
+}
+
+interface LegacyLessonData {
+  exercise1?: LegacyExercise1Data;
+  exercise2?: LegacyExercise2Data;
+  exercise3?: LegacyExercise3Data;
+}
+
+interface LegacyFeedbackData {
+  overallScore?: number;
+  generalFeedback?: string;
+  handwrittenOcrText?: string;
+  exercise1?: { score?: number | null; feedback?: string | null; corrections?: Prisma.InputJsonValue };
+  exercise2?: { score?: number | null; feedback?: string | null; corrections?: Prisma.InputJsonValue };
+  exercise3?: { score?: number | null; feedback?: string | null; corrections?: Prisma.InputJsonValue };
+}
+
+interface LegacyUserSubmissionData {
+  ex1?: string;
+  ex2?: string;
+  ex3?: string;
+}
 
 const SECRET_SETTING_KEY = 'api_key';
 
@@ -13,8 +52,8 @@ export class SettingsBackupService {
     private readonly cryptoService: SettingsCryptoService,
   ) {}
 
-  private parseDate(val: any): Date | undefined {
-    if (!val) return undefined;
+  private parseDate(val: unknown): Date | undefined {
+    if (!val || typeof val !== 'string' && !(val instanceof Date) && typeof val !== 'number') return undefined;
     const d = new Date(val);
     return isNaN(d.getTime()) ? undefined : d;
   }
@@ -29,7 +68,7 @@ export class SettingsBackupService {
     await this.prisma.$transaction(async (tx) => {
       // 1. Settings
       if (settings && typeof settings === 'object') {
-        const settingsList: Array<{ key: string; value: string; updatedAt?: any }> = Array.isArray(settings)
+        const settingsList: Array<{ key: string; value: string; updatedAt?: string | Date }> = Array.isArray(settings)
           ? settings
           : Object.entries(settings).map(([key, value]) => ({ key, value: value as string }));
 
@@ -167,16 +206,19 @@ export class SettingsBackupService {
           let newLesson;
 
           if (Array.isArray(l.exercises) && l.exercises.length > 0) {
-            const safeParseJson = (val: any, fallback: any = undefined) => {
+            const safeParseJson = (
+              val: unknown,
+              fallback: Prisma.NullableJsonNullValueInput | Prisma.InputJsonValue = Prisma.DbNull,
+            ): Prisma.NullableJsonNullValueInput | Prisma.InputJsonValue => {
               if (val === undefined || val === null) return fallback;
               if (typeof val === 'string') {
                 try {
-                  return JSON.parse(val);
+                  return JSON.parse(val) as Prisma.InputJsonValue;
                 } catch {
-                  return fallback !== undefined ? fallback : val;
+                  return fallback !== Prisma.DbNull ? fallback : val;
                 }
               }
-              return val;
+              return val as Prisma.InputJsonValue;
             };
 
             newLesson = await tx.lesson.create({
@@ -196,14 +238,14 @@ export class SettingsBackupService {
                 ...(createdAt ? { createdAt } : {}),
                 ...(updatedAt ? { updatedAt } : {}),
                 exercises: {
-                  create: l.exercises.map((ex: any) => ({
+                  create: l.exercises.map((ex) => ({
                     exerciseNumber: ex.exerciseNumber,
                     instruction: ex.instruction || `Exercise ${ex.exerciseNumber}`,
-                    content: safeParseJson(ex.content, {}),
-                    userSubmission: safeParseJson(ex.userSubmission, undefined),
+                    content: safeParseJson(ex.content, {}) as Prisma.InputJsonValue,
+                    userSubmission: safeParseJson(ex.userSubmission, Prisma.DbNull) as Prisma.NullableJsonNullValueInput | Prisma.InputJsonValue,
                     score: ex.score ?? null,
                     feedback: ex.feedback ?? null,
-                    corrections: safeParseJson(ex.corrections, undefined),
+                    corrections: safeParseJson(ex.corrections, Prisma.DbNull) as Prisma.NullableJsonNullValueInput | Prisma.InputJsonValue,
                     createdAt: this.parseDate(ex.createdAt) || undefined,
                     updatedAt: this.parseDate(ex.updatedAt) || undefined,
                   })),
@@ -212,20 +254,20 @@ export class SettingsBackupService {
             });
           } else {
             // Legacy backup import fallback
-            let ld: any = {};
+            let ld: LegacyLessonData = {};
             try {
-              ld = typeof l.lessonData === 'string' ? JSON.parse(l.lessonData) : l.lessonData;
+              ld = typeof l.lessonData === 'string' ? JSON.parse(l.lessonData) : (l.lessonData as LegacyLessonData) || {};
             } catch {}
-            let fb: any = null;
+            let fb: LegacyFeedbackData | null = null;
             if (l.aiFeedback) {
               try {
-                fb = typeof l.aiFeedback === 'string' ? JSON.parse(l.aiFeedback) : l.aiFeedback;
+                fb = typeof l.aiFeedback === 'string' ? JSON.parse(l.aiFeedback) : (l.aiFeedback as LegacyFeedbackData) || null;
               } catch {}
             }
-            let us: any = null;
+            let us: LegacyUserSubmissionData | null = null;
             if (l.userSubmission) {
               try {
-                us = typeof l.userSubmission === 'string' ? JSON.parse(l.userSubmission) : l.userSubmission;
+                us = typeof l.userSubmission === 'string' ? JSON.parse(l.userSubmission) : (l.userSubmission as LegacyUserSubmissionData) || null;
               } catch {}
             }
 
@@ -293,12 +335,15 @@ export class SettingsBackupService {
             ? l.targetWords
             : Array.isArray(l.words)
             ? l.words
-                .map((w: any) =>
-                  typeof w === 'string'
-                    ? w
-                    : w.word?.targetLanguage || w.targetLanguage,
-                )
-                .filter(Boolean)
+                .map((w: unknown) => {
+                  if (typeof w === 'string') return w;
+                  if (w && typeof w === 'object') {
+                    const wordObj = w as { word?: { targetLanguage?: string }; targetLanguage?: string };
+                    return wordObj.word?.targetLanguage || wordObj.targetLanguage;
+                  }
+                  return undefined;
+                })
+                .filter((w): w is string => Boolean(w))
             : [];
           for (const kw of targetWords) {
             const wId = await resolveWord(kw);

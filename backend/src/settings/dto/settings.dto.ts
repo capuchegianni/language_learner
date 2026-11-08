@@ -1,4 +1,5 @@
 import { IsBoolean, IsOptional } from 'class-validator';
+import { Prisma } from '../../generated/prisma/client';
 
 export class ResetDataDto {
   @IsOptional()
@@ -34,27 +35,27 @@ export class ExportDataQueryDto {
 
 export interface ImportPayload {
   overrideSettings?: boolean;
-  settings?: Array<{ key: string; value: string; updatedAt?: any }> | Record<string, string>;
+  settings?: Array<{ key: string; value: string; updatedAt?: string | Date }> | Record<string, string>;
   words?: Array<{
     targetLanguage: string;
     nativeLanguage: string;
     pronunciation?: string;
     partOfSpeech?: string;
     notes?: string;
-    createdAt?: any;
-    updatedAt?: any;
+    createdAt?: string | Date;
+    updatedAt?: string | Date;
   }>;
   rules?: Array<{
     title: string;
     explanation: string;
-    examples: any;
-    exceptions?: any;
-    createdAt?: any;
-    updatedAt?: any;
+    examples: Prisma.InputJsonValue;
+    exceptions?: Prisma.InputJsonValue;
+    createdAt?: string | Date;
+    updatedAt?: string | Date;
   }>;
   lessons?: Array<{
     title?: string;
-    date?: any;
+    date?: string | Date;
     ruleTitle?: string;
     rule?: { title: string };
     isReview?: boolean;
@@ -70,18 +71,18 @@ export interface ImportPayload {
     exercises?: Array<{
       exerciseNumber: number;
       instruction: string;
-      content: any;
-      userSubmission?: any;
+      content: Prisma.InputJsonValue;
+      userSubmission?: Prisma.InputJsonValue;
       score?: number;
       feedback?: string;
-      corrections?: any;
-      createdAt?: any;
-      updatedAt?: any;
+      corrections?: Prisma.InputJsonValue;
+      createdAt?: string | Date;
+      updatedAt?: string | Date;
     }>;
-    lessonData?: any;
-    userSubmission?: any;
-    aiFeedback?: any;
-    createdAt?: any;
-    updatedAt?: any;
+    lessonData?: Prisma.InputJsonValue;
+    userSubmission?: Prisma.InputJsonValue;
+    aiFeedback?: Prisma.InputJsonValue;
+    createdAt?: string | Date;
+    updatedAt?: string | Date;
   }>;
 }

@@ -4,7 +4,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { AiService } from '../../ai/ai.service';
 import { UsageService } from '../../usage/usage.service';
 import { SubmitLessonDto } from '../dto/lesson.dto';
-import { UserSubmission } from '../../ai/interfaces/ai.interfaces';
+import { UserSubmission, ExerciseGrading } from '../../ai/interfaces/ai.interfaces';
 
 @Injectable()
 export class LessonGradingService {
@@ -112,25 +112,36 @@ export class LessonGradingService {
     await this.usageService.incrementUsage(userId, ActionType.LESSON_CORRECTION);
 
     return this.prisma.$transaction(async (tx) => {
-      const exerciseList =
-        lesson.exercises.length > 0
-          ? lesson.exercises
-          : [
-              { exerciseNumber: 1, instruction: 'Exercise 1', content: {} },
-              { exerciseNumber: 2, instruction: 'Exercise 2', content: {} },
-              { exerciseNumber: 3, instruction: 'Exercise 3', content: {} },
-            ];
+      const fallbackExercises: Array<{
+        exerciseNumber: number;
+        instruction: string;
+        content: Prisma.InputJsonValue;
+      }> = [
+        { exerciseNumber: 1, instruction: 'Exercise 1', content: {} },
+        { exerciseNumber: 2, instruction: 'Exercise 2', content: {} },
+        { exerciseNumber: 3, instruction: 'Exercise 3', content: {} },
+      ];
+
+      const exerciseList = lesson.exercises.length > 0 ? lesson.exercises : fallbackExercises;
 
       for (const ex of exerciseList) {
         const sub = userSubmissions.get(ex.exerciseNumber);
-        const evalResult = (grading as any)[`exercise${ex.exerciseNumber}`] as
-          | { score?: number; feedback?: string; corrections?: string[] }
-          | undefined;
+        const exerciseKey = `exercise${ex.exerciseNumber}` as 'exercise1' | 'exercise2' | 'exercise3';
+        const evalResult = grading[exerciseKey] as ExerciseGrading | undefined;
 
         const score =
           evalResult?.score !== undefined && evalResult?.score !== null
             ? Number(evalResult.score)
             : null;
+
+        const userSubmissionJson: Prisma.InputJsonValue | Prisma.NullableJsonNullValueInput =
+          sub ? (sub as unknown as Prisma.InputJsonValue) : Prisma.DbNull;
+
+        const correctionsJson: Prisma.InputJsonValue =
+          (evalResult?.corrections ?? []) as unknown as Prisma.InputJsonValue;
+
+        const contentJson: Prisma.InputJsonValue =
+          (ex.content ?? {}) as Prisma.InputJsonValue;
 
         await tx.lessonExercise.upsert({
           where: {
@@ -140,20 +151,20 @@ export class LessonGradingService {
             },
           },
           update: {
-            userSubmission: (sub ?? Prisma.DbNull) as any,
+            userSubmission: userSubmissionJson,
             score,
             feedback: evalResult?.feedback ?? null,
-            corrections: evalResult?.corrections ?? [],
+            corrections: correctionsJson,
           },
           create: {
             lessonId,
             exerciseNumber: ex.exerciseNumber,
             instruction: ex.instruction,
-            content: (ex as any).content ?? {},
-            userSubmission: (sub ?? Prisma.DbNull) as any,
+            content: contentJson,
+            userSubmission: userSubmissionJson,
             score,
             feedback: evalResult?.feedback ?? null,
-            corrections: evalResult?.corrections ?? [],
+            corrections: correctionsJson,
           },
         });
       }

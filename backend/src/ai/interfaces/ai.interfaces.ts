@@ -36,25 +36,35 @@ export interface LessonContent {
   rawPrompt: string;
 }
 
+export type CorrectionErrorType =
+  | 'spelling'
+  | 'conjugation'
+  | 'grammar'
+  | 'vocabulary'
+  | 'syntax'
+  | 'other';
+
+export interface StructuredCorrection {
+  item: string;
+  original: string;
+  expected: string;
+  explanation: string;
+  errorType: CorrectionErrorType;
+}
+
+export interface ExerciseGrading {
+  score: number;
+  corrections: StructuredCorrection[];
+  feedback: string;
+}
+
 export interface GradingResult {
   overallScore: number; // 0-100
   generalFeedback: string;
-  exercise1: {
-    score: number;
-    corrections: string[];
-    feedback: string;
-  };
-  exercise2: {
-    score: number;
-    corrections: string[];
-    feedback: string;
-  };
-  exercise3: {
-    score: number;
-    corrections: string[];
-    feedback: string;
-  };
-  handwrittenOcrText?: string;
+  exercise1: ExerciseGrading;
+  exercise2: ExerciseGrading;
+  exercise3: ExerciseGrading;
+  handwrittenOcrText?: string | null;
 }
 
 export interface UserLanguages {

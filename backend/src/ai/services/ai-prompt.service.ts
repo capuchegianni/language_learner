@@ -168,36 +168,40 @@ Follow this exact JSON structure:
     nativeLanguage: string,
     targetLanguage: string,
   ): string {
-    const parseContent = (content: any) => {
+    const parseContent = (content: unknown): Record<string, unknown> => {
       if (!content) return {};
       if (typeof content === 'string') {
         try {
-          return JSON.parse(content);
+          const parsed = JSON.parse(content);
+          return parsed && typeof parsed === 'object' ? (parsed as Record<string, unknown>) : {};
         } catch {
           return {};
         }
       }
-      return content;
+      if (typeof content === 'object') {
+        return content as Record<string, unknown>;
+      }
+      return {};
     };
 
     const ex1 = exercises.find((e) => e.exerciseNumber === 1);
     const ex1Content = parseContent(ex1?.content);
     const ex1TargetItemsFormatted = Array.isArray(ex1Content.targetWords)
-      ? ex1Content.targetWords.map((item: string, idx: number) => `  ${idx + 1}. ${item}`).join('\n')
+      ? (ex1Content.targetWords as unknown[]).map((item, idx) => `  ${idx + 1}. ${String(item)}`).join('\n')
       : '';
-    const ex1TypeInfo = ex1Content.type
+    const ex1TypeInfo = typeof ex1Content.type === 'string'
       ? `Exercise 1 Archetype: ${ex1Content.type}\n`
       : '';
 
     const ex2 = exercises.find((e) => e.exerciseNumber === 2);
     const ex2Content = parseContent(ex2?.content);
     const ex2SentencesFormatted = Array.isArray(ex2Content.sentencesToTranslate)
-      ? ex2Content.sentencesToTranslate.map((s: string, idx: number) => `  ${idx + 1}. ${s}`).join('\n')
+      ? (ex2Content.sentencesToTranslate as unknown[]).map((s, idx) => `  ${idx + 1}. ${String(s)}`).join('\n')
       : '';
 
     const ex3 = exercises.find((e) => e.exerciseNumber === 3);
     const ex3Content = parseContent(ex3?.content);
-    const ex3Text = ex3Content.textToTranslate || '';
+    const ex3Text = typeof ex3Content.textToTranslate === 'string' ? ex3Content.textToTranslate : '';
 
     const ex1Submission = this.formatUserSubmission(userSubmissions.get(1));
     const ex2Submission = this.formatUserSubmission(userSubmissions.get(2));
@@ -242,32 +246,57 @@ ${hasImages ? 'NOTE: Images of handwritten answers are attached. Perform OCR on 
 
 Grading Guidelines:
 - Grade the student's work accurately, providing constructive feedback and corrections. All feedback, explanations, and notes MUST be written in ${nativeLanguage}.
+- For each exercise (exercise1, exercise2, exercise3), determine an integer score from 0 to 100 based on accuracy.
+- STRUCTURED CORRECTIONS REQUIREMENT:
+  * For all exercises, "corrections" MUST be an array of StructuredCorrection objects.
+  * NEGATIVE CONSTRAINT: Include corrections STRICTLY AND ONLY for student mistakes or errors. If an exercise contains NO mistakes (all answers are correct), "corrections" MUST be an empty array []. NEVER produce corrections for correct answers!
+  * Each item in "corrections" MUST contain:
+    - "item": identification of the question or target word (e.g. "Exercise 1: 가다", "Sentence 2", or "Story Line 1")
+    - "original": the verbatim student input containing the error
+    - "expected": the correct form in ${targetLanguage}
+    - "explanation": concise grammatical explanation in ${nativeLanguage}
+    - "errorType": strictly one of: "spelling" | "conjugation" | "grammar" | "vocabulary" | "syntax" | "other"
 - Exercise 1 Evaluation:
   * Grade answers strictly against the Exercise 1 Instruction and Archetype (${ex1Content.type || 'pattern practice'}).
   * If the exercise is a conjugation drill (e.g. subject_conjugation), verify that all subject persons were conjugated and check stems, endings, and orthography.
   * If the exercise is stem inflection or particle/case attachment, check stem changes, vowel harmony, batchim/consonant rules, and elisions.
   * If the exercise is sentence transformation or clause combination, verify that the grammatical transformation/connector was correctly applied without altering meaning.
   * If the exercise is agreement or cloze insertion, check gender/number agreement and contextual accuracy.
-  * For any mistake, provide a clear, itemized correction in "exercise1.corrections" indicating the item, what was incorrect, the expected answer, and a concise explanation in ${nativeLanguage}. If an item is correct, do not include an unnecessary correction.
 
 Return STRICT JSON format (no markdown formatting, no extra text):
 {
   "overallScore": 85,
   "generalFeedback": "Overall feedback summary in ${nativeLanguage}, it must be constructive and pinpoint current weaknesses and strengths if any.",
-  "handwrittenOcrText": "Transcribed text if image was provided, else null",
+  "handwrittenOcrText": ${hasImages ? '"Transcribed text if image was provided, else null"' : 'null'},
   "exercise1": {
     "score": 90,
-    "corrections": ["<Item>: correction and explanation in ${nativeLanguage}"],
+    "corrections": [
+      {
+        "item": "Exercise 1: <Target Item>",
+        "original": "<Student Error>",
+        "expected": "<Correct Form in ${targetLanguage}>",
+        "explanation": "<Concise explanation in ${nativeLanguage}>",
+        "errorType": "conjugation"
+      }
+    ],
     "feedback": "Feedback for Ex 1 in ${nativeLanguage}"
   },
   "exercise2": {
-    "score": 80,
-    "corrections": ["Sentence 1 in ${nativeLanguage}: ...", "Sentence 2 in ${nativeLanguage}: ..."],
-    "feedback": "Feedback for Ex 2 in ${nativeLanguage}"
+    "score": 100,
+    "corrections": [],
+    "feedback": "All answers are correct! Great work."
   },
   "exercise3": {
-    "score": 85,
-    "corrections": ["Text correction details in ${nativeLanguage} ..."],
+    "score": 80,
+    "corrections": [
+      {
+        "item": "Sentence 1",
+        "original": "<Student Error>",
+        "expected": "<Correct Form in ${targetLanguage}>",
+        "explanation": "<Concise explanation in ${nativeLanguage}>",
+        "errorType": "grammar"
+      }
+    ],
     "feedback": "Feedback for Ex 3 in ${nativeLanguage}"
   }
 }`;
