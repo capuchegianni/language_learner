@@ -388,6 +388,7 @@ export const ModelName = {
   Word: 'Word',
   Rule: 'Rule',
   Lesson: 'Lesson',
+  LessonExercise: 'LessonExercise',
   LessonWord: 'LessonWord',
   Setting: 'Setting',
   LessonProposal: 'LessonProposal',
@@ -407,7 +408,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "word" | "rule" | "lesson" | "lessonWord" | "setting" | "lessonProposal" | "usageRecord"
+    modelProps: "user" | "word" | "rule" | "lesson" | "lessonExercise" | "lessonWord" | "setting" | "lessonProposal" | "usageRecord"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -704,6 +705,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.LessonCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.LessonCountAggregateOutputType> | number
+        }
+      }
+    }
+    LessonExercise: {
+      payload: Prisma.$LessonExercisePayload<ExtArgs>
+      fields: Prisma.LessonExerciseFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LessonExerciseFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LessonExercisePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LessonExerciseFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LessonExercisePayload>
+        }
+        findFirst: {
+          args: Prisma.LessonExerciseFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LessonExercisePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LessonExerciseFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LessonExercisePayload>
+        }
+        findMany: {
+          args: Prisma.LessonExerciseFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LessonExercisePayload>[]
+        }
+        create: {
+          args: Prisma.LessonExerciseCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LessonExercisePayload>
+        }
+        createMany: {
+          args: Prisma.LessonExerciseCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LessonExerciseCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LessonExercisePayload>[]
+        }
+        delete: {
+          args: Prisma.LessonExerciseDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LessonExercisePayload>
+        }
+        update: {
+          args: Prisma.LessonExerciseUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LessonExercisePayload>
+        }
+        deleteMany: {
+          args: Prisma.LessonExerciseDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LessonExerciseUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LessonExerciseUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LessonExercisePayload>[]
+        }
+        upsert: {
+          args: Prisma.LessonExerciseUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LessonExercisePayload>
+        }
+        aggregate: {
+          args: Prisma.LessonExerciseAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLessonExercise>
+        }
+        groupBy: {
+          args: Prisma.LessonExerciseGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LessonExerciseGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LessonExerciseCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LessonExerciseCountAggregateOutputType> | number
         }
       }
     }
@@ -1090,19 +1165,35 @@ export const LessonScalarFieldEnum = {
   ruleId: 'ruleId',
   isReview: 'isReview',
   wordsCount: 'wordsCount',
-  lessonData: 'lessonData',
   status: 'status',
-  userSubmission: 'userSubmission',
   submissionImage: 'submissionImage',
-  aiFeedback: 'aiFeedback',
-  overallScore: 'overallScore',
   rawPrompt: 'rawPrompt',
+  overallScore: 'overallScore',
+  generalFeedback: 'generalFeedback',
+  handwrittenOcrText: 'handwrittenOcrText',
   userId: 'userId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type LessonScalarFieldEnum = (typeof LessonScalarFieldEnum)[keyof typeof LessonScalarFieldEnum]
+
+
+export const LessonExerciseScalarFieldEnum = {
+  id: 'id',
+  lessonId: 'lessonId',
+  exerciseNumber: 'exerciseNumber',
+  instruction: 'instruction',
+  content: 'content',
+  userSubmission: 'userSubmission',
+  score: 'score',
+  feedback: 'feedback',
+  corrections: 'corrections',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LessonExerciseScalarFieldEnum = (typeof LessonExerciseScalarFieldEnum)[keyof typeof LessonExerciseScalarFieldEnum]
 
 
 export const LessonWordScalarFieldEnum = {
@@ -1159,12 +1250,44 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
 export const NullsOrder = {
   first: 'first',
   last: 'last'
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+export const QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+} as const
+
+export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
 
@@ -1212,6 +1335,20 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
  * Reference to a field of type 'LessonStatus'
  */
 export type EnumLessonStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LessonStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 
@@ -1327,6 +1464,7 @@ export type GlobalOmitConfig = {
   word?: Prisma.WordOmit
   rule?: Prisma.RuleOmit
   lesson?: Prisma.LessonOmit
+  lessonExercise?: Prisma.LessonExerciseOmit
   lessonWord?: Prisma.LessonWordOmit
   setting?: Prisma.SettingOmit
   lessonProposal?: Prisma.LessonProposalOmit
