@@ -159,34 +159,147 @@ export class SettingsBackupService {
       // 4. Lessons
       if (Array.isArray(lessons)) {
         for (const l of lessons) {
-          if (!l.lessonData) continue;
+          if (!l.exercises && !l.lessonData) continue;
           const ruleId = await resolveRule(l.ruleTitle || (l.rule ? l.rule.title : ''));
-
-          const lessonDataStr = typeof l.lessonData === 'string' ? l.lessonData : JSON.stringify(l.lessonData);
           const createdAt = this.parseDate(l.createdAt);
           const updatedAt = this.parseDate(l.updatedAt);
 
-          const newLesson = await tx.lesson.create({
-            data: {
-              title: l.title || null,
-              date: this.parseDate(l.date) || new Date(),
-              ruleId,
-              isReview: !!l.isReview,
-              wordsCount: l.wordsCount || 5,
-              lessonData: lessonDataStr,
-              status: (l.status as LessonStatus) || LessonStatus.GENERATED,
-              userSubmission: l.userSubmission ? (typeof l.userSubmission === 'string' ? l.userSubmission : JSON.stringify(l.userSubmission)) : null,
-              submissionImage: l.submissionImage || null,
-              aiFeedback: l.aiFeedback ? (typeof l.aiFeedback === 'string' ? l.aiFeedback : JSON.stringify(l.aiFeedback)) : null,
-              overallScore: l.overallScore || null,
-              rawPrompt: l.rawPrompt || null,
-              userId,
-              ...(createdAt ? { createdAt } : {}),
-              ...(updatedAt ? { updatedAt } : {}),
-            },
-          });
+          let newLesson;
 
-          const targetWords = l.targetWords || [];
+          if (Array.isArray(l.exercises) && l.exercises.length > 0) {
+            const safeParseJson = (val: any, fallback: any = undefined) => {
+              if (val === undefined || val === null) return fallback;
+              if (typeof val === 'string') {
+                try {
+                  return JSON.parse(val);
+                } catch {
+                  return fallback !== undefined ? fallback : val;
+                }
+              }
+              return val;
+            };
+
+            newLesson = await tx.lesson.create({
+              data: {
+                title: l.title || null,
+                date: this.parseDate(l.date) || new Date(),
+                ruleId,
+                isReview: !!l.isReview,
+                wordsCount: l.wordsCount || 5,
+                status: (l.status as LessonStatus) || LessonStatus.GENERATED,
+                submissionImage: l.submissionImage || null,
+                overallScore: l.overallScore ?? null,
+                generalFeedback: l.generalFeedback || null,
+                handwrittenOcrText: l.handwrittenOcrText || null,
+                rawPrompt: l.rawPrompt || null,
+                userId,
+                ...(createdAt ? { createdAt } : {}),
+                ...(updatedAt ? { updatedAt } : {}),
+                exercises: {
+                  create: l.exercises.map((ex: any) => ({
+                    exerciseNumber: ex.exerciseNumber,
+                    instruction: ex.instruction || `Exercise ${ex.exerciseNumber}`,
+                    content: safeParseJson(ex.content, {}),
+                    userSubmission: safeParseJson(ex.userSubmission, undefined),
+                    score: ex.score ?? null,
+                    feedback: ex.feedback ?? null,
+                    corrections: safeParseJson(ex.corrections, undefined),
+                    createdAt: this.parseDate(ex.createdAt) || undefined,
+                    updatedAt: this.parseDate(ex.updatedAt) || undefined,
+                  })),
+                },
+              },
+            });
+          } else {
+            // Legacy backup import fallback
+            let ld: any = {};
+            try {
+              ld = typeof l.lessonData === 'string' ? JSON.parse(l.lessonData) : l.lessonData;
+            } catch {}
+            let fb: any = null;
+            if (l.aiFeedback) {
+              try {
+                fb = typeof l.aiFeedback === 'string' ? JSON.parse(l.aiFeedback) : l.aiFeedback;
+              } catch {}
+            }
+            let us: any = null;
+            if (l.userSubmission) {
+              try {
+                us = typeof l.userSubmission === 'string' ? JSON.parse(l.userSubmission) : l.userSubmission;
+              } catch {}
+            }
+
+            newLesson = await tx.lesson.create({
+              data: {
+                title: l.title || null,
+                date: this.parseDate(l.date) || new Date(),
+                ruleId,
+                isReview: !!l.isReview,
+                wordsCount: l.wordsCount || 5,
+                status: (l.status as LessonStatus) || LessonStatus.GENERATED,
+                submissionImage: l.submissionImage || null,
+                overallScore: l.overallScore ?? fb?.overallScore ?? null,
+                generalFeedback: l.generalFeedback ?? fb?.generalFeedback ?? null,
+                handwrittenOcrText: l.handwrittenOcrText ?? fb?.handwrittenOcrText ?? null,
+                rawPrompt: l.rawPrompt || null,
+                userId,
+                ...(createdAt ? { createdAt } : {}),
+                ...(updatedAt ? { updatedAt } : {}),
+                exercises: {
+                  create: [
+                    {
+                      exerciseNumber: 1,
+                      instruction: ld?.exercise1?.instruction || 'Exercise 1',
+                      content: {
+                        type: ld?.exercise1?.type,
+                        targetWords: ld?.exercise1?.targetWords || [],
+                        sampleWords: ld?.exercise1?.sampleWords,
+                        subjectPronouns: ld?.exercise1?.subjectPronouns,
+                      },
+                      userSubmission: us?.ex1 ? { text: us.ex1 } : undefined,
+                      score: fb?.exercise1?.score ?? null,
+                      feedback: fb?.exercise1?.feedback ?? null,
+                      corrections: fb?.exercise1?.corrections ?? undefined,
+                    },
+                    {
+                      exerciseNumber: 2,
+                      instruction: ld?.exercise2?.instruction || 'Exercise 2',
+                      content: {
+                        sentencesToTranslate: ld?.exercise2?.sentencesToTranslate || [],
+                      },
+                      userSubmission: us?.ex2 ? { text: us.ex2 } : undefined,
+                      score: fb?.exercise2?.score ?? null,
+                      feedback: fb?.exercise2?.feedback ?? null,
+                      corrections: fb?.exercise2?.corrections ?? undefined,
+                    },
+                    {
+                      exerciseNumber: 3,
+                      instruction: ld?.exercise3?.instruction || 'Exercise 3',
+                      content: {
+                        textToTranslate: ld?.exercise3?.textToTranslate || '',
+                      },
+                      userSubmission: us?.ex3 ? { text: us.ex3 } : undefined,
+                      score: fb?.exercise3?.score ?? null,
+                      feedback: fb?.exercise3?.feedback ?? null,
+                      corrections: fb?.exercise3?.corrections ?? undefined,
+                    },
+                  ],
+                },
+              },
+            });
+          }
+
+          const targetWords: string[] = Array.isArray(l.targetWords)
+            ? l.targetWords
+            : Array.isArray(l.words)
+            ? l.words
+                .map((w: any) =>
+                  typeof w === 'string'
+                    ? w
+                    : w.word?.targetLanguage || w.targetLanguage,
+                )
+                .filter(Boolean)
+            : [];
           for (const kw of targetWords) {
             const wId = await resolveWord(kw);
             if (wId) {
@@ -256,17 +369,30 @@ export class SettingsBackupService {
             date: true,
             isReview: true,
             wordsCount: true,
-            lessonData: true,
             status: true,
-            userSubmission: true,
             submissionImage: true,
-            aiFeedback: true,
             overallScore: true,
+            generalFeedback: true,
+            handwrittenOcrText: true,
             rawPrompt: true,
             createdAt: true,
             updatedAt: true,
             rule: { select: { title: true } },
             words: { select: { word: { select: { targetLanguage: true } } } },
+            exercises: {
+              select: {
+                exerciseNumber: true,
+                instruction: true,
+                content: true,
+                userSubmission: true,
+                score: true,
+                feedback: true,
+                corrections: true,
+                createdAt: true,
+                updatedAt: true,
+              },
+              orderBy: { exerciseNumber: 'asc' },
+            },
           },
           orderBy: { date: 'asc' },
         });

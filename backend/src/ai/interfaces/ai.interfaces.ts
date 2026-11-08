@@ -61,3 +61,9 @@ export interface UserLanguages {
   nativeLanguage: string;
   targetLanguage: string;
 }
+
+export type UserSubmission =
+  | { grid: Record<string, string[]> } // Ex 1 (Conjugation matrix variant)
+  | { answers: string[] } // Ex 1 & Ex 2 (Standard lists: word endings, sentence translations, connector choices)
+  | { text: string }; // Ex 3 (Story translation, free-form paragraphs, or raw OCR fallback)
+

@@ -93,17 +93,45 @@ export class LessonGeneratorService {
           ruleId: ruleEntity.id,
           isReview,
           wordsCount,
-          lessonData: JSON.stringify(content),
           rawPrompt: content.rawPrompt,
           status: LessonStatus.GENERATED,
           userId,
           words: {
             create: wordEntities.map((w) => ({ wordId: w.id })),
           },
+          exercises: {
+            create: [
+              {
+                exerciseNumber: 1,
+                instruction: content.exercise1?.instruction || 'Exercise 1',
+                content: {
+                  type: content.exercise1?.type,
+                  targetWords: content.exercise1?.targetWords || [],
+                  sampleWords: content.exercise1?.sampleWords,
+                  subjectPronouns: content.exercise1?.subjectPronouns,
+                },
+              },
+              {
+                exerciseNumber: 2,
+                instruction: content.exercise2?.instruction || 'Exercise 2',
+                content: {
+                  sentencesToTranslate: content.exercise2?.sentencesToTranslate || [],
+                },
+              },
+              {
+                exerciseNumber: 3,
+                instruction: content.exercise3?.instruction || 'Exercise 3',
+                content: {
+                  textToTranslate: content.exercise3?.textToTranslate || '',
+                },
+              },
+            ],
+          },
         },
         include: {
           rule: true,
           words: { include: { word: true } },
+          exercises: { orderBy: { exerciseNumber: 'asc' } },
         },
       });
 

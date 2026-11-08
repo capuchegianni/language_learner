@@ -28,6 +28,7 @@ export class LessonQueriesService {
       include: {
         rule: true,
         words: { include: { word: true } },
+        exercises: { orderBy: { exerciseNumber: 'asc' } },
       },
     });
   }
@@ -38,6 +39,7 @@ export class LessonQueriesService {
       include: {
         rule: true,
         words: { include: { word: true } },
+        exercises: { orderBy: { exerciseNumber: 'asc' } },
       },
     });
     if (!lesson) {
@@ -65,7 +67,11 @@ export class LessonQueriesService {
       where: { userId },
       take: 3,
       orderBy: { createdAt: 'desc' },
-      include: { rule: true },
+      include: {
+        rule: true,
+        words: { include: { word: true } },
+        exercises: { orderBy: { exerciseNumber: 'asc' } },
+      },
     });
 
     const gradedStats = await this.prisma.lesson.aggregate({

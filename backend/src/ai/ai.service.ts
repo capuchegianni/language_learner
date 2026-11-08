@@ -1,5 +1,5 @@
 import { Injectable, Logger, InternalServerErrorException, BadRequestException } from '@nestjs/common';
-import { ActionType } from '../generated/prisma/client';
+import { ActionType, LessonExercise } from '../generated/prisma/client';
 import { SettingsService } from '../settings/settings.service';
 import { AiLlmCallerService } from './services/ai-llm-caller.service';
 import { AiPromptService } from './services/ai-prompt.service';
@@ -8,6 +8,7 @@ import {
   LessonContent,
   GradingResult,
   UserLanguages,
+  UserSubmission,
 } from './interfaces/ai.interfaces';
 
 export * from './interfaces/ai.interfaces';
@@ -129,15 +130,20 @@ export class AiService {
    */
   async gradeSubmission(
     userId: string,
-    lessonData: LessonContent,
-    userAnswersText: { ex1?: string; ex2?: string; ex3?: string },
+    lesson: {
+      rule?: { title: string; explanation: string } | null;
+      words?: Array<{ word: { targetLanguage: string; nativeLanguage: string } }>;
+    },
+    exercises: LessonExercise[],
+    userSubmissions: Map<number, UserSubmission>,
     imagePaths?: string[],
   ): Promise<GradingResult> {
     const { nativeLanguage, targetLanguage } = await this.getUserLanguages(userId);
     const hasImages = !!(imagePaths && imagePaths.length > 0);
     const gradingInstructions = this.promptService.buildGradingPrompt(
-      lessonData,
-      userAnswersText,
+      lesson,
+      exercises,
+      userSubmissions,
       hasImages,
       nativeLanguage,
       targetLanguage,

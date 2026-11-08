@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { LessonContent } from '../interfaces/ai.interfaces';
+import { LessonExercise } from '../../generated/prisma/client';
+import { UserSubmission } from '../interfaces/ai.interfaces';
 import { formatExerciseOneMatrix } from '../constants/exercise-one-matrix.constant';
 
 @Injectable()
@@ -131,56 +132,118 @@ Follow this exact JSON structure:
   }
 
   /**
+   * Helper to format UserSubmission polymorphic union cleanly for LLM consumption.
+   */
+  private formatUserSubmission(sub?: UserSubmission): string {
+    if (!sub) return 'N/A';
+    if ('grid' in sub && sub.grid && typeof sub.grid === 'object') {
+      const lines = Object.entries(sub.grid).map(([key, conjugations]) => {
+        const formattedConjugations = Array.isArray(conjugations)
+          ? conjugations.join(' | ')
+          : String(conjugations);
+        return `${key} | ${formattedConjugations}`;
+      });
+      return lines.length > 0 ? lines.join('\n') : 'N/A';
+    }
+    if ('answers' in sub && Array.isArray(sub.answers)) {
+      return sub.answers.map((ans, idx) => `${idx + 1}. ${ans}`).join('\n') || 'N/A';
+    }
+    if ('text' in sub && typeof sub.text === 'string') {
+      return sub.text.trim() || 'N/A';
+    }
+    return typeof sub === 'string' ? sub : JSON.stringify(sub);
+  }
+
+  /**
    * Builds the prompt for multimodal answer grading and OCR.
    */
   buildGradingPrompt(
-    lessonData: LessonContent,
-    userAnswersText: { ex1?: string; ex2?: string; ex3?: string },
+    lesson: {
+      rule?: { title: string; explanation: string } | null;
+      words?: Array<{ word: { targetLanguage: string; nativeLanguage: string } }>;
+    },
+    exercises: LessonExercise[],
+    userSubmissions: Map<number, UserSubmission>,
     hasImages: boolean,
     nativeLanguage: string,
     targetLanguage: string,
   ): string {
-    const ex1TargetItemsFormatted = lessonData.exercise1.targetWords
-      .map((item, idx) => `  ${idx + 1}. ${item}`)
-      .join('\n');
-    const ex1TypeInfo = lessonData.exercise1.type
-      ? `Exercise 1 Archetype: ${lessonData.exercise1.type}\n`
+    const parseContent = (content: any) => {
+      if (!content) return {};
+      if (typeof content === 'string') {
+        try {
+          return JSON.parse(content);
+        } catch {
+          return {};
+        }
+      }
+      return content;
+    };
+
+    const ex1 = exercises.find((e) => e.exerciseNumber === 1);
+    const ex1Content = parseContent(ex1?.content);
+    const ex1TargetItemsFormatted = Array.isArray(ex1Content.targetWords)
+      ? ex1Content.targetWords.map((item: string, idx: number) => `  ${idx + 1}. ${item}`).join('\n')
       : '';
+    const ex1TypeInfo = ex1Content.type
+      ? `Exercise 1 Archetype: ${ex1Content.type}\n`
+      : '';
+
+    const ex2 = exercises.find((e) => e.exerciseNumber === 2);
+    const ex2Content = parseContent(ex2?.content);
+    const ex2SentencesFormatted = Array.isArray(ex2Content.sentencesToTranslate)
+      ? ex2Content.sentencesToTranslate.map((s: string, idx: number) => `  ${idx + 1}. ${s}`).join('\n')
+      : '';
+
+    const ex3 = exercises.find((e) => e.exerciseNumber === 3);
+    const ex3Content = parseContent(ex3?.content);
+    const ex3Text = ex3Content.textToTranslate || '';
+
+    const ex1Submission = this.formatUserSubmission(userSubmissions.get(1));
+    const ex2Submission = this.formatUserSubmission(userSubmissions.get(2));
+    const ex3Submission = this.formatUserSubmission(userSubmissions.get(3));
+
+    const ruleTitle = lesson.rule?.title || 'General Grammar';
+    const ruleExplanation = lesson.rule?.explanation || '';
+    const vocabularyList =
+      lesson.words && lesson.words.length > 0
+        ? lesson.words.map((w) => `${w.word.targetLanguage} (${w.word.nativeLanguage})`).join(', ')
+        : 'N/A';
 
     return `You are an expert ${targetLanguage} teacher grading a student's exercise submission. The student's native language is ${nativeLanguage}.
 
 Lesson Reference:
-Rule: ${lessonData.rule.title} (${lessonData.rule.explanation})
-Vocabulary: ${lessonData.newWords.map((w) => `${w.targetLanguage} (${w.nativeLanguage})`).join(', ')}
+Rule: ${ruleTitle} (${ruleExplanation})
+Vocabulary: ${vocabularyList}
 
 Exercise Prompts:
-${ex1TypeInfo}Exercise 1 Instruction: ${lessonData.exercise1.instruction}
+${ex1TypeInfo}Exercise 1 Instruction: ${ex1?.instruction || 'Exercise 1'}
 Exercise 1 Target Items:
 ${ex1TargetItemsFormatted}
 
-Exercise 2 Instruction: ${lessonData.exercise2.instruction}
+Exercise 2 Instruction: ${ex2?.instruction || 'Exercise 2'}
 Exercise 2 Sentences to Translate:
-${lessonData.exercise2.sentencesToTranslate.map((s, idx) => `  ${idx + 1}. ${s}`).join('\n')}
+${ex2SentencesFormatted}
 
-Exercise 3 Instruction: ${lessonData.exercise3.instruction}
-Exercise 3 Text to Translate: ${lessonData.exercise3.textToTranslate}
+Exercise 3 Instruction: ${ex3?.instruction || 'Exercise 3'}
+Exercise 3 Text to Translate: ${ex3Text}
 
 Student Submission:
 [Exercise 1 Submission]
-${userAnswersText.ex1 || 'N/A'}
+${ex1Submission}
 
 [Exercise 2 Submission]
-${userAnswersText.ex2 || 'N/A'}
+${ex2Submission}
 
 [Exercise 3 Submission]
-${userAnswersText.ex3 || 'N/A'}
+${ex3Submission}
 
 ${hasImages ? 'NOTE: Images of handwritten answers are attached. Perform OCR on the handwriting first.' : ''}
 
 Grading Guidelines:
 - Grade the student's work accurately, providing constructive feedback and corrections. All feedback, explanations, and notes MUST be written in ${nativeLanguage}.
 - Exercise 1 Evaluation:
-  * Grade answers strictly against the Exercise 1 Instruction and Archetype (${lessonData.exercise1.type || 'pattern practice'}).
+  * Grade answers strictly against the Exercise 1 Instruction and Archetype (${ex1Content.type || 'pattern practice'}).
   * If the exercise is a conjugation drill (e.g. subject_conjugation), verify that all subject persons were conjugated and check stems, endings, and orthography.
   * If the exercise is stem inflection or particle/case attachment, check stem changes, vowel harmony, batchim/consonant rules, and elisions.
   * If the exercise is sentence transformation or clause combination, verify that the grammatical transformation/connector was correctly applied without altering meaning.
