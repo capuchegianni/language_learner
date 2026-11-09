@@ -1,18 +1,36 @@
 import Database from 'better-sqlite3';
 import * as path from 'path';
+import * as fs from 'fs';
 import * as dotenv from 'dotenv';
 import { randomUUID } from 'crypto';
 
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
+dotenv.config({ path: path.resolve(process.cwd(), '.env') });
 
 function getDatabasePath(): string {
   const dbUrl = process.env.DATABASE_URL;
-  if (dbUrl && dbUrl.startsWith('file:')) {
-    const rawPath = dbUrl.replace('file:', '');
-    return path.isAbsolute(rawPath) ? rawPath : path.resolve(__dirname, '..', rawPath);
+  const rawPath = dbUrl && dbUrl.startsWith('file:') ? dbUrl.replace('file:', '') : './data/dev.db';
+
+  if (path.isAbsolute(rawPath)) {
+    return rawPath;
   }
-  return path.resolve(__dirname, '../data/dev.db');
+
+  // 1. Direct from process.cwd() (matches Docker container /app where volume is mounted to /app/data)
+  const cwdCandidate = path.resolve(process.cwd(), rawPath);
+  if (fs.existsSync(cwdCandidate)) return cwdCandidate;
+
+  // 2. Relative to monorepo root: backend/<rawPath>
+  const backendRel = path.resolve(process.cwd(), 'backend', rawPath);
+  if (fs.existsSync(backendRel)) return backendRel;
+
+  // 3. Derived from __dirname, accounting for whether running from src/scripts or dist/scripts
+  const isDist = __dirname.includes('/dist/') || __dirname.includes('\\dist\\');
+  const backendDir = isDist ? path.resolve(__dirname, '../..') : path.resolve(__dirname, '..');
+  const fromDir = path.resolve(backendDir, rawPath);
+  if (fs.existsSync(fromDir)) return fromDir;
+
+  return cwdCandidate;
 }
 
 function runMigration() {
