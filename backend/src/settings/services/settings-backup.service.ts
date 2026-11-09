@@ -1,8 +1,47 @@
 import { Injectable } from '@nestjs/common';
-import { LessonStatus } from '../../generated/prisma/client';
+import { LessonStatus, Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { SettingsCryptoService } from './settings-crypto.service';
 import { ImportPayload, ResetDataDto } from '../dto/settings.dto';
+
+interface LegacyExercise1Data {
+  instruction?: string;
+  type?: string;
+  targetWords?: string[];
+  sampleWords?: string[];
+  subjectPronouns?: string[];
+}
+
+interface LegacyExercise2Data {
+  instruction?: string;
+  sentencesToTranslate?: string[];
+}
+
+interface LegacyExercise3Data {
+  instruction?: string;
+  textToTranslate?: string;
+}
+
+interface LegacyLessonData {
+  exercise1?: LegacyExercise1Data;
+  exercise2?: LegacyExercise2Data;
+  exercise3?: LegacyExercise3Data;
+}
+
+interface LegacyFeedbackData {
+  overallScore?: number;
+  generalFeedback?: string;
+  handwrittenOcrText?: string;
+  exercise1?: { score?: number | null; feedback?: string | null; corrections?: Prisma.InputJsonValue };
+  exercise2?: { score?: number | null; feedback?: string | null; corrections?: Prisma.InputJsonValue };
+  exercise3?: { score?: number | null; feedback?: string | null; corrections?: Prisma.InputJsonValue };
+}
+
+interface LegacyUserSubmissionData {
+  ex1?: string;
+  ex2?: string;
+  ex3?: string;
+}
 
 const SECRET_SETTING_KEY = 'api_key';
 
@@ -13,8 +52,8 @@ export class SettingsBackupService {
     private readonly cryptoService: SettingsCryptoService,
   ) {}
 
-  private parseDate(val: any): Date | undefined {
-    if (!val) return undefined;
+  private parseDate(val: unknown): Date | undefined {
+    if (!val || typeof val !== 'string' && !(val instanceof Date) && typeof val !== 'number') return undefined;
     const d = new Date(val);
     return isNaN(d.getTime()) ? undefined : d;
   }
@@ -29,7 +68,7 @@ export class SettingsBackupService {
     await this.prisma.$transaction(async (tx) => {
       // 1. Settings
       if (settings && typeof settings === 'object') {
-        const settingsList: Array<{ key: string; value: string; updatedAt?: any }> = Array.isArray(settings)
+        const settingsList: Array<{ key: string; value: string; updatedAt?: string | Date }> = Array.isArray(settings)
           ? settings
           : Object.entries(settings).map(([key, value]) => ({ key, value: value as string }));
 
@@ -159,34 +198,153 @@ export class SettingsBackupService {
       // 4. Lessons
       if (Array.isArray(lessons)) {
         for (const l of lessons) {
-          if (!l.lessonData) continue;
+          if (!l.exercises && !l.lessonData) continue;
           const ruleId = await resolveRule(l.ruleTitle || (l.rule ? l.rule.title : ''));
-
-          const lessonDataStr = typeof l.lessonData === 'string' ? l.lessonData : JSON.stringify(l.lessonData);
           const createdAt = this.parseDate(l.createdAt);
           const updatedAt = this.parseDate(l.updatedAt);
 
-          const newLesson = await tx.lesson.create({
-            data: {
-              title: l.title || null,
-              date: this.parseDate(l.date) || new Date(),
-              ruleId,
-              isReview: !!l.isReview,
-              wordsCount: l.wordsCount || 5,
-              lessonData: lessonDataStr,
-              status: (l.status as LessonStatus) || LessonStatus.GENERATED,
-              userSubmission: l.userSubmission ? (typeof l.userSubmission === 'string' ? l.userSubmission : JSON.stringify(l.userSubmission)) : null,
-              submissionImage: l.submissionImage || null,
-              aiFeedback: l.aiFeedback ? (typeof l.aiFeedback === 'string' ? l.aiFeedback : JSON.stringify(l.aiFeedback)) : null,
-              overallScore: l.overallScore || null,
-              rawPrompt: l.rawPrompt || null,
-              userId,
-              ...(createdAt ? { createdAt } : {}),
-              ...(updatedAt ? { updatedAt } : {}),
-            },
-          });
+          let newLesson;
 
-          const targetWords = l.targetWords || [];
+          if (Array.isArray(l.exercises) && l.exercises.length > 0) {
+            const safeParseJson = (
+              val: unknown,
+              fallback: Prisma.NullableJsonNullValueInput | Prisma.InputJsonValue = Prisma.DbNull,
+            ): Prisma.NullableJsonNullValueInput | Prisma.InputJsonValue => {
+              if (val === undefined || val === null) return fallback;
+              if (typeof val === 'string') {
+                try {
+                  return JSON.parse(val) as Prisma.InputJsonValue;
+                } catch {
+                  return fallback !== Prisma.DbNull ? fallback : val;
+                }
+              }
+              return val as Prisma.InputJsonValue;
+            };
+
+            newLesson = await tx.lesson.create({
+              data: {
+                title: l.title || null,
+                date: this.parseDate(l.date) || new Date(),
+                ruleId,
+                isReview: !!l.isReview,
+                wordsCount: l.wordsCount || 5,
+                status: (l.status as LessonStatus) || LessonStatus.GENERATED,
+                submissionImage: l.submissionImage || null,
+                overallScore: l.overallScore ?? null,
+                generalFeedback: l.generalFeedback || null,
+                handwrittenOcrText: l.handwrittenOcrText || null,
+                rawPrompt: l.rawPrompt || null,
+                userId,
+                ...(createdAt ? { createdAt } : {}),
+                ...(updatedAt ? { updatedAt } : {}),
+                exercises: {
+                  create: l.exercises.map((ex) => ({
+                    exerciseNumber: ex.exerciseNumber,
+                    instruction: ex.instruction || `Exercise ${ex.exerciseNumber}`,
+                    content: safeParseJson(ex.content, {}) as Prisma.InputJsonValue,
+                    userSubmission: safeParseJson(ex.userSubmission, Prisma.DbNull) as Prisma.NullableJsonNullValueInput | Prisma.InputJsonValue,
+                    score: ex.score ?? null,
+                    feedback: ex.feedback ?? null,
+                    corrections: safeParseJson(ex.corrections, Prisma.DbNull) as Prisma.NullableJsonNullValueInput | Prisma.InputJsonValue,
+                    createdAt: this.parseDate(ex.createdAt) || undefined,
+                    updatedAt: this.parseDate(ex.updatedAt) || undefined,
+                  })),
+                },
+              },
+            });
+          } else {
+            // Legacy backup import fallback
+            let ld: LegacyLessonData = {};
+            try {
+              ld = typeof l.lessonData === 'string' ? JSON.parse(l.lessonData) : (l.lessonData as LegacyLessonData) || {};
+            } catch {}
+            let fb: LegacyFeedbackData | null = null;
+            if (l.aiFeedback) {
+              try {
+                fb = typeof l.aiFeedback === 'string' ? JSON.parse(l.aiFeedback) : (l.aiFeedback as LegacyFeedbackData) || null;
+              } catch {}
+            }
+            let us: LegacyUserSubmissionData | null = null;
+            if (l.userSubmission) {
+              try {
+                us = typeof l.userSubmission === 'string' ? JSON.parse(l.userSubmission) : (l.userSubmission as LegacyUserSubmissionData) || null;
+              } catch {}
+            }
+
+            newLesson = await tx.lesson.create({
+              data: {
+                title: l.title || null,
+                date: this.parseDate(l.date) || new Date(),
+                ruleId,
+                isReview: !!l.isReview,
+                wordsCount: l.wordsCount || 5,
+                status: (l.status as LessonStatus) || LessonStatus.GENERATED,
+                submissionImage: l.submissionImage || null,
+                overallScore: l.overallScore ?? fb?.overallScore ?? null,
+                generalFeedback: l.generalFeedback ?? fb?.generalFeedback ?? null,
+                handwrittenOcrText: l.handwrittenOcrText ?? fb?.handwrittenOcrText ?? null,
+                rawPrompt: l.rawPrompt || null,
+                userId,
+                ...(createdAt ? { createdAt } : {}),
+                ...(updatedAt ? { updatedAt } : {}),
+                exercises: {
+                  create: [
+                    {
+                      exerciseNumber: 1,
+                      instruction: ld?.exercise1?.instruction || 'Exercise 1',
+                      content: {
+                        type: ld?.exercise1?.type,
+                        targetWords: ld?.exercise1?.targetWords || [],
+                        sampleWords: ld?.exercise1?.sampleWords,
+                        subjectPronouns: ld?.exercise1?.subjectPronouns,
+                      },
+                      userSubmission: us?.ex1 ? { text: us.ex1 } : undefined,
+                      score: fb?.exercise1?.score ?? null,
+                      feedback: fb?.exercise1?.feedback ?? null,
+                      corrections: fb?.exercise1?.corrections ?? undefined,
+                    },
+                    {
+                      exerciseNumber: 2,
+                      instruction: ld?.exercise2?.instruction || 'Exercise 2',
+                      content: {
+                        sentencesToTranslate: ld?.exercise2?.sentencesToTranslate || [],
+                      },
+                      userSubmission: us?.ex2 ? { text: us.ex2 } : undefined,
+                      score: fb?.exercise2?.score ?? null,
+                      feedback: fb?.exercise2?.feedback ?? null,
+                      corrections: fb?.exercise2?.corrections ?? undefined,
+                    },
+                    {
+                      exerciseNumber: 3,
+                      instruction: ld?.exercise3?.instruction || 'Exercise 3',
+                      content: {
+                        textToTranslate: ld?.exercise3?.textToTranslate || '',
+                      },
+                      userSubmission: us?.ex3 ? { text: us.ex3 } : undefined,
+                      score: fb?.exercise3?.score ?? null,
+                      feedback: fb?.exercise3?.feedback ?? null,
+                      corrections: fb?.exercise3?.corrections ?? undefined,
+                    },
+                  ],
+                },
+              },
+            });
+          }
+
+          const targetWords: string[] = Array.isArray(l.targetWords)
+            ? l.targetWords
+            : Array.isArray(l.words)
+            ? l.words
+                .map((w: unknown) => {
+                  if (typeof w === 'string') return w;
+                  if (w && typeof w === 'object') {
+                    const wordObj = w as { word?: { targetLanguage?: string }; targetLanguage?: string };
+                    return wordObj.word?.targetLanguage || wordObj.targetLanguage;
+                  }
+                  return undefined;
+                })
+                .filter((w): w is string => Boolean(w))
+            : [];
           for (const kw of targetWords) {
             const wId = await resolveWord(kw);
             if (wId) {
@@ -256,17 +414,30 @@ export class SettingsBackupService {
             date: true,
             isReview: true,
             wordsCount: true,
-            lessonData: true,
             status: true,
-            userSubmission: true,
             submissionImage: true,
-            aiFeedback: true,
             overallScore: true,
+            generalFeedback: true,
+            handwrittenOcrText: true,
             rawPrompt: true,
             createdAt: true,
             updatedAt: true,
             rule: { select: { title: true } },
             words: { select: { word: { select: { targetLanguage: true } } } },
+            exercises: {
+              select: {
+                exerciseNumber: true,
+                instruction: true,
+                content: true,
+                userSubmission: true,
+                score: true,
+                feedback: true,
+                corrections: true,
+                createdAt: true,
+                updatedAt: true,
+              },
+              orderBy: { exerciseNumber: 'asc' },
+            },
           },
           orderBy: { date: 'asc' },
         });

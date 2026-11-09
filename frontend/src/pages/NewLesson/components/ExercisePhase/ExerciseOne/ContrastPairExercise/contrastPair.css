@@ -16,53 +16,66 @@
 
 /* Sentence with inline select */
 .ex1-contrast-sentence {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: var(--space-2xs);
+  display: block;
   margin: 0;
   font-family: var(--font-target);
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
   color: var(--text-primary);
-  line-height: var(--line-height-normal);
+  line-height: 1.9;
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+.ex1-contrast-num,
+.ex1-contrast-before,
+.ex1-contrast-after {
+  display: inline;
 }
 
 .ex1-contrast-select {
-  font-size: var(--font-size-sm);
-  font-family: var(--font-target);
-  font-weight: var(--font-weight-bold);
+  font-size: inherit;
+  font-family: inherit;
+  font-weight: var(--font-weight-semibold);
   color: var(--text-primary);
   background: var(--bg-card-alt);
   border: var(--border-width-regular) solid var(--border-color);
   box-shadow: var(--shadow-subtle);
-  padding: var(--space-3xs) var(--space-lg) var(--space-3xs) var(--space-xs);
+  padding: 0.18rem 1.6rem 0.18rem 0.55rem;
   cursor: pointer;
   outline: none;
   appearance: none;
   -webkit-appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23111111' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right var(--space-xs) center;
-  transition: transform var(--transition-fast), background-color var(--transition-fast), box-shadow var(--transition-fast);
-  vertical-align: baseline;
+  background-position: right 0.45rem center;
+  transition: transform var(--transition-fast), background-color var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+  vertical-align: middle;
   box-sizing: border-box;
+  width: auto;
+  min-width: 4.5rem;
+  max-width: 100%;
+  min-height: auto;
+  line-height: inherit;
+  display: inline-block;
+  margin: 0;
+  border-radius: var(--radius-sm, 2px);
 }
 
 [data-theme="evening"] .ex1-contrast-select {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
 }
 
-.ex1-contrast-select:hover,
-.ex1-contrast-select:focus,
-.ex1-contrast-select:focus-visible {
+.ex1-contrast-select:not(:disabled):not(.graded-correct):hover,
+.ex1-contrast-select:not(:disabled):not(.graded-correct):focus,
+.ex1-contrast-select:not(:disabled):not(.graded-correct):focus-visible {
   transform: var(--motion-lift);
   background-color: var(--bg-card-hover);
   box-shadow: var(--shadow-press);
   outline: none !important;
 }
 
-.ex1-contrast-select:active {
+.ex1-contrast-select:not(:disabled):not(.graded-correct):active {
   transform: var(--motion-press);
   box-shadow: var(--shadow-subtle);
 }
@@ -71,18 +84,51 @@
   background: var(--bg-card);
   color: var(--text-primary);
   font-weight: var(--font-weight-semibold);
+  font-family: inherit;
+}
+
+/* Graded Review Mode Overrides for Contrast Pair Selects */
+.ex1-contrast-select:disabled {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.ex1-contrast-select.graded-field.graded-correct,
+.ex1-contrast-select.graded-field.graded-correct:hover,
+.ex1-contrast-select.graded-field.graded-correct:focus,
+.ex1-contrast-select.graded-field.graded-correct:focus-visible,
+.ex1-contrast-select.graded-field.graded-correct:active {
+  cursor: default !important;
+  transform: none !important;
+  box-shadow: none !important;
+  background-color: var(--stamp-green-bg) !important;
+  outline: none !important;
+  padding-right: 1.85rem !important;
+  background-image: none !important;
+}
+
+.ex1-contrast-select.graded-field.graded-mistake {
+  padding-right: 1.85rem !important;
+  background-image: none !important;
+  cursor: pointer;
+}
+
+/* Review Mode Correction Strip in Contrast Pair Drill */
+.ex1-contrast-corrections {
+  margin-top: var(--space-3xs);
+  padding-left: var(--space-sm);
 }
 
 @media (max-width: 650px) {
   .ex1-contrast-sentence {
     font-size: var(--font-size-sm);
-    gap: var(--space-3xs);
-    line-height: var(--line-height-snug);
+    line-height: 1.85;
   }
 
   .ex1-contrast-select {
-    font-size: var(--font-size-xs);
-    padding: var(--space-3xs) var(--space-md) var(--space-3xs) var(--space-2xs);
+    padding: 0.12rem 1.4rem 0.12rem 0.45rem;
+    min-width: 3.75rem;
+    background-position: right 0.35rem center;
   }
 }
 

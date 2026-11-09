@@ -1,9 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import confetti from 'canvas-confetti';
-import { api } from '../../../services/api';
-import { Lesson, LessonContent, ProposedRule, UsageInfo } from '../../../types';
+import { api, ExerciseSubmissionPayload } from '../../../services/api';
+import { parseLessonContent } from '../../../services/lesson-adapter';
+import { Lesson, LessonContent, ProposedRule, UsageInfo, UserSubmission } from '../../../types';
 import { LessonPhase } from '../components/StepIndicator';
+import { parseConjugationRow } from '../components/ExercisePhase/ExerciseOne/SubjectConjugationExercise/SubjectConjugationExercise';
 
 export interface UseNewLessonStateReturn {
   phase: LessonPhase;
@@ -163,11 +165,11 @@ export function useNewLessonState(resumeLessonId?: string): UseNewLessonStateRet
           setLoadingProposals(true);
           const lesson = await api.getLessonById(resumeLessonId);
           setCurrentLesson(lesson);
-          const parsed: LessonContent = JSON.parse(lesson.lessonData);
+          const parsed = parseLessonContent(lesson);
           setLessonContent(parsed);
           setSelectedRuleTitle(lesson.rule?.title || lesson.title || '');
           loadSavedAnswers(lesson.id);
-          if (lesson.status === 'GRADED' && lesson.aiFeedback) {
+          if (lesson.status === 'GRADED' && lesson.overallScore !== null) {
             setPhase('GRADED');
           } else {
             setPhase('GENERATED_WORKSPACE');
@@ -215,7 +217,7 @@ export function useNewLessonState(resumeLessonId?: string): UseNewLessonStateRet
         isReview: isReviewSelection,
       });
       await fetchUsage();
-      const parsed: LessonContent = JSON.parse(lesson.lessonData);
+      const parsed = parseLessonContent(lesson);
       setLessonContent(parsed);
       loadSavedAnswers(lesson.id);
       setCurrentLesson(lesson);
@@ -282,18 +284,33 @@ export function useNewLessonState(resumeLessonId?: string): UseNewLessonStateRet
       try {
         setError(null);
         setSubmitting(true);
-        const formattedEx1 =
-          lessonContent?.exercise1.targetWords
-            ?.map((word, i) => `${word}: ${ex1Answers[i] || ''}`)
-            .join('\n') || '';
-        const formattedEx2 =
-          lessonContent?.exercise2.sentencesToTranslate
-            ?.map((sentence, i) => `${sentence}: ${ex2Answers[i] || ''}`)
-            .join('\n') || '';
+
+        let ex1Submission: UserSubmission;
+        if (
+          lessonContent?.exercise1.type === 'subject_conjugation' &&
+          Array.isArray(lessonContent?.exercise1.targetWords) &&
+          Array.isArray(lessonContent?.exercise1.subjectPronouns) &&
+          lessonContent.exercise1.subjectPronouns.length > 0
+        ) {
+          const activePronouns = lessonContent.exercise1.subjectPronouns;
+          const grid: Record<string, string[]> = {};
+          lessonContent.exercise1.targetWords.forEach((word, vIdx) => {
+            grid[word] = parseConjugationRow(ex1Answers[vIdx], activePronouns);
+          });
+          ex1Submission = { grid };
+        } else {
+          ex1Submission = { answers: ex1Answers };
+        }
+
+        const exercises: ExerciseSubmissionPayload[] = [
+          { exerciseNumber: 1, submission: ex1Submission },
+          { exerciseNumber: 2, submission: { answers: ex2Answers } },
+          { exerciseNumber: 3, submission: { text: ex3Answer } },
+        ];
 
         const updatedLesson = await api.submitLesson(
           currentLesson.id,
-          { ex1: formattedEx1, ex2: formattedEx2, ex3: ex3Answer },
+          { exercises },
           imageFiles.length > 0 ? imageFiles : null,
         );
         await fetchUsage();

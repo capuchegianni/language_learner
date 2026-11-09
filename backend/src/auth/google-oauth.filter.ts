@@ -13,18 +13,17 @@ export class GoogleOAuthExceptionFilter implements ExceptionFilter {
 
   constructor(private configService: ConfigService) {}
 
-  catch(exception: any, host: ArgumentsHost) {
+  catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
     const frontendUrl =
       this.configService.get<string>('FRONTEND_URL') || 'http://localhost:5173';
 
-    this.logger.warn(
-      `Google OAuth authentication failed: ${exception?.message || exception}`,
-    );
+    const message = exception instanceof Error ? exception.message : String(exception);
+    this.logger.warn(`Google OAuth authentication failed: ${message}`);
 
-    const queryError = (request.query as any)?.error;
+    const queryError = typeof request.query?.error === 'string' ? request.query.error : undefined;
     let errorParam = 'auth_failed';
     if (queryError === 'access_denied' || queryError === 'consent_required') {
       errorParam = 'cancelled';

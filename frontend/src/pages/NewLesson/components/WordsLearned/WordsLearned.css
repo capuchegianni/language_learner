@@ -3,14 +3,16 @@
 /* ========================================================= */
 
 .words-learned-header {
-  font-family: var(--font-masthead);
-  font-size: var(--font-size-md);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
   font-weight: var(--font-weight-bold);
-  margin-bottom: var(--space-md);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  margin-bottom: var(--space-lg);
   display: flex;
   align-items: center;
   gap: var(--space-xs);
-  color: var(--text-primary);
+  color: var(--text-secondary);
 }
 
 .words-learned-grid {

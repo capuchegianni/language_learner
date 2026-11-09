@@ -46,6 +46,7 @@
   border: var(--border-width-regular) solid var(--border-color);
   padding: var(--space-xs) var(--space-2xl) var(--space-xs) var(--space-sm);
   color: var(--text-primary);
+  -webkit-text-fill-color: var(--text-primary);
   font-family: var(--font-mono);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
@@ -72,9 +73,8 @@
 }
 
 /* Unified Broadsheet Hover & Focus Motion (Lift & Shadow Press, No Outline) */
-.select-field:hover,
-.select-field:focus,
-.select-field:focus-visible {
+.select-field:not(:disabled):not(.graded-correct):hover,
+.select-field:not(:disabled):not(.graded-correct):active {
   transform: var(--motion-lift);
   box-shadow: var(--shadow-hover);
   background-color: var(--bg-card-hover);
@@ -82,13 +82,15 @@
 }
 
 /* Active / Onclick Press Motion */
-.select-field:active {
+.select-field:not(:disabled):not(.graded-correct):active {
   transform: var(--motion-press);
   box-shadow: var(--shadow-press);
 }
 
 .select-field:disabled {
-  opacity: 0.5;
+  opacity: 1;
+  color: var(--text-primary);
+  -webkit-text-fill-color: var(--text-primary);
   cursor: not-allowed;
   background-color: var(--bg-card-alt);
   box-shadow: none;
@@ -113,6 +115,53 @@
   min-height: var(--control-height-lg);
   padding: var(--space-sm) var(--space-2xl) var(--space-sm) var(--space-md);
   font-size: var(--font-size-base);
+}
+
+/* Inline Variant */
+.select-field.select-inline,
+.select-inline {
+  width: auto;
+  min-width: 4.5rem;
+  max-width: 100%;
+  min-height: auto;
+  height: auto;
+  display: inline-block;
+  vertical-align: middle;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: var(--font-weight-medium);
+  line-height: inherit;
+  padding: 0.18rem 1.6rem 0.18rem 0.55rem;
+  margin: 0 var(--space-3xs);
+  border-radius: var(--radius-sm, 2px);
+  background-position: right 0.45rem center;
+  background-size: 0.75rem;
+  box-sizing: border-box;
+}
+
+[data-theme="evening"] .select-field.select-inline,
+[data-theme="evening"] .select-inline {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23f5f5f5' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+}
+
+.select-container.select-inline-container {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  vertical-align: middle;
+  width: auto;
+  max-width: 100%;
+  gap: var(--space-2xs);
+  margin: 0 var(--space-3xs);
+}
+
+.select-container.select-inline-container .select-field.select-inline {
+  margin: 0;
+}
+
+.select-container.select-inline-container .select-inline-label {
+  margin-bottom: 0;
+  white-space: nowrap;
 }
 
 /* --- Error & Hint Messages --- */
@@ -157,7 +206,7 @@
 }
 
 .filter-select-card:hover,
-.filter-select-card:focus-within {
+.filter-select-card:active {
   transform: var(--motion-lift);
   box-shadow: var(--shadow-hover);
   background-color: var(--bg-card-hover);
@@ -206,7 +255,7 @@
   vertical-align: middle;
 }
 
-.filter-select-input:focus {
+.filter-select-input:active {
   outline: none !important;
   box-shadow: none !important;
 }

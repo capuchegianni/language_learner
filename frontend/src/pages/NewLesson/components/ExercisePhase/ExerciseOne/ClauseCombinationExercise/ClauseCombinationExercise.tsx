@@ -1,6 +1,6 @@
 import React from 'react';
 import { IconPaperclipLink, IconFleuronPlus } from '../../../../../../components/icons';
-import { Input } from '../../../../../../components';
+import { GradedTextInput } from '../../../../../../components';
 import { ExerciseOneComponentProps } from '../types';
 import './clauseCombination.css';
 
@@ -45,7 +45,9 @@ export const ClauseCombinationExercise: React.FC<ExerciseOneComponentProps> = ({
                   </>
                 )}
               </div>
-              <Input
+              <GradedTextInput
+                exerciseNumber={1}
+                inputId={String(idx)}
                 type="text"
                 id={`ex1-clause-${idx}`}
                 placeholder="Combine clauses into a single sentence using the rule..."

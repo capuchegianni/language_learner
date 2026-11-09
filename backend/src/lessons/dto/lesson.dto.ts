@@ -1,6 +1,18 @@
-import { IsBoolean, IsEnum, IsInt, IsNotEmpty, IsOptional, IsString, Max, Min } from 'class-validator';
-import { Type } from 'class-transformer';
+import {
+  IsArray,
+  IsBoolean,
+  IsEnum,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Max,
+  Min,
+  ValidateNested,
+} from 'class-validator';
+import { plainToInstance, Transform, Type } from 'class-transformer';
 import { LessonStatus } from '../../generated/prisma/client';
+import { UserSubmission } from '../../ai/interfaces/ai.interfaces';
 
 export class GenerateLessonDto {
   @IsString()
@@ -19,18 +31,38 @@ export class GenerateLessonDto {
   isReview?: boolean;
 }
 
+export class ExerciseSubmissionItemDto {
+  @IsInt()
+  @Min(1)
+  @Max(3)
+  exerciseNumber!: number;
+
+  @IsNotEmpty()
+  submission!: UserSubmission;
+}
+
 export class SubmitLessonDto {
-  @IsOptional()
-  @IsString()
-  ex1?: string;
-
-  @IsOptional()
-  @IsString()
-  ex2?: string;
-
-  @IsOptional()
-  @IsString()
-  ex3?: string;
+  @IsNotEmpty({ message: 'exercises payload is required' })
+  @Transform(({ value }) => {
+    let parsed = value;
+    if (typeof value === 'string') {
+      try {
+        parsed = JSON.parse(value);
+      } catch {
+        return value;
+      }
+    }
+    if (Array.isArray(parsed)) {
+      return parsed.map((item) =>
+        plainToInstance(ExerciseSubmissionItemDto, item),
+      );
+    }
+    return parsed;
+  })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ExerciseSubmissionItemDto)
+  exercises!: ExerciseSubmissionItemDto[];
 }
 
 export class ReplaceProposalDto {

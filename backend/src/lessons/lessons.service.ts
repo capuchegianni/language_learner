@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { User } from '../generated/prisma/client';
 import { LessonProposalsService } from './services/lesson-proposals.service';
 import { LessonGeneratorService } from './services/lesson-generator.service';
 import { LessonGradingService } from './services/lesson-grading.service';
@@ -39,12 +40,12 @@ export class LessonsService {
    * Submits user answers (text or uploaded image) and calls AI Vision/Grading engine.
    */
   async submitLesson(
-    userId: string,
+    user: User | string,
     lessonId: string,
     userAnswersText: SubmitLessonDto,
     imagePaths?: string[],
   ) {
-    return this.gradingService.submitLesson(userId, lessonId, userAnswersText, imagePaths);
+    return this.gradingService.submitLesson(user, lessonId, userAnswersText, imagePaths);
   }
 
   /**

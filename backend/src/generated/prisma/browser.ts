@@ -38,6 +38,11 @@ export type Rule = Prisma.RuleModel
  */
 export type Lesson = Prisma.LessonModel
 /**
+ * Model LessonExercise
+ * 
+ */
+export type LessonExercise = Prisma.LessonExerciseModel
+/**
  * Model LessonWord
  * 
  */

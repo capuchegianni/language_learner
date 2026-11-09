@@ -84,10 +84,33 @@ export interface LessonContent {
   };
 }
 
-export interface ExerciseGrading {
+export type CorrectionErrorType =
+  | 'spelling'
+  | 'conjugation'
+  | 'grammar'
+  | 'vocabulary'
+  | 'syntax'
+  | 'other';
+
+export interface StructuredCorrection {
+  inputId: string; // "0", "1", "2" or "0_0", "0_1" for 2D matrix
+  original: string;
+  expected: string;
+  explanation: string;
+  errorType: CorrectionErrorType;
+}
+
+export type UserSubmission =
+  | { grid: Record<string, string[]> } // Ex 1 (Conjugation matrix variant)
+  | { answers: string[] } // Ex 1 & Ex 2 (Standard lists: word endings, sentence translations, connector choices)
+  | { text: string }; // Ex 3 (Story translation, free-form paragraphs, or raw OCR fallback)
+
+export interface ExerciseGrading<T = StructuredCorrection> {
   score: number;
-  corrections: string[];
+  corrections: T[];
   feedback: string;
+  hasLegacyCorrections?: boolean;
+  legacyCorrections?: string[];
 }
 
 export interface GradingResult {
@@ -99,6 +122,20 @@ export interface GradingResult {
   exercise3: ExerciseGrading;
 }
 
+export interface LessonExercise {
+  id: string;
+  lessonId: string;
+  exerciseNumber: number;
+  instruction: string;
+  content: any;
+  userSubmission?: any;
+  score?: number | null;
+  feedback?: string | null;
+  corrections?: StructuredCorrection[] | string[] | any;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface Lesson {
   id: string;
   title?: string;
@@ -107,12 +144,11 @@ export interface Lesson {
   rule?: Rule;
   isReview: boolean;
   wordsCount: number;
-  lessonData: string; // JSON string of LessonContent
+  exercises?: LessonExercise[]; // Structured relational exercises
   status: 'GENERATED' | 'SUBMITTED' | 'GRADED';
-  userSubmission?: string; // JSON string of {ex1, ex2, ex3}
-  submissionImage?: string;
-  aiFeedback?: string; // JSON string of GradingResult
   overallScore?: number;
+  generalFeedback?: string;
+  handwrittenOcrText?: string;
   rawPrompt?: string;
   createdAt: string;
   words?: Array<{ word: Word }>;
