@@ -45,7 +45,7 @@ export type CorrectionErrorType =
   | 'other';
 
 export interface StructuredCorrection {
-  item: string;
+  inputId: string; // "0", "1", "2" or "0_0", "0_1" for 2D matrix
   original: string;
   expected: string;
   explanation: string;

@@ -10,7 +10,7 @@ import {
   Min,
   ValidateNested,
 } from 'class-validator';
-import { Transform, Type } from 'class-transformer';
+import { plainToInstance, Transform, Type } from 'class-transformer';
 import { LessonStatus } from '../../generated/prisma/client';
 import { UserSubmission } from '../../ai/interfaces/ai.interfaces';
 
@@ -42,33 +42,27 @@ export class ExerciseSubmissionItemDto {
 }
 
 export class SubmitLessonDto {
-  @IsOptional()
+  @IsNotEmpty({ message: 'exercises payload is required' })
   @Transform(({ value }) => {
+    let parsed = value;
     if (typeof value === 'string') {
       try {
-        return JSON.parse(value);
+        parsed = JSON.parse(value);
       } catch {
         return value;
       }
     }
-    return value;
+    if (Array.isArray(parsed)) {
+      return parsed.map((item) =>
+        plainToInstance(ExerciseSubmissionItemDto, item),
+      );
+    }
+    return parsed;
   })
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => ExerciseSubmissionItemDto)
-  exercises?: ExerciseSubmissionItemDto[];
-
-  @IsOptional()
-  @IsString()
-  ex1?: string;
-
-  @IsOptional()
-  @IsString()
-  ex2?: string;
-
-  @IsOptional()
-  @IsString()
-  ex3?: string;
+  exercises!: ExerciseSubmissionItemDto[];
 }
 
 export class ReplaceProposalDto {

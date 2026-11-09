@@ -38,21 +38,11 @@ export class LessonGradingService {
     }
 
     const userSubmissions = new Map<number, UserSubmission>();
-    if (userAnswersText.exercises && userAnswersText.exercises.length > 0) {
+    if (userAnswersText.exercises && Array.isArray(userAnswersText.exercises)) {
       for (const item of userAnswersText.exercises) {
-        if (item.submission !== undefined && item.submission !== null) {
+        if (item && item.submission !== undefined && item.submission !== null) {
           userSubmissions.set(item.exerciseNumber, item.submission);
         }
-      }
-    } else {
-      if (userAnswersText.ex1 && userAnswersText.ex1.trim()) {
-        userSubmissions.set(1, { text: userAnswersText.ex1.trim() });
-      }
-      if (userAnswersText.ex2 && userAnswersText.ex2.trim()) {
-        userSubmissions.set(2, { text: userAnswersText.ex2.trim() });
-      }
-      if (userAnswersText.ex3 && userAnswersText.ex3.trim()) {
-        userSubmissions.set(3, { text: userAnswersText.ex3.trim() });
       }
     }
 

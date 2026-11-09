@@ -134,24 +134,48 @@ Follow this exact JSON structure:
   /**
    * Helper to format UserSubmission polymorphic union cleanly for LLM consumption.
    */
-  private formatUserSubmission(sub?: UserSubmission): string {
+  private formatUserSubmission(
+    sub?: UserSubmission,
+    subjectPronouns?: string[],
+    targetWords?: string[],
+  ): string {
     if (!sub) return 'N/A';
     if ('grid' in sub && sub.grid && typeof sub.grid === 'object') {
-      const lines = Object.entries(sub.grid).map(([key, conjugations]) => {
-        const formattedConjugations = Array.isArray(conjugations)
-          ? conjugations.join(' | ')
-          : String(conjugations);
-        return `${key} | ${formattedConjugations}`;
+      const lines: string[] = [];
+      const verbs =
+        targetWords && targetWords.length > 0
+          ? targetWords
+          : Object.keys(sub.grid);
+
+      verbs.forEach((verb, vIdx) => {
+        const conjugations = sub.grid[verb];
+        if (Array.isArray(conjugations)) {
+          conjugations.forEach((conj, pIdx) => {
+            const pronounLabel =
+              subjectPronouns && subjectPronouns[pIdx]
+                ? ` [${subjectPronouns[pIdx]}]`
+                : '';
+            lines.push(
+              `  Input ${vIdx}_${pIdx} (${verb}${pronounLabel}): ${conj || '(no answer)'}`,
+            );
+          });
+        } else if (conjugations !== undefined) {
+          lines.push(`  Input ${vIdx} (${verb}): ${String(conjugations)}`);
+        }
       });
       return lines.length > 0 ? lines.join('\n') : 'N/A';
     }
     if ('answers' in sub && Array.isArray(sub.answers)) {
-      return sub.answers.map((ans, idx) => `${idx + 1}. ${ans}`).join('\n') || 'N/A';
+      return (
+        sub.answers
+          .map((ans, idx) => `  Input ${idx}: ${ans || '(no answer)'}`)
+          .join('\n') || 'N/A'
+      );
     }
     if ('text' in sub && typeof sub.text === 'string') {
-      return sub.text.trim() || 'N/A';
+      return `  Input 0: ${sub.text.trim() || '(no answer)'}`;
     }
-    return typeof sub === 'string' ? sub : JSON.stringify(sub);
+    return typeof sub === 'string' ? `  Input 0: ${sub}` : JSON.stringify(sub);
   }
 
   /**
@@ -186,9 +210,39 @@ Follow this exact JSON structure:
 
     const ex1 = exercises.find((e) => e.exerciseNumber === 1);
     const ex1Content = parseContent(ex1?.content);
-    const ex1TargetItemsFormatted = Array.isArray(ex1Content.targetWords)
-      ? (ex1Content.targetWords as unknown[]).map((item, idx) => `  ${idx + 1}. ${String(item)}`).join('\n')
-      : '';
+    const ex1TargetWordsRaw =
+      Array.isArray(ex1Content.targetWords) && ex1Content.targetWords.length > 0
+        ? ex1Content.targetWords
+        : Array.isArray(ex1Content.sampleWords) && ex1Content.sampleWords.length > 0
+          ? ex1Content.sampleWords
+          : [];
+    const ex1TargetWords = ex1TargetWordsRaw.map(String);
+
+    const isSubjectConjugation =
+      ex1Content.type === 'subject_conjugation' &&
+      ex1TargetWords.length > 0 &&
+      Array.isArray(ex1Content.subjectPronouns) &&
+      ex1Content.subjectPronouns.length > 0;
+
+    let ex1TargetItemsFormatted = '';
+    if (isSubjectConjugation) {
+      const targetVerbs = ex1TargetWords;
+      const pronouns = ex1Content.subjectPronouns as unknown[];
+      const lines: string[] = [];
+      targetVerbs.forEach((verb, vIdx) => {
+        pronouns.forEach((pronoun, pIdx) => {
+          lines.push(
+            `  Input ${vIdx}_${pIdx} (${String(verb)} [${String(pronoun)}]): conjugate for this pronoun`,
+          );
+        });
+      });
+      ex1TargetItemsFormatted = lines.join('\n');
+    } else if (ex1TargetWords.length > 0) {
+      ex1TargetItemsFormatted = ex1TargetWords
+        .map((item, idx) => `  Input ${idx}: ${String(item)}`)
+        .join('\n');
+    }
+
     const ex1TypeInfo = typeof ex1Content.type === 'string'
       ? `Exercise 1 Archetype: ${ex1Content.type}\n`
       : '';
@@ -196,14 +250,24 @@ Follow this exact JSON structure:
     const ex2 = exercises.find((e) => e.exerciseNumber === 2);
     const ex2Content = parseContent(ex2?.content);
     const ex2SentencesFormatted = Array.isArray(ex2Content.sentencesToTranslate)
-      ? (ex2Content.sentencesToTranslate as unknown[]).map((s, idx) => `  ${idx + 1}. ${String(s)}`).join('\n')
+      ? (ex2Content.sentencesToTranslate as unknown[])
+          .map((s, idx) => `  Input ${idx}: ${String(s)}`)
+          .join('\n')
       : '';
 
     const ex3 = exercises.find((e) => e.exerciseNumber === 3);
     const ex3Content = parseContent(ex3?.content);
     const ex3Text = typeof ex3Content.textToTranslate === 'string' ? ex3Content.textToTranslate : '';
 
-    const ex1Submission = this.formatUserSubmission(userSubmissions.get(1));
+    const subjectPronouns = Array.isArray(ex1Content.subjectPronouns)
+      ? (ex1Content.subjectPronouns as string[])
+      : undefined;
+
+    const ex1Submission = this.formatUserSubmission(
+      userSubmissions.get(1),
+      subjectPronouns,
+      isSubjectConjugation ? ex1TargetWords : undefined,
+    );
     const ex2Submission = this.formatUserSubmission(userSubmissions.get(2));
     const ex3Submission = this.formatUserSubmission(userSubmissions.get(3));
 
@@ -222,15 +286,16 @@ Vocabulary: ${vocabularyList}
 
 Exercise Prompts:
 ${ex1TypeInfo}Exercise 1 Instruction: ${ex1?.instruction || 'Exercise 1'}
-Exercise 1 Target Items:
+Exercise 1 Target Items (Matching inputId headers):
 ${ex1TargetItemsFormatted}
 
 Exercise 2 Instruction: ${ex2?.instruction || 'Exercise 2'}
-Exercise 2 Sentences to Translate:
+Exercise 2 Sentences to Translate (Sequential inputs 0..N):
 ${ex2SentencesFormatted}
 
 Exercise 3 Instruction: ${ex3?.instruction || 'Exercise 3'}
-Exercise 3 Text to Translate: ${ex3Text}
+Exercise 3 Text to Translate (Input 0):
+  Input 0: ${ex3Text}
 
 Student Submission:
 [Exercise 1 Submission]
@@ -242,20 +307,21 @@ ${ex2Submission}
 [Exercise 3 Submission]
 ${ex3Submission}
 
-${hasImages ? 'NOTE: Images of handwritten answers are attached. Perform OCR on the handwriting first.' : ''}
+${hasImages ? 'NOTE: Images of handwritten answers are attached. First perform OCR to transcribe the student handwriting into the input slots (e.g. Input 0, Input 1, or Input 0_0) for each exercise in userSubmission, and set handwrittenOcrText to the full transcription. Then evaluate each input slot identically.' : ''}
 
 Grading Guidelines:
 - Grade the student's work accurately, providing constructive feedback and corrections. All feedback, explanations, and notes MUST be written in ${nativeLanguage}.
 - For each exercise (exercise1, exercise2, exercise3), determine an integer score from 0 to 100 based on accuracy.
 - STRUCTURED CORRECTIONS REQUIREMENT:
   * For all exercises, "corrections" MUST be an array of StructuredCorrection objects.
-  * NEGATIVE CONSTRAINT: Include corrections STRICTLY AND ONLY for student mistakes or errors. If an exercise contains NO mistakes (all answers are correct), "corrections" MUST be an empty array []. NEVER produce corrections for correct answers!
-  * Each item in "corrections" MUST contain:
-    - "item": identification of the question or target word (e.g. "Exercise 1: 가다", "Sentence 2", or "Story Line 1")
-    - "original": the verbatim student input containing the error
-    - "expected": the correct form in ${targetLanguage}
-    - "explanation": concise grammatical explanation in ${nativeLanguage}
+  * NEGATIVE CONSTRAINT: Include corrections STRICTLY AND ONLY for student mistakes or errors. If an input or exercise contains NO mistakes (the answer is fully correct), DO NOT include any correction for it. If an exercise has no mistakes at all, "corrections" MUST be an empty array [].
+  * Every item in "corrections" MUST contain:
+    - "inputId": exact string identifier matching the "Input <inputId>" header where the mistake occurred (e.g. "0", "1", "2" for linear items, or "0_0", "0_1" for conjugation matrix cells).
+    - "original": the exact substring from the student's submission that has the error.
+    - "expected": the correct replacement word, phrase, or sentence in ${targetLanguage}.
+    - "explanation": concise grammatical explanation in ${nativeLanguage}.
     - "errorType": strictly one of: "spelling" | "conjugation" | "grammar" | "vocabulary" | "syntax" | "other"
+  * MULTIPLE ERRORS PER INPUT: If a single input has multiple distinct mistakes (e.g. one spelling error and one wrong particle), return multiple correction objects sharing that same "inputId", each pinpointing its own "original" substring.
 - Exercise 1 Evaluation:
   * Grade answers strictly against the Exercise 1 Instruction and Archetype (${ex1Content.type || 'pattern practice'}).
   * If the exercise is a conjugation drill (e.g. subject_conjugation), verify that all subject persons were conjugated and check stems, endings, and orthography.
@@ -272,8 +338,8 @@ Return STRICT JSON format (no markdown formatting, no extra text):
     "score": 90,
     "corrections": [
       {
-        "item": "Exercise 1: <Target Item>",
-        "original": "<Student Error>",
+        "inputId": "0",
+        "original": "<Student Mistake Substring>",
         "expected": "<Correct Form in ${targetLanguage}>",
         "explanation": "<Concise explanation in ${nativeLanguage}>",
         "errorType": "conjugation"
@@ -290,8 +356,8 @@ Return STRICT JSON format (no markdown formatting, no extra text):
     "score": 80,
     "corrections": [
       {
-        "item": "Sentence 1",
-        "original": "<Student Error>",
+        "inputId": "0",
+        "original": "<Student Mistake Substring>",
         "expected": "<Correct Form in ${targetLanguage}>",
         "explanation": "<Concise explanation in ${nativeLanguage}>",
         "errorType": "grammar"

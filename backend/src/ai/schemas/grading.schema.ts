@@ -60,7 +60,7 @@ export function repairCorrectionItem(raw: unknown): StructuredCorrection {
   if (typeof raw === 'string') {
     const trimmed = raw.trim();
     return {
-      item: trimmed,
+      inputId: '0',
       original: '',
       expected: trimmed,
       explanation: trimmed,
@@ -70,12 +70,22 @@ export function repairCorrectionItem(raw: unknown): StructuredCorrection {
 
   if (raw && typeof raw === 'object') {
     const obj = raw as Record<string, unknown>;
-    const item =
-      typeof obj.item === 'string'
-        ? obj.item.trim()
-        : obj.item != null
-          ? String(obj.item)
-          : 'Correction';
+    let inputId = '0';
+    if (typeof obj.inputId === 'string' && obj.inputId.trim()) {
+      inputId = obj.inputId.trim().replace(/^input\s*[:#]?\s*/i, '').trim() || '0';
+    } else if (typeof obj.inputId === 'number' && !isNaN(obj.inputId)) {
+      inputId = String(Math.floor(obj.inputId));
+    } else if (typeof obj.inputIndex === 'number' && !isNaN(obj.inputIndex)) {
+      inputId = String(Math.floor(obj.inputIndex));
+    } else if (typeof obj.inputIndex === 'string' && obj.inputIndex.trim()) {
+      inputId = obj.inputIndex.trim().replace(/^input\s*[:#]?\s*/i, '').trim() || '0';
+    } else if (typeof obj.item === 'string' && obj.item.trim()) {
+      const match = obj.item.match(/input\s*[:#]?\s*(\d+(?:_\d+)?)/i);
+      if (match) {
+        inputId = match[1];
+      }
+    }
+
     const original =
       typeof obj.original === 'string'
         ? obj.original.trim()
@@ -103,11 +113,11 @@ export function repairCorrectionItem(raw: unknown): StructuredCorrection {
       }
     }
 
-    return { item, original, expected, explanation, errorType };
+    return { inputId, original, expected, explanation, errorType };
   }
 
   return {
-    item: 'Correction',
+    inputId: '0',
     original: '',
     expected: '',
     explanation: raw != null ? String(raw) : '',
@@ -118,7 +128,7 @@ export function repairCorrectionItem(raw: unknown): StructuredCorrection {
 export const StructuredCorrectionSchema = z.preprocess(
   repairCorrectionItem,
   z.object({
-    item: z.string(),
+    inputId: z.string().min(1),
     original: z.string(),
     expected: z.string(),
     explanation: z.string(),
