@@ -15,4 +15,5 @@ export * from './Card';
 export * from './Layout';
 export * from './Footer';
 export * from './Tutorial';
+export * from './GradedPrimitives';
 export * from './icons';

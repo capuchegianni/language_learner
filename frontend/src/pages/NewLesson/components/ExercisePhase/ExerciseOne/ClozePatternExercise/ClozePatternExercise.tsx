@@ -1,6 +1,6 @@
 import React from 'react';
 import { IconQueryNotice } from '../../../../../../components/icons';
-import { Input } from '../../../../../../components';
+import { GradedTextInput } from '../../../../../../components';
 import { ExerciseOneComponentProps } from '../types';
 import './clozePattern.css';
 
@@ -43,7 +43,9 @@ export const ClozePatternExercise: React.FC<ExerciseOneComponentProps> = ({
                 </span>
               )}
             </div>
-            <Input
+            <GradedTextInput
+              exerciseNumber={1}
+              inputId={String(idx)}
               type="text"
               id={`ex1-cloze-${idx}`}
               placeholder={`Fill in the blank using "${hint || 'target'}"...`}

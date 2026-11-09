@@ -8,18 +8,24 @@ import {
   Settings,
   SettingsUpdatePayload,
   UsageInfo,
+  UserSubmission,
   Word,
 } from '../types';
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL?.replace(/\/+$/, '') || '';
+const BACKEND_URL = (import.meta.env?.VITE_BACKEND_URL || '').replace(/\/+$/, '');
 
-export const API_BASE = import.meta.env.DEV
+export const API_BASE = import.meta.env?.DEV
   ? '/api'
   : `${BACKEND_URL}/api`;
 
 // Ensure cookies are sent with every request (needed for session auth)
 axios.defaults.withCredentials = true;
 
+
+export interface ExerciseSubmissionPayload {
+  exerciseNumber: number;
+  submission: UserSubmission;
+}
 
 export const api = {
   // Stats
@@ -65,16 +71,14 @@ export const api = {
   // Exercise Submission with Text or Handwritten Images
   async submitLesson(
     lessonId: string,
-    answers: { ex1?: string; ex2?: string; ex3?: string },
+    payload: { exercises: ExerciseSubmissionPayload[] },
     imageFiles?: File[] | null,
   ): Promise<Lesson> {
     const formData = new FormData();
-    if (answers.ex1) formData.append('ex1', answers.ex1);
-    if (answers.ex2) formData.append('ex2', answers.ex2);
-    if (answers.ex3) formData.append('ex3', answers.ex3);
+    formData.append('exercises', JSON.stringify(payload.exercises));
 
     if (imageFiles && imageFiles.length > 0) {
-      imageFiles.forEach(file => {
+      imageFiles.forEach((file) => {
         formData.append('images', file);
       });
     }

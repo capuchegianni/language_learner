@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { IconLinotypeLayers } from '../../../../../../components/icons';
-import { Input } from '../../../../../../components';
+import { GradedTextInput } from '../../../../../../components';
+import { useExerciseReview } from '../../../../../../contexts/ExerciseReviewContext';
 import { ExerciseOneComponentProps } from '../types';
 import './subjectConjugation.css';
 
@@ -9,24 +10,45 @@ import './subjectConjugation.css';
  * matching the order of the provided subject pronouns.
  */
 export function parseConjugationRow(
-  raw: string | undefined,
+  raw: unknown,
   pronouns: string[]
 ): string[] {
   const result: string[] = pronouns.map(() => '');
-  if (!raw || !raw.trim()) return result;
+  if (!raw) return result;
+
+  if (Array.isArray(raw)) {
+    pronouns.forEach((_, idx) => {
+      if (raw[idx] !== undefined) result[idx] = String(raw[idx]);
+    });
+    return result;
+  }
+
+  if (typeof raw !== 'string') return result;
 
   const trimmed = raw.trim();
+  if (!trimmed) return result;
 
-  // 1. JSON check
-  if (trimmed.startsWith('{') && trimmed.endsWith('}')) {
+  // 1. JSON check (both array and object formats)
+  if (
+    (trimmed.startsWith('{') && trimmed.endsWith('}')) ||
+    (trimmed.startsWith('[') && trimmed.endsWith(']'))
+  ) {
     try {
-      const obj = JSON.parse(trimmed);
-      pronouns.forEach((p, idx) => {
-        if (obj[p] !== undefined) result[idx] = String(obj[p]);
-      });
-      return result;
+      const parsed = JSON.parse(trimmed);
+      if (Array.isArray(parsed)) {
+        pronouns.forEach((_, idx) => {
+          if (parsed[idx] !== undefined) result[idx] = String(parsed[idx]);
+        });
+        return result;
+      }
+      if (parsed && typeof parsed === 'object') {
+        pronouns.forEach((p, idx) => {
+          if (parsed[p] !== undefined) result[idx] = String(parsed[p]);
+        });
+        return result;
+      }
     } catch {
-      // Ignore JSON error
+      // Ignore JSON error and try regex/fallback
     }
   }
 
@@ -87,18 +109,17 @@ export function parseConjugationRow(
 }
 
 /**
- * Serializes an array of cell values back into a readable "pronoun: value" string.
+ * Serializes an array of cell values back into a string.
+ * Uses JSON array format to preserve all commas and punctuation safely.
  */
 export function serializeConjugationRow(
   rowValues: string[],
-  pronouns: string[]
+  _pronouns?: string[]
 ): string {
   const hasContent = rowValues.some((v) => v && v.trim().length > 0);
   if (!hasContent) return '';
 
-  return pronouns
-    .map((p, idx) => `${p}: ${rowValues[idx]?.trim() || ''}`)
-    .join(', ');
+  return JSON.stringify(rowValues);
 }
 
 export const SubjectConjugationExercise: React.FC<ExerciseOneComponentProps> = ({
@@ -108,6 +129,12 @@ export const SubjectConjugationExercise: React.FC<ExerciseOneComponentProps> = (
   answers,
   onAnswerChange,
 }) => {
+  const {
+    isReviewMode,
+    getCorrectionsForInput,
+    hasLegacyCorrections,
+    openCorrectionModal,
+  } = useExerciseReview();
   const activePronouns = subjectPronouns || [];
   const lastEmittedRef = useRef<string[]>([]);
 
@@ -171,7 +198,9 @@ export const SubjectConjugationExercise: React.FC<ExerciseOneComponentProps> = (
               <span className="ex1-verb-title target-text">
                 {idx + 1}. {verb}
               </span>
-              <Input
+              <GradedTextInput
+                exerciseNumber={1}
+                inputId={String(idx)}
                 type="text"
                 id={`ex1-conj-${idx}`}
                 placeholder={`Conjugate "${verb}" for all subjects separated by commas...`}
@@ -215,21 +244,61 @@ export const SubjectConjugationExercise: React.FC<ExerciseOneComponentProps> = (
                   <td className="ex1-table-pronoun-cell">
                     <span className="ex1-table-pronoun-tag">{pronoun}</span>
                   </td>
-                  {targetWords.map((verb, vIdx) => (
-                    <td key={vIdx} className="ex1-table-cell-wrapper">
-                      <Input
-                        type="text"
-                        id={`ex1-conj-cell-${vIdx}-${pIdx}`}
-                        value={cellMatrix[vIdx]?.[pIdx] || ''}
-                        onChange={(e) =>
-                          handleCellChange(vIdx, pIdx, e.target.value)
-                        }
-                        className="ex1-table-direct-input"
-                        autoComplete="off"
-                        spellCheck={false}
-                      />
-                    </td>
-                  ))}
+                  {targetWords.map((verb, vIdx) => {
+                    const inputId = `${vIdx}_${pIdx}`;
+                    const isLegacy = hasLegacyCorrections(1);
+                    const corrections = isReviewMode ? getCorrectionsForInput(1, inputId) : [];
+                    const hasMistakes = isReviewMode && !isLegacy && corrections.length > 0;
+
+                    if (hasMistakes) {
+                      return (
+                        <td
+                          key={vIdx}
+                          className="ex1-table-cell-wrapper ex1-table-cell-mistake"
+                          onClick={() => openCorrectionModal(corrections)}
+                          role="button"
+                          tabIndex={0}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault();
+                              openCorrectionModal(corrections);
+                            }
+                          }}
+                          title="Click to view correction details"
+                        >
+                          <div className="ex1-table-cell-diff">
+                            {corrections.map((c, cIdx) => (
+                              <span key={cIdx} className="ex1-table-diff-item">
+                                <span className="chip-mistake">
+                                  {c.original || cellMatrix[vIdx]?.[pIdx] || '(empty)'}
+                                </span>
+                                <span className="chip-arrow">→</span>
+                                <span className="chip-expected">{c.expected}</span>
+                              </span>
+                            ))}
+                          </div>
+                        </td>
+                      );
+                    }
+
+                    return (
+                      <td key={vIdx} className="ex1-table-cell-wrapper">
+                        <GradedTextInput
+                          exerciseNumber={1}
+                          inputId={inputId}
+                          type="text"
+                          id={`ex1-conj-cell-${vIdx}-${pIdx}`}
+                          value={cellMatrix[vIdx]?.[pIdx] || ''}
+                          onChange={(e) =>
+                            handleCellChange(vIdx, pIdx, e.target.value)
+                          }
+                          className="ex1-table-direct-input"
+                          autoComplete="off"
+                          spellCheck={false}
+                        />
+                      </td>
+                    );
+                  })}
                 </tr>
               ))}
             </tbody>

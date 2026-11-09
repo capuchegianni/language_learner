@@ -5,7 +5,7 @@ import {
   IconPressPin,
   IconBookmarkRibbon,
 } from '../../../../../../components/icons';
-import { Input } from '../../../../../../components';
+import { GradedTextInput } from '../../../../../../components';
 import { ExerciseOneComponentProps } from '../types';
 import './wordInflection.css';
 
@@ -48,7 +48,9 @@ export const WordInflectionExercise: React.FC<ExerciseOneComponentProps> = ({
               <span className="ex1-inflection-word target-text">{word}</span>
               <IconManiculeRight size={14} className="ex1-inflection-arrow" />
             </div>
-            <Input
+            <GradedTextInput
+              exerciseNumber={1}
+              inputId={String(idx)}
               type="text"
               id={`ex1-inflect-${idx}`}
               placeholder={getPlaceholder(word)}

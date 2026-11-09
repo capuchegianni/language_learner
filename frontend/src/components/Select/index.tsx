@@ -24,6 +24,7 @@ export interface SelectProps extends Omit<React.SelectHTMLAttributes<HTMLSelectE
   containerStyle?: React.CSSProperties;
   size?: 'sm' | 'md' | 'lg';
   onValueChange?: (value: string) => void;
+  inline?: boolean;
 }
 
 export interface FilterSelectProps {
@@ -61,6 +62,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(({
   onValueChange,
   disabled = false,
   size = 'md',
+  inline = false,
   children,
   style,
   ...rest
@@ -131,6 +133,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(({
   }
 
   // --- Variant: Standard Select ---
+  const isInline = inline || className.includes('select-inline') || className.includes('inline') || className.includes('contrast-select');
   const selectElement = (
     <select
       id={id}
@@ -138,7 +141,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(({
       value={value}
       onChange={handleChange}
       disabled={disabled}
-      className={`select-field select-${size} ${className}`.trim()}
+      className={['select-field', isInline ? 'select-inline' : '', `select-${size}`, className].filter(Boolean).join(' ')}
       style={style}
       {...rest}
     >
@@ -146,8 +149,25 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(({
     </select>
   );
 
-  if (!label && !error && !hint && !containerClassName && !containerStyle) {
-    return selectElement;
+  if (isInline) {
+    if (!label && !error && !hint && !containerClassName && !containerStyle) {
+      return selectElement;
+    }
+    return (
+      <span
+        className={`select-container select-inline-container ${error ? 'has-error' : ''} ${disabled ? 'is-disabled' : ''} ${containerClassName}`.trim()}
+        style={containerStyle}
+      >
+        {label && (
+          <label htmlFor={id} className="select-label select-inline-label" {...labelProps}>
+            {label}
+          </label>
+        )}
+        {selectElement}
+        {error && <span className="select-error-msg select-inline-error">{error}</span>}
+        {hint && !error && <span className="select-hint-msg select-inline-hint">{hint}</span>}
+      </span>
+    );
   }
 
   return (

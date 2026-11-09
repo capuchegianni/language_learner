@@ -92,7 +92,13 @@ export const LessonCard: React.FC<LessonCardProps> = ({
       <div className="lesson-card-actions">
         {lesson.overallScore !== null && lesson.overallScore !== undefined && lesson.status === 'GRADED' ? (
           <Pill
-            variant={lesson.overallScore >= 80 ? 'success' : 'primary'}
+            variant={
+              lesson.overallScore >= 75
+                ? 'success'
+                : lesson.overallScore >= 25
+                  ? 'warning'
+                  : 'danger'
+            }
             isStamp
             heavyBorder
           >

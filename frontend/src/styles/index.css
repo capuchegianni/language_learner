@@ -297,11 +297,23 @@ body::before {
   background-size: 4px 4px;
 }
 
-/* Prevent auto-zooming on iOS devices by setting min 16px font */
+/* Prevent auto-zooming on iOS devices by setting min 16px font & ensure black readable input text */
 input,
 select,
 textarea {
   font-size: 16px;
+  color: var(--text-primary);
+  -webkit-text-fill-color: var(--text-primary);
+}
+
+input:disabled,
+select:disabled,
+textarea:disabled,
+input:read-only,
+textarea:read-only {
+  color: var(--text-primary);
+  -webkit-text-fill-color: var(--text-primary);
+  opacity: 1;
 }
 
 /* Headings */

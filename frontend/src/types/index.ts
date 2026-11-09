@@ -93,17 +93,24 @@ export type CorrectionErrorType =
   | 'other';
 
 export interface StructuredCorrection {
-  item: string;
+  inputId: string; // "0", "1", "2" or "0_0", "0_1" for 2D matrix
   original: string;
   expected: string;
   explanation: string;
   errorType: CorrectionErrorType;
 }
 
-export interface ExerciseGrading<T = string> {
+export type UserSubmission =
+  | { grid: Record<string, string[]> } // Ex 1 (Conjugation matrix variant)
+  | { answers: string[] } // Ex 1 & Ex 2 (Standard lists: word endings, sentence translations, connector choices)
+  | { text: string }; // Ex 3 (Story translation, free-form paragraphs, or raw OCR fallback)
+
+export interface ExerciseGrading<T = StructuredCorrection> {
   score: number;
   corrections: T[];
   feedback: string;
+  hasLegacyCorrections?: boolean;
+  legacyCorrections?: string[];
 }
 
 export interface GradingResult {
