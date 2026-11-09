@@ -11,7 +11,7 @@ export interface UseLessonHistoryReturn {
   setSearch: (search: string) => void;
   filterStatus: string;
   setFilterStatus: (status: string) => void;
-  deleteLesson: (e: React.MouseEvent, id: string) => Promise<void>;
+  deleteLesson: (id: string) => Promise<void>;
 }
 
 export function useLessonHistory(): UseLessonHistoryReturn {
@@ -50,15 +50,12 @@ export function useLessonHistory(): UseLessonHistoryReturn {
   }, [search, filterStatus, loadLessons]);
 
   const deleteLesson = useCallback(
-    async (e: React.MouseEvent, id: string) => {
-      e.stopPropagation();
-      if (window.confirm('Are you sure you want to delete this lesson?')) {
-        try {
-          await api.deleteLesson(id);
-          await loadLessons(search, filterStatus);
-        } catch (err) {
-          console.error('Failed to delete lesson', err);
-        }
+    async (id: string) => {
+      try {
+        await api.deleteLesson(id);
+        await loadLessons(search, filterStatus);
+      } catch (err) {
+        console.error('Failed to delete lesson', err);
       }
     },
     [search, filterStatus, loadLessons],

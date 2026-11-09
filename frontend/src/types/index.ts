@@ -3,6 +3,25 @@ export interface User {
   displayName: string;
   email: string;
   avatarUrl: string | null;
+  plan?: 'FREE' | 'PREMIUM';
+  isCustom?: boolean;
+  isAdmin?: boolean;
+}
+
+export interface AdminUser {
+  id: string;
+  displayName: string;
+  email: string;
+  avatarUrl: string | null;
+  plan: 'FREE' | 'PREMIUM';
+  isCustom: boolean;
+  createdAt: string;
+  updatedAt: string;
+  _count?: {
+    lessons: number;
+    words: number;
+    rules: number;
+  };
 }
 
 export interface Word {
@@ -65,10 +84,33 @@ export interface LessonContent {
   };
 }
 
-export interface ExerciseGrading {
+export type CorrectionErrorType =
+  | 'spelling'
+  | 'conjugation'
+  | 'grammar'
+  | 'vocabulary'
+  | 'syntax'
+  | 'other';
+
+export interface StructuredCorrection {
+  inputId: string; // "0", "1", "2" or "0_0", "0_1" for 2D matrix
+  original: string;
+  expected: string;
+  explanation: string;
+  errorType: CorrectionErrorType;
+}
+
+export type UserSubmission =
+  | { grid: Record<string, string[]> } // Ex 1 (Conjugation matrix variant)
+  | { answers: string[] } // Ex 1 & Ex 2 (Standard lists: word endings, sentence translations, connector choices)
+  | { text: string }; // Ex 3 (Story translation, free-form paragraphs, or raw OCR fallback)
+
+export interface ExerciseGrading<T = StructuredCorrection> {
   score: number;
-  corrections: string[];
+  corrections: T[];
   feedback: string;
+  hasLegacyCorrections?: boolean;
+  legacyCorrections?: string[];
 }
 
 export interface GradingResult {
@@ -80,6 +122,20 @@ export interface GradingResult {
   exercise3: ExerciseGrading;
 }
 
+export interface LessonExercise {
+  id: string;
+  lessonId: string;
+  exerciseNumber: number;
+  instruction: string;
+  content: any;
+  userSubmission?: any;
+  score?: number | null;
+  feedback?: string | null;
+  corrections?: StructuredCorrection[] | string[] | any;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface Lesson {
   id: string;
   title?: string;
@@ -88,12 +144,11 @@ export interface Lesson {
   rule?: Rule;
   isReview: boolean;
   wordsCount: number;
-  lessonData: string; // JSON string of LessonContent
+  exercises?: LessonExercise[]; // Structured relational exercises
   status: 'GENERATED' | 'SUBMITTED' | 'GRADED';
-  userSubmission?: string; // JSON string of {ex1, ex2, ex3}
-  submissionImage?: string;
-  aiFeedback?: string; // JSON string of GradingResult
   overallScore?: number;
+  generalFeedback?: string;
+  handwrittenOcrText?: string;
   rawPrompt?: string;
   createdAt: string;
   words?: Array<{ word: Word }>;
@@ -107,13 +162,31 @@ export interface DashboardStats {
   recentLessons: Lesson[];
 }
 
+export interface UsageRecordItem {
+  used: number;
+  limit: number | null;
+}
+
+export interface UsageInfo {
+  plan: 'FREE' | 'PREMIUM';
+  isCustom: boolean;
+  date: string;
+  usage: {
+    RULE_PROPOSAL: UsageRecordItem;
+    LESSON_GENERATION: UsageRecordItem;
+    LESSON_CORRECTION: UsageRecordItem;
+  };
+}
+
 export interface Settings {
-  AI_MODEL: string;
-  AI_BASE_URL: string;
+  AI_MODEL?: string;
+  AI_BASE_URL?: string;
   NATIVE_LANGUAGE?: string;
   TARGET_LANGUAGE?: string;
   hasApiKey?: boolean;
   TUTORIAL_COMPLETED?: string;
+  plan?: 'FREE' | 'PREMIUM';
+  isCustom?: boolean;
 }
 
 export interface SettingsUpdatePayload {
@@ -123,6 +196,7 @@ export interface SettingsUpdatePayload {
   NATIVE_LANGUAGE?: string;
   TARGET_LANGUAGE?: string;
   TUTORIAL_COMPLETED?: string;
+  isCustom?: boolean;
 }
 
 export interface LanguageOption {

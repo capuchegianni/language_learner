@@ -63,12 +63,14 @@ language_learner/
 
 All models are **user-scoped** — every query MUST filter by `userId`.
 
-- **User** — Google OAuth profile (`googleId`, `email`, `displayName`, `avatarUrl`)
+- **User** — Google OAuth profile (`googleId`, `email`, `displayName`, `avatarUrl`, `plan`, `isCustom`)
 - **Word** — Vocabulary bank entries. Unique per `(userId, targetLanguage)`.
 - **Rule** — Grammar rules. Unique per `(userId, title)`. Fields `examples` and `exceptions` are stored as JSON strings.
 - **Lesson** — Generated lessons. `lessonData`, `userSubmission`, `aiFeedback` are stored as **JSON strings** (parsed at runtime). Status: `GENERATED` → `SUBMITTED` → `GRADED`.
 - **LessonWord** — Many-to-many join between Lesson ↔ Word.
+- **LessonProposal** — User's active proposed rules and review rule entries (one-to-many with User: `title`, `explanation`, `category`, `difficulty`, `isReview`).
 - **Setting** — Key-value pairs per user. The `api_key` setting is AES-256-GCM encrypted.
+- **UsageRecord** — Daily AI quota tracker per user (`userId`, `actionType`, `date`, `count`). Unique on `(userId, actionType, date)`. Resets at UTC midnight.
 
 ### Important: JSON String Fields
 
@@ -144,6 +146,63 @@ All routes are defined in `App.tsx`. Protected routes wrap children with `<Prote
 | `/words`               | WordBank       | CRUD vocabulary           |
 | `/rules`               | RuleBank       | CRUD grammar rules        |
 | `/settings`            | Settings       | AI config, import/export, reset, account |
+| `/admin`               | Admin          | User management & plan assignment (admin only) |
+
+## API Endpoints Reference
+
+### Auth (`/api/auth`)
+| Method | Path                    | Auth | Description                    |
+| ------ | ----------------------- | ---- | ------------------------------ |
+| GET    | `/api/auth/google`      | No   | Redirects to Google OAuth      |
+| GET    | `/api/auth/google/callback` | No | OAuth callback, redirects to frontend |
+| GET    | `/api/auth/status`      | No   | Returns `{ authenticated, user }` |
+| GET    | `/api/auth/me`          | Yes  | Returns current user profile   |
+| GET    | `/api/auth/logout`      | No   | Destroys session, redirects    |
+| DELETE | `/api/auth/account`     | Yes  | Deletes user + all data        |
+
+### Lessons (`/api/lessons`)
+| Method | Path                            | Auth | Description                           |
+| ------ | ------------------------------- | ---- | ------------------------------------- |
+| GET    | `/api/lessons/stats`            | Yes  | Dashboard stats                       |
+| GET    | `/api/lessons/propose-rules`    | Yes  | Get or top-up active rule proposals (?refresh) |
+| POST   | `/api/lessons/propose-rules/replace` | Yes | Replace a single proposal card ({ index }) |
+| POST   | `/api/lessons/generate`         | Yes  | Generate lesson from rule             |
+| POST   | `/api/lessons/:id/submit`       | Yes  | Submit answers (multipart: text + images) |
+| GET    | `/api/lessons`                  | Yes  | List all lessons                      |
+| GET    | `/api/lessons/:id`              | Yes  | Get lesson by ID                      |
+| DELETE | `/api/lessons/:id`              | Yes  | Delete lesson                         |
+
+### Vocabulary (`/api/vocabulary`)
+| Method | Path                   | Auth | Description                    |
+| ------ | ---------------------- | ---- | ------------------------------ |
+| GET    | `/api/vocabulary`      | Yes  | List words (?q=search)         |
+| POST   | `/api/vocabulary`      | Yes  | Create word                    |
+| PUT    | `/api/vocabulary/:id`  | Yes  | Update word                    |
+| DELETE | `/api/vocabulary/:id`  | Yes  | Delete word                    |
+
+### Rules (`/api/rules`)
+| Method | Path              | Auth | Description                    |
+| ------ | ----------------- | ---- | ------------------------------ |
+| GET    | `/api/rules`      | Yes  | List rules (?q=search)         |
+| POST   | `/api/rules`      | Yes  | Create rule                    |
+| PUT    | `/api/rules/:id`  | Yes  | Update rule                    |
+| DELETE | `/api/rules/:id`  | Yes  | Delete rule                    |
+
+### Settings (`/api/settings`)
+| Method | Path                   | Auth | Description                    |
+| ------ | ---------------------- | ---- | ------------------------------ |
+| GET    | `/api/settings`        | Yes  | Get all settings               |
+| GET    | `/api/settings/usage`  | Yes  | Get daily AI usage quotas & plan status |
+| POST   | `/api/settings`        | Yes  | Update settings (key-value + isCustom) |
+| GET    | `/api/settings/export` | Yes  | Export data (?settings, ?words, ?rules, ?lessons, ?usage) |
+| POST   | `/api/settings/import` | Yes  | Import data (JSON body)        |
+| POST   | `/api/settings/reset`  | Yes  | Reset selected data categories |
+
+### Admin (`/api/admin`)
+| Method | Path                   | Auth  | Description                         |
+| ------ | ---------------------- | ----- | ----------------------------------- |
+| GET    | `/api/admin/users`     | Admin | List and search users (?q=search)   |
+| PATCH  | `/api/admin/users/:id/plan` | Admin | Update user plan (FREE / PREMIUM) |
 
 ## Development Commands
 

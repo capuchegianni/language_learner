@@ -2,10 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { IconManiculeLeft } from '../../components/icons';
 import { api } from '../../services/api';
+import {
+  parseLessonContent,
+  parseAiFeedback,
+  parseUserSubmission,
+  ParsedUserSubmissionResult,
+} from '../../services/lesson-adapter';
 import { Lesson, LessonContent, GradingResult } from '../../types';
 import { RuleExplanation } from '../NewLesson/components/RuleExplanation';
 import { WordsLearned } from '../NewLesson/components/WordsLearned';
-import { AIFeedbackDisplay } from '../NewLesson/components/AIFeedbackDisplay';
+import { ExercisePhase } from '../NewLesson/components/ExercisePhase';
 import { LoadingSpinner, EmptyState, CodeBlock, Pill, Button, Card } from '../../components';
 import './LessonDetail.css';
 
@@ -86,14 +92,10 @@ export const LessonDetail: React.FC<LessonDetailProps> = ({
     );
   }
 
-  const lessonContent: LessonContent | null = lesson.lessonData
-    ? JSON.parse(lesson.lessonData)
-    : null;
-  const aiFeedback: GradingResult | null = lesson.aiFeedback
-    ? JSON.parse(lesson.aiFeedback)
-    : null;
-  const userSubmission: { ex1?: string; ex2?: string; ex3?: string } | null =
-    lesson.userSubmission ? JSON.parse(lesson.userSubmission) : null;
+  const lessonContent: LessonContent | null = parseLessonContent(lesson);
+  const aiFeedback: GradingResult | null = parseAiFeedback(lesson);
+  const userSubmission: ParsedUserSubmissionResult | null =
+    parseUserSubmission(lesson);
 
   return (
     <div className="lesson-detail-container">
@@ -120,32 +122,25 @@ export const LessonDetail: React.FC<LessonDetailProps> = ({
             Completed on {new Date(lesson.createdAt).toLocaleDateString()} • {lesson.wordsCount} Target Words
           </p>
         </div>
-
-        {lesson.overallScore !== null && lesson.overallScore !== undefined && (
-          <div className="lesson-detail-score-box">
-            <div
-              className={`lesson-detail-score-value ${lesson.overallScore >= 80 ? 'high' : 'low'}`}
-            >
-              {lesson.overallScore}%
-            </div>
-            <div className="lesson-detail-score-label">
-              Overall Score
-            </div>
-          </div>
-        )}
       </Card>
 
-      {/* Rule Details & Words Learned */}
-      {lessonContent && <WordsLearned lessonContent={lessonContent} />}
-      {lessonContent && <RuleExplanation lessonContent={lessonContent} />}
+      {/* Rule Details & Words Learned (hidden when lesson has been graded) */}
+      {lessonContent && lesson.status !== 'GRADED' && !aiFeedback && (
+        <>
+          <WordsLearned lessonContent={lessonContent} />
+          <RuleExplanation lessonContent={lessonContent} />
+        </>
+      )}
 
-      {/* AI Teacher Grading & User Answers */}
-      {aiFeedback && (
-        <AIFeedbackDisplay
-          gradingResult={aiFeedback}
-          userSubmission={userSubmission}
+      {/* Graded Inline Exercise Review */}
+      {aiFeedback && lessonContent && (
+        <ExercisePhase
           lessonContent={lessonContent}
-          title={feedbackTitle}
+          ex1Answers={userSubmission?.ex1Answers || (userSubmission?.ex1 ? [userSubmission.ex1] : [])}
+          ex2Answers={userSubmission?.ex2Answers || (userSubmission?.ex2 ? [userSubmission.ex2] : [])}
+          ex3Answer={userSubmission?.ex3Answer || userSubmission?.ex3 || ''}
+          isReviewMode={true}
+          gradingResult={aiFeedback}
         />
       )}
 

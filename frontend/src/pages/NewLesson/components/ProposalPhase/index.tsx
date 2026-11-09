@@ -1,13 +1,14 @@
 import React, { useState, useRef } from 'react';
-import { ProposedRule } from '../../../../types';
+import { ProposedRule, UsageInfo } from '../../../../types';
 import {
   IconRefreshCrank,
   IconLexicon,
   IconNewDispatch,
   IconApprovalCheck,
+  IconHazardAlert,
 } from '../../../../components/icons';
 import { useLanguages } from '../../../../contexts/LanguageContext';
-import { Pill, Select, IconButton, LoadingSpinner, Card, Button, Input } from '../../../../components';
+import { Pill, Select, IconButton, LoadingSpinner, Card, Button, Input, Modal } from '../../../../components';
 import './ProposalPhase.css';
 
 export interface ProposalPhaseProps {
@@ -24,6 +25,7 @@ export interface ProposalPhaseProps {
   onGenerateLesson: () => void;
   generatingLesson: boolean;
   fetchProposals: (forceRefresh: boolean) => void;
+  usageInfo?: UsageInfo | null;
   className?: string;
 }
 
@@ -41,11 +43,31 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
   onGenerateLesson,
   generatingLesson,
   fetchProposals,
+  usageInfo,
   className = '',
 }) => {
   const { targetLanguage } = useLanguages();
   const [customRule, setCustomRule] = useState('');
   const customInputRef = useRef<HTMLInputElement>(null);
+  const [confirmRefreshTarget, setConfirmRefreshTarget] = useState<
+    { type: 'all' } | { type: 'single'; index: number; title: string } | null
+  >(null);
+
+  const isCustomPlan = usageInfo?.isCustom ?? false;
+  const proposalUsage = usageInfo?.usage.RULE_PROPOSAL;
+  const lessonGenUsage = usageInfo?.usage.LESSON_GENERATION;
+
+  const isProposalLimitReached =
+    !isCustomPlan &&
+    proposalUsage?.limit !== null &&
+    proposalUsage?.limit !== undefined &&
+    proposalUsage.used >= proposalUsage.limit;
+
+  const isLessonGenLimitReached =
+    !isCustomPlan &&
+    lessonGenUsage?.limit !== null &&
+    lessonGenUsage?.limit !== undefined &&
+    lessonGenUsage.used >= lessonGenUsage.limit;
 
   const isCustomSelected =
     selectedRuleTitle !== '' &&
@@ -92,6 +114,28 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
           ]}
           className="proposal-word-count-filter"
         />
+
+        {/* Daily Quota Indicator (if not on custom plan) */}
+        {!isCustomPlan && usageInfo && (
+          <div className="proposal-quota-bar">
+            <span>
+              Daily Quota: <strong>{lessonGenUsage?.used ?? 0} / {lessonGenUsage?.limit ?? 2}</strong> lessons
+            </span>
+            <span>•</span>
+            <span>
+              <strong>{proposalUsage?.used ?? 0} / {proposalUsage?.limit ?? 3}</strong> proposals used
+            </span>
+            <span>•</span>
+            <span>Resets at 00:00 UTC</span>
+          </div>
+        )}
+
+        {isLessonGenLimitReached && (
+          <div className="proposal-limit-warning" role="alert">
+            <IconHazardAlert size={16} />
+            <span>Daily lesson generation limit reached ({lessonGenUsage?.used}/{lessonGenUsage?.limit}). Resets at midnight UTC.</span>
+          </div>
+        )}
       </Card>
 
       {loadingProposals ? (
@@ -105,54 +149,72 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
           <div className="proposal-section-group">
             <h3 className="proposal-section-title">AI Proposed New Rules</h3>
 
-            <div className="proposal-grid">
-              {proposals.map((prop, idx) => {
-                const isSelected = selectedRuleTitle === prop.title && !isReviewSelection;
-                const isReplacing = replacingIndex === idx;
+            {proposals.length === 0 ? (
+              <Card className="proposal-empty-info-card">
+                <p>No AI proposals currently available. Use custom lesson or review mode below.</p>
+              </Card>
+            ) : (
+              <div className="proposal-grid">
+                {proposals.map((prop, idx) => {
+                  const isSelected = selectedRuleTitle === prop.title && !isReviewSelection;
+                  const isReplacing = replacingIndex === idx;
 
-                return (
-                  <Card
-                    key={idx}
-                    isInteractive
-                    className={`proposal-card ${isSelected ? 'selected' : ''} ${isReplacing ? 'replacing' : ''}`}
-                    onClick={() => {
-                      if (!isReplacing) onSelectRule(prop.title, false);
-                    }}
-                  >
-                    {isReplacing ? (
-                      <div className="proposal-replacing-state">
-                        <LoadingSpinner size={24} variant="raw" />
-                        <span className="proposal-replacing-text">Generating new proposal...</span>
-                      </div>
-                    ) : (
-                      <>
-                        <div>
-                          <div className="proposal-card-header">
-                            <div className="proposal-card-pills">
-                              <Pill variant="primary">{prop.category}</Pill>
-                              <Pill variant="warning">{prop.difficulty}</Pill>
+                  return (
+                    <Card
+                      key={idx}
+                      isInteractive
+                      className={`proposal-card ${isSelected ? 'selected' : ''} ${isReplacing ? 'replacing' : ''}`}
+                      onClick={() => {
+                        if (!isReplacing) onSelectRule(prop.title, false);
+                      }}
+                    >
+                      {isReplacing ? (
+                        <div className="proposal-replacing-state">
+                          <LoadingSpinner size={24} variant="raw" />
+                          <span className="proposal-replacing-text">Generating new proposal...</span>
+                        </div>
+                      ) : (
+                        <>
+                          <div>
+                            <div className="proposal-card-header">
+                              <div className="proposal-card-pills">
+                                <Pill variant="primary">{prop.category}</Pill>
+                                <Pill variant="warning">{prop.difficulty}</Pill>
+                              </div>
+                              <IconButton
+                                size="xs"
+                                icon={<IconRefreshCrank size={12} />}
+                                title={
+                                  isProposalLimitReached
+                                    ? 'Daily proposal limit reached. Resets at 00:00 UTC.'
+                                    : 'Replace this proposal'
+                                }
+                                aria-label={`Replace proposal: ${prop.title}`}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setConfirmRefreshTarget({
+                                    type: 'single',
+                                    index: idx,
+                                    title: prop.title,
+                                  });
+                                }}
+                                disabled={replacingIndex !== null || isProposalLimitReached}
+                              />
                             </div>
-                            <IconButton
-                              icon={<IconRefreshCrank />}
-                              title="Replace this proposal"
-                              aria-label={`Replace proposal: ${prop.title}`}
-                              onClick={(e) => onReplaceProposal(idx, e)}
-                              disabled={replacingIndex !== null}
-                            />
+                            <h4 className="target-text proposal-card-title">{prop.title}</h4>
+                            <p className="proposal-card-desc">{prop.briefExplanation}</p>
                           </div>
-                          <h4 className="target-text proposal-card-title">{prop.title}</h4>
-                          <p className="proposal-card-desc">{prop.briefExplanation}</p>
-                        </div>
-                        <div className="proposal-select-indicator">
-                          {isSelected ? <IconApprovalCheck size={16} /> : <div className="proposal-unselected-circle" />}
-                          <span>{isSelected ? 'Selected Rule' : 'Select Rule'}</span>
-                        </div>
-                      </>
-                    )}
-                  </Card>
-                );
-              })}
-            </div>
+                          <div className="proposal-select-indicator">
+                            {isSelected ? <IconApprovalCheck size={16} /> : <div className="proposal-unselected-circle" />}
+                            <span>{isSelected ? 'Selected Rule' : 'Select Rule'}</span>
+                          </div>
+                        </>
+                      )}
+                    </Card>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
           {/* Custom Rule Input */}
@@ -235,8 +297,9 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
         <Button
           variant="secondary"
           className="proposal-btn"
-          onClick={() => fetchProposals(true)}
-          disabled={loadingProposals || generatingLesson}
+          onClick={() => setConfirmRefreshTarget({ type: 'all' })}
+          disabled={loadingProposals || generatingLesson || isProposalLimitReached}
+          title={isProposalLimitReached ? 'Daily proposal limit reached. Resets at 00:00 UTC.' : undefined}
           icon={<IconRefreshCrank size={18} />}
         >
           Refresh Proposals
@@ -245,7 +308,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
           variant="primary"
           className="proposal-btn"
           id="tutorial-generate-btn"
-          disabled={!selectedRuleTitle || generatingLesson}
+          disabled={!selectedRuleTitle || generatingLesson || isLessonGenLimitReached}
           onClick={onGenerateLesson}
           icon={!generatingLesson ? <IconNewDispatch size={20} /> : undefined}
         >
@@ -255,11 +318,46 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
               size={18}
               message="Generating Lesson..."
             />
+          ) : isLessonGenLimitReached ? (
+            `Daily Limit Reached (${lessonGenUsage?.used}/${lessonGenUsage?.limit})`
           ) : (
             'Generate Lesson & Exercises'
           )}
         </Button>
       </div>
+
+      {/* Refresh Confirmation Modal */}
+      <Modal
+        isOpen={confirmRefreshTarget !== null}
+        onClose={() => setConfirmRefreshTarget(null)}
+        icon={<IconHazardAlert size={20} />}
+        title="Confirm Refresh"
+        maxWidth="440px"
+      >
+        <p className="modal-prompt-text">
+          {confirmRefreshTarget?.type === 'all'
+            ? 'Are you sure you want to refresh all proposals? The current proposals will be replaced and a proposal quota will be used.'
+            : `Are you sure you want to replace "${confirmRefreshTarget?.title}" with a new proposal?`}
+        </p>
+        <div className="modal-actions">
+          <Button variant="secondary" onClick={() => setConfirmRefreshTarget(null)}>
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            onClick={(e) => {
+              if (confirmRefreshTarget?.type === 'all') {
+                fetchProposals(true);
+              } else if (confirmRefreshTarget?.type === 'single') {
+                onReplaceProposal(confirmRefreshTarget.index, e);
+              }
+              setConfirmRefreshTarget(null);
+            }}
+          >
+            Confirm
+          </Button>
+        </div>
+      </Modal>
     </div>
   );
 };

@@ -12,12 +12,24 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
+  isUserAdmin(email?: string): boolean {
+    if (!email) return false;
+    const adminEmails = (this.configService.get<string>('ADMIN_EMAILS') || '')
+      .split(',')
+      .map((e) => e.trim().toLowerCase())
+      .filter(Boolean);
+    return adminEmails.includes(email.toLowerCase());
+  }
+
   getProfile(user: User) {
     return {
       id: user.id,
       displayName: user.displayName,
       email: user.email,
       avatarUrl: user.avatarUrl,
+      plan: user.plan,
+      isCustom: user.isCustom,
+      isAdmin: this.isUserAdmin(user.email),
     };
   }
 

@@ -15,7 +15,7 @@ export const WordsLearned: React.FC<WordsLearnedProps> = ({ lessonContent, class
   return (
     <Card className={`${className}`.trim()}>
       <h3 className="words-learned-header">
-        <IconLexicon size={18} />
+        <IconLexicon size={16} />
         <span>Words Introduced in this Lesson</span>
       </h3>
       <div className="words-learned-grid">

@@ -16,7 +16,7 @@
 
 .proposal-header-title {
   font-family: var(--font-masthead);
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-bold);
   margin-bottom: var(--space-xs);
   color: var(--text-primary);
@@ -66,12 +66,12 @@
 .proposal-section-group {
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm);
+  gap: var(--space-2xs);
 }
 
 .proposal-section-title {
   font-family: var(--font-masthead);
-  font-size: var(--font-size-md);
+  font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
   color: var(--text-primary);
   margin: 0;
@@ -390,4 +390,41 @@ input.custom-rule-input::placeholder {
     text-align: center;
     text-align-last: center;
   }
+}
+
+.proposal-quota-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  margin-top: var(--space-md);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  flex-wrap: wrap;
+}
+
+.proposal-limit-warning {
+  margin-top: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--stamp-red-bg, #fdf2f2);
+  border: var(--border-width-regular) solid var(--stamp-red, #c0392b);
+  border-left: var(--border-width-heavy) solid var(--stamp-red, #c0392b);
+  color: var(--stamp-red, #c0392b);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  text-align: center;
+}
+
+.proposal-empty-info-card {
+  padding: var(--space-md) var(--space-lg);
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  text-align: center;
+  background: var(--bg-card-alt);
 }

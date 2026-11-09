@@ -6,7 +6,7 @@ export interface UseDashboardStatsReturn {
   stats: DashboardStats | null;
   loading: boolean;
   loadStats: () => Promise<void>;
-  deleteLesson: (e: React.MouseEvent, id: string) => Promise<void>;
+  deleteLesson: (id: string) => Promise<void>;
 }
 
 export function useDashboardStats(): UseDashboardStatsReturn {
@@ -30,15 +30,12 @@ export function useDashboardStats(): UseDashboardStatsReturn {
   }, [loadStats]);
 
   const deleteLesson = useCallback(
-    async (e: React.MouseEvent, id: string) => {
-      e.stopPropagation();
-      if (window.confirm('Are you sure you want to delete this lesson from history?')) {
-        try {
-          await api.deleteLesson(id);
-          await loadStats();
-        } catch (err) {
-          console.error('Failed to delete lesson', err);
-        }
+    async (id: string) => {
+      try {
+        await api.deleteLesson(id);
+        await loadStats();
+      } catch (err) {
+        console.error('Failed to delete lesson', err);
       }
     },
     [loadStats],

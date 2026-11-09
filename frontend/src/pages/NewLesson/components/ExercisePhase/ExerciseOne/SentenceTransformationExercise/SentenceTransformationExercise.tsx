@@ -1,6 +1,6 @@
 import React from 'react';
 import { IconRefreshCrank, IconManiculeRight } from '../../../../../../components/icons';
-import { Input } from '../../../../../../components';
+import { GradedTextInput } from '../../../../../../components';
 import { ExerciseOneComponentProps } from '../types';
 import './sentenceTransformation.css';
 
@@ -29,7 +29,9 @@ export const SentenceTransformationExercise: React.FC<ExerciseOneComponentProps>
                 {sentence}
               </div>
             </div>
-            <Input
+            <GradedTextInput
+              exerciseNumber={1}
+              inputId={String(idx)}
               type="text"
               id={`ex1-trans-${idx}`}
               placeholder="Write the transformed sentence..."

@@ -43,13 +43,12 @@ export type LessonMinAggregateOutputType = {
   ruleId: string | null
   isReview: boolean | null
   wordsCount: number | null
-  lessonData: string | null
-  status: string | null
-  userSubmission: string | null
+  status: $Enums.LessonStatus | null
   submissionImage: string | null
-  aiFeedback: string | null
-  overallScore: number | null
   rawPrompt: string | null
+  overallScore: number | null
+  generalFeedback: string | null
+  handwrittenOcrText: string | null
   userId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -62,13 +61,12 @@ export type LessonMaxAggregateOutputType = {
   ruleId: string | null
   isReview: boolean | null
   wordsCount: number | null
-  lessonData: string | null
-  status: string | null
-  userSubmission: string | null
+  status: $Enums.LessonStatus | null
   submissionImage: string | null
-  aiFeedback: string | null
-  overallScore: number | null
   rawPrompt: string | null
+  overallScore: number | null
+  generalFeedback: string | null
+  handwrittenOcrText: string | null
   userId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -81,13 +79,12 @@ export type LessonCountAggregateOutputType = {
   ruleId: number
   isReview: number
   wordsCount: number
-  lessonData: number
   status: number
-  userSubmission: number
   submissionImage: number
-  aiFeedback: number
-  overallScore: number
   rawPrompt: number
+  overallScore: number
+  generalFeedback: number
+  handwrittenOcrText: number
   userId: number
   createdAt: number
   updatedAt: number
@@ -112,13 +109,12 @@ export type LessonMinAggregateInputType = {
   ruleId?: true
   isReview?: true
   wordsCount?: true
-  lessonData?: true
   status?: true
-  userSubmission?: true
   submissionImage?: true
-  aiFeedback?: true
-  overallScore?: true
   rawPrompt?: true
+  overallScore?: true
+  generalFeedback?: true
+  handwrittenOcrText?: true
   userId?: true
   createdAt?: true
   updatedAt?: true
@@ -131,13 +127,12 @@ export type LessonMaxAggregateInputType = {
   ruleId?: true
   isReview?: true
   wordsCount?: true
-  lessonData?: true
   status?: true
-  userSubmission?: true
   submissionImage?: true
-  aiFeedback?: true
-  overallScore?: true
   rawPrompt?: true
+  overallScore?: true
+  generalFeedback?: true
+  handwrittenOcrText?: true
   userId?: true
   createdAt?: true
   updatedAt?: true
@@ -150,13 +145,12 @@ export type LessonCountAggregateInputType = {
   ruleId?: true
   isReview?: true
   wordsCount?: true
-  lessonData?: true
   status?: true
-  userSubmission?: true
   submissionImage?: true
-  aiFeedback?: true
-  overallScore?: true
   rawPrompt?: true
+  overallScore?: true
+  generalFeedback?: true
+  handwrittenOcrText?: true
   userId?: true
   createdAt?: true
   updatedAt?: true
@@ -256,13 +250,12 @@ export type LessonGroupByOutputType = {
   ruleId: string | null
   isReview: boolean
   wordsCount: number
-  lessonData: string
-  status: string
-  userSubmission: string | null
+  status: $Enums.LessonStatus
   submissionImage: string | null
-  aiFeedback: string | null
-  overallScore: number | null
   rawPrompt: string | null
+  overallScore: number | null
+  generalFeedback: string | null
+  handwrittenOcrText: string | null
   userId: string
   createdAt: Date
   updatedAt: Date
@@ -298,19 +291,19 @@ export type LessonWhereInput = {
   ruleId?: Prisma.StringNullableFilter<"Lesson"> | string | null
   isReview?: Prisma.BoolFilter<"Lesson"> | boolean
   wordsCount?: Prisma.IntFilter<"Lesson"> | number
-  lessonData?: Prisma.StringFilter<"Lesson"> | string
-  status?: Prisma.StringFilter<"Lesson"> | string
-  userSubmission?: Prisma.StringNullableFilter<"Lesson"> | string | null
+  status?: Prisma.EnumLessonStatusFilter<"Lesson"> | $Enums.LessonStatus
   submissionImage?: Prisma.StringNullableFilter<"Lesson"> | string | null
-  aiFeedback?: Prisma.StringNullableFilter<"Lesson"> | string | null
-  overallScore?: Prisma.IntNullableFilter<"Lesson"> | number | null
   rawPrompt?: Prisma.StringNullableFilter<"Lesson"> | string | null
+  overallScore?: Prisma.IntNullableFilter<"Lesson"> | number | null
+  generalFeedback?: Prisma.StringNullableFilter<"Lesson"> | string | null
+  handwrittenOcrText?: Prisma.StringNullableFilter<"Lesson"> | string | null
   userId?: Prisma.StringFilter<"Lesson"> | string
   createdAt?: Prisma.DateTimeFilter<"Lesson"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Lesson"> | Date | string
   rule?: Prisma.XOR<Prisma.RuleNullableScalarRelationFilter, Prisma.RuleWhereInput> | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   words?: Prisma.LessonWordListRelationFilter
+  exercises?: Prisma.LessonExerciseListRelationFilter
 }
 
 export type LessonOrderByWithRelationInput = {
@@ -320,19 +313,19 @@ export type LessonOrderByWithRelationInput = {
   ruleId?: Prisma.SortOrderInput | Prisma.SortOrder
   isReview?: Prisma.SortOrder
   wordsCount?: Prisma.SortOrder
-  lessonData?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  userSubmission?: Prisma.SortOrderInput | Prisma.SortOrder
   submissionImage?: Prisma.SortOrderInput | Prisma.SortOrder
-  aiFeedback?: Prisma.SortOrderInput | Prisma.SortOrder
-  overallScore?: Prisma.SortOrderInput | Prisma.SortOrder
   rawPrompt?: Prisma.SortOrderInput | Prisma.SortOrder
+  overallScore?: Prisma.SortOrderInput | Prisma.SortOrder
+  generalFeedback?: Prisma.SortOrderInput | Prisma.SortOrder
+  handwrittenOcrText?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   rule?: Prisma.RuleOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
   words?: Prisma.LessonWordOrderByRelationAggregateInput
+  exercises?: Prisma.LessonExerciseOrderByRelationAggregateInput
 }
 
 export type LessonWhereUniqueInput = Prisma.AtLeast<{
@@ -345,19 +338,19 @@ export type LessonWhereUniqueInput = Prisma.AtLeast<{
   ruleId?: Prisma.StringNullableFilter<"Lesson"> | string | null
   isReview?: Prisma.BoolFilter<"Lesson"> | boolean
   wordsCount?: Prisma.IntFilter<"Lesson"> | number
-  lessonData?: Prisma.StringFilter<"Lesson"> | string
-  status?: Prisma.StringFilter<"Lesson"> | string
-  userSubmission?: Prisma.StringNullableFilter<"Lesson"> | string | null
+  status?: Prisma.EnumLessonStatusFilter<"Lesson"> | $Enums.LessonStatus
   submissionImage?: Prisma.StringNullableFilter<"Lesson"> | string | null
-  aiFeedback?: Prisma.StringNullableFilter<"Lesson"> | string | null
-  overallScore?: Prisma.IntNullableFilter<"Lesson"> | number | null
   rawPrompt?: Prisma.StringNullableFilter<"Lesson"> | string | null
+  overallScore?: Prisma.IntNullableFilter<"Lesson"> | number | null
+  generalFeedback?: Prisma.StringNullableFilter<"Lesson"> | string | null
+  handwrittenOcrText?: Prisma.StringNullableFilter<"Lesson"> | string | null
   userId?: Prisma.StringFilter<"Lesson"> | string
   createdAt?: Prisma.DateTimeFilter<"Lesson"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Lesson"> | Date | string
   rule?: Prisma.XOR<Prisma.RuleNullableScalarRelationFilter, Prisma.RuleWhereInput> | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   words?: Prisma.LessonWordListRelationFilter
+  exercises?: Prisma.LessonExerciseListRelationFilter
 }, "id">
 
 export type LessonOrderByWithAggregationInput = {
@@ -367,13 +360,12 @@ export type LessonOrderByWithAggregationInput = {
   ruleId?: Prisma.SortOrderInput | Prisma.SortOrder
   isReview?: Prisma.SortOrder
   wordsCount?: Prisma.SortOrder
-  lessonData?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  userSubmission?: Prisma.SortOrderInput | Prisma.SortOrder
   submissionImage?: Prisma.SortOrderInput | Prisma.SortOrder
-  aiFeedback?: Prisma.SortOrderInput | Prisma.SortOrder
-  overallScore?: Prisma.SortOrderInput | Prisma.SortOrder
   rawPrompt?: Prisma.SortOrderInput | Prisma.SortOrder
+  overallScore?: Prisma.SortOrderInput | Prisma.SortOrder
+  generalFeedback?: Prisma.SortOrderInput | Prisma.SortOrder
+  handwrittenOcrText?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -394,13 +386,12 @@ export type LessonScalarWhereWithAggregatesInput = {
   ruleId?: Prisma.StringNullableWithAggregatesFilter<"Lesson"> | string | null
   isReview?: Prisma.BoolWithAggregatesFilter<"Lesson"> | boolean
   wordsCount?: Prisma.IntWithAggregatesFilter<"Lesson"> | number
-  lessonData?: Prisma.StringWithAggregatesFilter<"Lesson"> | string
-  status?: Prisma.StringWithAggregatesFilter<"Lesson"> | string
-  userSubmission?: Prisma.StringNullableWithAggregatesFilter<"Lesson"> | string | null
+  status?: Prisma.EnumLessonStatusWithAggregatesFilter<"Lesson"> | $Enums.LessonStatus
   submissionImage?: Prisma.StringNullableWithAggregatesFilter<"Lesson"> | string | null
-  aiFeedback?: Prisma.StringNullableWithAggregatesFilter<"Lesson"> | string | null
-  overallScore?: Prisma.IntNullableWithAggregatesFilter<"Lesson"> | number | null
   rawPrompt?: Prisma.StringNullableWithAggregatesFilter<"Lesson"> | string | null
+  overallScore?: Prisma.IntNullableWithAggregatesFilter<"Lesson"> | number | null
+  generalFeedback?: Prisma.StringNullableWithAggregatesFilter<"Lesson"> | string | null
+  handwrittenOcrText?: Prisma.StringNullableWithAggregatesFilter<"Lesson"> | string | null
   userId?: Prisma.StringWithAggregatesFilter<"Lesson"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Lesson"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Lesson"> | Date | string
@@ -412,18 +403,18 @@ export type LessonCreateInput = {
   date?: Date | string
   isReview?: boolean
   wordsCount?: number
-  lessonData: string
-  status?: string
-  userSubmission?: string | null
+  status?: $Enums.LessonStatus
   submissionImage?: string | null
-  aiFeedback?: string | null
-  overallScore?: number | null
   rawPrompt?: string | null
+  overallScore?: number | null
+  generalFeedback?: string | null
+  handwrittenOcrText?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   rule?: Prisma.RuleCreateNestedOneWithoutLessonsInput
   user: Prisma.UserCreateNestedOneWithoutLessonsInput
   words?: Prisma.LessonWordCreateNestedManyWithoutLessonInput
+  exercises?: Prisma.LessonExerciseCreateNestedManyWithoutLessonInput
 }
 
 export type LessonUncheckedCreateInput = {
@@ -433,17 +424,17 @@ export type LessonUncheckedCreateInput = {
   ruleId?: string | null
   isReview?: boolean
   wordsCount?: number
-  lessonData: string
-  status?: string
-  userSubmission?: string | null
+  status?: $Enums.LessonStatus
   submissionImage?: string | null
-  aiFeedback?: string | null
-  overallScore?: number | null
   rawPrompt?: string | null
+  overallScore?: number | null
+  generalFeedback?: string | null
+  handwrittenOcrText?: string | null
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
   words?: Prisma.LessonWordUncheckedCreateNestedManyWithoutLessonInput
+  exercises?: Prisma.LessonExerciseUncheckedCreateNestedManyWithoutLessonInput
 }
 
 export type LessonUpdateInput = {
@@ -452,18 +443,18 @@ export type LessonUpdateInput = {
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
   wordsCount?: Prisma.IntFieldUpdateOperationsInput | number
-  lessonData?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  userSubmission?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumLessonStatusFieldUpdateOperationsInput | $Enums.LessonStatus
   submissionImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aiFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  overallScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rawPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overallScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  generalFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  handwrittenOcrText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rule?: Prisma.RuleUpdateOneWithoutLessonsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutLessonsNestedInput
   words?: Prisma.LessonWordUpdateManyWithoutLessonNestedInput
+  exercises?: Prisma.LessonExerciseUpdateManyWithoutLessonNestedInput
 }
 
 export type LessonUncheckedUpdateInput = {
@@ -473,17 +464,17 @@ export type LessonUncheckedUpdateInput = {
   ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
   wordsCount?: Prisma.IntFieldUpdateOperationsInput | number
-  lessonData?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  userSubmission?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumLessonStatusFieldUpdateOperationsInput | $Enums.LessonStatus
   submissionImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aiFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  overallScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rawPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overallScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  generalFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  handwrittenOcrText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   words?: Prisma.LessonWordUncheckedUpdateManyWithoutLessonNestedInput
+  exercises?: Prisma.LessonExerciseUncheckedUpdateManyWithoutLessonNestedInput
 }
 
 export type LessonCreateManyInput = {
@@ -493,13 +484,12 @@ export type LessonCreateManyInput = {
   ruleId?: string | null
   isReview?: boolean
   wordsCount?: number
-  lessonData: string
-  status?: string
-  userSubmission?: string | null
+  status?: $Enums.LessonStatus
   submissionImage?: string | null
-  aiFeedback?: string | null
-  overallScore?: number | null
   rawPrompt?: string | null
+  overallScore?: number | null
+  generalFeedback?: string | null
+  handwrittenOcrText?: string | null
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -511,13 +501,12 @@ export type LessonUpdateManyMutationInput = {
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
   wordsCount?: Prisma.IntFieldUpdateOperationsInput | number
-  lessonData?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  userSubmission?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumLessonStatusFieldUpdateOperationsInput | $Enums.LessonStatus
   submissionImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aiFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  overallScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rawPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overallScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  generalFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  handwrittenOcrText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -529,13 +518,12 @@ export type LessonUncheckedUpdateManyInput = {
   ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
   wordsCount?: Prisma.IntFieldUpdateOperationsInput | number
-  lessonData?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  userSubmission?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumLessonStatusFieldUpdateOperationsInput | $Enums.LessonStatus
   submissionImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aiFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  overallScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rawPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overallScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  generalFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  handwrittenOcrText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -558,13 +546,12 @@ export type LessonCountOrderByAggregateInput = {
   ruleId?: Prisma.SortOrder
   isReview?: Prisma.SortOrder
   wordsCount?: Prisma.SortOrder
-  lessonData?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  userSubmission?: Prisma.SortOrder
   submissionImage?: Prisma.SortOrder
-  aiFeedback?: Prisma.SortOrder
-  overallScore?: Prisma.SortOrder
   rawPrompt?: Prisma.SortOrder
+  overallScore?: Prisma.SortOrder
+  generalFeedback?: Prisma.SortOrder
+  handwrittenOcrText?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -582,13 +569,12 @@ export type LessonMaxOrderByAggregateInput = {
   ruleId?: Prisma.SortOrder
   isReview?: Prisma.SortOrder
   wordsCount?: Prisma.SortOrder
-  lessonData?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  userSubmission?: Prisma.SortOrder
   submissionImage?: Prisma.SortOrder
-  aiFeedback?: Prisma.SortOrder
-  overallScore?: Prisma.SortOrder
   rawPrompt?: Prisma.SortOrder
+  overallScore?: Prisma.SortOrder
+  generalFeedback?: Prisma.SortOrder
+  handwrittenOcrText?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -601,13 +587,12 @@ export type LessonMinOrderByAggregateInput = {
   ruleId?: Prisma.SortOrder
   isReview?: Prisma.SortOrder
   wordsCount?: Prisma.SortOrder
-  lessonData?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  userSubmission?: Prisma.SortOrder
   submissionImage?: Prisma.SortOrder
-  aiFeedback?: Prisma.SortOrder
-  overallScore?: Prisma.SortOrder
   rawPrompt?: Prisma.SortOrder
+  overallScore?: Prisma.SortOrder
+  generalFeedback?: Prisma.SortOrder
+  handwrittenOcrText?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -707,10 +692,6 @@ export type LessonUncheckedUpdateManyWithoutRuleNestedInput = {
   deleteMany?: Prisma.LessonScalarWhereInput | Prisma.LessonScalarWhereInput[]
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
 export type IntFieldUpdateOperationsInput = {
   set?: number
   increment?: number
@@ -719,12 +700,30 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type EnumLessonStatusFieldUpdateOperationsInput = {
+  set?: $Enums.LessonStatus
+}
+
 export type NullableIntFieldUpdateOperationsInput = {
   set?: number | null
   increment?: number
   decrement?: number
   multiply?: number
   divide?: number
+}
+
+export type LessonCreateNestedOneWithoutExercisesInput = {
+  create?: Prisma.XOR<Prisma.LessonCreateWithoutExercisesInput, Prisma.LessonUncheckedCreateWithoutExercisesInput>
+  connectOrCreate?: Prisma.LessonCreateOrConnectWithoutExercisesInput
+  connect?: Prisma.LessonWhereUniqueInput
+}
+
+export type LessonUpdateOneRequiredWithoutExercisesNestedInput = {
+  create?: Prisma.XOR<Prisma.LessonCreateWithoutExercisesInput, Prisma.LessonUncheckedCreateWithoutExercisesInput>
+  connectOrCreate?: Prisma.LessonCreateOrConnectWithoutExercisesInput
+  upsert?: Prisma.LessonUpsertWithoutExercisesInput
+  connect?: Prisma.LessonWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LessonUpdateToOneWithWhereWithoutExercisesInput, Prisma.LessonUpdateWithoutExercisesInput>, Prisma.LessonUncheckedUpdateWithoutExercisesInput>
 }
 
 export type LessonCreateNestedOneWithoutWordsInput = {
@@ -747,17 +746,17 @@ export type LessonCreateWithoutUserInput = {
   date?: Date | string
   isReview?: boolean
   wordsCount?: number
-  lessonData: string
-  status?: string
-  userSubmission?: string | null
+  status?: $Enums.LessonStatus
   submissionImage?: string | null
-  aiFeedback?: string | null
-  overallScore?: number | null
   rawPrompt?: string | null
+  overallScore?: number | null
+  generalFeedback?: string | null
+  handwrittenOcrText?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   rule?: Prisma.RuleCreateNestedOneWithoutLessonsInput
   words?: Prisma.LessonWordCreateNestedManyWithoutLessonInput
+  exercises?: Prisma.LessonExerciseCreateNestedManyWithoutLessonInput
 }
 
 export type LessonUncheckedCreateWithoutUserInput = {
@@ -767,16 +766,16 @@ export type LessonUncheckedCreateWithoutUserInput = {
   ruleId?: string | null
   isReview?: boolean
   wordsCount?: number
-  lessonData: string
-  status?: string
-  userSubmission?: string | null
+  status?: $Enums.LessonStatus
   submissionImage?: string | null
-  aiFeedback?: string | null
-  overallScore?: number | null
   rawPrompt?: string | null
+  overallScore?: number | null
+  generalFeedback?: string | null
+  handwrittenOcrText?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   words?: Prisma.LessonWordUncheckedCreateNestedManyWithoutLessonInput
+  exercises?: Prisma.LessonExerciseUncheckedCreateNestedManyWithoutLessonInput
 }
 
 export type LessonCreateOrConnectWithoutUserInput = {
@@ -814,13 +813,12 @@ export type LessonScalarWhereInput = {
   ruleId?: Prisma.StringNullableFilter<"Lesson"> | string | null
   isReview?: Prisma.BoolFilter<"Lesson"> | boolean
   wordsCount?: Prisma.IntFilter<"Lesson"> | number
-  lessonData?: Prisma.StringFilter<"Lesson"> | string
-  status?: Prisma.StringFilter<"Lesson"> | string
-  userSubmission?: Prisma.StringNullableFilter<"Lesson"> | string | null
+  status?: Prisma.EnumLessonStatusFilter<"Lesson"> | $Enums.LessonStatus
   submissionImage?: Prisma.StringNullableFilter<"Lesson"> | string | null
-  aiFeedback?: Prisma.StringNullableFilter<"Lesson"> | string | null
-  overallScore?: Prisma.IntNullableFilter<"Lesson"> | number | null
   rawPrompt?: Prisma.StringNullableFilter<"Lesson"> | string | null
+  overallScore?: Prisma.IntNullableFilter<"Lesson"> | number | null
+  generalFeedback?: Prisma.StringNullableFilter<"Lesson"> | string | null
+  handwrittenOcrText?: Prisma.StringNullableFilter<"Lesson"> | string | null
   userId?: Prisma.StringFilter<"Lesson"> | string
   createdAt?: Prisma.DateTimeFilter<"Lesson"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Lesson"> | Date | string
@@ -832,17 +830,17 @@ export type LessonCreateWithoutRuleInput = {
   date?: Date | string
   isReview?: boolean
   wordsCount?: number
-  lessonData: string
-  status?: string
-  userSubmission?: string | null
+  status?: $Enums.LessonStatus
   submissionImage?: string | null
-  aiFeedback?: string | null
-  overallScore?: number | null
   rawPrompt?: string | null
+  overallScore?: number | null
+  generalFeedback?: string | null
+  handwrittenOcrText?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutLessonsInput
   words?: Prisma.LessonWordCreateNestedManyWithoutLessonInput
+  exercises?: Prisma.LessonExerciseCreateNestedManyWithoutLessonInput
 }
 
 export type LessonUncheckedCreateWithoutRuleInput = {
@@ -851,17 +849,17 @@ export type LessonUncheckedCreateWithoutRuleInput = {
   date?: Date | string
   isReview?: boolean
   wordsCount?: number
-  lessonData: string
-  status?: string
-  userSubmission?: string | null
+  status?: $Enums.LessonStatus
   submissionImage?: string | null
-  aiFeedback?: string | null
-  overallScore?: number | null
   rawPrompt?: string | null
+  overallScore?: number | null
+  generalFeedback?: string | null
+  handwrittenOcrText?: string | null
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
   words?: Prisma.LessonWordUncheckedCreateNestedManyWithoutLessonInput
+  exercises?: Prisma.LessonExerciseUncheckedCreateNestedManyWithoutLessonInput
 }
 
 export type LessonCreateOrConnectWithoutRuleInput = {
@@ -889,23 +887,115 @@ export type LessonUpdateManyWithWhereWithoutRuleInput = {
   data: Prisma.XOR<Prisma.LessonUpdateManyMutationInput, Prisma.LessonUncheckedUpdateManyWithoutRuleInput>
 }
 
+export type LessonCreateWithoutExercisesInput = {
+  id?: string
+  title?: string | null
+  date?: Date | string
+  isReview?: boolean
+  wordsCount?: number
+  status?: $Enums.LessonStatus
+  submissionImage?: string | null
+  rawPrompt?: string | null
+  overallScore?: number | null
+  generalFeedback?: string | null
+  handwrittenOcrText?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  rule?: Prisma.RuleCreateNestedOneWithoutLessonsInput
+  user: Prisma.UserCreateNestedOneWithoutLessonsInput
+  words?: Prisma.LessonWordCreateNestedManyWithoutLessonInput
+}
+
+export type LessonUncheckedCreateWithoutExercisesInput = {
+  id?: string
+  title?: string | null
+  date?: Date | string
+  ruleId?: string | null
+  isReview?: boolean
+  wordsCount?: number
+  status?: $Enums.LessonStatus
+  submissionImage?: string | null
+  rawPrompt?: string | null
+  overallScore?: number | null
+  generalFeedback?: string | null
+  handwrittenOcrText?: string | null
+  userId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  words?: Prisma.LessonWordUncheckedCreateNestedManyWithoutLessonInput
+}
+
+export type LessonCreateOrConnectWithoutExercisesInput = {
+  where: Prisma.LessonWhereUniqueInput
+  create: Prisma.XOR<Prisma.LessonCreateWithoutExercisesInput, Prisma.LessonUncheckedCreateWithoutExercisesInput>
+}
+
+export type LessonUpsertWithoutExercisesInput = {
+  update: Prisma.XOR<Prisma.LessonUpdateWithoutExercisesInput, Prisma.LessonUncheckedUpdateWithoutExercisesInput>
+  create: Prisma.XOR<Prisma.LessonCreateWithoutExercisesInput, Prisma.LessonUncheckedCreateWithoutExercisesInput>
+  where?: Prisma.LessonWhereInput
+}
+
+export type LessonUpdateToOneWithWhereWithoutExercisesInput = {
+  where?: Prisma.LessonWhereInput
+  data: Prisma.XOR<Prisma.LessonUpdateWithoutExercisesInput, Prisma.LessonUncheckedUpdateWithoutExercisesInput>
+}
+
+export type LessonUpdateWithoutExercisesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  wordsCount?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumLessonStatusFieldUpdateOperationsInput | $Enums.LessonStatus
+  submissionImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overallScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  generalFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  handwrittenOcrText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rule?: Prisma.RuleUpdateOneWithoutLessonsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutLessonsNestedInput
+  words?: Prisma.LessonWordUpdateManyWithoutLessonNestedInput
+}
+
+export type LessonUncheckedUpdateWithoutExercisesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  wordsCount?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumLessonStatusFieldUpdateOperationsInput | $Enums.LessonStatus
+  submissionImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rawPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overallScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  generalFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  handwrittenOcrText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  words?: Prisma.LessonWordUncheckedUpdateManyWithoutLessonNestedInput
+}
+
 export type LessonCreateWithoutWordsInput = {
   id?: string
   title?: string | null
   date?: Date | string
   isReview?: boolean
   wordsCount?: number
-  lessonData: string
-  status?: string
-  userSubmission?: string | null
+  status?: $Enums.LessonStatus
   submissionImage?: string | null
-  aiFeedback?: string | null
-  overallScore?: number | null
   rawPrompt?: string | null
+  overallScore?: number | null
+  generalFeedback?: string | null
+  handwrittenOcrText?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   rule?: Prisma.RuleCreateNestedOneWithoutLessonsInput
   user: Prisma.UserCreateNestedOneWithoutLessonsInput
+  exercises?: Prisma.LessonExerciseCreateNestedManyWithoutLessonInput
 }
 
 export type LessonUncheckedCreateWithoutWordsInput = {
@@ -915,16 +1005,16 @@ export type LessonUncheckedCreateWithoutWordsInput = {
   ruleId?: string | null
   isReview?: boolean
   wordsCount?: number
-  lessonData: string
-  status?: string
-  userSubmission?: string | null
+  status?: $Enums.LessonStatus
   submissionImage?: string | null
-  aiFeedback?: string | null
-  overallScore?: number | null
   rawPrompt?: string | null
+  overallScore?: number | null
+  generalFeedback?: string | null
+  handwrittenOcrText?: string | null
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  exercises?: Prisma.LessonExerciseUncheckedCreateNestedManyWithoutLessonInput
 }
 
 export type LessonCreateOrConnectWithoutWordsInput = {
@@ -949,17 +1039,17 @@ export type LessonUpdateWithoutWordsInput = {
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
   wordsCount?: Prisma.IntFieldUpdateOperationsInput | number
-  lessonData?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  userSubmission?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumLessonStatusFieldUpdateOperationsInput | $Enums.LessonStatus
   submissionImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aiFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  overallScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rawPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overallScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  generalFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  handwrittenOcrText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rule?: Prisma.RuleUpdateOneWithoutLessonsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutLessonsNestedInput
+  exercises?: Prisma.LessonExerciseUpdateManyWithoutLessonNestedInput
 }
 
 export type LessonUncheckedUpdateWithoutWordsInput = {
@@ -969,16 +1059,16 @@ export type LessonUncheckedUpdateWithoutWordsInput = {
   ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
   wordsCount?: Prisma.IntFieldUpdateOperationsInput | number
-  lessonData?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  userSubmission?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumLessonStatusFieldUpdateOperationsInput | $Enums.LessonStatus
   submissionImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aiFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  overallScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rawPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overallScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  generalFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  handwrittenOcrText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  exercises?: Prisma.LessonExerciseUncheckedUpdateManyWithoutLessonNestedInput
 }
 
 export type LessonCreateManyUserInput = {
@@ -988,13 +1078,12 @@ export type LessonCreateManyUserInput = {
   ruleId?: string | null
   isReview?: boolean
   wordsCount?: number
-  lessonData: string
-  status?: string
-  userSubmission?: string | null
+  status?: $Enums.LessonStatus
   submissionImage?: string | null
-  aiFeedback?: string | null
-  overallScore?: number | null
   rawPrompt?: string | null
+  overallScore?: number | null
+  generalFeedback?: string | null
+  handwrittenOcrText?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1005,17 +1094,17 @@ export type LessonUpdateWithoutUserInput = {
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
   wordsCount?: Prisma.IntFieldUpdateOperationsInput | number
-  lessonData?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  userSubmission?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumLessonStatusFieldUpdateOperationsInput | $Enums.LessonStatus
   submissionImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aiFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  overallScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rawPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overallScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  generalFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  handwrittenOcrText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rule?: Prisma.RuleUpdateOneWithoutLessonsNestedInput
   words?: Prisma.LessonWordUpdateManyWithoutLessonNestedInput
+  exercises?: Prisma.LessonExerciseUpdateManyWithoutLessonNestedInput
 }
 
 export type LessonUncheckedUpdateWithoutUserInput = {
@@ -1025,16 +1114,16 @@ export type LessonUncheckedUpdateWithoutUserInput = {
   ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
   wordsCount?: Prisma.IntFieldUpdateOperationsInput | number
-  lessonData?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  userSubmission?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumLessonStatusFieldUpdateOperationsInput | $Enums.LessonStatus
   submissionImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aiFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  overallScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rawPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overallScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  generalFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  handwrittenOcrText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   words?: Prisma.LessonWordUncheckedUpdateManyWithoutLessonNestedInput
+  exercises?: Prisma.LessonExerciseUncheckedUpdateManyWithoutLessonNestedInput
 }
 
 export type LessonUncheckedUpdateManyWithoutUserInput = {
@@ -1044,13 +1133,12 @@ export type LessonUncheckedUpdateManyWithoutUserInput = {
   ruleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
   wordsCount?: Prisma.IntFieldUpdateOperationsInput | number
-  lessonData?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  userSubmission?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumLessonStatusFieldUpdateOperationsInput | $Enums.LessonStatus
   submissionImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aiFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  overallScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rawPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overallScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  generalFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  handwrittenOcrText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1061,13 +1149,12 @@ export type LessonCreateManyRuleInput = {
   date?: Date | string
   isReview?: boolean
   wordsCount?: number
-  lessonData: string
-  status?: string
-  userSubmission?: string | null
+  status?: $Enums.LessonStatus
   submissionImage?: string | null
-  aiFeedback?: string | null
-  overallScore?: number | null
   rawPrompt?: string | null
+  overallScore?: number | null
+  generalFeedback?: string | null
+  handwrittenOcrText?: string | null
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1079,17 +1166,17 @@ export type LessonUpdateWithoutRuleInput = {
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
   wordsCount?: Prisma.IntFieldUpdateOperationsInput | number
-  lessonData?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  userSubmission?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumLessonStatusFieldUpdateOperationsInput | $Enums.LessonStatus
   submissionImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aiFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  overallScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rawPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overallScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  generalFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  handwrittenOcrText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutLessonsNestedInput
   words?: Prisma.LessonWordUpdateManyWithoutLessonNestedInput
+  exercises?: Prisma.LessonExerciseUpdateManyWithoutLessonNestedInput
 }
 
 export type LessonUncheckedUpdateWithoutRuleInput = {
@@ -1098,17 +1185,17 @@ export type LessonUncheckedUpdateWithoutRuleInput = {
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
   wordsCount?: Prisma.IntFieldUpdateOperationsInput | number
-  lessonData?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  userSubmission?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumLessonStatusFieldUpdateOperationsInput | $Enums.LessonStatus
   submissionImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aiFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  overallScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rawPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overallScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  generalFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  handwrittenOcrText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   words?: Prisma.LessonWordUncheckedUpdateManyWithoutLessonNestedInput
+  exercises?: Prisma.LessonExerciseUncheckedUpdateManyWithoutLessonNestedInput
 }
 
 export type LessonUncheckedUpdateManyWithoutRuleInput = {
@@ -1117,13 +1204,12 @@ export type LessonUncheckedUpdateManyWithoutRuleInput = {
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isReview?: Prisma.BoolFieldUpdateOperationsInput | boolean
   wordsCount?: Prisma.IntFieldUpdateOperationsInput | number
-  lessonData?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  userSubmission?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumLessonStatusFieldUpdateOperationsInput | $Enums.LessonStatus
   submissionImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  aiFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  overallScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rawPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  overallScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  generalFeedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  handwrittenOcrText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1136,10 +1222,12 @@ export type LessonUncheckedUpdateManyWithoutRuleInput = {
 
 export type LessonCountOutputType = {
   words: number
+  exercises: number
 }
 
 export type LessonCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   words?: boolean | LessonCountOutputTypeCountWordsArgs
+  exercises?: boolean | LessonCountOutputTypeCountExercisesArgs
 }
 
 /**
@@ -1159,6 +1247,13 @@ export type LessonCountOutputTypeCountWordsArgs<ExtArgs extends runtime.Types.Ex
   where?: Prisma.LessonWordWhereInput
 }
 
+/**
+ * LessonCountOutputType without action
+ */
+export type LessonCountOutputTypeCountExercisesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LessonExerciseWhereInput
+}
+
 
 export type LessonSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1167,19 +1262,19 @@ export type LessonSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   ruleId?: boolean
   isReview?: boolean
   wordsCount?: boolean
-  lessonData?: boolean
   status?: boolean
-  userSubmission?: boolean
   submissionImage?: boolean
-  aiFeedback?: boolean
-  overallScore?: boolean
   rawPrompt?: boolean
+  overallScore?: boolean
+  generalFeedback?: boolean
+  handwrittenOcrText?: boolean
   userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   rule?: boolean | Prisma.Lesson$ruleArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   words?: boolean | Prisma.Lesson$wordsArgs<ExtArgs>
+  exercises?: boolean | Prisma.Lesson$exercisesArgs<ExtArgs>
   _count?: boolean | Prisma.LessonCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["lesson"]>
 
@@ -1190,13 +1285,12 @@ export type LessonSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   ruleId?: boolean
   isReview?: boolean
   wordsCount?: boolean
-  lessonData?: boolean
   status?: boolean
-  userSubmission?: boolean
   submissionImage?: boolean
-  aiFeedback?: boolean
-  overallScore?: boolean
   rawPrompt?: boolean
+  overallScore?: boolean
+  generalFeedback?: boolean
+  handwrittenOcrText?: boolean
   userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1211,13 +1305,12 @@ export type LessonSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   ruleId?: boolean
   isReview?: boolean
   wordsCount?: boolean
-  lessonData?: boolean
   status?: boolean
-  userSubmission?: boolean
   submissionImage?: boolean
-  aiFeedback?: boolean
-  overallScore?: boolean
   rawPrompt?: boolean
+  overallScore?: boolean
+  generalFeedback?: boolean
+  handwrittenOcrText?: boolean
   userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1232,23 +1325,23 @@ export type LessonSelectScalar = {
   ruleId?: boolean
   isReview?: boolean
   wordsCount?: boolean
-  lessonData?: boolean
   status?: boolean
-  userSubmission?: boolean
   submissionImage?: boolean
-  aiFeedback?: boolean
-  overallScore?: boolean
   rawPrompt?: boolean
+  overallScore?: boolean
+  generalFeedback?: boolean
+  handwrittenOcrText?: boolean
   userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type LessonOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "date" | "ruleId" | "isReview" | "wordsCount" | "lessonData" | "status" | "userSubmission" | "submissionImage" | "aiFeedback" | "overallScore" | "rawPrompt" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["lesson"]>
+export type LessonOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "date" | "ruleId" | "isReview" | "wordsCount" | "status" | "submissionImage" | "rawPrompt" | "overallScore" | "generalFeedback" | "handwrittenOcrText" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["lesson"]>
 export type LessonInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   rule?: boolean | Prisma.Lesson$ruleArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   words?: boolean | Prisma.Lesson$wordsArgs<ExtArgs>
+  exercises?: boolean | Prisma.Lesson$exercisesArgs<ExtArgs>
   _count?: boolean | Prisma.LessonCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type LessonIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1266,6 +1359,7 @@ export type $LessonPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     rule: Prisma.$RulePayload<ExtArgs> | null
     user: Prisma.$UserPayload<ExtArgs>
     words: Prisma.$LessonWordPayload<ExtArgs>[]
+    exercises: Prisma.$LessonExercisePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1274,13 +1368,12 @@ export type $LessonPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     ruleId: string | null
     isReview: boolean
     wordsCount: number
-    lessonData: string
-    status: string
-    userSubmission: string | null
+    status: $Enums.LessonStatus
     submissionImage: string | null
-    aiFeedback: string | null
-    overallScore: number | null
     rawPrompt: string | null
+    overallScore: number | null
+    generalFeedback: string | null
+    handwrittenOcrText: string | null
     userId: string
     createdAt: Date
     updatedAt: Date
@@ -1681,6 +1774,7 @@ export interface Prisma__LessonClient<T, Null = never, ExtArgs extends runtime.T
   rule<T extends Prisma.Lesson$ruleArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lesson$ruleArgs<ExtArgs>>): Prisma.Prisma__RuleClient<runtime.Types.Result.GetResult<Prisma.$RulePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   words<T extends Prisma.Lesson$wordsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lesson$wordsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LessonWordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  exercises<T extends Prisma.Lesson$exercisesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lesson$exercisesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LessonExercisePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1716,13 +1810,12 @@ export interface LessonFieldRefs {
   readonly ruleId: Prisma.FieldRef<"Lesson", 'String'>
   readonly isReview: Prisma.FieldRef<"Lesson", 'Boolean'>
   readonly wordsCount: Prisma.FieldRef<"Lesson", 'Int'>
-  readonly lessonData: Prisma.FieldRef<"Lesson", 'String'>
-  readonly status: Prisma.FieldRef<"Lesson", 'String'>
-  readonly userSubmission: Prisma.FieldRef<"Lesson", 'String'>
+  readonly status: Prisma.FieldRef<"Lesson", 'LessonStatus'>
   readonly submissionImage: Prisma.FieldRef<"Lesson", 'String'>
-  readonly aiFeedback: Prisma.FieldRef<"Lesson", 'String'>
-  readonly overallScore: Prisma.FieldRef<"Lesson", 'Int'>
   readonly rawPrompt: Prisma.FieldRef<"Lesson", 'String'>
+  readonly overallScore: Prisma.FieldRef<"Lesson", 'Int'>
+  readonly generalFeedback: Prisma.FieldRef<"Lesson", 'String'>
+  readonly handwrittenOcrText: Prisma.FieldRef<"Lesson", 'String'>
   readonly userId: Prisma.FieldRef<"Lesson", 'String'>
   readonly createdAt: Prisma.FieldRef<"Lesson", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Lesson", 'DateTime'>
@@ -2160,6 +2253,30 @@ export type Lesson$wordsArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.LessonWordScalarFieldEnum | Prisma.LessonWordScalarFieldEnum[]
+}
+
+/**
+ * Lesson.exercises
+ */
+export type Lesson$exercisesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LessonExercise
+   */
+  select?: Prisma.LessonExerciseSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LessonExercise
+   */
+  omit?: Prisma.LessonExerciseOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LessonExerciseInclude<ExtArgs> | null
+  where?: Prisma.LessonExerciseWhereInput
+  orderBy?: Prisma.LessonExerciseOrderByWithRelationInput | Prisma.LessonExerciseOrderByWithRelationInput[]
+  cursor?: Prisma.LessonExerciseWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LessonExerciseScalarFieldEnum | Prisma.LessonExerciseScalarFieldEnum[]
 }
 
 /**

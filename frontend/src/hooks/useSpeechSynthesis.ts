@@ -49,7 +49,7 @@ export function useSpeechSynthesis(options: UseSpeechSynthesisOptions = {}): Use
   const speak = useCallback(
     (text: string, speakOptions: SpeakOptions = {}) => {
       if (!isSupported) {
-        alert('Speech synthesis is not supported in this browser.');
+        console.warn('Speech synthesis is not supported in this browser.');
         return;
       }
 

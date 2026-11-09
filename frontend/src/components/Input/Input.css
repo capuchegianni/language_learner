@@ -57,6 +57,7 @@
   border: var(--border-width-regular) solid var(--border-color);
   padding: var(--space-xs) var(--space-sm);
   color: var(--text-primary);
+  -webkit-text-fill-color: var(--text-primary);
   font-family: var(--font-mono);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
@@ -103,8 +104,12 @@
 }
 
 .input-field:disabled,
-.textarea-field:disabled {
-  opacity: 0.5;
+.textarea-field:disabled,
+.input-field:read-only,
+.textarea-field:read-only {
+  opacity: 1;
+  color: var(--text-primary);
+  -webkit-text-fill-color: var(--text-primary);
   cursor: not-allowed;
   background-color: var(--bg-card-alt);
   box-shadow: none;

@@ -86,9 +86,9 @@ export class LessonsController {
     @Body() dto: SubmitLessonDto,
     @UploadedFiles() files?: Array<Express.Multer.File>,
   ) {
-    const userId = req.user.id;
+    const user = req.user;
     const imagePaths = files && files.length > 0 ? files.map((f) => f.path) : undefined;
-    return this.lessonsService.submitLesson(userId, id, dto, imagePaths);
+    return this.lessonsService.submitLesson(user, id, dto, imagePaths);
   }
 
   @Get()

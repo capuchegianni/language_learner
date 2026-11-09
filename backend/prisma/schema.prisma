@@ -7,12 +7,31 @@ generator client {
   output   = "../src/generated/prisma"
 }
 
+enum Plan {
+  FREE
+  PREMIUM
+}
+
+enum LessonStatus {
+  GENERATED
+  SUBMITTED
+  GRADED
+}
+
+enum ActionType {
+  RULE_PROPOSAL
+  LESSON_GENERATION
+  LESSON_CORRECTION
+}
+
 model User {
   id          String   @id @default(uuid())
   googleId    String   @unique
   displayName String
   email       String   @unique
   avatarUrl   String?
+  plan        Plan     @default(FREE)
+  isCustom    Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -61,34 +80,55 @@ model Rule {
 }
 
 model Lesson {
-  id       String   @id @default(uuid())
-  title    String?
-  date     DateTime @default(now())
-  ruleId   String?
-  rule     Rule?    @relation(fields: [ruleId], references: [id], onDelete: SetNull)
-  isReview Boolean  @default(false)
+  id                 String       @id @default(uuid())
+  title              String?
+  date               DateTime     @default(now())
+  ruleId             String?
+  rule               Rule?        @relation(fields: [ruleId], references: [id], onDelete: SetNull)
+  isReview           Boolean      @default(false)
+  wordsCount         Int          @default(5)
 
-  wordsCount Int    @default(5)
-  lessonData String // JSON string containing 5 words, rules, Ex1, Ex2, Ex3
+  status             LessonStatus @default(GENERATED)
+  submissionImage    String?
+  rawPrompt          String?
 
-  status          String  @default("GENERATED") // GENERATED | SUBMITTED | GRADED
-  userSubmission  String? // JSON string of user answers
-  submissionImage String? // Image file relative path if handwritten photo uploaded
-  aiFeedback      String? // JSON string of AI feedback & score breakdown
-  overallScore    Int?
+  overallScore       Int?
+  generalFeedback    String?
+  handwrittenOcrText String?
 
-  rawPrompt String? // The exact generated prompt text
+  userId             String
+  user               User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  words LessonWord[]
+  words              LessonWord[]
+  exercises          LessonExercise[]
 
   @@index([ruleId])
   @@index([userId])
+}
+
+model LessonExercise {
+  id             String   @id @default(uuid())
+  lessonId       String
+  lesson         Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  exerciseNumber Int
+
+  instruction    String
+  content        Json     // Structured definition: targetWords, sentences, conjugation matrix, etc.
+
+  userSubmission Json?    // Polymorphic submission data: UserSubmission
+
+  score          Int?
+  feedback       String?
+  corrections    Json?    // Array of correction strings: string[]
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([lessonId, exerciseNumber])
+  @@index([lessonId])
 }
 
 model LessonWord {
@@ -130,4 +170,15 @@ model LessonProposal {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+}
+
+model UsageRecord {
+  id         String     @id @default(uuid())
+  userHash   String
+  actionType ActionType
+  date       String     // UTC date string "YYYY-MM-DD"
+  count      Int        @default(0)
+
+  @@unique([userHash, actionType, date])
+  @@index([userHash])
 }

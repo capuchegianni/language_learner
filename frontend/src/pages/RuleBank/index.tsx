@@ -1,10 +1,11 @@
-import React from 'react';
-import { IconGrammarGazette, IconFleuronPlus } from '../../components/icons';
+import React, { useState } from 'react';
+import { IconGrammarGazette, IconFleuronPlus, IconTrashShears, IconHazardAlert } from '../../components/icons';
 import { useLanguages } from '../../contexts/LanguageContext';
 import { useRuleBank } from './hooks/useRuleBank';
 import { RuleCard } from './components/RuleCard';
 import { RuleModal } from './components/RuleModal';
-import { PageHeader, FilterBar, Input, LoadingSpinner, EmptyState, Button } from '../../components';
+import { PageHeader, FilterBar, Input, LoadingSpinner, EmptyState, Button, Modal } from '../../components';
+import { Rule } from '../../types';
 import './RuleBank.css';
 
 export const RuleBank: React.FC = () => {
@@ -24,6 +25,8 @@ export const RuleBank: React.FC = () => {
     saveRule,
     deleteRule,
   } = useRuleBank();
+  const [ruleToDelete, setRuleToDelete] = useState<Rule | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   return (
     <div className="rulebank-container">
@@ -31,7 +34,13 @@ export const RuleBank: React.FC = () => {
         id="tutorial-rulebank-header"
         icon={<IconGrammarGazette size={40} />}
         title={`${targetLanguage} Grammar Rules`}
-        subtitle={`All mastered grammar patterns and rules in your bank. Total: ${rules.length} rule${rules.length !== 1 ? 's' : ''}.`}
+        subtitle={
+          <>
+            <span>All mastered grammar patterns and rules in your bank.</span>
+            <br />
+            <span>Total: {rules.length} rule{rules.length !== 1 ? 's' : ''}.</span>
+          </>
+        }
         actions={
           <Button
             variant="primary"
@@ -68,7 +77,7 @@ export const RuleBank: React.FC = () => {
                 key={rule.id}
                 rule={rule}
                 onEdit={openEditModal}
-                onDelete={deleteRule}
+                onDelete={() => setRuleToDelete(rule)}
               />
             ))}
           </div>
@@ -83,6 +92,46 @@ export const RuleBank: React.FC = () => {
         onFieldChange={updateFormField}
         onSubmit={saveRule}
       />
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        isOpen={ruleToDelete !== null}
+        onClose={() => !isDeleting && setRuleToDelete(null)}
+        icon={<IconHazardAlert size={20} />}
+        title="Delete Rule"
+        maxWidth="440px"
+        danger
+      >
+        <p className="modal-prompt-text">
+          Are you sure you want to delete <strong>{ruleToDelete?.title}</strong> from your rule bank? This action cannot be undone.
+        </p>
+        <div className="modal-actions">
+          <Button
+            variant="secondary"
+            onClick={() => setRuleToDelete(null)}
+            disabled={isDeleting}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            disabled={isDeleting}
+            icon={isDeleting ? undefined : <IconTrashShears size={16} />}
+            onClick={async () => {
+              if (!ruleToDelete) return;
+              setIsDeleting(true);
+              try {
+                await deleteRule(ruleToDelete.id);
+                setRuleToDelete(null);
+              } finally {
+                setIsDeleting(false);
+              }
+            }}
+          >
+            {isDeleting ? 'Deleting...' : 'Delete'}
+          </Button>
+        </div>
+      </Modal>
     </div>
   );
 };

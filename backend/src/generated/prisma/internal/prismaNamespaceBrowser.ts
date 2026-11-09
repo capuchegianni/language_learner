@@ -55,9 +55,11 @@ export const ModelName = {
   Word: 'Word',
   Rule: 'Rule',
   Lesson: 'Lesson',
+  LessonExercise: 'LessonExercise',
   LessonWord: 'LessonWord',
   Setting: 'Setting',
-  LessonProposal: 'LessonProposal'
+  LessonProposal: 'LessonProposal',
+  UsageRecord: 'UsageRecord'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -79,6 +81,8 @@ export const UserScalarFieldEnum = {
   displayName: 'displayName',
   email: 'email',
   avatarUrl: 'avatarUrl',
+  plan: 'plan',
+  isCustom: 'isCustom',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -122,19 +126,35 @@ export const LessonScalarFieldEnum = {
   ruleId: 'ruleId',
   isReview: 'isReview',
   wordsCount: 'wordsCount',
-  lessonData: 'lessonData',
   status: 'status',
-  userSubmission: 'userSubmission',
   submissionImage: 'submissionImage',
-  aiFeedback: 'aiFeedback',
-  overallScore: 'overallScore',
   rawPrompt: 'rawPrompt',
+  overallScore: 'overallScore',
+  generalFeedback: 'generalFeedback',
+  handwrittenOcrText: 'handwrittenOcrText',
   userId: 'userId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type LessonScalarFieldEnum = (typeof LessonScalarFieldEnum)[keyof typeof LessonScalarFieldEnum]
+
+
+export const LessonExerciseScalarFieldEnum = {
+  id: 'id',
+  lessonId: 'lessonId',
+  exerciseNumber: 'exerciseNumber',
+  instruction: 'instruction',
+  content: 'content',
+  userSubmission: 'userSubmission',
+  score: 'score',
+  feedback: 'feedback',
+  corrections: 'corrections',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LessonExerciseScalarFieldEnum = (typeof LessonExerciseScalarFieldEnum)[keyof typeof LessonExerciseScalarFieldEnum]
 
 
 export const LessonWordScalarFieldEnum = {
@@ -172,6 +192,17 @@ export const LessonProposalScalarFieldEnum = {
 export type LessonProposalScalarFieldEnum = (typeof LessonProposalScalarFieldEnum)[keyof typeof LessonProposalScalarFieldEnum]
 
 
+export const UsageRecordScalarFieldEnum = {
+  id: 'id',
+  userHash: 'userHash',
+  actionType: 'actionType',
+  date: 'date',
+  count: 'count'
+} as const
+
+export type UsageRecordScalarFieldEnum = (typeof UsageRecordScalarFieldEnum)[keyof typeof UsageRecordScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -180,10 +211,42 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+export const JsonNullValueInput = {
+  JsonNull: 'JsonNull'
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: 'DbNull',
+  JsonNull: 'JsonNull'
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
 export const NullsOrder = {
   first: 'first',
   last: 'last'
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: 'DbNull',
+  JsonNull: 'JsonNull',
+  AnyNull: 'AnyNull'
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+export const QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+} as const
+
+export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 

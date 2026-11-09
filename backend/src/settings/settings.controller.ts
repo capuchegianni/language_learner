@@ -15,6 +15,12 @@ export class SettingsController {
     return this.settingsService.getAllSettings(userId);
   }
 
+  @Get('usage')
+  async getUsage(@Req() req: AuthenticatedRequest) {
+    const userId = req.user.id;
+    return this.settingsService.getUsage(userId);
+  }
+
   @Get('export')
   async exportData(
     @Req() req: AuthenticatedRequest,
@@ -30,7 +36,7 @@ export class SettingsController {
   }
 
   @Post()
-  async updateSettings(@Req() req: AuthenticatedRequest, @Body() body: Record<string, string>) {
+  async updateSettings(@Req() req: AuthenticatedRequest, @Body() body: Record<string, any>) {
     const userId = req.user.id;
     return this.settingsService.updateSettings(userId, body);
   }

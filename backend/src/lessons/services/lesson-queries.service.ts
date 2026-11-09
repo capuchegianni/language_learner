@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { LessonStatus, Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { LessonQueryDto } from '../dto/lesson.dto';
 
@@ -7,9 +8,9 @@ export class LessonQueriesService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getLessons(userId: string, options?: LessonQueryDto) {
-    const where: any = { userId };
+    const where: Prisma.LessonWhereInput = { userId };
     if (options?.status) {
-      where.status = options.status.toUpperCase();
+      where.status = options.status as LessonStatus;
     }
     if (options?.q) {
       const q = options.q.trim();
@@ -27,6 +28,7 @@ export class LessonQueriesService {
       include: {
         rule: true,
         words: { include: { word: true } },
+        exercises: { orderBy: { exerciseNumber: 'asc' } },
       },
     });
   }
@@ -37,6 +39,7 @@ export class LessonQueriesService {
       include: {
         rule: true,
         words: { include: { word: true } },
+        exercises: { orderBy: { exerciseNumber: 'asc' } },
       },
     });
     if (!lesson) {
@@ -64,13 +67,17 @@ export class LessonQueriesService {
       where: { userId },
       take: 3,
       orderBy: { createdAt: 'desc' },
-      include: { rule: true },
+      include: {
+        rule: true,
+        words: { include: { word: true } },
+        exercises: { orderBy: { exerciseNumber: 'asc' } },
+      },
     });
 
     const gradedStats = await this.prisma.lesson.aggregate({
       where: {
         userId,
-        status: 'GRADED',
+        status: LessonStatus.GRADED,
       },
       _count: {
         _all: true,

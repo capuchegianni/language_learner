@@ -1,4 +1,5 @@
 import { Injectable, Logger, InternalServerErrorException, BadRequestException } from '@nestjs/common';
+import { ActionType, LessonExercise, User } from '../generated/prisma/client';
 import { SettingsService } from '../settings/settings.service';
 import { AiLlmCallerService } from './services/ai-llm-caller.service';
 import { AiPromptService } from './services/ai-prompt.service';
@@ -7,7 +8,9 @@ import {
   LessonContent,
   GradingResult,
   UserLanguages,
+  UserSubmission,
 } from './interfaces/ai.interfaces';
+import { validateAndRepairGrading } from './schemas/grading.schema';
 
 export * from './interfaces/ai.interfaces';
 
@@ -62,16 +65,17 @@ export class AiService {
     );
 
     try {
-      const rawResponse = await this.llmCaller.callLlm(userId, systemPrompt);
+      const rawResponse = await this.llmCaller.callLlm(userId, systemPrompt, ActionType.RULE_PROPOSAL);
       const cleaned = this.llmCaller.cleanJsonResponse(rawResponse);
       const parsed = JSON.parse(cleaned);
       if (Array.isArray(parsed) && parsed.length >= count) {
         return parsed.slice(0, count);
       }
       throw new Error('AI returned an invalid or incomplete array format for rule proposals.');
-    } catch (err: any) {
-      this.logger.error(`Error generating rule proposals from LLM: ${err.message}`);
-      throw new InternalServerErrorException(`Failed to generate rule proposals. Details: ${err.message}`);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      this.logger.error(`Error generating rule proposals from LLM: ${msg}`);
+      throw new InternalServerErrorException(`Failed to generate rule proposals. Details: ${msg}`);
     }
   }
 
@@ -104,7 +108,7 @@ export class AiService {
 
     try {
       const fullPrompt = `${systemInstructions}\n\nUSER PROMPT:\n${rawPrompt}`;
-      const rawResponse = await this.llmCaller.callLlm(userId, fullPrompt);
+      const rawResponse = await this.llmCaller.callLlm(userId, fullPrompt, ActionType.LESSON_GENERATION);
       const cleaned = this.llmCaller.cleanJsonResponse(rawResponse);
       const parsed = JSON.parse(cleaned);
       if (parsed.error) {
@@ -114,12 +118,13 @@ export class AiService {
         ...parsed,
         rawPrompt,
       };
-    } catch (err: any) {
+    } catch (err: unknown) {
       if (err instanceof BadRequestException) {
         throw err;
       }
-      this.logger.error(`Failed to generate lesson from AI API: ${err.message}`);
-      throw new InternalServerErrorException(`Failed to generate lesson. Please check your AI API key and model settings. Details: ${err.message}`);
+      const msg = err instanceof Error ? err.message : String(err);
+      this.logger.error(`Failed to generate lesson from AI API: ${msg}`);
+      throw new InternalServerErrorException(`Failed to generate lesson. Please check your AI API key and model settings. Details: ${msg}`);
     }
   }
 
@@ -127,16 +132,22 @@ export class AiService {
    * Multimodal AI Grading of user answers (Text input or uploaded handwritten image).
    */
   async gradeSubmission(
-    userId: string,
-    lessonData: LessonContent,
-    userAnswersText: { ex1?: string; ex2?: string; ex3?: string },
+    userIdOrUser: string | User,
+    lesson: {
+      rule?: { title: string; explanation: string } | null;
+      words?: Array<{ word: { targetLanguage: string; nativeLanguage: string } }>;
+    },
+    exercises: LessonExercise[],
+    userSubmissions: Map<number, UserSubmission>,
     imagePaths?: string[],
   ): Promise<GradingResult> {
+    const userId = typeof userIdOrUser === 'string' ? userIdOrUser : userIdOrUser.id;
     const { nativeLanguage, targetLanguage } = await this.getUserLanguages(userId);
     const hasImages = !!(imagePaths && imagePaths.length > 0);
     const gradingInstructions = this.promptService.buildGradingPrompt(
-      lessonData,
-      userAnswersText,
+      lesson,
+      exercises,
+      userSubmissions,
       hasImages,
       nativeLanguage,
       targetLanguage,
@@ -146,16 +157,36 @@ export class AiService {
       let rawResponse = '';
 
       if (hasImages) {
-        rawResponse = await this.llmCaller.callLlmWithImages(userId, gradingInstructions, imagePaths!);
+        rawResponse = await this.llmCaller.callLlmWithImages(
+          userIdOrUser,
+          gradingInstructions,
+          imagePaths!,
+          ActionType.LESSON_CORRECTION,
+        );
       } else {
-        rawResponse = await this.llmCaller.callLlm(userId, gradingInstructions);
+        rawResponse = await this.llmCaller.callLlm(
+          userIdOrUser,
+          gradingInstructions,
+          ActionType.LESSON_CORRECTION,
+        );
       }
 
       const cleaned = this.llmCaller.cleanJsonResponse(rawResponse);
-      return JSON.parse(cleaned);
-    } catch (err: any) {
-      this.logger.error(`Error grading submission via AI API: ${err.message}`);
-      throw new InternalServerErrorException(`Failed to grade submission. Please check your AI API configuration. Details: ${err.message}`);
+      let parsed: unknown = {};
+      try {
+        parsed = JSON.parse(cleaned);
+      } catch (parseErr: unknown) {
+        const msg = parseErr instanceof Error ? parseErr.message : String(parseErr);
+        this.logger.warn(
+          `Initial JSON.parse failed on cleaned LLM output: ${msg}. Passing to validateAndRepairGrading.`,
+        );
+        parsed = cleaned;
+      }
+      return validateAndRepairGrading(parsed);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      this.logger.error(`Error grading submission via AI API: ${msg}`);
+      throw new InternalServerErrorException(`Failed to grade submission. Please check your AI API configuration. Details: ${msg}`);
     }
   }
 
@@ -164,18 +195,13 @@ export class AiService {
    * Defaults to English -> Korean if not configured.
    */
   async getUserLanguages(userId: string): Promise<UserLanguages> {
-    let nativeLanguage = 'English';
-    let targetLanguage = 'Korean';
-    try {
-      nativeLanguage = await this.settingsService.getSetting(userId, 'NATIVE_LANGUAGE');
-    } catch {
-      // Not set yet, use default
-    }
-    try {
-      targetLanguage = await this.settingsService.getSetting(userId, 'TARGET_LANGUAGE');
-    } catch {
-      // Not set yet, use default
-    }
-    return { nativeLanguage, targetLanguage };
+    const settings = await this.settingsService.getSettings(userId, [
+      'NATIVE_LANGUAGE',
+      'TARGET_LANGUAGE',
+    ]);
+    return {
+      nativeLanguage: settings['NATIVE_LANGUAGE'],
+      targetLanguage: settings['TARGET_LANGUAGE'],
+    };
   }
 }
