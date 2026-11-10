@@ -28,6 +28,7 @@ export * from './IconUserBust';
 export * from './IconKeySkeleton';
 export * from './IconSaveLedger';
 export * from './IconExitGate';
+export * from './IconInfoNotice';
 export * from './IconQueryNotice';
 export * from './IconRefreshCrank';
 export * from './IconAwardLaurel';

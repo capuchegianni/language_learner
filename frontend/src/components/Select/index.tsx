@@ -176,9 +176,15 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(({
       style={containerStyle}
     >
       {label && (
-        <label htmlFor={id} className="select-label" {...labelProps}>
-          {label}
-        </label>
+        id ? (
+          <label htmlFor={id} className="select-label" {...labelProps}>
+            {label}
+          </label>
+        ) : (
+          <span className="select-label" {...(labelProps as React.HTMLAttributes<HTMLSpanElement>)}>
+            {label}
+          </span>
+        )
       )}
       {selectElement}
       {error && <div className="select-error-msg">{error}</div>}
