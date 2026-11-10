@@ -202,5 +202,6 @@ export interface SettingsUpdatePayload {
 export interface LanguageOption {
   name: string;
   voiceCode: string;
+  tier?: 1 | 2 | 3;
 }
 

@@ -264,7 +264,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
           {reviewRule && (
             <div id="tutorial-review-rule" className="proposal-section-group">
               <h3 className="proposal-section-title">
-                Spaced Repetition Review
+                Review a previous lesson
               </h3>
               <Card
                 isInteractive
