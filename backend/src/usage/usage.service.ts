@@ -191,10 +191,7 @@ export class UsageService implements OnModuleInit {
         );
       }
     } catch (err: unknown) {
-      this.logger.error(
-        'Failed to prune old usage records',
-        err instanceof Error ? err.stack : err,
-      );
+      this.logger.error(err);
     }
   }
 }

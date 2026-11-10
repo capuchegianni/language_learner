@@ -74,7 +74,7 @@ export class AiService {
       throw new Error('AI returned an invalid or incomplete array format for rule proposals.');
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
-      this.logger.error(`Error generating rule proposals from LLM: ${msg}`);
+      this.logger.error(err);
       throw new InternalServerErrorException(`Failed to generate rule proposals. Details: ${msg}`);
     }
   }
@@ -111,9 +111,7 @@ export class AiService {
       const rawResponse = await this.llmCaller.callLlm(userId, fullPrompt, ActionType.LESSON_GENERATION);
       const cleaned = this.llmCaller.cleanJsonResponse(rawResponse);
       const parsed = JSON.parse(cleaned);
-      if (parsed.error) {
-        throw new BadRequestException(parsed.error);
-      }
+
       return {
         ...parsed,
         rawPrompt,
@@ -123,7 +121,7 @@ export class AiService {
         throw err;
       }
       const msg = err instanceof Error ? err.message : String(err);
-      this.logger.error(`Failed to generate lesson from AI API: ${msg}`);
+      this.logger.error(err);
       throw new InternalServerErrorException(`Failed to generate lesson. Please check your AI API key and model settings. Details: ${msg}`);
     }
   }
@@ -185,7 +183,7 @@ export class AiService {
       return validateAndRepairGrading(parsed);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
-      this.logger.error(`Error grading submission via AI API: ${msg}`);
+      this.logger.error(err);
       throw new InternalServerErrorException(`Failed to grade submission. Please check your AI API configuration. Details: ${msg}`);
     }
   }

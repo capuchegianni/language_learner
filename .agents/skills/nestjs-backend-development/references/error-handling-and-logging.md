@@ -36,10 +36,7 @@ export class AiService {
     try {
       // ... API call
     } catch (err: any) {
-      this.logger.error(
-        `LLM call failed for user ${userId}: ${err.message}`,
-        err.stack,
-      );
+      this.logger.error(err);
       throw new BadRequestException(
         'Failed to generate AI response. Please verify your API key configuration.',
       );

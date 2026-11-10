@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { ActionType, LessonStatus } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AiService } from '../../ai/ai.service';
@@ -45,6 +45,9 @@ export class LessonGeneratorService {
     );
 
     await this.usageService.incrementUsage(userId, ActionType.LESSON_GENERATION);
+    if ("error" in content) {
+      throw new BadRequestException(content.error);
+    }
 
     // Execute all database operations inside a single transaction
     return this.prisma.$transaction(async (tx) => {
