@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "pnpm exec prisma generate && nest build",
+    "build": "pnpm exec prisma generate && nest build && tsc -p tsconfig.scripts.json",
     "format": "prettier --write \"src/**/*.ts\"",
     "start": "nest start",
     "start:dev": "pnpm exec prisma generate && nest start --watch",
