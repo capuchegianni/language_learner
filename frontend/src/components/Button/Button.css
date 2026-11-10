@@ -7,7 +7,6 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-xs);
-  padding: var(--space-xs) var(--space-md);
   font-family: var(--font-mono);
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
@@ -49,6 +48,36 @@
   border-color: var(--border-color-light);
   color: var(--text-muted);
   transform: none;
+}
+
+/* Variant: Empty (Borderless, shadowless, animationless) */
+.btn.btn-empty,
+.icon-btn.btn-empty {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  transform: none;
+  transition: opacity var(--transition-fast), color var(--transition-fast);
+}
+
+.btn.btn-empty:hover:not(:disabled):not(.disabled),
+.icon-btn.btn-empty:hover:not(:disabled):not(.disabled) {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  transform: none;
+  opacity: 0.75;
+}
+
+.btn.btn-empty:active:not(:disabled):not(.disabled),
+.icon-btn.btn-empty:active:not(:disabled):not(.disabled),
+.btn.btn-empty.active,
+.icon-btn.btn-empty.active {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  transform: none;
+  opacity: 0.9;
 }
 
 /* Variant: Primary */
@@ -199,6 +228,15 @@
 }
 
 /* Sizes */
+.btn-size-null,
+.icon-btn.btn-size-null {
+  padding: 0;
+  width: auto;
+  height: auto;
+  min-width: 0;
+  min-height: 0;
+}
+
 .btn-size-xs {
   padding: var(--space-3xs) var(--space-xs);
   font-size: var(--font-size-3xs);
