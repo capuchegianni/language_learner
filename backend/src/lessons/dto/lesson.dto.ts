@@ -6,7 +6,9 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  Matches,
   Max,
+  MaxLength,
   Min,
   ValidateNested,
 } from 'class-validator';
@@ -15,8 +17,13 @@ import { LessonStatus } from '../../generated/prisma/client';
 import { UserSubmission } from '../../ai/interfaces/ai.interfaces';
 
 export class GenerateLessonDto {
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   @IsString()
   @IsNotEmpty({ message: 'Rule title cannot be empty' })
+  @MaxLength(150, { message: 'Rule title cannot exceed 150 characters' })
+  @Matches(/[\p{L}\p{N}]/u, {
+    message: 'Rule title must contain at least one letter or number',
+  })
   ruleTitle!: string;
 
   @IsOptional()

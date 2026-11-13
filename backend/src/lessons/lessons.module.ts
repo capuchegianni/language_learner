@@ -7,9 +7,10 @@ import { LessonGradingService } from './services/lesson-grading.service';
 import { LessonQueriesService } from './services/lesson-queries.service';
 import { AiModule } from '../ai/ai.module';
 import { UsageModule } from '../usage/usage.module';
+import { ModerationModule } from '../moderation/moderation.module';
 
 @Module({
-  imports: [AiModule, UsageModule],
+  imports: [AiModule, UsageModule, ModerationModule],
   controllers: [LessonsController],
   providers: [
     LessonsService,

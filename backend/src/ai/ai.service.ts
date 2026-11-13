@@ -11,8 +11,10 @@ import {
   UserSubmission,
 } from './interfaces/ai.interfaces';
 import { validateAndRepairGrading } from './schemas/grading.schema';
+import { AiPromptGuardException } from './exceptions/ai-prompt-guard.exception';
 
 export * from './interfaces/ai.interfaces';
+export * from './exceptions';
 
 @Injectable()
 export class AiService {
@@ -112,12 +114,15 @@ export class AiService {
       const cleaned = this.llmCaller.cleanJsonResponse(rawResponse);
       const parsed = JSON.parse(cleaned);
 
+      if ("error" in parsed) {
+        throw new AiPromptGuardException(parsed.error);
+      }
       return {
         ...parsed,
         rawPrompt,
       };
     } catch (err: unknown) {
-      if (err instanceof BadRequestException) {
+      if (err instanceof AiPromptGuardException || err instanceof BadRequestException) {
         throw err;
       }
       const msg = err instanceof Error ? err.message : String(err);

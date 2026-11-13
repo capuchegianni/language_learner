@@ -2,7 +2,9 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { ActionType, LessonStatus } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AiService } from '../../ai/ai.service';
+import { AiPromptGuardException } from '../../ai/exceptions/ai-prompt-guard.exception';
 import { UsageService } from '../../usage/usage.service';
+import { GuardModerationService } from '../../moderation/guard-moderation.service';
 import { GenerateLessonDto } from '../dto/lesson.dto';
 
 @Injectable()
@@ -11,12 +13,21 @@ export class LessonGeneratorService {
     private readonly prisma: PrismaService,
     private readonly aiService: AiService,
     private readonly usageService: UsageService,
+    private readonly guardModerationService: GuardModerationService,
   ) {}
 
   /**
    * Generates a daily lesson based on chosen rule title & target words count.
    */
   async generateLesson(userId: string, dto: GenerateLessonDto) {
+    const trimmed = dto.ruleTitle?.trim();
+    if (!trimmed || trimmed.length > 150 || !/[\p{L}\p{N}]/u.test(trimmed)) {
+      throw new BadRequestException(
+        'Rule title must contain at least one letter or number and not exceed 150 characters',
+      );
+    }
+    dto.ruleTitle = trimmed;
+
     const wordsCount = dto.wordsCount || 5;
     const isReview = !!dto.isReview;
 
@@ -36,18 +47,23 @@ export class LessonGeneratorService {
     await this.usageService.checkLimit(userId, ActionType.LESSON_GENERATION);
 
     // Call AI service to construct & execute prompt
-    const content = await this.aiService.generateLesson(
-      userId,
-      dto.ruleTitle,
-      wordsCount,
-      knownWordsList,
-      knownRulesList,
-    );
+    let content;
+    try {
+      content = await this.aiService.generateLesson(
+        userId,
+        dto.ruleTitle,
+        wordsCount,
+        knownWordsList,
+        knownRulesList,
+      );
+    } catch (err: unknown) {
+      if (err instanceof AiPromptGuardException) {
+        await this.guardModerationService.recordGuardError(userId);
+      }
+      throw err;
+    }
 
     await this.usageService.incrementUsage(userId, ActionType.LESSON_GENERATION);
-    if ("error" in content) {
-      throw new BadRequestException(content.error);
-    }
 
     // Execute all database operations inside a single transaction
     return this.prisma.$transaction(async (tx) => {
