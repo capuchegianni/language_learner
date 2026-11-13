@@ -2,7 +2,6 @@ import React, { useState, useRef } from 'react';
 import { ProposedRule, UsageInfo } from '../../../../types';
 import {
   IconRefreshCrank,
-  IconLexicon,
   IconNewDispatch,
   IconApprovalCheck,
   IconHazardAlert,
@@ -57,6 +56,9 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
   const proposalUsage = usageInfo?.usage.RULE_PROPOSAL;
   const lessonGenUsage = usageInfo?.usage.LESSON_GENERATION;
 
+  const isRestricted = !isCustomPlan && !!(usageInfo?.isRestricted || usageInfo?.restriction);
+  const restriction = usageInfo?.restriction;
+
   const isProposalLimitReached =
     !isCustomPlan &&
     proposalUsage?.limit !== null &&
@@ -74,18 +76,27 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
     !proposals.find((p) => p.title === selectedRuleTitle) &&
     (!reviewRule || reviewRule.title !== selectedRuleTitle);
 
+  const trimmedCustomRule = customRule.trim();
+  const hasLettersOrNumbers = /[\p{L}\p{N}]/u.test(trimmedCustomRule);
+  const isCustomRuleValid = trimmedCustomRule.length > 0 && trimmedCustomRule.length <= 150 && hasLettersOrNumbers;
+  const showCustomRuleWarning = trimmedCustomRule.length > 0 && !hasLettersOrNumbers;
+
   const handleCustomRuleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setCustomRule(val);
-    if (val.trim()) {
-      onSelectRule(val, false);
+    const trimmed = val.trim();
+    if (trimmed && /[\p{L}\p{N}]/u.test(trimmed)) {
+      onSelectRule(trimmed, false);
+    } else if (isCustomSelected) {
+      onSelectRule('', false);
     }
   };
 
   const handleCustomCardClick = () => {
     customInputRef.current?.focus();
-    if (customRule.trim()) {
-      onSelectRule(customRule, false);
+    const trimmed = customRule.trim();
+    if (trimmed && /[\p{L}\p{N}]/u.test(trimmed)) {
+      onSelectRule(trimmed, false);
     }
   };
 
@@ -134,6 +145,20 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
           <div className="proposal-limit-warning" role="alert">
             <IconHazardAlert size={16} />
             <span>Daily lesson generation limit reached ({lessonGenUsage?.used}/{lessonGenUsage?.limit}). Resets at midnight UTC.</span>
+          </div>
+        )}
+
+        {isRestricted && (
+          <div className="proposal-restriction-banner" role="alert">
+            <IconHazardAlert size={18} />
+            <div className="proposal-restriction-content">
+              <strong>AI Access Suspended</strong>
+              <span className="proposal-restriction-expiry">
+                {restriction?.isPermanent || !restriction?.blockedUntil
+                  ? 'This restriction is permanent. Contact administration for review.'
+                  : `Active until ${new Date(restriction.blockedUntil).toLocaleString()}.`}
+              </span>
+            </div>
           </div>
         )}
       </Card>
@@ -185,7 +210,9 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
                                 size="xs"
                                 icon={<IconRefreshCrank size={12} />}
                                 title={
-                                  isProposalLimitReached
+                                  isRestricted
+                                    ? 'AI access is currently restricted'
+                                    : isProposalLimitReached
                                     ? 'Daily proposal limit reached. Resets at 00:00 UTC.'
                                     : 'Replace this proposal'
                                 }
@@ -198,7 +225,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
                                     title: prop.title,
                                   });
                                 }}
-                                disabled={replacingIndex !== null || isProposalLimitReached}
+                                disabled={replacingIndex !== null || isProposalLimitReached || isRestricted}
                               />
                             </div>
                             <h4 className="target-text proposal-card-title">{prop.title}</h4>
@@ -219,9 +246,14 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
 
           {/* Custom Rule Input */}
           <div id="tutorial-custom-rule" className="proposal-section-group">
-            <h3 className="proposal-section-title">
-              Create Your Own Lesson
-            </h3>
+            <div className="proposal-section-header">
+              <h3 className="proposal-section-title">
+                Create Your Own Lesson
+              </h3>
+              <span className="custom-rule-char-count">
+                {customRule.length}/150
+              </span>
+            </div>
             <Card
               as="label"
               htmlFor="custom-lesson-rule-input"
@@ -234,12 +266,14 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
                   id="custom-lesson-rule-input"
                   ref={customInputRef}
                   type="text"
+                  maxLength={150}
                   placeholder={`e.g., How to say 'I want to...' in ${targetLanguage}`}
                   value={customRule}
                   onChange={handleCustomRuleChange}
                   onFocus={() => {
-                    if (customRule.trim()) {
-                      onSelectRule(customRule, false);
+                    const trimmed = customRule.trim();
+                    if (trimmed && /[\p{L}\p{N}]/u.test(trimmed)) {
+                      onSelectRule(trimmed, false);
                     }
                   }}
                   className="custom-rule-input"
@@ -249,8 +283,9 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
                 className="custom-rule-badge"
                 onClick={(e) => {
                   e.stopPropagation();
-                  if (customRule.trim()) {
-                    onSelectRule(customRule, false);
+                  const trimmed = customRule.trim();
+                  if (trimmed && /[\p{L}\p{N}]/u.test(trimmed)) {
+                    onSelectRule(trimmed, false);
                   }
                 }}
               >
@@ -258,9 +293,14 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
                 <span>{isCustomSelected ? 'Selected' : 'Select'}</span>
               </div>
             </Card>
+            {showCustomRuleWarning && (
+              <div className="custom-rule-warning" role="alert">
+                Custom rule must contain at least one letter or number.
+              </div>
+            )}
           </div>
 
-          {/* Spaced Repetition Review Rule Option */}
+          {/* Spaced Repetition Review Rule Option
           {reviewRule && (
             <div id="tutorial-review-rule" className="proposal-section-group">
               <h3 className="proposal-section-title">
@@ -288,7 +328,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
                 </div>
               </Card>
             </div>
-          )}
+          )} */}
         </div>
       )}
 
@@ -298,8 +338,14 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
           variant="secondary"
           className="proposal-btn"
           onClick={() => setConfirmRefreshTarget({ type: 'all' })}
-          disabled={loadingProposals || generatingLesson || isProposalLimitReached}
-          title={isProposalLimitReached ? 'Daily proposal limit reached. Resets at 00:00 UTC.' : undefined}
+          disabled={loadingProposals || generatingLesson || isProposalLimitReached || isRestricted}
+          title={
+            isRestricted
+              ? 'AI access is currently restricted'
+              : isProposalLimitReached
+              ? 'Daily proposal limit reached. Resets at 00:00 UTC.'
+              : undefined
+          }
           icon={<IconRefreshCrank size={18} />}
         >
           Refresh Proposals
@@ -308,7 +354,7 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
           variant="primary"
           className="proposal-btn"
           id="tutorial-generate-btn"
-          disabled={!selectedRuleTitle || generatingLesson || isLessonGenLimitReached}
+          disabled={!selectedRuleTitle || generatingLesson || isLessonGenLimitReached || isRestricted || (isCustomSelected && !isCustomRuleValid)}
           onClick={onGenerateLesson}
           icon={!generatingLesson ? <IconNewDispatch size={20} /> : undefined}
         >
@@ -318,6 +364,8 @@ export const ProposalPhase: React.FC<ProposalPhaseProps> = ({
               size={18}
               message="Generating Lesson..."
             />
+          ) : isRestricted ? (
+            'AI Access Restricted'
           ) : isLessonGenLimitReached ? (
             `Daily Limit Reached (${lessonGenUsage?.used}/${lessonGenUsage?.limit})`
           ) : (

@@ -11,8 +11,10 @@ import {
   UserSubmission,
 } from './interfaces/ai.interfaces';
 import { validateAndRepairGrading } from './schemas/grading.schema';
+import { AiPromptGuardException } from './exceptions/ai-prompt-guard.exception';
 
 export * from './interfaces/ai.interfaces';
+export * from './exceptions';
 
 @Injectable()
 export class AiService {
@@ -74,7 +76,7 @@ export class AiService {
       throw new Error('AI returned an invalid or incomplete array format for rule proposals.');
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
-      this.logger.error(`Error generating rule proposals from LLM: ${msg}`);
+      this.logger.error(err);
       throw new InternalServerErrorException(`Failed to generate rule proposals. Details: ${msg}`);
     }
   }
@@ -111,19 +113,20 @@ export class AiService {
       const rawResponse = await this.llmCaller.callLlm(userId, fullPrompt, ActionType.LESSON_GENERATION);
       const cleaned = this.llmCaller.cleanJsonResponse(rawResponse);
       const parsed = JSON.parse(cleaned);
-      if (parsed.error) {
-        throw new BadRequestException(parsed.error);
+
+      if ("error" in parsed) {
+        throw new AiPromptGuardException(parsed.error);
       }
       return {
         ...parsed,
         rawPrompt,
       };
     } catch (err: unknown) {
-      if (err instanceof BadRequestException) {
+      if (err instanceof AiPromptGuardException || err instanceof BadRequestException) {
         throw err;
       }
       const msg = err instanceof Error ? err.message : String(err);
-      this.logger.error(`Failed to generate lesson from AI API: ${msg}`);
+      this.logger.error(err);
       throw new InternalServerErrorException(`Failed to generate lesson. Please check your AI API key and model settings. Details: ${msg}`);
     }
   }
@@ -185,7 +188,7 @@ export class AiService {
       return validateAndRepairGrading(parsed);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
-      this.logger.error(`Error grading submission via AI API: ${msg}`);
+      this.logger.error(err);
       throw new InternalServerErrorException(`Failed to grade submission. Please check your AI API configuration. Details: ${msg}`);
     }
   }

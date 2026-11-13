@@ -198,6 +198,90 @@
   background: var(--stamp-red, #c0392b);
 }
 
+.settings-quota-progress-fill.warning {
+  background: var(--stamp-amber, #925400);
+}
+
+/* Guard Stamps */
+.settings-guard-stamp {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-stamp);
+  padding: var(--space-3xs) var(--space-sm);
+  border: var(--border-width-regular) solid var(--border-color);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3xs);
+}
+
+.settings-guard-stamp.normal {
+  background: var(--stamp-green-bg, #f0fdf4);
+  color: var(--stamp-green, #166534);
+  border-color: var(--stamp-green, #166534);
+}
+
+.settings-guard-stamp.warning {
+  background: var(--stamp-amber-bg, #fffbeb);
+  color: var(--stamp-amber, #925400);
+  border-color: var(--stamp-amber, #925400);
+}
+
+.settings-guard-stamp.restricted {
+  background: var(--stamp-red-bg, #fdf2f2);
+  color: var(--stamp-red, #c0392b);
+  border-color: var(--stamp-red, #c0392b);
+}
+
+/* Restriction Banners */
+.settings-restriction-bypass-notice {
+  margin-bottom: var(--space-lg);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--stamp-amber-bg, #fffbeb);
+  border: var(--border-width-regular) solid var(--stamp-amber, #925400);
+  border-left: var(--border-width-heavy) solid var(--stamp-amber, #925400);
+  color: var(--stamp-amber, #925400);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  line-height: var(--line-height-normal);
+}
+
+.settings-restriction-active-alert {
+  margin-bottom: var(--space-lg);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--stamp-red-bg, #fdf2f2);
+  border: var(--border-width-regular) solid var(--stamp-red, #c0392b);
+  border-left: var(--border-width-heavy) solid var(--stamp-red, #c0392b);
+  color: var(--stamp-red, #c0392b);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  line-height: var(--line-height-normal);
+}
+
+.settings-restriction-notice-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xs);
+}
+
+.settings-restriction-notice-title {
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.settings-restriction-expiry {
+  font-size: var(--font-size-2xs);
+  opacity: 0.9;
+}
+
 .settings-quota-footer {
   display: flex;
   align-items: center;

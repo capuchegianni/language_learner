@@ -27,6 +27,9 @@ export const PlanUsageSection: React.FC<PlanUsageSectionProps> = ({
 }) => {
   const isKeyMissing = isCustom && !hasApiKey && !isLocalOllama;
 
+  const restriction = usageInfo?.restriction;
+  const isRestricted = !!(usageInfo?.isRestricted || restriction);
+
   const ruleProposalUsed = usageInfo?.usage.RULE_PROPOSAL.used ?? 0;
   const ruleProposalLimit = usageInfo?.usage.RULE_PROPOSAL.limit ?? (plan === 'PREMIUM' ? 10 : 3);
 
@@ -55,6 +58,13 @@ export const PlanUsageSection: React.FC<PlanUsageSectionProps> = ({
             <span className="settings-plan-stamp premium">Premium Plan</span>
           ) : (
             <span className="settings-plan-stamp">Free Plan</span>
+          )}
+          {!isRestricted ? (
+            <span className="settings-guard-stamp normal">In Good Standing</span>
+          ) : isCustom ? (
+            <span className="settings-guard-stamp warning">Bypass Active</span>
+          ) : (
+            <span className="settings-guard-stamp restricted">Suspended</span>
           )}
         </div>
       </div>
@@ -93,6 +103,43 @@ export const PlanUsageSection: React.FC<PlanUsageSectionProps> = ({
           <span>
             Custom mode is active, but you have not configured an API key. AI features will not work until you enter an API key below.
           </span>
+        </div>
+      )}
+
+      {/* BYOK Bypass Notice */}
+      {isRestricted && isCustom && (
+        <div className="settings-restriction-bypass-notice" role="alert">
+          <IconHazardAlert size={18} />
+          <div className="settings-restriction-notice-content">
+            <span className="settings-restriction-notice-title">
+              BYOK Bypass Active
+            </span>
+            <span>
+              Your account has an active AI suspension, but AI calls are permitted while using custom API credentials. Warning: AI access will be suspended immediately if custom mode is disabled.
+            </span>
+            {restriction?.blockedUntil && (
+              <span className="settings-restriction-expiry">
+                Active until {new Date(restriction.blockedUntil).toLocaleString()}
+              </span>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Active Restriction Alert */}
+      {isRestricted && !isCustom && (
+        <div className="settings-restriction-active-alert" role="alert">
+          <IconHazardAlert size={18} />
+          <div className="settings-restriction-notice-content">
+            <span className="settings-restriction-notice-title">
+              AI Access Suspended
+            </span>
+            <span className="settings-restriction-expiry">
+              {restriction?.isPermanent || !restriction?.blockedUntil
+                ? 'Active permanently. Contact administration for review.'
+                : `Active until ${new Date(restriction.blockedUntil).toLocaleString()}.`}
+            </span>
+          </div>
         </div>
       )}
 

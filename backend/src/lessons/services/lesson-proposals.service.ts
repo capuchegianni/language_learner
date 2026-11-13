@@ -58,10 +58,12 @@ export class LessonProposalsService {
       await this.usageService.incrementUsage(userId, ActionType.RULE_PROPOSAL);
 
       for (const p of generated) {
+        const trimmedTitle = p.title?.trim() || '';
+        const title = trimmedTitle.length > 150 ? trimmedTitle.slice(0, 150) : trimmedTitle;
         const created = await this.prisma.lessonProposal.create({
           data: {
             userId,
-            title: p.title,
+            title,
             explanation: p.briefExplanation || '',
             category: p.category || 'Grammar',
             difficulty: p.difficulty || 'Beginner',
@@ -132,14 +134,17 @@ export class LessonProposalsService {
     await this.usageService.incrementUsage(userId, ActionType.RULE_PROPOSAL);
 
     if (newRules.length > 0) {
+      const p = newRules[0];
+      const trimmedTitle = p.title?.trim() || '';
+      const title = trimmedTitle.length > 150 ? trimmedTitle.slice(0, 150) : trimmedTitle;
       if (targetProposal) {
         const updated = await this.prisma.lessonProposal.update({
           where: { id: targetProposal.id },
           data: {
-            title: newRules[0].title,
-            explanation: newRules[0].briefExplanation || '',
-            category: newRules[0].category || 'Grammar',
-            difficulty: newRules[0].difficulty || 'Beginner',
+            title,
+            explanation: p.briefExplanation || '',
+            category: p.category || 'Grammar',
+            difficulty: p.difficulty || 'Beginner',
             targetLanguage,
           },
         });
@@ -148,10 +153,10 @@ export class LessonProposalsService {
         const created = await this.prisma.lessonProposal.create({
           data: {
             userId,
-            title: newRules[0].title,
-            explanation: newRules[0].briefExplanation || '',
-            category: newRules[0].category || 'Grammar',
-            difficulty: newRules[0].difficulty || 'Beginner',
+            title,
+            explanation: p.briefExplanation || '',
+            category: p.category || 'Grammar',
+            difficulty: p.difficulty || 'Beginner',
             isReview: false,
             targetLanguage,
           },

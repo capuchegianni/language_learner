@@ -62,3 +62,13 @@ export type LessonProposal = Prisma.LessonProposalModel
  * 
  */
 export type UsageRecord = Prisma.UsageRecordModel
+/**
+ * Model UserAiRestriction
+ * 
+ */
+export type UserAiRestriction = Prisma.UserAiRestrictionModel
+/**
+ * Model GuardErrorEvent
+ * 
+ */
+export type GuardErrorEvent = Prisma.GuardErrorEventModel
