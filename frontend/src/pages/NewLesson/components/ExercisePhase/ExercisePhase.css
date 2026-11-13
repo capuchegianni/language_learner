@@ -243,8 +243,7 @@
     width: 100%;
   }
 
-  .vision-upload-controls .btn,
-  .vision-upload-controls label.btn {
+  .vision-upload-controls .btn {
     width: 100%;
     justify-content: center;
   }
