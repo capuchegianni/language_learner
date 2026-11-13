@@ -24,6 +24,12 @@ enum ActionType {
   LESSON_CORRECTION
 }
 
+enum BanType {
+  COOLDOWN_48H
+  BAN_7D
+  MANUAL
+}
+
 model User {
   id          String   @id @default(uuid())
   googleId    String   @unique
@@ -182,3 +188,29 @@ model UsageRecord {
   @@unique([userHash, actionType, date])
   @@index([userHash])
 }
+
+model UserAiRestriction {
+  id           String    @id @default(uuid())
+  userHash     String    @unique
+  banType      BanType
+  reason       String?
+  blockedAt    DateTime  @default(now())
+  blockedUntil DateTime?
+  isPermanent  Boolean   @default(false)
+  bannedBy     String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([userHash])
+}
+
+model GuardErrorEvent {
+  id        String   @id @default(uuid())
+  userHash  String
+  createdAt DateTime @default(now())
+  forgiven  Boolean  @default(false)
+
+  @@index([userHash, createdAt])
+  @@index([userHash, forgiven])
+}
+

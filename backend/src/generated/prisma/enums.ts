@@ -33,3 +33,12 @@ export const ActionType = {
 } as const
 
 export type ActionType = (typeof ActionType)[keyof typeof ActionType]
+
+
+export const BanType = {
+  COOLDOWN_48H: 'COOLDOWN_48H',
+  BAN_7D: 'BAN_7D',
+  MANUAL: 'MANUAL'
+} as const
+
+export type BanType = (typeof BanType)[keyof typeof BanType]
