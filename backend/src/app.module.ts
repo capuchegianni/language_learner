@@ -12,6 +12,7 @@ import { LessonsModule } from './lessons/lessons.module';
 import { AuthModule } from './auth/auth.module';
 import { UsageModule } from './usage/usage.module';
 import { AdminModule } from './admin/admin.module';
+import { ModerationModule } from './moderation/moderation.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { AdminModule } from './admin/admin.module';
     AuthModule,
     AdminModule,
     UsageModule,
+    ModerationModule,
     SettingsModule,
     AiModule,
     VocabularyModule,
