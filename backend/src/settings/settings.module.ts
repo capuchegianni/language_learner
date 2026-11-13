@@ -4,9 +4,10 @@ import { SettingsService } from './settings.service';
 import { SettingsCryptoService } from './services/settings-crypto.service';
 import { SettingsBackupService } from './services/settings-backup.service';
 import { UsageModule } from '../usage/usage.module';
+import { ModerationModule } from '../moderation/moderation.module';
 
 @Module({
-  imports: [UsageModule],
+  imports: [UsageModule, ModerationModule],
   controllers: [SettingsController],
   providers: [SettingsService, SettingsCryptoService, SettingsBackupService],
   exports: [SettingsService, SettingsCryptoService, SettingsBackupService],
