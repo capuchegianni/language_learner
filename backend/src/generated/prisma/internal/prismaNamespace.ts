@@ -392,7 +392,9 @@ export const ModelName = {
   LessonWord: 'LessonWord',
   Setting: 'Setting',
   LessonProposal: 'LessonProposal',
-  UsageRecord: 'UsageRecord'
+  UsageRecord: 'UsageRecord',
+  UserAiRestriction: 'UserAiRestriction',
+  GuardErrorEvent: 'GuardErrorEvent'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -408,7 +410,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "word" | "rule" | "lesson" | "lessonExercise" | "lessonWord" | "setting" | "lessonProposal" | "usageRecord"
+    modelProps: "user" | "word" | "rule" | "lesson" | "lessonExercise" | "lessonWord" | "setting" | "lessonProposal" | "usageRecord" | "userAiRestriction" | "guardErrorEvent"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1078,6 +1080,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    UserAiRestriction: {
+      payload: Prisma.$UserAiRestrictionPayload<ExtArgs>
+      fields: Prisma.UserAiRestrictionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.UserAiRestrictionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAiRestrictionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.UserAiRestrictionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAiRestrictionPayload>
+        }
+        findFirst: {
+          args: Prisma.UserAiRestrictionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAiRestrictionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.UserAiRestrictionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAiRestrictionPayload>
+        }
+        findMany: {
+          args: Prisma.UserAiRestrictionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAiRestrictionPayload>[]
+        }
+        create: {
+          args: Prisma.UserAiRestrictionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAiRestrictionPayload>
+        }
+        createMany: {
+          args: Prisma.UserAiRestrictionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.UserAiRestrictionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAiRestrictionPayload>[]
+        }
+        delete: {
+          args: Prisma.UserAiRestrictionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAiRestrictionPayload>
+        }
+        update: {
+          args: Prisma.UserAiRestrictionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAiRestrictionPayload>
+        }
+        deleteMany: {
+          args: Prisma.UserAiRestrictionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.UserAiRestrictionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.UserAiRestrictionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAiRestrictionPayload>[]
+        }
+        upsert: {
+          args: Prisma.UserAiRestrictionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserAiRestrictionPayload>
+        }
+        aggregate: {
+          args: Prisma.UserAiRestrictionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateUserAiRestriction>
+        }
+        groupBy: {
+          args: Prisma.UserAiRestrictionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserAiRestrictionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.UserAiRestrictionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserAiRestrictionCountAggregateOutputType> | number
+        }
+      }
+    }
+    GuardErrorEvent: {
+      payload: Prisma.$GuardErrorEventPayload<ExtArgs>
+      fields: Prisma.GuardErrorEventFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GuardErrorEventFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuardErrorEventPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GuardErrorEventFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuardErrorEventPayload>
+        }
+        findFirst: {
+          args: Prisma.GuardErrorEventFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuardErrorEventPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GuardErrorEventFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuardErrorEventPayload>
+        }
+        findMany: {
+          args: Prisma.GuardErrorEventFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuardErrorEventPayload>[]
+        }
+        create: {
+          args: Prisma.GuardErrorEventCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuardErrorEventPayload>
+        }
+        createMany: {
+          args: Prisma.GuardErrorEventCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.GuardErrorEventCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuardErrorEventPayload>[]
+        }
+        delete: {
+          args: Prisma.GuardErrorEventDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuardErrorEventPayload>
+        }
+        update: {
+          args: Prisma.GuardErrorEventUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuardErrorEventPayload>
+        }
+        deleteMany: {
+          args: Prisma.GuardErrorEventDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GuardErrorEventUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.GuardErrorEventUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuardErrorEventPayload>[]
+        }
+        upsert: {
+          args: Prisma.GuardErrorEventUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuardErrorEventPayload>
+        }
+        aggregate: {
+          args: Prisma.GuardErrorEventAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGuardErrorEvent>
+        }
+        groupBy: {
+          args: Prisma.GuardErrorEventGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GuardErrorEventGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GuardErrorEventCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GuardErrorEventCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1242,6 +1392,32 @@ export const UsageRecordScalarFieldEnum = {
 export type UsageRecordScalarFieldEnum = (typeof UsageRecordScalarFieldEnum)[keyof typeof UsageRecordScalarFieldEnum]
 
 
+export const UserAiRestrictionScalarFieldEnum = {
+  id: 'id',
+  userHash: 'userHash',
+  banType: 'banType',
+  reason: 'reason',
+  blockedAt: 'blockedAt',
+  blockedUntil: 'blockedUntil',
+  isPermanent: 'isPermanent',
+  bannedBy: 'bannedBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserAiRestrictionScalarFieldEnum = (typeof UserAiRestrictionScalarFieldEnum)[keyof typeof UserAiRestrictionScalarFieldEnum]
+
+
+export const GuardErrorEventScalarFieldEnum = {
+  id: 'id',
+  userHash: 'userHash',
+  createdAt: 'createdAt',
+  forgiven: 'forgiven'
+} as const
+
+export type GuardErrorEventScalarFieldEnum = (typeof GuardErrorEventScalarFieldEnum)[keyof typeof GuardErrorEventScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1360,6 +1536,13 @@ export type EnumActionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$Prism
 
 
 /**
+ * Reference to a field of type 'BanType'
+ */
+export type EnumBanTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BanType'>
+    
+
+
+/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -1469,6 +1652,8 @@ export type GlobalOmitConfig = {
   setting?: Prisma.SettingOmit
   lessonProposal?: Prisma.LessonProposalOmit
   usageRecord?: Prisma.UsageRecordOmit
+  userAiRestriction?: Prisma.UserAiRestrictionOmit
+  guardErrorEvent?: Prisma.GuardErrorEventOmit
 }
 
 /* Types for Logging */

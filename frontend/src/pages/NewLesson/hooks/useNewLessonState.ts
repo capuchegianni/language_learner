@@ -108,7 +108,6 @@ export function useNewLessonState(resumeLessonId?: string): UseNewLessonStateRet
       setError(null);
       setLoadingProposals(true);
       const res = await api.getRuleProposals({ refresh: forceRefresh });
-      await fetchUsage();
       setProposals(res.proposedNewRules);
       setReviewRule(res.reviewRuleOption);
       if (res.proposedNewRules.length > 0) {
@@ -117,11 +116,16 @@ export function useNewLessonState(resumeLessonId?: string): UseNewLessonStateRet
       }
     } catch (err: any) {
       console.error('Failed to fetch rule proposals', err);
-      setError(
-        err.response?.data?.message ||
-          'Failed to fetch AI rule proposals. Please check your AI API key and model settings.',
-      );
+      if (err.response?.status === 403) {
+        setError('AI access suspended.');
+      } else {
+        setError(
+          err.response?.data?.message ||
+            'Failed to fetch AI rule proposals. Please check your AI API key and model settings.',
+        );
+      }
     } finally {
+      await fetchUsage();
       setLoadingProposals(false);
     }
   }, [fetchUsage]);
@@ -133,7 +137,6 @@ export function useNewLessonState(resumeLessonId?: string): UseNewLessonStateRet
         setError(null);
         setReplacingIndex(indexToReplace);
         const res = await api.replaceProposal(indexToReplace);
-        await fetchUsage();
         setProposals(res.proposedNewRules);
         if (res.reviewRuleOption) {
           setReviewRule(res.reviewRuleOption);
@@ -146,11 +149,16 @@ export function useNewLessonState(resumeLessonId?: string): UseNewLessonStateRet
         }
       } catch (err: any) {
         console.error('Failed to replace proposal', err);
-        setError(
-          err.response?.data?.message ||
-            'Failed to fetch AI rule proposal. Please check your AI API key and model settings.',
-        );
+        if (err.response?.status === 403) {
+          setError('AI access suspended.');
+        } else {
+          setError(
+            err.response?.data?.message ||
+              'Failed to fetch AI rule proposal. Please check your AI API key and model settings.',
+          );
+        }
       } finally {
+        await fetchUsage();
         setReplacingIndex(null);
       }
     },
@@ -216,7 +224,6 @@ export function useNewLessonState(resumeLessonId?: string): UseNewLessonStateRet
         wordsCount,
         isReview: isReviewSelection,
       });
-      await fetchUsage();
       const parsed = parseLessonContent(lesson);
       setLessonContent(parsed);
       loadSavedAnswers(lesson.id);
@@ -225,11 +232,16 @@ export function useNewLessonState(resumeLessonId?: string): UseNewLessonStateRet
       navigate(`/lessons/${lesson.id}/resume`, { replace: true });
     } catch (err: any) {
       console.error('Error generating lesson', err);
-      setError(
-        err.response?.data?.message ||
-          'Failed to generate lesson. Please check your AI API configuration.',
-      );
+      if (err.response?.status === 403) {
+        setError('AI access suspended.');
+      } else {
+        setError(
+          err.response?.data?.message ||
+            'Failed to generate lesson. Please check your AI API configuration.',
+        );
+      }
     } finally {
+      await fetchUsage();
       setGeneratingLesson(false);
     }
   }, [selectedRuleTitle, wordsCount, isReviewSelection, loadSavedAnswers, navigate, fetchUsage]);
@@ -313,7 +325,6 @@ export function useNewLessonState(resumeLessonId?: string): UseNewLessonStateRet
           { exercises },
           imageFiles.length > 0 ? imageFiles : null,
         );
-        await fetchUsage();
         setCurrentLesson(updatedLesson);
         setPhase('GRADED');
         localStorage.removeItem(`lesson_answers_${currentLesson.id}`);
@@ -324,11 +335,16 @@ export function useNewLessonState(resumeLessonId?: string): UseNewLessonStateRet
         });
       } catch (err: any) {
         console.error('Submission failed', err);
-        setError(
-          err.response?.data?.message ||
-            'Failed to grade submission. Please check your AI API configuration.',
-        );
+        if (err.response?.status === 403) {
+          setError('AI access suspended.');
+        } else {
+          setError(
+            err.response?.data?.message ||
+              'Failed to grade submission. Please check your AI API configuration.',
+          );
+        }
       } finally {
+        await fetchUsage();
         setSubmitting(false);
       }
     },

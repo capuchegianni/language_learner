@@ -59,7 +59,9 @@ export const ModelName = {
   LessonWord: 'LessonWord',
   Setting: 'Setting',
   LessonProposal: 'LessonProposal',
-  UsageRecord: 'UsageRecord'
+  UsageRecord: 'UsageRecord',
+  UserAiRestriction: 'UserAiRestriction',
+  GuardErrorEvent: 'GuardErrorEvent'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -201,6 +203,32 @@ export const UsageRecordScalarFieldEnum = {
 } as const
 
 export type UsageRecordScalarFieldEnum = (typeof UsageRecordScalarFieldEnum)[keyof typeof UsageRecordScalarFieldEnum]
+
+
+export const UserAiRestrictionScalarFieldEnum = {
+  id: 'id',
+  userHash: 'userHash',
+  banType: 'banType',
+  reason: 'reason',
+  blockedAt: 'blockedAt',
+  blockedUntil: 'blockedUntil',
+  isPermanent: 'isPermanent',
+  bannedBy: 'bannedBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserAiRestrictionScalarFieldEnum = (typeof UserAiRestrictionScalarFieldEnum)[keyof typeof UserAiRestrictionScalarFieldEnum]
+
+
+export const GuardErrorEventScalarFieldEnum = {
+  id: 'id',
+  userHash: 'userHash',
+  createdAt: 'createdAt',
+  forgiven: 'forgiven'
+} as const
+
+export type GuardErrorEventScalarFieldEnum = (typeof GuardErrorEventScalarFieldEnum)[keyof typeof GuardErrorEventScalarFieldEnum]
 
 
 export const SortOrder = {

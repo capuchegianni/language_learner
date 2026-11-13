@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {
   AdminUser,
+  BanUserPayload,
   DashboardStats,
   Lesson,
   ProposedRule,
@@ -8,6 +9,7 @@ import {
   Settings,
   SettingsUpdatePayload,
   UsageInfo,
+  UserAiRestriction,
   UserSubmission,
   Word,
 } from '../types';
@@ -199,6 +201,19 @@ export const api = {
 
   async updateUserPlan(userId: string, plan: 'FREE' | 'PREMIUM'): Promise<AdminUser> {
     const res = await axios.patch(`${API_BASE}/admin/users/${userId}/plan`, { plan });
+    return res.data;
+  },
+
+  async banUser(
+    userId: string,
+    data: BanUserPayload,
+  ): Promise<{ success: boolean; restriction: UserAiRestriction }> {
+    const res = await axios.post(`${API_BASE}/admin/users/${userId}/ban`, data);
+    return res.data;
+  },
+
+  async unblockUser(userId: string): Promise<{ success: boolean; message: string }> {
+    const res = await axios.post(`${API_BASE}/admin/users/${userId}/unblock`);
     return res.data;
   },
 };

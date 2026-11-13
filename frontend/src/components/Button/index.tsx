@@ -9,9 +9,10 @@ export type ButtonVariant =
   | 'edit'
   | 'delete'
   | 'audio'
-  | 'note';
+  | 'note'
+  | 'empty';
 
-export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg';
+export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'null';
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {

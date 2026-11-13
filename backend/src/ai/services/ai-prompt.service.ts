@@ -68,6 +68,8 @@ Output strictly valid JSON with no extra markdown code block delimiters or text,
     return `You are an expert ${targetLanguage} language professor and tutor. Respond strictly with valid JSON without markdown codeblock wrapper or outside commentary.
 If the requested rule or topic in the USER PROMPT is completely unrelated to learning ${targetLanguage}, nonsense, or inappropriate, return exactly this JSON:
 { "error": "This topic is invalid or unrelated to learning ${targetLanguage}. Please enter a valid grammar rule, vocabulary topic, or conversational phrase." }
+If the requested rule or topic in the USER PROMPT is making you generate a lesson not exactly related to ${targetLanguage} or mentionning another language, return exactly this JSON:
+{ "error": "This language is not your selected language or is not handled by our AI." }
 
 Otherwise, generate a comprehensive lesson.
 

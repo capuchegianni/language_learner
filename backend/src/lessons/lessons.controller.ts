@@ -16,6 +16,7 @@ import { diskStorage } from 'multer';
 import * as path from 'path';
 import { LessonsService } from './lessons.service';
 import { AuthenticatedGuard } from '../auth/authenticated.guard';
+import { AiAccessGuard } from '../moderation/guards/ai-access.guard';
 import { AuthenticatedRequest } from '../types/request';
 import {
   GenerateLessonDto,
@@ -27,7 +28,7 @@ import {
 
 const uploadStorage = diskStorage({
   destination: './uploads',
-  filename: (req, file, cb) => {
+  filename: (_req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
     const ext = path.extname(file.originalname);
     cb(null, `${file.fieldname}-${uniqueSuffix}${ext}`);
@@ -46,6 +47,7 @@ export class LessonsController {
   }
 
   @Get('propose-rules')
+  @UseGuards(AiAccessGuard)
   async getRuleProposals(
     @Req() req: AuthenticatedRequest,
     @Query() query: RuleProposalQueryDto,
@@ -56,6 +58,7 @@ export class LessonsController {
   }
 
   @Post('propose-rules/replace')
+  @UseGuards(AiAccessGuard)
   async replaceProposal(
     @Req() req: AuthenticatedRequest,
     @Body() dto: ReplaceProposalDto,
@@ -65,6 +68,7 @@ export class LessonsController {
   }
 
   @Post('generate')
+  @UseGuards(AiAccessGuard)
   async generateLesson(
     @Req() req: AuthenticatedRequest,
     @Body() dto: GenerateLessonDto,
@@ -74,6 +78,7 @@ export class LessonsController {
   }
 
   @Post(':id/submit')
+  @UseGuards(AiAccessGuard)
   @UseInterceptors(
     FilesInterceptor('images', 3, {
       storage: uploadStorage,

@@ -8,6 +8,33 @@ export interface User {
   isAdmin?: boolean;
 }
 
+export type BanType = 'COOLDOWN_48H' | 'BAN_7D' | 'MANUAL';
+
+export type BanDurationPreset = '1h' | '24h' | '48h' | '7d' | '1m' | '1y' | 'Permanent';
+
+export interface UserAiRestriction {
+  id?: string;
+  userHash?: string;
+  banType: BanType;
+  reason?: string | null;
+  blockedAt: string;
+  blockedUntil?: string | null;
+  isPermanent: boolean;
+  bannedBy?: string | null;
+}
+
+export interface BanUserPayload {
+  duration: BanDurationPreset;
+  reason?: string;
+}
+
+export interface GuardErrorCounts {
+  daily: number;
+  dailyLimit?: number;
+  weekly: number;
+  weeklyLimit?: number;
+}
+
 export interface AdminUser {
   id: string;
   displayName: string;
@@ -15,6 +42,10 @@ export interface AdminUser {
   avatarUrl: string | null;
   plan: 'FREE' | 'PREMIUM';
   isCustom: boolean;
+  isAdmin?: boolean;
+  guardErrorsDaily?: number;
+  guardErrorsWeekly?: number;
+  restriction?: UserAiRestriction | null;
   createdAt: string;
   updatedAt: string;
   _count?: {
@@ -176,6 +207,9 @@ export interface UsageInfo {
     LESSON_GENERATION: UsageRecordItem;
     LESSON_CORRECTION: UsageRecordItem;
   };
+  guardErrors?: GuardErrorCounts;
+  restriction?: UserAiRestriction | null;
+  isRestricted?: boolean;
 }
 
 export interface Settings {
@@ -202,5 +236,6 @@ export interface SettingsUpdatePayload {
 export interface LanguageOption {
   name: string;
   voiceCode: string;
+  tier?: 1 | 2 | 3;
 }
 

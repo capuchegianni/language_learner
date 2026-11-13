@@ -141,7 +141,7 @@ private readonly logger = new Logger(LessonsService.name);
 try {
   return await this.aiService.grade(payload);
 } catch (err) {
-  this.logger.error(`AI grading failed for user ${userId}: ${err.message}`, err.stack);
+  this.logger.error(err);
   throw new BadRequestException('AI grading failed. Please verify your API key and try again.');
 }
 ```

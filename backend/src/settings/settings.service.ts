@@ -1,9 +1,10 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { Plan } from '../generated/prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { SettingsCryptoService } from './services/settings-crypto.service';
 import { SettingsBackupService } from './services/settings-backup.service';
 import { UsageService } from '../usage/usage.service';
+import { GuardModerationService } from '../moderation/guard-moderation.service';
 import { ImportPayload, ResetDataDto } from './dto/settings.dto';
 
 const SECRET_SETTING_KEY = 'api_key';
@@ -15,6 +16,7 @@ export class SettingsService {
     private readonly cryptoService: SettingsCryptoService,
     private readonly backupService: SettingsBackupService,
     private readonly usageService: UsageService,
+    private readonly guardModerationService: GuardModerationService,
   ) {}
 
   private normalizeKey(key: string): string {
@@ -136,7 +138,29 @@ export class SettingsService {
   }
 
   async getUsage(userId: string) {
-    return this.usageService.getDailyUsageSummary(userId);
+    const [summary, user] = await Promise.all([
+      this.usageService.getDailyUsageSummary(userId),
+      this.prisma.user.findUnique({
+        where: { id: userId },
+        select: { googleId: true },
+      }),
+    ]);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const userHash = this.guardModerationService.hashGoogleId(user.googleId);
+    const [guardErrors, restriction] = await Promise.all([
+      this.guardModerationService.getGuardErrorCounts(userHash),
+      this.guardModerationService.getActiveRestriction(userHash),
+    ]);
+
+    return {
+      ...summary,
+      guardErrors,
+      restriction,
+    };
   }
 
   async importData(userId: string, data: ImportPayload): Promise<{ success: boolean; message: string }> {

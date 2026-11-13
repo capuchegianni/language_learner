@@ -55,6 +55,15 @@ export const NewLesson: React.FC = () => {
     handleBackFromExercises,
   } = useNewLessonState(resumeLessonId);
 
+  const isCustomPlan = usageInfo?.isCustom ?? false;
+  const isRestricted = !isCustomPlan && !!(usageInfo?.isRestricted || usageInfo?.restriction);
+  const restriction = usageInfo?.restriction;
+
+  const isSuspensionError =
+    isRestricted ||
+    error?.toLowerCase().includes('suspend') ||
+    error?.toLowerCase().includes('restrict');
+
   return (
     <div className="new-lesson-container">
       {/* Step Indicator Header */}
@@ -62,9 +71,19 @@ export const NewLesson: React.FC = () => {
 
       {/* Error Alert */}
       {error && (
-        <div className="new-lesson-error-box">
-          <strong className="new-lesson-error-title">AI Processing Error</strong>
-          <span className="new-lesson-error-desc">{error}</span>
+        <div className="new-lesson-error-box" role="alert">
+          <strong className="new-lesson-error-title">
+            {isSuspensionError ? 'AI Access Suspended' : 'AI Processing Error'}
+          </strong>
+          <span className="new-lesson-error-desc">
+            {isSuspensionError
+              ? (restriction?.blockedUntil
+                  ? `Active until ${new Date(restriction.blockedUntil).toLocaleString()}.`
+                  : restriction?.isPermanent
+                  ? 'Active permanently. Contact administration for review.'
+                  : 'Active until suspension expires.')
+              : error}
+          </span>
         </div>
       )}
 
