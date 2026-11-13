@@ -66,6 +66,9 @@ const ExercisePhaseContent: React.FC<ExercisePhaseProps> = ({
 
   const isCustomPlan = usageInfo?.isCustom ?? false;
   const correctionUsage = usageInfo?.usage.LESSON_CORRECTION;
+  const isRestricted = !isCustomPlan && !!(usageInfo?.isRestricted || usageInfo?.restriction);
+  const restriction = usageInfo?.restriction;
+
   const isCorrectionLimitReached =
     !isCustomPlan &&
     correctionUsage?.limit !== null &&
@@ -322,7 +325,7 @@ const ExercisePhaseContent: React.FC<ExercisePhaseProps> = ({
 
             {!isReviewMode && (
               <div className="vision-upload-controls">
-                <label className={`btn btn-secondary ${imageFiles.length >= 3 ? 'disabled' : ''}`}>
+                <label className={`btn btn-secondary ${imageFiles.length >= 3 ? 'disabled' : ''}`}> {/* to change alo */}
                   <IconUploadPress size={18} />
                   <span>{imageFiles.length >= 3 ? '3 Photos Uploaded (Max)' : 'Choose Photo(s)'}</span>
                   <input
@@ -347,6 +350,21 @@ const ExercisePhaseContent: React.FC<ExercisePhaseProps> = ({
           <span>
             Daily lesson correction limit reached ({correctionUsage?.used}/{correctionUsage?.limit}). Resets at midnight UTC.
           </span>
+        </div>
+      )}
+
+      {/* Editorial Restriction Alert Banner (active mode only) */}
+      {!isReviewMode && isRestricted && (
+        <div className="exercise-restriction-banner" role="alert">
+          <IconHazardAlert size={18} />
+          <div className="exercise-restriction-content">
+            <strong>AI Access Suspended</strong>
+            <span className="exercise-restriction-expiry">
+              {restriction?.isPermanent || !restriction?.blockedUntil
+                ? 'This restriction is permanent. Contact administration for review.'
+                : `Active until ${new Date(restriction.blockedUntil).toLocaleString()}.`}
+            </span>
+          </div>
         </div>
       )}
 
@@ -378,7 +396,7 @@ const ExercisePhaseContent: React.FC<ExercisePhaseProps> = ({
               type="submit"
               variant="primary"
               className="exercise-btn"
-              disabled={submitting || isCorrectionLimitReached}
+              disabled={submitting || isCorrectionLimitReached || isRestricted}
               icon={!submitting ? <IconSendTelegraph size={18} /> : undefined}
             >
               {submitting ? (
@@ -387,6 +405,8 @@ const ExercisePhaseContent: React.FC<ExercisePhaseProps> = ({
                   size={18}
                   message="Grading with AI Teacher..."
                 />
+              ) : isRestricted ? (
+                'AI Access Restricted'
               ) : isCorrectionLimitReached ? (
                 `Daily Limit Reached (${correctionUsage?.used}/${correctionUsage?.limit})`
               ) : (
