@@ -73,7 +73,7 @@
 
 .admin-user-card {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 180px;
+  grid-template-columns: 2fr 1.2fr 1fr 180px;
   align-items: center;
   gap: var(--space-lg);
   padding: var(--space-md) var(--space-lg);
@@ -160,12 +160,43 @@
   gap: var(--space-xs);
 }
 
+.admin-metric-guard {
+  color: var(--text-muted);
+  font-size: var(--font-size-3xs);
+}
+
 /* Mode & Status */
 .admin-user-badges {
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
   align-items: flex-start;
+}
+
+.admin-ban-badge-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xs);
+}
+
+.admin-ban-stamp {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-3xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-stamp);
+  padding: var(--space-3xs) var(--space-xs);
+  background: var(--stamp-red-bg, #fdf2f2);
+  color: var(--stamp-red, #c0392b);
+  border: var(--border-width-regular) solid var(--stamp-red, #c0392b);
+  display: inline-block;
+}
+
+.admin-ban-until {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-3xs);
+  color: var(--stamp-red, #c0392b);
+  opacity: 0.85;
 }
 
 .admin-plan-stamp {
@@ -196,13 +227,83 @@
 /* Plan Actions */
 .admin-user-actions {
   display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: var(--space-sm);
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-xs);
 }
 
 .admin-plan-select {
   width: 100%;
+}
+
+.admin-moderation-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.admin-protected-badge {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-3xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-stamp);
+  padding: var(--space-3xs) var(--space-xs);
+  background: var(--bg-card-alt);
+  color: var(--text-muted);
+  border: var(--border-width-hairline) solid var(--border-color-light);
+  display: inline-block;
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.admin-mod-btn {
+  width: 100%;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+/* Modal styles */
+.admin-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-sm) 0;
+}
+
+.admin-modal-desc {
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+  line-height: var(--line-height-normal);
+  margin: 0;
+}
+
+.admin-modal-subdesc {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  line-height: var(--line-height-normal);
+  margin: 0;
+}
+
+.admin-modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.admin-modal-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+  margin-top: var(--space-lg);
+  padding-top: var(--space-md);
+  border-top: var(--border-width-hairline) solid var(--border-color-light);
 }
 
 /* Responsive */
